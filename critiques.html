@@ -982,6 +982,7 @@
         const isCroced = session && (r.crocs||[]).includes(session.id);
         const isTop = crocCount > 0 && crocCount === maxCrocs;
         const canCroc = session && session.id !== r.authorId;
+        const canLike = session && session.id !== r.authorId;
         return `
         <div class="review-card${isTop ? ' top-croced' : ''}" id="card-${r.id}">
           <div class="review-card-header">
@@ -1012,7 +1013,7 @@
               <span class="croc-icon">🦷</span>
               <span class="croc-count">${crocCount > 0 ? crocCount : 'Croquer'}</span>
             </button>` : crocCount > 0 ? `<span class="croc-btn croced" style="cursor:default;"><span class="croc-icon">🦷</span> ${crocCount}</span>` : ''}
-            ${session ? `<button class="like-btn${(r.likes||[]).includes(session.id) ? ' liked' : ''}" id="like-btn-${r.id}" onclick="handleLike('${r.authorId}','${r.id}',this)">
+            ${canLike ? `<button class="like-btn${(r.likes||[]).includes(session.id) ? ' liked' : ''}" id="like-btn-${r.id}" onclick="handleLike('${r.authorId}','${r.id}',this)">
               <span>❤️</span>
               <span id="like-count-${r.id}">${(r.likes||[]).length || ''}</span>
             </button>` : (r.likes||[]).length > 0 ? `<span class="like-btn liked" style="cursor:default;">❤️ ${r.likes.length}</span>` : ''}

@@ -44,11 +44,9 @@
       -webkit-user-select: none;
     }
 
-    /* ── SCREENS ── */
     .screen { display: none; width: 100%; height: 100vh; overflow: hidden; }
     .screen.active { display: flex; flex-direction: column; }
 
-    /* ── NOISE OVERLAY ── */
     body::after {
       content: '';
       position: fixed; inset: 0;
@@ -56,7 +54,6 @@
       pointer-events: none; z-index: 9999;
     }
 
-    /* ══════════════════ TITLE SCREEN ══════════════════ */
     #screenTitle {
       background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a0305 0%, #080808 70%);
       align-items: center; justify-content: center; position: relative; overflow: hidden;
@@ -128,10 +125,8 @@
     }
     .title-back-link:hover { color: var(--text); }
 
-    /* ══════════════════ GAME SCREEN ══════════════════ */
     #screenGame { background: var(--bg); flex-direction: column; }
 
-    /* HUD TOP */
     .hud-top {
       background: rgba(8,8,8,0.98);
       border-bottom: 1px solid var(--border);
@@ -148,7 +143,6 @@
     .hud-stat.red .hud-stat-val { color: var(--red); }
     .hud-stat.green .hud-stat-val { color: var(--green); }
 
-    /* XP bar under HUD */
     .hud-xp-wrap {
       background: rgba(8,8,8,0.98); border-bottom: 1px solid var(--border);
       padding: 0.2rem 0.8rem; flex-shrink: 0; display: flex; align-items: center; gap: 0.6rem;
@@ -160,10 +154,8 @@
     .hud-day { font-family:'Oswald',sans-serif; font-size:0.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
     .hud-day span { color:var(--text); font-weight:600; }
 
-    /* GAME BODY */
     .game-body { flex:1; overflow:hidden; position:relative; display:flex; flex-direction:column; min-height:0; }
 
-    /* TAB BAR */
     .tab-bar { display:flex; background:var(--surface); border-bottom:1px solid var(--border); flex-shrink:0; }
     .tab-btn {
       flex:1; padding:0.55rem 0.2rem; border:none; background:none; color:var(--muted);
@@ -182,19 +174,15 @@
     }
     @keyframes notifPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
 
-    /* TAB PANELS */
     .tab-panel { display:none; flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; min-height:0; }
     .tab-panel.active { display:flex; flex-direction:column; }
 
-    /* ══════════════════ FARM TAB ══════════════════ */
     .farm-area { padding:0.8rem; flex:1; }
     .farm-header {
       display:flex; justify-content:space-between; align-items:center; margin-bottom:0.7rem;
       font-family:'Oswald',sans-serif; font-size:0.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
     }
-    .farm-grid {
-      display:grid; grid-template-columns:repeat(4,1fr); gap:0.45rem; margin-bottom:0.8rem;
-    }
+    .farm-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.45rem; margin-bottom:0.8rem; }
     .plot {
       aspect-ratio:1; border-radius:8px; border:2px solid var(--border);
       display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -229,7 +217,6 @@
       padding:1px 3px; font-family:'Black Ops One',cursive; letter-spacing:.03em;
     }
 
-    /* SEEDS */
     .seeds-section { background:var(--surface); border-top:1px solid var(--border); padding:0.7rem 0.8rem; flex-shrink:0; }
     .seeds-label { font-family:'Oswald',sans-serif; font-size:0.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; display:flex; justify-content:space-between; align-items:center; }
     .seeds-row { display:flex; gap:0.4rem; overflow-x:auto; padding-bottom:0.2rem; }
@@ -246,7 +233,6 @@
     .seed-cost { font-size:0.55rem; color:var(--yellow); font-family:'Black Ops One',cursive; }
     .seed-time { font-size:0.45rem; color:var(--muted); }
 
-    /* ══════════════════ RECETTES TAB ══════════════════ */
     .recipes-area { padding:0.8rem; display:flex; flex-direction:column; gap:0.7rem; }
     .recipe-section-title {
       font-family:'Oswald',sans-serif; font-size:0.62rem; letter-spacing:.15em;
@@ -266,9 +252,7 @@
     .recipe-info { flex:1; }
     .recipe-name { font-family:'Oswald',sans-serif; font-weight:600; font-size:0.9rem; }
     .recipe-desc { font-size:0.6rem; color:var(--muted); line-height:1.4; margin-top:0.15rem; }
-    .recipe-ingredients {
-      display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.1rem;
-    }
+    .recipe-ingredients { display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.1rem; }
     .recipe-ing {
       background:var(--surface3); border:1px solid var(--border);
       border-radius:4px; padding:0.2rem 0.5rem; font-size:0.6rem;
@@ -286,7 +270,6 @@
     .btn-cook:active { transform:scale(0.95); }
     .btn-cook:disabled { background:var(--surface3); color:var(--muted); cursor:not-allowed; }
 
-    /* ══════════════════ FIGHT TAB ══════════════════ */
     .fight-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
     .fight-stage {
       background:radial-gradient(ellipse 90% 70% at 50% 50%, #1a0305 0%, #080808 100%);
@@ -317,9 +300,7 @@
     }
     .opponent-name { font-family:'Black Ops One',cursive; font-size:1.05rem; margin-top:0.25rem; color:var(--text); }
     .opponent-title { font-family:'Oswald',sans-serif; font-size:0.62rem; letter-spacing:.15em; text-transform:uppercase; color:var(--red); }
-    .buff-badge {
-      display:inline-flex; gap:0.3rem; flex-wrap:wrap; justify-content:center; margin-top:0.3rem;
-    }
+    .buff-badge { display:inline-flex; gap:0.3rem; flex-wrap:wrap; justify-content:center; margin-top:0.3rem; }
     .buff-pill {
       background:rgba(245,200,66,0.15); border:1px solid var(--yellow);
       border-radius:10px; padding:0.15rem 0.5rem;
@@ -328,7 +309,6 @@
     .buff-pill.def { background:rgba(52,152,219,0.15); border-color:var(--blue); color:var(--blue); }
     .buff-pill.crit { background:rgba(232,25,44,0.15); border-color:var(--red); color:var(--red); }
 
-    /* HP BARS */
     .hp-bars { width:100%; max-width:360px; display:flex; flex-direction:column; gap:0.4rem; padding:0.4rem 0; }
     .hp-row { display:flex; align-items:center; gap:0.4rem; }
     .hp-label { font-family:'Oswald',sans-serif; font-size:0.57rem; letter-spacing:.08em; text-transform:uppercase; width:44px; flex-shrink:0; }
@@ -340,14 +320,12 @@
     .hp-bar-fill.player { background:linear-gradient(90deg,#1a8a4a,var(--green)); }
     .hp-val { font-family:'Black Ops One',cursive; font-size:0.72rem; width:36px; text-align:center; flex-shrink:0; }
 
-    /* RAGE */
     .rage-row { display:flex; align-items:center; gap:0.4rem; width:100%; max-width:360px; padding:0 0 0.2rem; }
     .rage-label { font-family:'Oswald',sans-serif; font-size:0.55rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); width:44px; flex-shrink:0; text-align:right; }
     .rage-track { flex:1; height:5px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden; }
     .rage-fill { height:100%; background:linear-gradient(90deg,#e8a019,var(--yellow)); border-radius:3px; transition:width 0.3s; }
     .rage-val { font-family:'Black Ops One',cursive; font-size:0.65rem; color:var(--yellow); width:36px; text-align:center; flex-shrink:0; }
 
-    /* FIGHT LOG */
     .fight-log {
       background:var(--surface); border-top:1px solid var(--border);
       padding:0.45rem 0.8rem; font-size:0.72rem; min-height:2.2rem;
@@ -357,7 +335,6 @@
     .dmg-enemy { color:var(--yellow); }
     .dmg-player { color:var(--red); }
 
-    /* FIGHT CONTROLS */
     .fight-controls { background:var(--surface2); border-top:1px solid var(--border); padding:0.6rem; flex-shrink:0; }
     .fight-moves { display:grid; grid-template-columns:repeat(5,1fr); gap:0.35rem; margin-bottom:0.4rem; }
     .move-btn {
@@ -390,7 +367,6 @@
     }
     .btn-flee:active { border-color:var(--red); color:var(--red); transform:scale(0.96); }
 
-    /* FIGHT INTRO / VICTORY / DEFEAT */
     .fight-intro, .fight-victory, .fight-defeat {
       display:flex; flex-direction:column; align-items:center; gap:0.7rem;
       padding:1.5rem 1.2rem; text-align:center; width:100%;
@@ -418,7 +394,6 @@
     }
     .btn-fight-next:active { transform:scale(0.95); }
 
-    /* ENEMY LIST */
     .enemy-list { width:100%; display:flex; flex-direction:column; gap:0.45rem; max-width:380px; }
     .enemy-card {
       background:var(--surface2); border:1px solid var(--border); border-radius:8px;
@@ -437,7 +412,6 @@
     .diff-hard { background:rgba(232,25,44,0.12); color:var(--red); }
     .diff-boss { background:rgba(142,68,173,0.18); color:#c39bd3; }
 
-    /* ══════════════════ SHOP TAB ══════════════════ */
     .shop-area { padding:0.8rem; display:flex; flex-direction:column; gap:0.9rem; }
     .shop-section-title {
       font-family:'Oswald',sans-serif; font-size:0.62rem; letter-spacing:.15em;
@@ -460,7 +434,6 @@
     .shop-item-desc { font-size:0.58rem; color:var(--muted); margin-top:0.15rem; line-height:1.4; }
     .shop-item-price { display:flex; align-items:center; gap:0.25rem; margin-top:0.45rem; font-family:'Black Ops One',cursive; font-size:0.82rem; color:var(--yellow); }
 
-    /* ══════════════════ INVENTORY TAB ══════════════════ */
     .inv-area { padding:0.8rem; display:flex; flex-direction:column; gap:0.9rem; }
     .inv-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.45rem; }
     .inv-item {
@@ -473,7 +446,6 @@
     .inv-emoji { font-size:1.55rem; }
     .inv-qty { position:absolute; bottom:2px; right:4px; font-family:'Black Ops One',cursive; font-size:0.62rem; color:var(--yellow); }
 
-    /* PLAYER STATS CARD */
     .player-stats-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:0.9rem; }
     .player-stats-title { font-family:'Oswald',sans-serif; font-size:0.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.75rem; }
     .stats-rows { display:flex; flex-direction:column; gap:0.55rem; }
@@ -486,7 +458,6 @@
     .stat-spd .stat-bar-fill { background:var(--yellow); }
     .stat-row-val { font-family:'Black Ops One',cursive; font-size:0.72rem; width:28px; text-align:right; flex-shrink:0; }
 
-    /* ══════════════════ TOASTS / POPUPS ══════════════════ */
     .toast {
       position:fixed; top:80px; left:50%;
       transform:translateX(-50%) translateY(-20px);
@@ -501,7 +472,6 @@
     .toast.gold    { border-color:var(--yellow); color:var(--yellow); }
     .toast.level   { border-color:var(--purple); color:var(--purple); background:rgba(155,89,182,0.15); }
 
-    /* FLOAT ANIMATIONS */
     .harvest-float {
       position:fixed; font-family:'Black Ops One',cursive; font-size:1.2rem;
       color:var(--yellow); pointer-events:none; z-index:500;
@@ -514,7 +484,6 @@
     }
     @keyframes cookFloat { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-80px) scale(0.5)} }
 
-    /* DAMAGE NUMBERS */
     .dmg-number {
       position:fixed; font-family:'Black Ops One',cursive; pointer-events:none;
       z-index:300; animation:dmgFloat 0.85s ease-out forwards;
@@ -528,7 +497,6 @@
       100%{opacity:0;transform:translateY(-75px) scale(0.8)}
     }
 
-    /* MODAL */
     .modal-overlay {
       position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:200;
       display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity 0.25s;
@@ -557,7 +525,6 @@
       -webkit-tap-highlight-color:transparent;
     }
 
-    /* LEVEL UP OVERLAY */
     .levelup-overlay {
       position:fixed; inset:0; z-index:500; display:flex; align-items:center; justify-content:center;
       background:rgba(0,0,0,0.75); opacity:0; pointer-events:none; transition:opacity 0.3s;
@@ -577,28 +544,20 @@
     .lvl-bonus { background:var(--surface2); border:1px solid var(--purple); border-radius:6px; padding:0.4rem 0.8rem; font-family:'Black Ops One',cursive; font-size:0.8rem; color:var(--purple); }
     .btn-levelup-ok { background:var(--purple); border:none; color:#fff; font-family:'Black Ops One',cursive; font-size:1rem; padding:0.7rem 2rem; border-radius:4px; cursor:pointer; margin-top:0.3rem; }
 
-    /* BACK LINK */
     .game-back-link {
       display:inline-flex; align-items:center; gap:0.4rem; color:var(--muted);
       font-size:0.62rem; text-decoration:none; font-family:'Oswald',sans-serif;
       letter-spacing:.08em; text-transform:uppercase; padding:0 0.3rem;
     }
 
-    /* SCROLLBAR */
     ::-webkit-scrollbar { width:3px; height:3px; }
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:#333; border-radius:2px; }
-
-    /* SWIPE HINT */
-    .swipe-hint {
-      font-size:0.55rem; color:var(--muted); font-family:'Oswald',sans-serif;
-      letter-spacing:.06em; text-align:center; padding:0.2rem 0;
-    }
   </style>
 </head>
 <body>
 
-<!-- ════════ TITLE SCREEN ════════ -->
+<!-- TITLE SCREEN -->
 <div class="screen active" id="screenTitle">
   <div class="title-bg-ring"></div>
   <div class="title-bg-ring"></div>
@@ -617,10 +576,8 @@
   </div>
 </div>
 
-<!-- ════════ GAME SCREEN ════════ -->
+<!-- GAME SCREEN -->
 <div class="screen" id="screenGame">
-
-  <!-- HUD TOP -->
   <div class="hud-top">
     <a href="index.html" class="game-back-link">🥡</a>
     <div class="hud-logo">🥊 L.BOXE</div>
@@ -646,9 +603,7 @@
     <div class="hud-xp-label" id="hudXpText">0 / 50 XP</div>
   </div>
 
-  <!-- BODY -->
   <div class="game-body">
-    <!-- TAB BAR -->
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('farm')" id="tabFarm">
         <span class="tab-icon">🌱</span>Ferme
@@ -667,7 +622,6 @@
       </button>
     </div>
 
-    <!-- ══ FARM TAB ══ -->
     <div class="tab-panel active" id="panelFarm">
       <div class="farm-area">
         <div class="farm-header">
@@ -685,32 +639,26 @@
       </div>
     </div>
 
-    <!-- ══ RECIPES TAB ══ -->
     <div class="tab-panel" id="panelRecipes">
       <div class="recipes-area" id="recipesArea"></div>
     </div>
 
-    <!-- ══ FIGHT TAB ══ -->
     <div class="tab-panel" id="panelFight">
       <div class="fight-area" id="fightArea"></div>
     </div>
 
-    <!-- ══ SHOP TAB ══ -->
     <div class="tab-panel" id="panelShop">
       <div class="shop-area" id="shopArea"></div>
     </div>
 
-    <!-- ══ INV TAB ══ -->
     <div class="tab-panel" id="panelInv">
       <div class="inv-area" id="invArea"></div>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal-box">
     <div class="modal-title" id="modalTitle"></div>
@@ -720,7 +668,6 @@
   </div>
 </div>
 
-<!-- LEVEL UP OVERLAY -->
 <div class="levelup-overlay" id="levelupOverlay">
   <div class="levelup-box">
     <span class="levelup-emoji">⭐</span>
@@ -732,10 +679,6 @@
 </div>
 
 <script>
-// ═══════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════
-
 const SEEDS = [
   { id:'tomato',   emoji:'🍅', name:'Tomate',     cost:5,  growTime:12, sell:12,  heal:0,  atk:2,  unlockDay:1 },
   { id:'carrot',   emoji:'🥕', name:'Carotte',    cost:8,  growTime:20, sell:20,  heal:10, atk:0,  unlockDay:1 },
@@ -801,16 +744,13 @@ const MOVES = [
 
 const LEVEL_XP = [0, 50, 120, 220, 360, 550, 800, 1100, 1500, 2000, 2600];
 
-// ═══════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════
 let state = {
   gold: 60,
   day: 1,
   player: { hp:100, maxHp:100, atk:20, def:5, spd:10, rage:0, maxRage:100, streak:0 },
   plots: Array.from({length:8}, (_,i) => ({ id:i, locked:false, crop:null, plantedAt:null, growTime:null, status:null })),
   inventory: {},
-  cooked: {},  // cooked dishes
+  cooked: {},
   equipped: {},
   wins: 0,
   xp: 0,
@@ -820,13 +760,9 @@ let state = {
   enemyHp: 0,
   selectedSeed: null,
   tick: 0,
-  // Active buffs in fight
   buffs: { atk:0, def:0, rounds:0, nextCrit:false },
 };
 
-// ═══════════════════════════════════════════
-// SAVE / LOAD
-// ═══════════════════════════════════════════
 function saveGame() {
   try {
     const save = {
@@ -852,9 +788,6 @@ function loadGame() {
   } catch(e) { return false; }
 }
 
-// ═══════════════════════════════════════════
-// SCREENS / TABS
-// ═══════════════════════════════════════════
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -865,7 +798,7 @@ function startGame() {
   showScreen('screenGame');
   renderAll();
   setInterval(gameTick, 1000);
-  setInterval(saveGame, 15000); // auto-save every 15s
+  setInterval(saveGame, 15000);
   if (loaded) toast('💾 Partie chargée !', 'success');
 }
 
@@ -881,22 +814,19 @@ function switchTab(tab) {
   if (tab === 'recipes') renderRecipes();
 }
 
-// ═══════════════════════════════════════════
-// TICK
-// ═══════════════════════════════════════════
 function gameTick() {
   state.tick++;
   if (state.tick % 120 === 0) {
     state.day++;
     document.getElementById('hudDay').textContent = state.day;
-    toast(`☀️ Jour ${state.day} — Bonne récolte !`, 'success');
+    toast('☀️ Jour ' + state.day + ' — Bonne récolte !', 'success');
     state.player.hp = Math.min(state.player.maxHp, state.player.hp + 5);
     updateHUD();
-    renderSeeds(); // unlock new seeds
+    renderSeeds();
     checkFarmNotif();
   }
   let anyReady = false;
-  state.plots.forEach(plot => {
+  state.plots.forEach(function(plot) {
     if (plot.crop && plot.growTime && plot.status !== 'ready') {
       const elapsed = state.tick - plot.plantedAt;
       if (elapsed >= plot.growTime) { plot.status = 'ready'; anyReady = true; }
@@ -907,9 +837,9 @@ function gameTick() {
 }
 
 function checkFarmNotif() {
-  const ready = state.plots.filter(p => p.status === 'ready').length;
+  const ready = state.plots.filter(function(p) { return p.status === 'ready'; }).length;
   const notif = document.getElementById('farmReadyCount');
-  if (notif) notif.textContent = ready > 0 ? `✅ ${ready} prête${ready>1?'s':''}` : '';
+  if (notif) notif.textContent = ready > 0 ? ('✅ ' + ready + ' prête' + (ready>1?'s':'')) : '';
   const btn = document.getElementById('tabFarm');
   let n = btn.querySelector('.tab-notif');
   if (ready > 0 && !n) {
@@ -917,9 +847,6 @@ function checkFarmNotif() {
   } else if (ready === 0 && n) n.remove();
 }
 
-// ═══════════════════════════════════════════
-// RENDER ALL
-// ═══════════════════════════════════════════
 function renderAll() {
   updateHUD();
   renderFarm();
@@ -931,16 +858,15 @@ function updateHUD() {
   document.getElementById('hudGold').textContent = state.gold;
   document.getElementById('hudHP').textContent = state.player.hp;
   document.getElementById('hudStreak').textContent = state.player.streak;
-  // XP bar
   const lvl = state.level;
   const xpForNext = LEVEL_XP[lvl] || LEVEL_XP[LEVEL_XP.length-1];
   const xpBase = lvl > 1 ? LEVEL_XP[lvl-1] : 0;
   const progress = Math.min(100, ((state.xp - xpBase) / (xpForNext - xpBase)) * 100);
   document.getElementById('hudXpBar').style.width = progress + '%';
   document.getElementById('hudLevel').textContent = 'LVL ' + lvl;
-  document.getElementById('hudXpText').textContent = `${state.xp - xpBase} / ${xpForNext - xpBase} XP`;
+  document.getElementById('hudXpText').textContent = (state.xp - xpBase) + ' / ' + (xpForNext - xpBase) + ' XP';
   document.getElementById('hudDay').textContent = state.day;
-  document.getElementById('seedGoldLabel').textContent = `💰 ${state.gold}`;
+  document.getElementById('seedGoldLabel').textContent = '💰 ' + state.gold;
 }
 
 function gainXP(amount) {
@@ -955,16 +881,14 @@ function gainXP(amount) {
 
 function triggerLevelUp() {
   const lvl = state.level;
-  // Bonus per level
   const bonuses = [];
   state.player.maxHp += 10; state.player.hp += 10; bonuses.push('+10 HP Max');
   state.player.atk += 2; bonuses.push('+2 ATK');
   if (lvl % 2 === 0) { state.player.def += 2; bonuses.push('+2 DEF'); }
   if (lvl % 3 === 0) { state.player.maxRage += 10; bonuses.push('+10 Rage Max'); }
-
-  document.getElementById('levelupTitle').textContent = `NIVEAU ${lvl} !`;
+  document.getElementById('levelupTitle').textContent = 'NIVEAU ' + lvl + ' !';
   const bonusEl = document.getElementById('levelupBonuses');
-  bonusEl.innerHTML = bonuses.map(b => `<div class="lvl-bonus">${b}</div>`).join('');
+  bonusEl.innerHTML = bonuses.map(function(b) { return '<div class="lvl-bonus">' + b + '</div>'; }).join('');
   document.getElementById('levelupOverlay').classList.add('show');
   saveGame();
 }
@@ -974,34 +898,31 @@ function closeLevelUp() {
   updateHUD();
 }
 
-// ═══════════════════════════════════════════
-// FARM
-// ═══════════════════════════════════════════
 function renderFarm() {
   const grid = document.getElementById('farmGrid');
   grid.innerHTML = '';
-  state.plots.forEach((plot, i) => {
+  state.plots.forEach(function(plot, i) {
     const el = document.createElement('div');
     el.className = 'plot';
     el.dataset.plot = i;
     if (plot.locked) {
       el.classList.add('locked');
-      el.innerHTML = `<span class="plot-lock-icon">🔒</span>`;
+      el.innerHTML = '<span class="plot-lock-icon">🔒</span>';
     } else if (!plot.crop) {
       el.classList.add('empty');
-      el.innerHTML = `<span style="font-size:0.9rem;color:#333">＋</span>`;
-      el.onclick = () => plantSeed(i);
+      el.innerHTML = '<span style="font-size:0.9rem;color:#333">＋</span>';
+      el.onclick = function() { plantSeed(i); };
     } else {
       const elapsed = state.tick - plot.plantedAt;
       const prog = Math.min(1, elapsed / plot.growTime);
       if (plot.status === 'ready') {
         el.classList.add('ready');
-        el.innerHTML = `<span class="plot-emoji">${plot.crop.emoji}</span><div class="plot-ready-badge">PRÊT</div><div class="plot-progress"><div class="plot-progress-bar" style="width:100%"></div></div>`;
-        el.onclick = () => harvest(i, el);
+        el.innerHTML = '<span class="plot-emoji">' + plot.crop.emoji + '</span><div class="plot-ready-badge">PRÊT</div><div class="plot-progress"><div class="plot-progress-bar" style="width:100%"></div></div>';
+        el.onclick = function() { harvest(i, el); };
       } else {
         el.classList.add('growing');
         const remaining = Math.max(0, plot.growTime - elapsed);
-        el.innerHTML = `<span class="plot-emoji" style="opacity:0.55;filter:grayscale(0.6)">${plot.crop.emoji}</span><span class="plot-time">${remaining}s</span><div class="plot-progress"><div class="plot-progress-bar" style="width:${prog*100}%"></div></div>`;
+        el.innerHTML = '<span class="plot-emoji" style="opacity:0.55;filter:grayscale(0.6)">' + plot.crop.emoji + '</span><span class="plot-time">' + remaining + 's</span><div class="plot-progress"><div class="plot-progress-bar" style="width:' + (prog*100) + '%"></div></div>';
       }
     }
     grid.appendChild(el);
@@ -1009,9 +930,9 @@ function renderFarm() {
 }
 
 function renderFarmProgress() {
-  state.plots.forEach((plot, i) => {
+  state.plots.forEach(function(plot, i) {
     if (!plot.crop || plot.status === 'ready') return;
-    const el = document.querySelector(`.plot[data-plot="${i}"]`);
+    const el = document.querySelector('.plot[data-plot="' + i + '"]');
     if (!el) return;
     const elapsed = state.tick - plot.plantedAt;
     const prog = Math.min(1, elapsed / plot.growTime);
@@ -1025,12 +946,12 @@ function renderFarmProgress() {
 function renderSeeds() {
   const row = document.getElementById('seedsRow');
   row.innerHTML = '';
-  SEEDS.forEach(seed => {
+  SEEDS.forEach(function(seed) {
     const locked = seed.unlockDay > state.day;
     const btn = document.createElement('div');
     btn.className = 'seed-btn' + (seed.id === state.selectedSeed ? ' selected' : '') + (locked ? ' locked-seed' : '');
-    btn.innerHTML = `<span class="seed-emoji">${seed.emoji}</span><span class="seed-name">${seed.name}</span><span class="seed-cost">💰${seed.cost}</span><span class="seed-time">⏱${seed.growTime}s</span>`;
-    if (!locked) btn.onclick = () => selectSeed(seed.id);
+    btn.innerHTML = '<span class="seed-emoji">' + seed.emoji + '</span><span class="seed-name">' + seed.name + '</span><span class="seed-cost">💰' + seed.cost + '</span><span class="seed-time">⏱' + seed.growTime + 's</span>';
+    if (!locked) btn.onclick = function() { selectSeed(seed.id); };
     row.appendChild(btn);
   });
 }
@@ -1042,7 +963,7 @@ function selectSeed(id) {
 
 function plantSeed(plotIdx) {
   if (!state.selectedSeed) { toast('Sélectionne une graine !', 'error'); return; }
-  const seed = SEEDS.find(s => s.id === state.selectedSeed);
+  const seed = SEEDS.find(function(s) { return s.id === state.selectedSeed; });
   if (!seed) return;
   if (state.gold < seed.cost) { toast('Pas assez d\'or !', 'error'); return; }
   state.gold -= seed.cost;
@@ -1066,66 +987,61 @@ function harvest(plotIdx, el) {
   renderFarm();
   checkFarmNotif();
   const rect = el.getBoundingClientRect();
-  spawnFloat(`+💰${gold}`, rect.left + rect.width/2, rect.top, 'harvest-float');
-  toast(`${crop.emoji} Récolte ! +${gold} or`, 'gold');
+  spawnFloat('+💰' + gold, rect.left + rect.width/2, rect.top, 'harvest-float');
+  toast(crop.emoji + ' Récolte ! +' + gold + ' or', 'gold');
 }
 
-// ═══════════════════════════════════════════
-// RECIPES
-// ═══════════════════════════════════════════
 function renderRecipes() {
   const area = document.getElementById('recipesArea');
-  const available = RECIPES.filter(r => r.unlockDay <= state.day);
-  const locked = RECIPES.filter(r => r.unlockDay > state.day);
+  const available = RECIPES.filter(function(r) { return r.unlockDay <= state.day; });
+  const locked = RECIPES.filter(function(r) { return r.unlockDay > state.day; });
 
-  area.innerHTML = `<div><div class="recipe-section-title">👨‍🍳 Recettes disponibles</div>
-    ${available.map(r => {
-      const canCook = canCookRecipe(r);
-      return `<div class="recipe-card" onclick="cookRecipe('${r.id}')">
-        <div class="recipe-card-top">
-          <span class="recipe-emoji">${r.emoji}</span>
-          <div class="recipe-info">
-            <div class="recipe-name">${r.name}</div>
-            <div class="recipe-desc">${r.desc}</div>
-          </div>
-        </div>
-        <div class="recipe-ingredients">
-          ${Object.entries(r.ingredients).map(([id, qty]) => {
-            const seed = SEEDS.find(s => s.id === id);
-            const have = (state.inventory[id] || 0) >= qty;
-            return `<span class="recipe-ing ${have?'have':'missing'}">${seed?.emoji||'?'}×${qty} ${have?'✓':'✗'}</span>`;
-          }).join('')}
-          <button class="btn-cook" ${canCook ? '' : 'disabled'}>🍳 Cuisiner</button>
-        </div>
-      </div>`;
-    }).join('')}
-    ${locked.length > 0 ? `<div class="recipe-section-title" style="margin-top:0.5rem">🔒 Non débloquées</div>
-    ${locked.map(r => `<div class="recipe-card locked-recipe">
-      <div class="recipe-card-top">
-        <span class="recipe-emoji" style="filter:grayscale(1)">🔒</span>
-        <div class="recipe-info">
-          <div class="recipe-name">${r.name}</div>
-          <div class="recipe-desc">Débloque au Jour ${r.unlockDay}</div>
-        </div>
-      </div>
-    </div>`).join('')}` : ''}
-  </div>`;
+  let html = '<div><div class="recipe-section-title">👨‍🍳 Recettes disponibles</div>';
+  available.forEach(function(r) {
+    const canCook = canCookRecipe(r);
+    let ingsHtml = '';
+    Object.entries(r.ingredients).forEach(function(entry) {
+      const id = entry[0]; const qty = entry[1];
+      const seed = SEEDS.find(function(s) { return s.id === id; });
+      const have = (state.inventory[id] || 0) >= qty;
+      ingsHtml += '<span class="recipe-ing ' + (have?'have':'missing') + '">' + (seed?seed.emoji:'?') + '×' + qty + ' ' + (have?'✓':'✗') + '</span>';
+    });
+    html += '<div class="recipe-card" onclick="cookRecipe(\'' + r.id + '\')">'
+      + '<div class="recipe-card-top"><span class="recipe-emoji">' + r.emoji + '</span>'
+      + '<div class="recipe-info"><div class="recipe-name">' + r.name + '</div>'
+      + '<div class="recipe-desc">' + r.desc + '</div></div></div>'
+      + '<div class="recipe-ingredients">' + ingsHtml
+      + '<button class="btn-cook" ' + (canCook ? '' : 'disabled') + '>🍳 Cuisiner</button>'
+      + '</div></div>';
+  });
+
+  if (locked.length > 0) {
+    html += '<div class="recipe-section-title" style="margin-top:0.5rem">🔒 Non débloquées</div>';
+    locked.forEach(function(r) {
+      html += '<div class="recipe-card locked-recipe"><div class="recipe-card-top">'
+        + '<span class="recipe-emoji" style="filter:grayscale(1)">🔒</span>'
+        + '<div class="recipe-info"><div class="recipe-name">' + r.name + '</div>'
+        + '<div class="recipe-desc">Débloque au Jour ' + r.unlockDay + '</div>'
+        + '</div></div></div>';
+    });
+  }
+  html += '</div>';
+  area.innerHTML = html;
 }
 
 function canCookRecipe(recipe) {
-  return Object.entries(recipe.ingredients).every(([id, qty]) => (state.inventory[id] || 0) >= qty);
+  return Object.entries(recipe.ingredients).every(function(entry) {
+    return (state.inventory[entry[0]] || 0) >= entry[1];
+  });
 }
 
 function cookRecipe(recipeId) {
-  const recipe = RECIPES.find(r => r.id === recipeId);
+  const recipe = RECIPES.find(function(r) { return r.id === recipeId; });
   if (!recipe) return;
   if (!canCookRecipe(recipe)) { toast('Ingrédients manquants !', 'error'); return; }
-  // Consume ingredients
-  Object.entries(recipe.ingredients).forEach(([id, qty]) => { state.inventory[id] -= qty; });
-  // Add cooked dish to inventory
+  Object.entries(recipe.ingredients).forEach(function(entry) { state.inventory[entry[0]] -= entry[1]; });
   state.cooked[recipe.id] = (state.cooked[recipe.id] || 0) + 1;
-  toast(`${recipe.emoji} ${recipe.name} cuisiné !`, 'success');
-  // Cook float
+  toast(recipe.emoji + ' ' + recipe.name + ' cuisiné !', 'success');
   const area = document.getElementById('recipesArea');
   const rect = area.getBoundingClientRect();
   spawnFloat(recipe.emoji, rect.left + rect.width/2, rect.top + 60, 'cook-float');
@@ -1134,11 +1050,11 @@ function cookRecipe(recipeId) {
 }
 
 function useCookedDish(recipeId) {
-  const recipe = RECIPES.find(r => r.id === recipeId);
+  const recipe = RECIPES.find(function(r) { return r.id === recipeId; });
   if (!recipe || !state.cooked[recipeId]) return;
   state.cooked[recipeId]--;
   applyRecipeEffect(recipe);
-  toast(`${recipe.emoji} ${recipe.name} utilisé !`, 'success');
+  toast(recipe.emoji + ' ' + recipe.name + ' utilisé !', 'success');
   closeModal();
   if (state.fightState === 'active') { updateFightBars(); renderFightActive(document.getElementById('fightArea')); }
   updateHUD();
@@ -1162,13 +1078,10 @@ function applyRecipeEffect(recipe) {
   updateHUD();
 }
 
-// ═══════════════════════════════════════════
-// FIGHT
-// ═══════════════════════════════════════════
 function renderFight() {
   const area = document.getElementById('fightArea');
   if (!area) return;
-  if (state.fightState === 'select')  renderEnemySelect(area);
+  if (state.fightState === 'select')   renderEnemySelect(area);
   else if (state.fightState === 'intro')   renderFightIntro(area);
   else if (state.fightState === 'active')  renderFightActive(area);
   else if (state.fightState === 'victory') renderFightVictory(area);
@@ -1176,40 +1089,40 @@ function renderFight() {
 }
 
 function renderEnemySelect(area) {
-  const available = ENEMIES.filter(e => e.unlockDay <= state.day);
-  const locked = ENEMIES.filter(e => e.unlockDay > state.day);
-  area.innerHTML = `<div class="fight-intro" style="padding:0.8rem;align-items:flex-start">
-    <div style="font-family:'Black Ops One',cursive;font-size:1.1rem;color:var(--red);margin-bottom:0.5rem;align-self:center">⚔️ CHOISIR UN ADVERSAIRE</div>
-    <div class="enemy-list">
-      ${available.map(e => `<div class="enemy-card" onclick="startFightWith('${e.id}')">
-        <span class="ec-emoji">${e.emoji}</span>
-        <div class="ec-info">
-          <div class="ec-name">${e.name}</div>
-          <div class="ec-title">${e.title} — HP: ${e.hp} · Récomp: 💰${e.reward.gold}</div>
-        </div>
-        <span class="ec-diff diff-${e.diff}">${e.diff.toUpperCase()}</span>
-      </div>`).join('')}
-      ${locked.slice(0,3).map(e => `<div class="enemy-card locked-enemy">
-        <span class="ec-emoji">🔒</span>
-        <div class="ec-info"><div class="ec-name">???</div><div class="ec-title">Jour ${e.unlockDay}</div></div>
-      </div>`).join('')}
-    </div>
-  </div>`;
+  const available = ENEMIES.filter(function(e) { return e.unlockDay <= state.day; });
+  const locked = ENEMIES.filter(function(e) { return e.unlockDay > state.day; });
+  let html = '<div class="fight-intro" style="padding:0.8rem;align-items:flex-start">'
+    + '<div style="font-family:\'Black Ops One\',cursive;font-size:1.1rem;color:var(--red);margin-bottom:0.5rem;align-self:center">⚔️ CHOISIR UN ADVERSAIRE</div>'
+    + '<div class="enemy-list">';
+  available.forEach(function(e) {
+    html += '<div class="enemy-card" onclick="startFightWith(\'' + e.id + '\')">'
+      + '<span class="ec-emoji">' + e.emoji + '</span>'
+      + '<div class="ec-info"><div class="ec-name">' + e.name + '</div>'
+      + '<div class="ec-title">' + e.title + ' — HP: ' + e.hp + ' · Récomp: 💰' + e.reward.gold + '</div></div>'
+      + '<span class="ec-diff diff-' + e.diff + '">' + e.diff.toUpperCase() + '</span>'
+      + '</div>';
+  });
+  locked.slice(0,3).forEach(function(e) {
+    html += '<div class="enemy-card locked-enemy"><span class="ec-emoji">🔒</span>'
+      + '<div class="ec-info"><div class="ec-name">???</div><div class="ec-title">Jour ' + e.unlockDay + '</div></div></div>';
+  });
+  html += '</div></div>';
+  area.innerHTML = html;
 }
 
 function renderFightIntro(area) {
   const e = state.currentEnemy;
-  area.innerHTML = `<div class="fight-intro">
-    <div class="fight-intro-emoji">${e.emoji}</div>
-    <h2>${e.name}</h2>
-    <p>${e.title}<br/>${e.hp} HP · ATK ${e.atk[0]}–${e.atk[1]} · DEF ${e.def}</p>
-    <div class="fight-rewards">
-      <div class="reward-item"><div class="reward-val">💰${e.reward.gold}</div><div class="reward-label">Or</div></div>
-      <div class="reward-item"><div class="reward-val">⭐${e.reward.xp}</div><div class="reward-label">XP</div></div>
-    </div>
-    <button class="btn-fight-start" onclick="beginFight()">🥊 COMBAT !</button>
-    <button class="btn-modal-secondary" style="max-width:200px" onclick="state.fightState='select';renderFight()">← Retour</button>
-  </div>`;
+  area.innerHTML = '<div class="fight-intro">'
+    + '<div class="fight-intro-emoji">' + e.emoji + '</div>'
+    + '<h2>' + e.name + '</h2>'
+    + '<p>' + e.title + '<br/>' + e.hp + ' HP · ATK ' + e.atk[0] + '–' + e.atk[1] + ' · DEF ' + e.def + '</p>'
+    + '<div class="fight-rewards">'
+    + '<div class="reward-item"><div class="reward-val">💰' + e.reward.gold + '</div><div class="reward-label">Or</div></div>'
+    + '<div class="reward-item"><div class="reward-val">⭐' + e.reward.xp + '</div><div class="reward-label">XP</div></div>'
+    + '</div>'
+    + '<button class="btn-fight-start" onclick="beginFight()">🥊 COMBAT !</button>'
+    + '<button class="btn-modal-secondary" style="max-width:200px" onclick="state.fightState=\'select\';renderFight()">← Retour</button>'
+    + '</div>';
 }
 
 function renderFightActive(area) {
@@ -1218,83 +1131,75 @@ function renderFightActive(area) {
   const enemyPct = Math.max(0, (state.enemyHp / e.hp) * 100);
   const playerPct = Math.max(0, (p.hp / p.maxHp) * 100);
 
-  // Buff badges
   let buffHtml = '';
   if (state.buffs.rounds > 0) {
-    if (state.buffs.atk > 0) buffHtml += `<span class="buff-pill">+${state.buffs.atk} ATK (${state.buffs.rounds})</span>`;
-    if (state.buffs.def > 0) buffHtml += `<span class="buff-pill def">+${state.buffs.def} DEF (${state.buffs.rounds})</span>`;
+    if (state.buffs.atk > 0) buffHtml += '<span class="buff-pill">+' + state.buffs.atk + ' ATK (' + state.buffs.rounds + ')</span>';
+    if (state.buffs.def > 0) buffHtml += '<span class="buff-pill def">+' + state.buffs.def + ' DEF (' + state.buffs.rounds + ')</span>';
   }
-  if (state.buffs.nextCrit) buffHtml += `<span class="buff-pill crit">💥 CRIT GARANTI</span>`;
+  if (state.buffs.nextCrit) buffHtml += '<span class="buff-pill crit">💥 CRIT GARANTI</span>';
 
-  area.innerHTML = `
-    <div class="fight-stage">
-      <div class="ring-lines"></div>
-      <div class="opponent-wrap">
-        <div class="hp-bars">
-          <div class="hp-row">
-            <span class="hp-label enemy">${e.name.split(' ')[0]}</span>
-            <div class="hp-bar-track"><div class="hp-bar-fill enemy" id="enemyHpBar" style="width:${enemyPct}%"></div></div>
-            <span class="hp-val" style="color:var(--red)" id="enemyHpVal">${state.enemyHp}</span>
-          </div>
-        </div>
-        <span class="opponent-emoji" id="opponentEmoji">${e.emoji}</span>
-        <div class="opponent-name">${e.name}</div>
-        <div class="opponent-title">${e.title}</div>
-        <div class="buff-badge">${buffHtml}</div>
-        <div class="hp-bars">
-          <div class="hp-row">
-            <span class="hp-label player">Toi</span>
-            <div class="hp-bar-track"><div class="hp-bar-fill player" id="playerHpBar" style="width:${playerPct}%"></div></div>
-            <span class="hp-val" style="color:var(--green)" id="playerHpVal">${p.hp}</span>
-          </div>
-        </div>
-        <div class="rage-row">
-          <span class="rage-label">Rage</span>
-          <div class="rage-track"><div class="rage-fill" id="rageBar" style="width:${(p.rage/p.maxRage)*100}%"></div></div>
-          <span class="rage-val" id="rageVal">${p.rage}</span>
-        </div>
-      </div>
-    </div>
-    <div class="fight-log" id="fightLog">Prêt à te battre ! 🥊</div>
-    <div class="fight-controls">
-      <div class="fight-moves">
-        ${MOVES.map(m => `<button class="move-btn ${m.class}" onclick="playerAttack('${m.id}')" ${m.rageCost > 0 && p.rage < m.rageCost ? 'disabled' : ''}>
-          <span class="move-emoji">${m.emoji}</span>${m.label}
-        </button>`).join('')}
-      </div>
-      <div class="fight-actions-row">
-        <button class="btn-use-food" onclick="openFoodModal()">🍱 Aliment</button>
-        <button class="btn-flee" onclick="fleeFight()">🏃 Fuir</button>
-      </div>
-    </div>`;
+  let movesHtml = '';
+  MOVES.forEach(function(m) {
+    const disabled = (m.rageCost > 0 && p.rage < m.rageCost) ? 'disabled' : '';
+    movesHtml += '<button class="move-btn ' + m.class + '" onclick="playerAttack(\'' + m.id + '\')" ' + disabled + '>'
+      + '<span class="move-emoji">' + m.emoji + '</span>' + m.label + '</button>';
+  });
+
+  area.innerHTML = '<div class="fight-stage">'
+    + '<div class="ring-lines"></div>'
+    + '<div class="opponent-wrap">'
+    + '<div class="hp-bars"><div class="hp-row">'
+    + '<span class="hp-label enemy">' + e.name.split(' ')[0] + '</span>'
+    + '<div class="hp-bar-track"><div class="hp-bar-fill enemy" id="enemyHpBar" style="width:' + enemyPct + '%"></div></div>'
+    + '<span class="hp-val" style="color:var(--red)" id="enemyHpVal">' + state.enemyHp + '</span>'
+    + '</div></div>'
+    + '<span class="opponent-emoji" id="opponentEmoji">' + e.emoji + '</span>'
+    + '<div class="opponent-name">' + e.name + '</div>'
+    + '<div class="opponent-title">' + e.title + '</div>'
+    + '<div class="buff-badge">' + buffHtml + '</div>'
+    + '<div class="hp-bars"><div class="hp-row">'
+    + '<span class="hp-label player">Toi</span>'
+    + '<div class="hp-bar-track"><div class="hp-bar-fill player" id="playerHpBar" style="width:' + playerPct + '%"></div></div>'
+    + '<span class="hp-val" style="color:var(--green)" id="playerHpVal">' + p.hp + '</span>'
+    + '</div></div>'
+    + '<div class="rage-row"><span class="rage-label">Rage</span>'
+    + '<div class="rage-track"><div class="rage-fill" id="rageBar" style="width:' + (p.rage/p.maxRage*100) + '%"></div></div>'
+    + '<span class="rage-val" id="rageVal">' + p.rage + '</span></div>'
+    + '</div></div>'
+    + '<div class="fight-log" id="fightLog">Prêt à te battre ! 🥊</div>'
+    + '<div class="fight-controls"><div class="fight-moves">' + movesHtml + '</div>'
+    + '<div class="fight-actions-row">'
+    + '<button class="btn-use-food" onclick="openFoodModal()">🍱 Aliment</button>'
+    + '<button class="btn-flee" onclick="fleeFight()">🏃 Fuir</button>'
+    + '</div></div>';
 }
 
 function renderFightVictory(area) {
   const e = state.currentEnemy;
-  area.innerHTML = `<div class="fight-victory">
-    <div class="fight-victory-emoji">🏆</div>
-    <h2>VICTOIRE !</h2>
-    <p>${e.name} est K.O. ! Bien joué, champion !</p>
-    <div class="fight-rewards">
-      <div class="reward-item"><div class="reward-val">💰${e.reward.gold}</div><div class="reward-label">Or gagné</div></div>
-      <div class="reward-item"><div class="reward-val">⭐${e.reward.xp}</div><div class="reward-label">XP</div></div>
-      <div class="reward-item"><div class="reward-val">🔥${state.player.streak}</div><div class="reward-label">Série</div></div>
-    </div>
-    <button class="btn-fight-next" onclick="afterVictory()">Continuer →</button>
-  </div>`;
+  area.innerHTML = '<div class="fight-victory">'
+    + '<div class="fight-victory-emoji">🏆</div>'
+    + '<h2>VICTOIRE !</h2>'
+    + '<p>' + e.name + ' est K.O. ! Bien joué, champion !</p>'
+    + '<div class="fight-rewards">'
+    + '<div class="reward-item"><div class="reward-val">💰' + e.reward.gold + '</div><div class="reward-label">Or gagné</div></div>'
+    + '<div class="reward-item"><div class="reward-val">⭐' + e.reward.xp + '</div><div class="reward-label">XP</div></div>'
+    + '<div class="reward-item"><div class="reward-val">🔥' + state.player.streak + '</div><div class="reward-label">Série</div></div>'
+    + '</div>'
+    + '<button class="btn-fight-next" onclick="afterVictory()">Continuer →</button>'
+    + '</div>';
 }
 
 function renderFightDefeat(area) {
-  area.innerHTML = `<div class="fight-defeat">
-    <div class="fight-defeat-emoji">💀</div>
-    <h2>K.O. !</h2>
-    <p>Tu as perdu. Retourne à la ferme, cuisine, et reviens plus fort !</p>
-    <button class="btn-fight-start" style="background:var(--surface3);box-shadow:none;border:1px solid var(--border)" onclick="afterDefeat()">Retenter</button>
-  </div>`;
+  area.innerHTML = '<div class="fight-defeat">'
+    + '<div class="fight-defeat-emoji">💀</div>'
+    + '<h2>K.O. !</h2>'
+    + '<p>Tu as perdu. Retourne à la ferme, cuisine, et reviens plus fort !</p>'
+    + '<button class="btn-fight-start" style="background:var(--surface3);box-shadow:none;border:1px solid var(--border)" onclick="afterDefeat()">Retenter</button>'
+    + '</div>';
 }
 
 function startFightWith(enemyId) {
-  state.currentEnemy = ENEMIES.find(e => e.id === enemyId);
+  state.currentEnemy = ENEMIES.find(function(e) { return e.id === enemyId; });
   state.enemyHp = state.currentEnemy.hp;
   state.fightState = 'intro';
   renderFight();
@@ -1307,13 +1212,12 @@ function beginFight() {
 }
 
 function playerAttack(moveId) {
-  const move = MOVES.find(m => m.id === moveId);
+  const move = MOVES.find(function(m) { return m.id === moveId; });
   const p = state.player;
   const e = state.currentEnemy;
   if (move.rageCost > 0 && p.rage < move.rageCost) { toast('Pas assez de Rage !', 'error'); return; }
 
-  // Disable move buttons during enemy turn
-  document.querySelectorAll('.move-btn').forEach(b => b.disabled = true);
+  document.querySelectorAll('.move-btn').forEach(function(b) { b.disabled = true; });
 
   const buffAtk = (state.buffs.rounds > 0) ? state.buffs.atk : 0;
   const totalAtk = p.atk + buffAtk;
@@ -1330,21 +1234,20 @@ function playerAttack(moveId) {
   const oppEl = document.getElementById('opponentEmoji');
   if (oppEl) { oppEl.classList.remove('hit'); void oppEl.offsetWidth; oppEl.classList.add('hit'); }
   const rect = oppEl ? oppEl.getBoundingClientRect() : {left:200,top:200,width:80};
-  spawnDmgNumber(isCrit ? `💥${dmg}` : dmg, rect.left + rect.width/2, rect.top, isCrit ? 'crit-dmg' : 'enemy-dmg');
-  setFightLog(`<span class="dmg-enemy">${isCrit ? '⭐ CRITIQUE ! ' : ''}${move.emoji} ${dmg} dégâts avec ${move.label}</span>`);
+  spawnDmgNumber(isCrit ? ('💥' + dmg) : dmg, rect.left + rect.width/2, rect.top, isCrit ? 'crit-dmg' : 'enemy-dmg');
+  setFightLog('<span class="dmg-enemy">' + (isCrit ? '⭐ CRITIQUE ! ' : '') + move.emoji + ' ' + dmg + ' dégâts avec ' + move.label + '</span>');
 
   if (state.enemyHp <= 0) {
     state.enemyHp = 0;
     updateFightBars();
-    setTimeout(() => endFight(true), 500);
+    setTimeout(function() { endFight(true); }, 500);
     return;
   }
 
-  // Tick buff rounds
   if (state.buffs.rounds > 0) state.buffs.rounds--;
 
   updateFightBars();
-  setTimeout(() => enemyAttack(), 420);
+  setTimeout(function() { enemyAttack(); }, 420);
 }
 
 function enemyAttack() {
@@ -1360,13 +1263,13 @@ function enemyAttack() {
 
   const pBar = document.getElementById('playerHpBar');
   const rect = pBar ? pBar.getBoundingClientRect() : {left:100,top:300,width:100};
-  spawnDmgNumber(`-${dmg}`, rect.left + rect.width/2, rect.top, 'player-dmg');
-  setFightLog(`<span class="dmg-player">${e.emoji} ${e.name} te frappe pour ${dmg} dégâts !</span>`);
+  spawnDmgNumber('-' + dmg, rect.left + rect.width/2, rect.top, 'player-dmg');
+  setFightLog('<span class="dmg-player">' + e.emoji + ' ' + e.name + ' te frappe pour ' + dmg + ' dégâts !</span>');
 
-  // Re-enable buttons
-  document.querySelectorAll('.move-btn').forEach(b => {
-    const m = MOVES.find(mv => b.classList.contains(mv.class));
-    b.disabled = (m && m.rageCost > 0 && p.rage < m.rageCost) || false;
+  document.querySelectorAll('.move-btn').forEach(function(b) {
+    const cls = b.className;
+    const m = MOVES.find(function(mv) { return cls.indexOf(mv.class) !== -1; });
+    b.disabled = !!(m && m.rageCost > 0 && p.rage < m.rageCost);
   });
 
   if (p.hp <= 0) { p.hp = 0; endFight(false); }
@@ -1442,12 +1345,9 @@ function fleeFight() {
 }
 
 function openFoodModal() {
-  // Seeds in inventory
-  const seedItems = SEEDS.filter(s => (state.inventory[s.id] || 0) > 0);
-  // Cooked dishes
-  const cookedItems = RECIPES.filter(r => (state.cooked[r.id] || 0) > 0);
-  // Shop consumables
-  const shopItems = SHOP_ITEMS.filter(s => (state.inventory[s.id] || 0) > 0 && s.type === 'item');
+  const seedItems = SEEDS.filter(function(s) { return (state.inventory[s.id] || 0) > 0; });
+  const cookedItems = RECIPES.filter(function(r) { return (state.cooked[r.id] || 0) > 0; });
+  const shopItems = SHOP_ITEMS.filter(function(s) { return (state.inventory[s.id] || 0) > 0 && s.type === 'item'; });
 
   if (seedItems.length === 0 && cookedItems.length === 0 && shopItems.length === 0) {
     toast('Aucun aliment disponible !', 'error'); return;
@@ -1456,33 +1356,33 @@ function openFoodModal() {
   let html = '<div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem">';
 
   if (cookedItems.length > 0) {
-    html += `<div style="font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);margin-bottom:0.2rem">👨‍🍳 Plats cuisinés</div>`;
-    cookedItems.forEach(r => {
-      html += `<button onclick="useCookedDish('${r.id}')" style="background:var(--surface2);border:1px solid var(--yellow);color:var(--text);border-radius:8px;padding:0.7rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;width:100%;text-align:left">
-        <span style="font-size:1.6rem">${r.emoji}</span>
-        <div style="flex:1"><div style="font-weight:500">${r.name} <span style="color:var(--yellow);font-size:0.65rem">(×${state.cooked[r.id]})</span></div>
-        <div style="font-size:0.6rem;color:var(--muted)">${r.desc}</div></div>
-      </button>`;
+    html += '<div style="font-family:\'Oswald\',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);margin-bottom:0.2rem">👨‍🍳 Plats cuisinés</div>';
+    cookedItems.forEach(function(r) {
+      html += '<button onclick="useCookedDish(\'' + r.id + '\')" style="background:var(--surface2);border:1px solid var(--yellow);color:var(--text);border-radius:8px;padding:0.7rem;font-family:\'DM Sans\',sans-serif;font-size:0.82rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;width:100%;text-align:left">'
+        + '<span style="font-size:1.6rem">' + r.emoji + '</span>'
+        + '<div style="flex:1"><div style="font-weight:500">' + r.name + ' <span style="color:var(--yellow);font-size:0.65rem">(×' + state.cooked[r.id] + ')</span></div>'
+        + '<div style="font-size:0.6rem;color:var(--muted)">' + r.desc + '</div></div>'
+        + '</button>';
     });
   }
   if (seedItems.length > 0) {
-    html += `<div style="font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0.4rem 0 0.2rem">🌱 Ingrédients bruts</div>`;
-    seedItems.forEach(s => {
-      html += `<button onclick="useRawItem('${s.id}')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.6rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left">
-        <span style="font-size:1.3rem">${s.emoji}</span>
-        <span style="flex:1">${s.name} ×${state.inventory[s.id]}</span>
-        <span style="color:var(--green);font-size:0.68rem">${s.heal>0?`+${s.heal}HP `:''}${s.atk>0?`+${s.atk}ATK`:''}</span>
-      </button>`;
+    html += '<div style="font-family:\'Oswald\',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0.4rem 0 0.2rem">🌱 Ingrédients bruts</div>';
+    seedItems.forEach(function(s) {
+      html += '<button onclick="useRawItem(\'' + s.id + '\')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.6rem;font-family:\'DM Sans\',sans-serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left">'
+        + '<span style="font-size:1.3rem">' + s.emoji + '</span>'
+        + '<span style="flex:1">' + s.name + ' ×' + state.inventory[s.id] + '</span>'
+        + '<span style="color:var(--green);font-size:0.68rem">' + (s.heal>0?('+'+s.heal+'HP '):'') + (s.atk>0?('+'+s.atk+'ATK'):'') + '</span>'
+        + '</button>';
     });
   }
   if (shopItems.length > 0) {
-    html += `<div style="font-family:'Oswald',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0.4rem 0 0.2rem">🧪 Potions</div>`;
-    shopItems.forEach(item => {
-      html += `<button onclick="useShopItem('${item.id}')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.6rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left">
-        <span style="font-size:1.3rem">${item.emoji}</span>
-        <span style="flex:1">${item.name} ×${state.inventory[item.id]}</span>
-        <span style="color:var(--green);font-size:0.68rem">${item.heal?`+${item.heal}HP`:''} ${item.rageMax?'Rage MAX':''}</span>
-      </button>`;
+    html += '<div style="font-family:\'Oswald\',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0.4rem 0 0.2rem">🧪 Potions</div>';
+    shopItems.forEach(function(item) {
+      html += '<button onclick="useShopItem(\'' + item.id + '\')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.6rem;font-family:\'DM Sans\',sans-serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left">'
+        + '<span style="font-size:1.3rem">' + item.emoji + '</span>'
+        + '<span style="flex:1">' + item.name + ' ×' + state.inventory[item.id] + '</span>'
+        + '<span style="color:var(--green);font-size:0.68rem">' + (item.heal?('+'+item.heal+'HP'):'') + ' ' + (item.rageMax?'Rage MAX':'') + '</span>'
+        + '</button>';
     });
   }
   html += '</div>';
@@ -1490,69 +1390,62 @@ function openFoodModal() {
 }
 
 function useRawItem(seedId) {
-  const seed = SEEDS.find(s => s.id === seedId);
+  const seed = SEEDS.find(function(s) { return s.id === seedId; });
   if (!seed || !state.inventory[seedId]) return;
   state.inventory[seedId]--;
-  if (seed.heal > 0) { state.player.hp = Math.min(state.player.maxHp, state.player.hp + seed.heal); toast(`${seed.emoji} +${seed.heal} HP !`, 'success'); }
-  if (seed.atk > 0)  { state.player.atk += seed.atk; toast(`${seed.emoji} +${seed.atk} ATK !`, 'success'); }
+  if (seed.heal > 0) { state.player.hp = Math.min(state.player.maxHp, state.player.hp + seed.heal); toast(seed.emoji + ' +' + seed.heal + ' HP !', 'success'); }
+  if (seed.atk > 0)  { state.player.atk += seed.atk; toast(seed.emoji + ' +' + seed.atk + ' ATK !', 'success'); }
   closeModal();
   updateHUD();
   if (state.fightState === 'active') updateFightBars();
 }
 
 function useShopItem(itemId) {
-  const item = SHOP_ITEMS.find(i => i.id === itemId);
+  const item = SHOP_ITEMS.find(function(i) { return i.id === itemId; });
   if (!item || !state.inventory[itemId]) return;
   state.inventory[itemId]--;
-  if (item.heal)    { state.player.hp = Math.min(state.player.maxHp, state.player.hp + item.heal); toast(`${item.emoji} +${item.heal} HP !`, 'success'); }
-  if (item.rageMax) { state.player.rage = state.player.maxRage; toast(`${item.emoji} Rage MAX !`, 'success'); }
+  if (item.heal)    { state.player.hp = Math.min(state.player.maxHp, state.player.hp + item.heal); toast(item.emoji + ' +' + item.heal + ' HP !', 'success'); }
+  if (item.rageMax) { state.player.rage = state.player.maxRage; toast(item.emoji + ' Rage MAX !', 'success'); }
   closeModal();
   updateHUD();
   if (state.fightState === 'active') updateFightBars();
 }
 
-// ═══════════════════════════════════════════
-// SHOP
-// ═══════════════════════════════════════════
+// ═══ SHOP (FIXED) ═══
 function renderShop() {
   const area = document.getElementById('shopArea');
-  const equips = SHOP_ITEMS.filter(i => i.type === 'equip');
-  const items  = SHOP_ITEMS.filter(i => i.type !== 'equip');
-  area.innerHTML = `
-    <div>
-      <div class="shop-section-title">⚔️ Équipement</div>
-      <div class="shop-grid">
-        ${equips.map(item => {
-          const owned = !!state.equipped[item.id];
-          const afford = state.gold >= item.cost;
-          return `<div class="shop-item ${owned?'owned':''} ${!afford&&!owned?'cant-afford':''}" onclick="${owned?'':``buyItem('${item.id}')``}">
-            <span class="shop-item-emoji">${item.emoji}</span>
-            <div class="shop-item-name">${item.name}</div>
-            <div class="shop-item-desc">${item.desc}</div>
-            <div class="shop-item-price">💰 ${owned?'Possédé':item.cost}</div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>
-    <div>
-      <div class="shop-section-title">🧪 Consommables</div>
-      <div class="shop-grid">
-        ${items.map(item => {
-          const qty = state.inventory[item.id] || 0;
-          const afford = state.gold >= item.cost;
-          return `<div class="shop-item ${!afford?'cant-afford':''}" onclick="buyItem('${item.id}')">
-            <span class="shop-item-emoji">${item.emoji}</span>
-            <div class="shop-item-name">${item.name} ${qty>0?`<span style='color:var(--yellow);font-size:0.6rem'>(×${qty})</span>`:''}</div>
-            <div class="shop-item-desc">${item.desc}</div>
-            <div class="shop-item-price">💰 ${item.cost}</div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
+  const equips = SHOP_ITEMS.filter(function(i) { return i.type === 'equip'; });
+  const items  = SHOP_ITEMS.filter(function(i) { return i.type !== 'equip'; });
+
+  let html = '<div><div class="shop-section-title">⚔️ Équipement</div><div class="shop-grid">';
+  equips.forEach(function(item) {
+    const owned = !!state.equipped[item.id];
+    const afford = state.gold >= item.cost;
+    const clickAttr = owned ? '' : ('onclick="buyItem(\'' + item.id + '\')"');
+    html += '<div class="shop-item ' + (owned?'owned':'') + ' ' + (!afford&&!owned?'cant-afford':'') + '" ' + clickAttr + '>'
+      + '<span class="shop-item-emoji">' + item.emoji + '</span>'
+      + '<div class="shop-item-name">' + item.name + '</div>'
+      + '<div class="shop-item-desc">' + item.desc + '</div>'
+      + '<div class="shop-item-price">💰 ' + (owned?'Possédé':item.cost) + '</div>'
+      + '</div>';
+  });
+  html += '</div></div><div><div class="shop-section-title">🧪 Consommables</div><div class="shop-grid">';
+  items.forEach(function(item) {
+    const qty = state.inventory[item.id] || 0;
+    const afford = state.gold >= item.cost;
+    html += '<div class="shop-item ' + (!afford?'cant-afford':'') + '" onclick="buyItem(\'' + item.id + '\')">'
+      + '<span class="shop-item-emoji">' + item.emoji + '</span>'
+      + '<div class="shop-item-name">' + item.name + (qty>0?' <span style="color:var(--yellow);font-size:0.6rem">(×'+qty+')</span>':'') + '</div>'
+      + '<div class="shop-item-desc">' + item.desc + '</div>'
+      + '<div class="shop-item-price">💰 ' + item.cost + '</div>'
+      + '</div>';
+  });
+  html += '</div></div>';
+  area.innerHTML = html;
 }
 
 function buyItem(itemId) {
-  const item = SHOP_ITEMS.find(i => i.id === itemId);
+  const item = SHOP_ITEMS.find(function(i) { return i.id === itemId; });
   if (!item) return;
   if (state.gold < item.cost) { toast('Pas assez d\'or !', 'error'); return; }
   if (item.type === 'equip' && state.equipped[item.id]) { toast('Déjà équipé !', 'error'); return; }
@@ -1560,114 +1453,95 @@ function buyItem(itemId) {
   if (item.type === 'equip') {
     state.equipped[item.id] = true;
     state.player[item.stat] = (state.player[item.stat] || 0) + item.val;
-    toast(`${item.emoji} ${item.name} équipé !`, 'success');
+    toast(item.emoji + ' ' + item.name + ' équipé !', 'success');
   } else if (item.type === 'plot') {
     let unlocked = 0;
     for (let i = 0; i < state.plots.length && unlocked < item.val; i++) {
       if (state.plots[i].locked) { state.plots[i].locked = false; unlocked++; }
     }
     if (unlocked === 0) {
-      // Extend plots array
       const start = state.plots.length;
       for (let i = 0; i < item.val; i++) state.plots.push({id:start+i, locked:false, crop:null, plantedAt:null, growTime:null, status:null});
-      toast(`🟫 ${item.val} nouvelles parcelles !`, 'success');
-    } else toast(`🟫 ${unlocked} nouvelles parcelles !`, 'success');
+      toast('🟫 ' + item.val + ' nouvelles parcelles !', 'success');
+    } else toast('🟫 ' + unlocked + ' nouvelles parcelles !', 'success');
     renderFarm();
   } else {
     state.inventory[item.id] = (state.inventory[item.id] || 0) + 1;
-    toast(`${item.emoji} Acheté !`, 'success');
+    toast(item.emoji + ' Acheté !', 'success');
   }
   updateHUD();
   renderShop();
 }
 
-// ═══════════════════════════════════════════
-// INVENTORY
-// ═══════════════════════════════════════════
 function renderInv() {
   const area = document.getElementById('invArea');
   const p = state.player;
-  const seedItems = SEEDS.filter(s => (state.inventory[s.id] || 0) > 0);
-  const shopItems = SHOP_ITEMS.filter(s => (state.inventory[s.id] || 0) > 0);
-  const cookedItems = RECIPES.filter(r => (state.cooked[r.id] || 0) > 0);
-  const allItems = [...seedItems, ...cookedItems, ...shopItems];
-  const slots = [...allItems];
+  const seedItems = SEEDS.filter(function(s) { return (state.inventory[s.id] || 0) > 0; });
+  const shopItems = SHOP_ITEMS.filter(function(s) { return (state.inventory[s.id] || 0) > 0; });
+  const cookedItems = RECIPES.filter(function(r) { return (state.cooked[r.id] || 0) > 0; });
+  const allItems = seedItems.concat(cookedItems).concat(shopItems);
+  const slots = allItems.slice();
   while (slots.length < 16) slots.push(null);
 
-  area.innerHTML = `
-    <div class="player-stats-card">
-      <div class="player-stats-title">📊 Stats du combattant</div>
-      <div class="stats-rows">
-        <div class="stat-row stat-atk">
-          <span class="stat-row-label">⚔️ Attaque</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.min(100,(p.atk/80)*100)}%"></div></div>
-          <span class="stat-row-val">${p.atk}</span>
-        </div>
-        <div class="stat-row stat-def">
-          <span class="stat-row-label">🛡️ Défense</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.min(100,(p.def/60)*100)}%"></div></div>
-          <span class="stat-row-val">${p.def}</span>
-        </div>
-        <div class="stat-row stat-spd">
-          <span class="stat-row-label">👟 Vitesse</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.min(100,(p.spd/60)*100)}%"></div></div>
-          <span class="stat-row-val">${p.spd}</span>
-        </div>
-      </div>
-      <div style="display:flex;gap:1rem;margin-top:0.8rem;flex-wrap:wrap">
-        <span style="font-size:0.68rem;color:var(--muted)">Victoires: <b style="color:var(--yellow)">${state.wins}</b></span>
-        <span style="font-size:0.68rem;color:var(--muted)">Série: <b style="color:var(--red)">${state.player.streak}</b></span>
-        <span style="font-size:0.68rem;color:var(--muted)">XP: <b style="color:var(--purple)">${state.xp}</b></span>
-        <span style="font-size:0.68rem;color:var(--muted)">Niveau: <b style="color:var(--purple)">${state.level}</b></span>
-      </div>
-    </div>
-    <div>
-      <div class="shop-section-title">🎒 Inventaire</div>
-      <div class="inv-grid">
-        ${slots.map(item => {
-          if (!item) return `<div class="inv-item empty-slot"></div>`;
-          const qty = item.type !== undefined ? (state.inventory[item.id] || 0) : ((state.cooked && state.cooked[item.id]) ? state.cooked[item.id] : (state.inventory[item.id] || 0));
-          const actualQty = state.cooked && state.cooked[item.id] !== undefined ? state.cooked[item.id] : (state.inventory[item.id] || 0);
-          return `<div class="inv-item" onclick="useItemFromInv('${item.id}','${state.cooked && state.cooked[item.id] !== undefined ? 'cooked' : 'raw'}')">
-            <span class="inv-emoji">${item.emoji}</span>
-            <span class="inv-qty">${actualQty}</span>
-          </div>`;
-        }).join('')}
-      </div>
-      ${allItems.length === 0 ? `<p style="text-align:center;color:var(--muted);font-size:0.72rem;padding:1rem">Aucun objet. Récolte et cuisine !</p>` : ''}
-    </div>`;
+  let slotsHtml = '';
+  slots.forEach(function(item) {
+    if (!item) { slotsHtml += '<div class="inv-item empty-slot"></div>'; return; }
+    const isCooked = state.cooked && state.cooked[item.id] !== undefined && state.cooked[item.id] > 0;
+    const qty = isCooked ? state.cooked[item.id] : (state.inventory[item.id] || 0);
+    const type = isCooked ? 'cooked' : 'raw';
+    slotsHtml += '<div class="inv-item" onclick="useItemFromInv(\'' + item.id + '\',\'' + type + '\')">'
+      + '<span class="inv-emoji">' + item.emoji + '</span>'
+      + '<span class="inv-qty">' + qty + '</span>'
+      + '</div>';
+  });
+
+  area.innerHTML = '<div class="player-stats-card">'
+    + '<div class="player-stats-title">📊 Stats du combattant</div>'
+    + '<div class="stats-rows">'
+    + '<div class="stat-row stat-atk"><span class="stat-row-label">⚔️ Attaque</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width:' + Math.min(100,(p.atk/80)*100) + '%"></div></div><span class="stat-row-val">' + p.atk + '</span></div>'
+    + '<div class="stat-row stat-def"><span class="stat-row-label">🛡️ Défense</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width:' + Math.min(100,(p.def/60)*100) + '%"></div></div><span class="stat-row-val">' + p.def + '</span></div>'
+    + '<div class="stat-row stat-spd"><span class="stat-row-label">👟 Vitesse</span><div class="stat-bar-track"><div class="stat-bar-fill" style="width:' + Math.min(100,(p.spd/60)*100) + '%"></div></div><span class="stat-row-val">' + p.spd + '</span></div>'
+    + '</div>'
+    + '<div style="display:flex;gap:1rem;margin-top:0.8rem;flex-wrap:wrap">'
+    + '<span style="font-size:0.68rem;color:var(--muted)">Victoires: <b style="color:var(--yellow)">' + state.wins + '</b></span>'
+    + '<span style="font-size:0.68rem;color:var(--muted)">Série: <b style="color:var(--red)">' + state.player.streak + '</b></span>'
+    + '<span style="font-size:0.68rem;color:var(--muted)">XP: <b style="color:var(--purple)">' + state.xp + '</b></span>'
+    + '<span style="font-size:0.68rem;color:var(--muted)">Niveau: <b style="color:var(--purple)">' + state.level + '</b></span>'
+    + '</div></div>'
+    + '<div><div class="shop-section-title">🎒 Inventaire</div>'
+    + '<div class="inv-grid">' + slotsHtml + '</div>'
+    + (allItems.length === 0 ? '<p style="text-align:center;color:var(--muted);font-size:0.72rem;padding:1rem">Aucun objet. Récolte et cuisine !</p>' : '')
+    + '</div>';
 }
 
 function useItemFromInv(id, type) {
   if (type === 'cooked') {
-    const recipe = RECIPES.find(r => r.id === id);
+    const recipe = RECIPES.find(function(r) { return r.id === id; });
     if (!recipe || !state.cooked[id]) return;
-    showModal(`${recipe.emoji} ${recipe.name}`, recipe.desc, '', [
-      { label:`✓ Utiliser`, action:`useCookedDish('${id}')`, primary:true },
+    showModal(recipe.emoji + ' ' + recipe.name, recipe.desc, '', [
+      { label:'✓ Utiliser', action:'useCookedDish(\'' + id + '\')', primary:true },
       { label:'Annuler', action:'closeModal()' }
     ]);
   } else {
-    const seed = SEEDS.find(s => s.id === id);
-    const shopItem = SHOP_ITEMS.find(s => s.id === id);
+    const seed = SEEDS.find(function(s) { return s.id === id; });
+    const shopItem = SHOP_ITEMS.find(function(s) { return s.id === id; });
     const obj = seed || shopItem;
     if (!obj) return;
-    showModal(`${obj.emoji} ${obj.name}`, obj.desc || `${seed?.heal>0?`+${seed.heal} HP`:''} ${seed?.atk>0?`+${seed.atk} ATK`:''}`, '', [
-      { label:`✓ Utiliser`, action:`${seed ? `useRawItem('${id}')` : `useShopItem('${id}')`}`, primary:true },
+    const descStr = obj.desc || ((seed && seed.heal>0?('+'+seed.heal+' HP '):''+(seed && seed.atk>0?('+'+seed.atk+' ATK'):'')));
+    showModal(obj.emoji + ' ' + obj.name, descStr, '', [
+      { label:'✓ Utiliser', action:(seed ? 'useRawItem(\'' + id + '\')' : 'useShopItem(\'' + id + '\')'), primary:true },
       { label:'Annuler', action:'closeModal()' }
     ]);
   }
 }
 
-// ═══════════════════════════════════════════
-// MODAL
-// ═══════════════════════════════════════════
 function showModal(title, desc, extraHtml, actions) {
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalDesc').textContent = desc;
   document.getElementById('modalExtra').innerHTML = extraHtml || '';
   const actionsEl = document.getElementById('modalActions');
   actionsEl.innerHTML = '';
-  (actions || []).forEach(a => {
+  (actions || []).forEach(function(a) {
     const btn = document.createElement('button');
     btn.innerHTML = a.label;
     btn.className = a.primary ? 'btn-modal-primary' : 'btn-modal-secondary';
@@ -1682,15 +1556,13 @@ function closeModal(e) {
   document.getElementById('modalOverlay').classList.remove('open');
 }
 
-// ═══════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════
-function toast(msg, type='') {
+function toast(msg, type) {
+  type = type || '';
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.className = 'toast show ' + type;
   clearTimeout(el._t);
-  el._t = setTimeout(() => el.classList.remove('show'), 2400);
+  el._t = setTimeout(function() { el.classList.remove('show'); }, 2400);
 }
 
 function spawnFloat(text, x, y, cls) {
@@ -1700,7 +1572,7 @@ function spawnFloat(text, x, y, cls) {
   el.style.left = (x - 20) + 'px';
   el.style.top = y + 'px';
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 1200);
+  setTimeout(function() { el.remove(); }, 1200);
 }
 
 function spawnDmgNumber(text, x, y, cls) {
@@ -1710,11 +1582,10 @@ function spawnDmgNumber(text, x, y, cls) {
   el.style.left = (x - 20) + 'px';
   el.style.top = (y - 10) + 'px';
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 900);
+  setTimeout(function() { el.remove(); }, 900);
 }
 
-// Touch prevention on game screen
-document.addEventListener('touchmove', e => {
+document.addEventListener('touchmove', function(e) {
   if (document.getElementById('screenGame').classList.contains('active')) {
     const scrollable = e.target.closest('.tab-panel, .seeds-row, .enemy-list, .shop-area, .inv-area, .recipes-area');
     if (!scrollable) e.preventDefault();

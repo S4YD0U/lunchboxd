@@ -267,7 +267,6 @@
     /* ═══ FIGHT — RPG BATTLE SCREEN ═══ */
     .fight-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
 
-    /* RPG Scene */
     .rpg-scene {
       flex:1; position:relative; overflow:hidden; min-height:0;
       display:flex; flex-direction:column;
@@ -288,7 +287,6 @@
       background-size:32px 32px;
     }
 
-    /* Enemy side (top) */
     .rpg-enemy-area {
       position:relative; z-index:2;
       display:flex; flex-direction:column; align-items:center;
@@ -320,7 +318,6 @@
     .rpg-mp-fill { height:100%; background:linear-gradient(90deg,#4a10a0,#9b59b6); transition:width 0.3s; }
     .rpg-mp-val { font-family:'Black Ops One',cursive; font-size:0.65rem; color:#9b59b6; width:50px; text-align:right; flex-shrink:0; }
 
-    /* Sprites */
     .rpg-sprites-row {
       position:relative; z-index:2; flex:1; display:flex; align-items:flex-end;
       justify-content:space-between; padding:0 1.5rem 0.3rem;
@@ -365,11 +362,9 @@
       100%{transform:translateX(0)}
     }
 
-    /* Status effects on sprites */
     .status-icons { display:flex; gap:2px; margin-top:2px; justify-content:center; }
     .status-icon { font-size:0.7rem; }
 
-    /* Buffs display */
     .rpg-buffs-row {
       position:relative; z-index:2;
       display:flex; justify-content:center; gap:0.3rem; flex-wrap:wrap;
@@ -385,7 +380,6 @@
     .buff-pill.poison { background:rgba(46,204,113,0.15); border-color:#27ae60; color:#27ae60; }
     .buff-pill.stun { background:rgba(255,220,50,0.15); border-color:#f39c12; color:#f39c12; }
 
-    /* Battle log (RPG-style scrolling text box) */
     .rpg-battle-log {
       position:relative; z-index:3;
       background:rgba(8,4,4,0.92); border-top:1px solid #2a1a1a;
@@ -399,7 +393,6 @@
     .rpg-log-line.crit { color:#fff; font-weight:700; text-shadow:0 0 10px var(--yellow); }
     .rpg-log-line.special { color:var(--purple); }
 
-    /* ATB / Turn bar */
     .rpg-atb-section {
       background:var(--surface2); border-top:1px solid var(--border); padding:0.4rem 0.8rem; flex-shrink:0;
       display:flex; align-items:center; gap:0.6rem;
@@ -412,7 +405,6 @@
     /* ═══ FIGHT CONTROLS ═══ */
     .fight-controls { background:var(--surface); border-top:1px solid var(--border); padding:0.55rem; flex-shrink:0; }
 
-    /* Move grid: 2 rows, styled like RPG ability menu */
     .rpg-move-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:0.3rem; margin-bottom:0.35rem; }
     .move-btn {
       border:none; border-radius:6px; padding:0.45rem 0.15rem; cursor:pointer; font-family:'Black Ops One',cursive;
@@ -457,7 +449,6 @@
     .fight-intro p, .fight-victory p, .fight-defeat p { font-size:0.78rem; color:var(--text2); line-height:1.5; }
     .fight-intro-emoji, .fight-victory-emoji, .fight-defeat-emoji { font-size:4rem; filter:drop-shadow(0 0 20px rgba(232,25,44,0.5)); }
 
-    /* Enemy intro — lore card */
     .enemy-lore-card {
       background:var(--surface2); border:1px solid var(--border); border-radius:10px;
       padding:0.8rem 1rem; width:100%; max-width:340px; text-align:left;
@@ -496,7 +487,6 @@
     }
     .btn-fight-next:active { transform:scale(0.95); }
 
-    /* Enemy select list */
     .enemy-list { width:100%; display:flex; flex-direction:column; gap:0.45rem; max-width:380px; }
     .enemy-card {
       background:var(--surface2); border:1px solid var(--border); border-radius:8px;
@@ -660,7 +650,6 @@
       letter-spacing:.08em; text-transform:uppercase; padding:0 0.3rem;
     }
 
-    /* ═══ DIFFICULTY WARNING ═══ */
     .diff-warning {
       background:rgba(232,25,44,0.08); border:1px solid rgba(232,25,44,0.3);
       border-radius:6px; padding:0.5rem 0.7rem; font-size:0.65rem; color:var(--red);
@@ -827,9 +816,6 @@ const RECIPES = [
   { id:'burger_maison', emoji:'🍔', name:'Burger Maison',         desc:'+100 HP +15 ATK pour 6 rounds.',         ingredients:{steak:1,lettuce:1,tomato:1},    effects:{heal:100,atkBuff:15,buffRounds:6},          unlockDay:5 },
 ];
 
-// ══════════════════════════════════════════
-//  ENEMIES — Personnages RPG avec lore
-// ══════════════════════════════════════════
 const ENEMIES = [
   {
     id:'patate_hongroise',
@@ -1303,7 +1289,7 @@ function useCookedDish(recipeId) {
   applyRecipeEffect(recipe);
   toast(recipe.emoji+' '+recipe.name+' utilisé !','success');
   closeModal();
-  if (state.fightState==='active') { updateFightBars(); renderFightActive(document.getElementById('fightArea')); }
+  if (state.fightState==='active') { updateFightDisplay(); renderFightActive(document.getElementById('fightArea')); }
   updateHUD();
 }
 
@@ -1345,7 +1331,8 @@ function renderEnemySelect(area) {
     +'<div style="font-family:\'Black Ops One\',cursive;font-size:1.1rem;color:var(--red);margin-bottom:0.5rem;align-self:center">⚔️ CHOISIR UN ADVERSAIRE</div>'
     +'<div class="enemy-list">';
   available.forEach(function(e) {
-    html += '<div class="enemy-card" onclick="startFightWith(\''+e.id+'\')"><span class="ec-emoji">'+e.emoji+'</span>'
+    html += '<div class="enemy-card" onclick="startFightWith(\'' + e.id + '\')">'
+      +'<span class="ec-emoji">'+e.emoji+'</span>'
       +'<div class="ec-info"><div class="ec-name">'+e.name+'</div>'
       +'<div class="ec-title">'+e.title+' — ❤️ '+e.hp+' · 💰'+e.reward.gold+'</div></div>'
       +'<span class="ec-diff diff-'+e.diff+'">'+e.diff.toUpperCase()+'</span></div>';
@@ -1395,7 +1382,6 @@ function renderFightActive(area) {
   var p = state.player;
   var enemyPct = Math.max(0, (state.enemyHp/e.hp)*100);
   var playerPct = Math.max(0, (p.hp/p.maxHp)*100);
-  var enemyMpPct = 100; // display only
 
   // Buffs HTML
   var buffHtml = '';
@@ -1409,15 +1395,16 @@ function renderFightActive(area) {
   if (state.debuffs.blind>0) buffHtml += '<span class="buff-pill stun">👁️‍🗨️ AVEUGLE('+state.debuffs.blind+')</span>';
   if (state.debuffs.stun>0) buffHtml += '<span class="buff-pill stun">⚡ STUN('+state.debuffs.stun+')</span>';
 
-  // Moves HTML
-  var movesHtml = '';
-  MOVES.forEach(function(m) {
+  // *** BUG FIX: build moves HTML using array join, avoiding quote escaping issues ***
+  var movesHtml = MOVES.map(function(m) {
     var tooLowRage = (m.rageCost>0 && p.rage<m.rageCost);
-    var disabled = tooLowRage ? 'disabled' : '';
-    var costStr = m.rageCost>0 ? ('<span class="move-cost">'+m.rageCost+'⚡</span>') : (m.ragegen>0 ? '<span class="move-cost">+'+m.ragegen+'⚡</span>' : '');
-    movesHtml += '<button class="move-btn '+m.class+'" onclick="playerAttack(\''+m.id+\')" '+disabled+'>'
-      +'<span class="move-emoji">'+m.emoji+'</span>'+m.label+costStr+'</button>';
-  });
+    var disabledAttr = tooLowRage ? ' disabled' : '';
+    var costStr = m.rageCost>0
+      ? '<span class="move-cost">'+m.rageCost+'⚡</span>'
+      : (m.ragegen>0 ? '<span class="move-cost">+'+m.ragegen+'⚡</span>' : '');
+    return '<button class="move-btn ' + m.class + '" onclick="playerAttack(\'' + m.id + '\')"' + disabledAttr + '>'
+      + '<span class="move-emoji">' + m.emoji + '</span>' + m.label + costStr + '</button>';
+  }).join('');
 
   // Recent log lines
   var logLines = state.combatLog.slice(-2).map(function(l){
@@ -1430,7 +1417,6 @@ function renderFightActive(area) {
     +'<div class="rpg-bg-floor"></div>'
     +'<div class="rpg-bg-grid"></div>'
 
-    // Enemy HP
     +'<div class="rpg-enemy-area">'
     +'<div class="rpg-enemy-name-row">'
     +'<div><div class="rpg-enemy-nameplate">'+e.name+'</div>'
@@ -1443,12 +1429,11 @@ function renderFightActive(area) {
     +'</div>'
     +'<div class="rpg-mp-row">'
     +'<span class="rpg-hp-label" style="color:var(--purple)">MP</span>'
-    +'<div class="rpg-mp-track"><div class="rpg-mp-fill" style="width:'+enemyMpPct+'%"></div></div>'
-    +'<span class="rpg-mp-val" id="enemyMpVal">???</span>'
+    +'<div class="rpg-mp-track"><div class="rpg-mp-fill" style="width:100%"></div></div>'
+    +'<span class="rpg-mp-val">???</span>'
     +'</div>'
     +'</div>'
 
-    // Sprites
     +'<div class="rpg-sprites-row">'
     +'<div class="rpg-sprite" style="order:2">'
     +'<span class="rpg-sprite-emoji" id="opponentEmoji">'+e.emoji+'</span>'
@@ -1462,10 +1447,8 @@ function renderFightActive(area) {
     +'</div>'
     +'</div>'
 
-    // Buffs
     +'<div class="rpg-buffs-row">'+buffHtml+'</div>'
 
-    // Player HP
     +'<div style="padding:0.2rem 0.8rem 0;">'
     +'<div class="rpg-hp-row">'
     +'<span class="rpg-hp-label" style="color:var(--green)">HP</span>'
@@ -1475,17 +1458,14 @@ function renderFightActive(area) {
     +'</div>'
     +'</div>'
 
-    // Battle log
     +'<div class="rpg-battle-log">'+logLines+'</div>'
 
-    // ATB / Rage
     +'<div class="rpg-atb-section">'
     +'<span class="rpg-atb-label">⚡ RAGE</span>'
     +'<div class="rpg-atb-track"><div class="rpg-atb-fill" id="rageBar" style="width:'+(p.rage/p.maxRage*100)+'%"></div></div>'
     +'<span class="rpg-atb-val" id="rageVal">'+p.rage+'</span>'
     +'</div>'
 
-    // Controls
     +'<div class="fight-controls">'
     +'<div class="rpg-move-grid">'+movesHtml+'</div>'
     +'<div class="fight-actions-row">'
@@ -1581,7 +1561,6 @@ function playerAttack(moveId) {
     return;
   }
 
-  // Hit or miss
   var accMod = state.debuffs.blind>0 ? 0.65 : 1;
   var hitRoll = Math.random();
   if (hitRoll > move.acc * accMod) {
@@ -1609,7 +1588,6 @@ function playerAttack(moveId) {
 
   state.enemyHp = Math.max(0, state.enemyHp-dmg);
 
-  // Animations
   var oppEl = document.getElementById('opponentEmoji');
   var plEl = document.getElementById('playerEmoji');
   if (plEl) { plEl.classList.remove('attack-anim'); void plEl.offsetWidth; plEl.classList.add('attack-anim'); }
@@ -1629,7 +1607,6 @@ function playerAttack(moveId) {
   if (state.debuffs.blind>0) state.debuffs.blind--;
   if (state.buffs.rounds>0) state.buffs.rounds--;
 
-  // Enemy DoT
   if (state.enemyDebuffs.burn>0) {
     var burnDmg = 6;
     state.enemyHp = Math.max(0, state.enemyHp-burnDmg);
@@ -1652,7 +1629,6 @@ function enemyTurn() {
   var p = state.player;
   var e = state.currentEnemy;
 
-  // Player DoT
   if (state.debuffs.burn>0) {
     var bd = 5;
     p.hp = Math.max(0, p.hp-bd);
@@ -1669,7 +1645,6 @@ function enemyTurn() {
   }
   if (p.hp<=0) { endFight(false); return; }
 
-  // Enemy special?
   var usesSpecial = false;
   if (e.special && !state.enemySpecialUsed[e.id+'_special'] && Math.random()<e.special.chance) {
     usesSpecial = true;
@@ -1729,7 +1704,6 @@ function enemyTurn() {
   }
 
   if (!usesSpecial) {
-    // Pattern attack
     var pattern = e.pattern || ['jab','cross'];
     var patternMove = pattern[state.enemyPatternIdx % pattern.length];
     state.enemyPatternIdx = (state.enemyPatternIdx+1) % pattern.length;
@@ -1773,7 +1747,6 @@ function spawnPlayerHitFX(dmg) {
 }
 
 function updateFightDisplay() {
-  // Update bars without full re-render
   var e = state.currentEnemy;
   var p = state.player;
   if (!e) return;
@@ -1790,7 +1763,6 @@ function updateFightDisplay() {
   if (rb) rb.style.width = (p.rage/p.maxRage*100)+'%';
   if (rv) rv.textContent = p.rage;
 
-  // Update log
   var logEl = document.querySelector('.rpg-battle-log');
   if (logEl) {
     logEl.innerHTML = state.combatLog.slice(-2).map(function(l){
@@ -1798,7 +1770,6 @@ function updateFightDisplay() {
     }).join('');
   }
 
-  // Update buffs
   var buffRow = document.querySelector('.rpg-buffs-row');
   if (buffRow) {
     var buffHtml = '';
@@ -1815,7 +1786,6 @@ function updateFightDisplay() {
   }
 }
 
-// Alias for backward compat
 function updateFightBars() { updateFightDisplay(); }
 
 function endFight(won) {
@@ -1875,7 +1845,7 @@ function openFoodModal() {
   if (cookedItems.length>0) {
     html += '<div style="font-family:\'Oswald\',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);margin-bottom:0.2rem">👨‍🍳 Plats cuisinés</div>';
     cookedItems.forEach(function(r){
-      html += '<button onclick="useCookedDish(\''+r.id+\')" style="background:var(--surface2);border:1px solid var(--yellow);color:var(--text);border-radius:8px;padding:0.7rem;font-family:\'DM Sans\',sans-serif;font-size:0.82rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;width:100%;text-align:left">'
+      html += '<button onclick="useCookedDish(\'' + r.id + '\')" style="background:var(--surface2);border:1px solid var(--yellow);color:var(--text);border-radius:8px;padding:0.7rem;font-family:\'DM Sans\',sans-serif;font-size:0.82rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;width:100%;text-align:left">'
         +'<span style="font-size:1.6rem">'+r.emoji+'</span>'
         +'<div style="flex:1"><div style="font-weight:500">'+r.name+' <span style="color:var(--yellow);font-size:0.65rem">(×'+state.cooked[r.id]+')</span></div>'
         +'<div style="font-size:0.6rem;color:var(--muted)">'+r.desc+'</div></div>'
@@ -1885,7 +1855,7 @@ function openFoodModal() {
   if (seedItems.length>0) {
     html += '<div style="font-family:\'Oswald\',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0.4rem 0 0.2rem">🌱 Ingrédients bruts</div>';
     seedItems.forEach(function(s){
-      html += '<button onclick="useRawItem(\''+s.id+\')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.6rem;font-family:\'DM Sans\',sans-serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left">'
+      html += '<button onclick="useRawItem(\'' + s.id + '\')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.6rem;font-family:\'DM Sans\',sans-serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left">'
         +'<span style="font-size:1.3rem">'+s.emoji+'</span>'
         +'<span style="flex:1">'+s.name+' ×'+state.inventory[s.id]+'</span>'
         +'<span style="color:var(--green);font-size:0.68rem">'+(s.heal>0?('+'+s.heal+'HP '):'')+(s.atk>0?('+'+s.atk+'ATK'):'')+'</span>'
@@ -1895,7 +1865,7 @@ function openFoodModal() {
   if (shopItems.length>0) {
     html += '<div style="font-family:\'Oswald\',sans-serif;font-size:0.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0.4rem 0 0.2rem">🧪 Potions</div>';
     shopItems.forEach(function(item){
-      html += '<button onclick="useShopItem(\''+item.id+\')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.6rem;font-family:\'DM Sans\',sans-serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left">'
+      html += '<button onclick="useShopItem(\'' + item.id + '\')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.6rem;font-family:\'DM Sans\',sans-serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left">'
         +'<span style="font-size:1.3rem">'+item.emoji+'</span>'
         +'<span style="flex:1">'+item.name+' ×'+state.inventory[item.id]+'</span>'
         +'<span style="color:var(--green);font-size:0.68rem">'+(item.heal?('+'+item.heal+'HP'):'')+' '+(item.rageMax?'Rage MAX':'')+(item.cure?'Soigne status':'')+'</span>'
@@ -1938,7 +1908,7 @@ function renderShop() {
   equips.forEach(function(item) {
     var owned = !!state.equipped[item.id];
     var afford = state.gold>=item.cost;
-    var clickAttr = owned ? '' : ('onclick="buyItem(\''+item.id+\')"');
+    var clickAttr = owned ? '' : ('onclick="buyItem(\'' + item.id + '\')"');
     html += '<div class="shop-item '+(owned?'owned':'')+' '+(!afford&&!owned?'cant-afford':'')+'" '+clickAttr+'>'
       +'<span class="shop-item-emoji">'+item.emoji+'</span>'
       +'<div class="shop-item-name">'+item.name+'</div>'
@@ -1950,7 +1920,7 @@ function renderShop() {
   items.forEach(function(item) {
     var qty = state.inventory[item.id]||0;
     var afford = state.gold>=item.cost;
-    html += '<div class="shop-item '+(!afford?'cant-afford':'')+'" onclick="buyItem(\''+item.id+\')">'
+    html += '<div class="shop-item '+(!afford?'cant-afford':'')+'" onclick="buyItem(\'' + item.id + '\')">'
       +'<span class="shop-item-emoji">'+item.emoji+'</span>'
       +'<div class="shop-item-name">'+item.name+(qty>0?' <span style="color:var(--yellow);font-size:0.6rem">(×'+qty+')</span>':'')+'</div>'
       +'<div class="shop-item-desc">'+item.desc+'</div>'
@@ -2007,7 +1977,9 @@ function renderInv() {
     var isCooked = state.cooked && state.cooked[item.id]!==undefined && state.cooked[item.id]>0;
     var qty = isCooked ? state.cooked[item.id] : (state.inventory[item.id]||0);
     var type = isCooked ? 'cooked' : 'raw';
-    slotsHtml += '<div class="inv-item" onclick="useItemFromInv(\''+item.id+'\',\''+type+'\')"><span class="inv-emoji">'+item.emoji+'</span><span class="inv-qty">'+qty+'</span></div>';
+    slotsHtml += '<div class="inv-item" onclick="useItemFromInv(\'' + item.id + '\',\'' + type + '\')">'
+      +'<span class="inv-emoji">'+item.emoji+'</span>'
+      +'<span class="inv-qty">'+qty+'</span></div>';
   });
   area.innerHTML = '<div class="player-stats-card">'
     +'<div class="player-stats-title">📊 Stats du combattant</div>'
@@ -2033,7 +2005,7 @@ function useItemFromInv(id, type) {
     var recipe=RECIPES.find(function(r){ return r.id===id; });
     if (!recipe||!state.cooked[id]) return;
     showModal(recipe.emoji+' '+recipe.name, recipe.desc, '', [
-      {label:'✓ Utiliser', action:'useCookedDish(\''+id+\')', primary:true},
+      {label:'✓ Utiliser', action:'useCookedDish(\'' + id + '\')', primary:true},
       {label:'Annuler', action:'closeModal()'}
     ]);
   } else {
@@ -2043,7 +2015,7 @@ function useItemFromInv(id, type) {
     if (!obj) return;
     var descStr=obj.desc||((seed&&seed.heal>0?('+'+seed.heal+' HP '):''+(seed&&seed.atk>0?('+'+seed.atk+' ATK'):'')));
     showModal(obj.emoji+' '+obj.name, descStr, '', [
-      {label:'✓ Utiliser', action:(seed?'useRawItem(\''+id+'\')':'useShopItem(\''+id+'\')'), primary:true},
+      {label:'✓ Utiliser', action:(seed?'useRawItem(\'' + id + '\')':'useShopItem(\'' + id + '\')'), primary:true},
       {label:'Annuler', action:'closeModal()'}
     ]);
   }

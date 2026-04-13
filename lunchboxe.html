@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Lunch Boxe 🥊 — Le Jeu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Oswald:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --red: #e8192c;
+      --red-dark: #a0101e;
+      --red-glow: rgba(232, 25, 44, 0.4);
+      --yellow: #f5c842;
+      --yellow-glow: rgba(245, 200, 66, 0.3);
+      --green: #2ecc71;
+      --blue: #3498db;
+      --text: #f0ede4;
+      --muted: #666;
+      --accent: #c8f542;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      height: 100%;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ── SCREENS ── */
+    .screen { display: none; width: 100%; height: 100vh; overflow: hidden; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ── NOISE OVERLAY ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* ══════════════════════════════════
+       TITLE SCREEN
+    ══════════════════════════════════ */
+    #screenTitle {
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a0305 0%, #0a0a0a 70%);
+      align-items: center; justify-content: center; position: relative; overflow: hidden;
+    }
+
+    .title-bg-ring {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      border: 2px solid rgba(232,25,44,0.15);
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      animation: ringPulse 3s ease-in-out infinite;
+    }
+    .title-bg-ring:nth-child(2) { width: 800px; height: 800px; animation-delay: 1s; }
+    .title-bg-ring:nth-child(3) { width: 400px; height: 400px; animation-delay: 0.5s; }
+    @keyframes ringPulse {
+      0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.03); }
+    }
+
+    .title-content { position: relative; z-index: 2; text-align: center; padding: 2rem; }
+
+    .title-emoji {
+      font-size: 4.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      animation: titleBounce 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px var(--red-glow));
+    }
+    @keyframes titleBounce {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-12px) rotate(5deg); }
+    }
+
+    .title-main {
+      font-family: 'Black Ops One', cursive;
+      font-size: clamp(2.8rem, 10vw, 5.5rem);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 0%, var(--yellow) 40%, var(--red) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      filter: drop-shadow(0 4px 20px var(--red-glow));
+    }
+
+    .title-sub {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.6rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .title-badges {
+      display: flex; gap: 0.6rem; justify-content: center;
+      margin-bottom: 2rem; flex-wrap: wrap;
+    }
+    .badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.7rem;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .badge.hot { border-color: var(--red); color: var(--red); }
+
+    .btn-play {
+      background: var(--red);
+      border: none;
+      color: #fff;
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.3rem;
+      letter-spacing: 0.05em;
+      padding: 1rem 3rem;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 0 var(--red-dark), 0 0 40px var(--red-glow);
+      display: block; margin: 0 auto;
+    }
+    .btn-play:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--red-dark), 0 0 20px var(--red-glow); }
+    .btn-play::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    }
+
+    .title-back-link {
+      display: block;
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .title-back-link:hover { color: var(--text); }
+
+    /* ══════════════════════════════════
+       GAME SCREEN LAYOUT
+    ══════════════════════════════════ */
+    #screenGame {
+      background: var(--bg);
+      flex-direction: column;
+    }
+
+    /* TOP HUD */
+    .hud-top {
+      background: rgba(10,10,10,0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .hud-logo {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1rem;
+      color: var(--red);
+      white-space: nowrap;
+    }
+
+    .hud-stats {
+      display: flex; gap: 0.8rem; align-items: center;
+    }
+    .hud-stat {
+      display: flex; flex-direction: column; align-items: center;
+      min-width: 44px;
+    }
+    .hud-stat-val {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .hud-stat-label {
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .hud-stat.gold .hud-stat-val { color: var(--yellow); }
+    .hud-stat.red .hud-stat-val { color: var(--red); }
+    .hud-stat.green .hud-stat-val { color: var(--green); }
+
+    .hud-day {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+    .hud-day span { color: var(--text); font-weight: 600; }
+
+    /* MAIN GAME AREA */
+    .game-body {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TAB BAR */
+    .tab-bar {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.6rem 0.3rem;
+      border: none;
+      background: none;
+      color: var(--muted);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .tab-btn .tab-icon { font-size: 1.1rem; }
+    .tab-btn.active {
+      color: var(--red);
+      border-bottom-color: var(--red);
+    }
+    .tab-btn .notif {
+      position: absolute;
+      top: 4px; right: calc(50% - 18px);
+      width: 8px; height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+    }
+
+    /* TAB PANELS */
+    .tab-panel { display: none; flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+    .tab-panel.active { display: flex; flex-direction: column; }
+
+    /* ══════════════════════════════════
+       FERME TAB
+    ══════════════════════════════════ */
+    .farm-area {
+      padding: 1rem;
+      flex: 1;
+    }
+
+    .farm-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .plot {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+      overflow: hidden;
+      background: #0f0f0f;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .plot:active { transform: scale(0.93); }
+
+    .plot.empty {
+      background: repeating-linear-gradient(
+        45deg, #111 0px, #111 4px, #0d0d0d 4px, #0d0d0d 8px
+      );
+      border-style: dashed;
+      border-color: #333;
+    }
+    .plot.empty:active { border-color: var(--red); background: rgba(232,25,44,0.05); }
+
+    .plot.growing { background: #0d1a0d; border-color: #1a3a1a; }
+    .plot.ready { background: #0d1a0d; border-color: var(--green); box-shadow: 0 0 12px rgba(46,204,113,0.2); animation: readyPulse 1.5s ease-in-out infinite; }
+    @keyframes readyPulse {
+      0%, 100% { box-shadow: 0 0 8px rgba(46,204,113,0.2); }
+      50% { box-shadow: 0 0 20px rgba(46,204,113,0.5); }
+    }
+    .plot.locked { background: #0d0d0d; border-color: #222; opacity: 0.5; cursor: not-allowed; }
+
+    .plot-emoji { font-size: 1.8rem; line-height: 1; }
+    .plot-progress {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.05);
+    }
+    .plot-progress-bar {
+      height: 100%;
+      background: var(--green);
+      transition: width 0.5s;
+    }
+    .plot-time {
+      font-size: 0.55rem;
+      color: var(--muted);
+      margin-top: 2px;
+      font-family: 'Oswald', sans-serif;
+    }
+    .plot-lock-icon { font-size: 1.2rem; }
+
+    /* SEEDS */
+    .seeds-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 0.8rem 1rem;
+      flex-shrink: 0;
+    }
+    .seeds-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .seeds-row {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+    }
+    .seed-btn {
+      flex-shrink: 0;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.7rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      min-width: 64px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .seed-btn:active { transform: scale(0.93); }
+    .seed-btn.selected { border-color: var(--red); background: rgba(232,25,44,0.08); }
+    .seed-btn.locked-seed { opacity: 0.35; cursor: not-allowed; }
+    .seed-emoji { font-size: 1.4rem; display: block; }
+    .seed-name { font-size: 0.5rem; color: var(--muted); text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 0.05em; }
+    .seed-cost { font-size: 0.6rem; color: var(--yellow); font-family: 'Black Ops One', cursive; }
+    .seed-time { font-size: 0.5rem; color: var(--muted); }
+
+    /* ══════════════════════════════════
+       BOXE TAB (COMBAT)
+    ══════════════════════════════════ */
+    .fight-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Opponent display */
+    .fight-stage {
+      background: radial-gradient(ellipse 90% 70% at 50% 50%, #1a0305 0%, #0a0a0a 100%);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 1rem;
+      min-height: 0;
+    }
+
+    .ring-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(232,25,44,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,25,44,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .opponent-wrap {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .opponent-emoji {
+      font-size: clamp(3.5rem, 12vw, 6rem);
+      display: block;
+      filter: drop-shadow(0 0 30px var(--red-glow));
+      transition: transform 0.1s;
+    }
+    .opponent-emoji.hit { animation: hitShake 0.25s; }
+    @keyframes hitShake {
+      0% { transform: translateX(0) scale(1); }
+      25% { transform: translateX(-8px) scale(1.05); }
+      50% { transform: translateX(8px) scale(0.95); }
+      75% { transform: translateX(-4px) scale(1.02); }
+      100% { transform: translateX(0) scale(1); }
+    }
+
+    .opponent-name {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.1rem;
+      margin-top: 0.3rem;
+      color: var(--text);
+    }
+    .opponent-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+
+    /* HP BARS */
+    .hp-bars {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+    }
+    .hp-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .hp-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      width: 48px;
+      flex-shrink: 0;
+    }
+    .hp-label.enemy { text-align: right; color: var(--red); }
+    .hp-label.player { text-align: left; color: var(--green); }
+    .hp-bar-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .hp-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .hp-bar-fill.enemy { background: linear-gradient(90deg, var(--red-dark), var(--red)); }
+    .hp-bar-fill.player { background: linear-gradient(90deg, #1a8a4a, var(--green)); }
+    .hp-val {
+      font-family: 'Black Ops One', cursive;
+      font-size: 0.75rem;
+      width: 40px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .hp-val.enemy { color: var(--red); }
+    .hp-val.player { color: var(--green); }
+
+    /* FIGHT CONTROLS */
+    .fight-controls {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 0.8rem 1rem;
+      flex-shrink: 0;
+    }
+
+    .fight-moves {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .move-btn {
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      padding: 0.7rem 0.5rem;
+      cursor: pointer;
+      color: var(--text);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-align: center;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    }
+    .move-btn:active { transform: scale(0.93); }
+    .move-btn.jab { border-color: #e8a019; }
+    .move-btn.jab:active { background: rgba(232,160,25,0.1); }
+    .move-btn.cross { border-color: var(--red); }
+    .move-btn.cross:active { background: rgba(232,25,44,0.1); }
+    .move-btn.hook { border-color: #8e44ad; }
+    .move-btn.hook:active { background: rgba(142,68,173,0.1); }
+    .move-btn.uppercut { border-color: #3498db; }
+    .move-btn.uppercut:active { background: rgba(52,152,219,0.1); }
+    .move-btn.special {
+      border-color: var(--yellow);
+      color: var(--yellow);
+      position: relative;
+      overflow: hidden;
+    }
+    .move-btn.special::after {
+      content: 'RAGE';
+      position: absolute;
+      top: 2px; right: 4px;
+      font-size: 0.45rem;
+      letter-spacing: 0.12em;
+      color: var(--yellow);
+      opacity: 0.7;
+    }
+    .move-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+    .fight-actions-row {
+      display: flex; gap: 0.5rem;
+    }
+    .btn-flee, .btn-use-food {
+      flex: 1;
+      padding: 0.6rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--muted);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-flee:active { transform: scale(0.95); }
+    .btn-use-food { color: var(--green); border-color: rgba(46,204,113,0.3); }
+    .btn-use-food:active { transform: scale(0.95); background: rgba(46,204,113,0.08); }
+
+    /* FIGHT LOG */
+    .fight-log {
+      padding: 0 1rem 0.5rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.04em;
+      min-height: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .fight-log .dmg-player { color: var(--red); font-weight: 600; }
+    .fight-log .dmg-enemy { color: var(--green); font-weight: 600; }
+
+    /* Pre-fight / Victory screens */
+    .fight-intro, .fight-victory, .fight-defeat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      gap: 1rem;
+    }
+
+    .fight-intro-emoji, .fight-victory-emoji, .fight-defeat-emoji {
+      font-size: 4rem;
+      filter: drop-shadow(0 0 20px var(--red-glow));
+    }
+    .fight-intro h2, .fight-victory h2, .fight-defeat h2 {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.6rem;
+      line-height: 1.1;
+    }
+    .fight-intro p, .fight-victory p, .fight-defeat p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-width: 280px;
+      line-height: 1.5;
+    }
+    .fight-victory h2 { color: var(--yellow); }
+    .fight-defeat h2 { color: var(--red); }
+
+    .fight-rewards {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      gap: 1.5rem;
+    }
+    .reward-item { text-align: center; }
+    .reward-val { font-family: 'Black Ops One', cursive; font-size: 1.3rem; color: var(--yellow); }
+    .reward-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Oswald', sans-serif; }
+
+    .btn-fight-start {
+      background: var(--red);
+      border: none;
+      color: #fff;
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.1rem;
+      padding: 0.9rem 2.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--red-dark), 0 0 30px var(--red-glow);
+      transition: transform 0.1s, box-shadow 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-fight-start:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--red-dark); }
+
+    .btn-fight-next {
+      background: var(--yellow);
+      border: none;
+      color: #000;
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.1rem;
+      padding: 0.9rem 2.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-fight-next:active { transform: scale(0.95); }
+
+    /* ENEMY SELECTOR */
+    .enemy-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-width: 360px;
+    }
+    .enemy-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .enemy-card:active { transform: scale(0.97); border-color: var(--red); }
+    .enemy-card.locked-enemy { opacity: 0.4; cursor: not-allowed; }
+    .enemy-card .ec-emoji { font-size: 2rem; flex-shrink: 0; }
+    .enemy-card .ec-info { flex: 1; }
+    .enemy-card .ec-name { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 0.9rem; }
+    .enemy-card .ec-title { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Oswald', sans-serif; }
+    .enemy-card .ec-diff {
+      font-family: 'Black Ops One', cursive;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+    }
+    .diff-easy { background: rgba(46,204,113,0.15); color: var(--green); }
+    .diff-med { background: rgba(245,200,66,0.15); color: var(--yellow); }
+    .diff-hard { background: rgba(232,25,44,0.15); color: var(--red); }
+    .diff-boss { background: rgba(142,68,173,0.2); color: #c39bd3; }
+
+    /* ══════════════════════════════════
+       MARCHÉ TAB (SHOP)
+    ══════════════════════════════════ */
+    .shop-area { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+
+    .shop-section-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .shop-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+    .shop-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .shop-item:active { transform: scale(0.95); }
+    .shop-item.owned { border-color: var(--green); }
+    .shop-item.owned::after {
+      content: '✓';
+      position: absolute; top: 6px; right: 8px;
+      font-size: 0.7rem; color: var(--green);
+    }
+    .shop-item.cant-afford { opacity: 0.45; cursor: not-allowed; }
+    .shop-item-emoji { font-size: 2rem; margin-bottom: 0.3rem; display: block; }
+    .shop-item-name { font-family: 'Oswald', sans-serif; font-size: 0.8rem; font-weight: 500; }
+    .shop-item-desc { font-size: 0.6rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.4; }
+    .shop-item-price {
+      display: flex; align-items: center; gap: 0.3rem;
+      margin-top: 0.5rem;
+      font-family: 'Black Ops One', cursive;
+      font-size: 0.85rem;
+      color: var(--yellow);
+    }
+
+    /* ══════════════════════════════════
+       INVENTAIRE TAB
+    ══════════════════════════════════ */
+    .inv-area { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+
+    .inv-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+    }
+    .inv-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .inv-item:active { transform: scale(0.92); }
+    .inv-item.empty-slot { border-style: dashed; border-color: #2a2a2a; cursor: default; }
+    .inv-emoji { font-size: 1.6rem; }
+    .inv-qty {
+      position: absolute; bottom: 2px; right: 4px;
+      font-family: 'Black Ops One', cursive;
+      font-size: 0.65rem;
+      color: var(--yellow);
+    }
+
+    .player-stats-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .player-stats-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+    .stats-rows { display: flex; flex-direction: column; gap: 0.6rem; }
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .stat-row-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      color: var(--muted);
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .stat-bar-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+    .stat-atk .stat-bar-fill { background: var(--red); }
+    .stat-def .stat-bar-fill { background: var(--blue); }
+    .stat-spd .stat-bar-fill { background: var(--yellow); }
+    .stat-row-val {
+      font-family: 'Black Ops One', cursive;
+      font-size: 0.75rem;
+      width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════
+       POPUPS / TOASTS
+    ══════════════════════════════════ */
+    .toast {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 1.2rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      pointer-events: none;
+      opacity: 0;
+      transition: all 0.25s;
+      z-index: 1000;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: var(--green); color: var(--green); }
+    .toast.error { border-color: var(--red); color: var(--red); }
+    .toast.gold { border-color: var(--yellow); color: var(--yellow); }
+
+    /* HARVEST FLOAT */
+    .harvest-float {
+      position: fixed;
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.2rem;
+      color: var(--yellow);
+      pointer-events: none;
+      z-index: 500;
+      animation: harvestFloat 1s ease-out forwards;
+    }
+    @keyframes harvestFloat {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-60px); }
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 200;
+      display: flex; align-items: flex-end;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-radius: 16px 16px 0 0;
+      width: 100%;
+      padding: 1.5rem 1.5rem 2rem;
+      transform: translateY(40px);
+      transition: transform 0.3s;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+    .modal-title {
+      font-family: 'Black Ops One', cursive;
+      font-size: 1.3rem;
+      margin-bottom: 0.3rem;
+    }
+    .modal-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; line-height: 1.5; }
+    .modal-actions { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+    .btn-modal-primary {
+      background: var(--red);
+      border: none;
+      color: #fff;
+      font-family: 'Black Ops One', cursive;
+      font-size: 1rem;
+      padding: 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 0 var(--red-dark);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-modal-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--red-dark); }
+    .btn-modal-secondary {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.7rem;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ══════════════════════════════════
+       DAMAGE NUMBERS
+    ══════════════════════════════════ */
+    .dmg-number {
+      position: fixed;
+      font-family: 'Black Ops One', cursive;
+      pointer-events: none;
+      z-index: 300;
+      animation: dmgFloat 0.8s ease-out forwards;
+    }
+    .dmg-number.player-dmg { color: var(--red); font-size: 1.6rem; }
+    .dmg-number.enemy-dmg { color: var(--yellow); font-size: 2rem; }
+    @keyframes dmgFloat {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      60% { opacity: 1; transform: translateY(-40px) scale(1.2); }
+      100% { opacity: 0; transform: translateY(-70px) scale(0.8); }
+    }
+
+    /* ── BACK LINK IN GAME ── */
+    .game-back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      color: var(--muted); font-size: 0.65rem;
+      text-decoration: none; font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0 0.5rem;
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 3px; height: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     TITLE SCREEN
+════════════════════════════════════ -->
+<div class="screen active" id="screenTitle">
+  <div class="title-bg-ring"></div>
+  <div class="title-bg-ring"></div>
+  <div class="title-bg-ring"></div>
+  <div class="title-content">
+    <span class="title-emoji">🥊</span>
+    <div class="title-main">LUNCH BOXE</div>
+    <div class="title-sub">Farm · Fight · Feast</div>
+    <div class="title-badges">
+      <span class="badge hot">🔴 Combat</span>
+      <span class="badge">🌱 Ferme</span>
+      <span class="badge">🍱 Recettes</span>
+    </div>
+    <button class="btn-play" onclick="startGame()">🥊 JOUER</button>
+    <a href="index.html" class="title-back-link">← Retour à Lunchboxd</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     GAME SCREEN
+════════════════════════════════════ -->
+<div class="screen" id="screenGame">
+
+  <!-- HUD TOP -->
+  <div class="hud-top">
+    <a href="index.html" class="game-back-link">🥡</a>
+    <div class="hud-logo">🥊 L.BOXE</div>
+    <div class="hud-stats">
+      <div class="hud-stat gold">
+        <span class="hud-stat-val" id="hudGold">0</span>
+        <span class="hud-stat-label">💰 Or</span>
+      </div>
+      <div class="hud-stat red">
+        <span class="hud-stat-val" id="hudHP">100</span>
+        <span class="hud-stat-label">❤️ HP</span>
+      </div>
+      <div class="hud-stat green">
+        <span class="hud-stat-val" id="hudStreak">0</span>
+        <span class="hud-stat-label">🔥 Série</span>
+      </div>
+    </div>
+    <div class="hud-day">Jour <span id="hudDay">1</span></div>
+  </div>
+
+  <!-- BODY -->
+  <div class="game-body">
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('farm')" id="tabFarm">
+        <span class="tab-icon">🌱</span>Ferme
+      </button>
+      <button class="tab-btn" onclick="switchTab('fight')" id="tabFight">
+        <span class="tab-icon">🥊</span>Combat
+      </button>
+      <button class="tab-btn" onclick="switchTab('shop')" id="tabShop">
+        <span class="tab-icon">🛒</span>Marché
+      </button>
+      <button class="tab-btn" onclick="switchTab('inv')" id="tabInv">
+        <span class="tab-icon">🎒</span>Sac
+      </button>
+    </div>
+
+    <!-- ══ FARM TAB ══ -->
+    <div class="tab-panel active" id="panelFarm">
+      <div class="farm-area">
+        <div class="farm-grid" id="farmGrid"></div>
+      </div>
+      <div class="seeds-section">
+        <div class="seeds-label">Graines — Sélectionne puis tape une parcelle vide</div>
+        <div class="seeds-row" id="seedsRow"></div>
+      </div>
+    </div>
+
+    <!-- ══ FIGHT TAB ══ -->
+    <div class="tab-panel" id="panelFight">
+      <div class="fight-area" id="fightArea">
+        <!-- dynamically filled -->
+      </div>
+    </div>
+
+    <!-- ══ SHOP TAB ══ -->
+    <div class="tab-panel" id="panelShop">
+      <div class="shop-area" id="shopArea"></div>
+    </div>
+
+    <!-- ══ INV TAB ══ -->
+    <div class="tab-panel" id="panelInv">
+      <div class="inv-area" id="invArea"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-desc" id="modalDesc"></div>
+    <div id="modalExtra"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+
+const SEEDS = [
+  { id:'tomato',   emoji:'🍅', name:'Tomate',    cost:5,  growTime:15,  sell:12,  heal:0,  atk:2,  unlockDay:1  },
+  { id:'carrot',   emoji:'🥕', name:'Carotte',   cost:8,  growTime:25,  sell:20,  heal:10, atk:0,  unlockDay:1  },
+  { id:'chili',    emoji:'🌶️', name:'Piment',    cost:15, growTime:40,  sell:35,  heal:0,  atk:6,  unlockDay:3  },
+  { id:'lemon',    emoji:'🍋', name:'Citron',    cost:12, growTime:30,  sell:28,  heal:5,  atk:4,  unlockDay:2  },
+  { id:'mushroom', emoji:'🍄', name:'Champignon',cost:20, growTime:60,  sell:55,  heal:20, atk:0,  unlockDay:4  },
+  { id:'steak',    emoji:'🥩', name:'Bœuf',      cost:40, growTime:90,  sell:100, heal:30, atk:10, unlockDay:5  },
+  { id:'berry',    emoji:'🫐', name:'Myrtille',  cost:10, growTime:20,  sell:22,  heal:8,  atk:3,  unlockDay:2  },
+  { id:'pepper',   emoji:'🫑', name:'Poivron',   cost:18, growTime:35,  sell:42,  heal:0,  atk:8,  unlockDay:3  },
+];
+
+const ENEMIES = [
+  { id:'sandwich', emoji:'🥪', name:'Sandwich Sam',   title:'Poids Plume',   hp:60,  atk:[4,10], def:2,  reward:{gold:20, xp:10},  diff:'easy', unlockDay:1  },
+  { id:'pizza',    emoji:'🍕', name:'Pizza Pete',     title:'Poids Léger',   hp:100, atk:[6,14], def:4,  reward:{gold:40, xp:20},  diff:'easy', unlockDay:1  },
+  { id:'burger',   emoji:'🍔', name:'Burger Boss',    title:'Poids Moyen',   hp:150, atk:[10,20],def:6,  reward:{gold:70, xp:35},  diff:'med',  unlockDay:2  },
+  { id:'hotdog',   emoji:'🌭', name:'Hot Dog Hiro',   title:'Poids Lourd',   hp:200, atk:[14,24],def:8,  reward:{gold:100,xp:50},  diff:'hard', unlockDay:3  },
+  { id:'sushi',    emoji:'🍣', name:'Sushi Shiro',    title:'Assassin',      hp:120, atk:[18,28],def:3,  reward:{gold:90, xp:55},  diff:'hard', unlockDay:4  },
+  { id:'ramen',    emoji:'🍜', name:'Ramen Raizo',    title:'Maître Ninja',  hp:280, atk:[16,30],def:10, reward:{gold:150,xp:80},  diff:'boss', unlockDay:5  },
+  { id:'donut',    emoji:'🍩', name:'Donut Dominik',  title:'Boss Final',    hp:400, atk:[20,35],def:15, reward:{gold:300,xp:150}, diff:'boss', unlockDay:7  },
+];
+
+const SHOP_ITEMS = [
+  { id:'gloves', emoji:'🥊', name:'Gants de boxe', desc:'+5 ATK permanents', cost:80,  type:'equip', stat:'atk', val:5  },
+  { id:'helmet', emoji:'⛑️', name:'Casque',        desc:'+10 DEF permanents',cost:60,  type:'equip', stat:'def', val:10 },
+  { id:'shoes',  emoji:'👟', name:'Baskets rapides',desc:'+8 SPD permanents', cost:70,  type:'equip', stat:'spd', val:8  },
+  { id:'plot5',  emoji:'🟫', name:'Parcelle +4',    desc:'Débloquer 4 nouvelles parcelles', cost:120, type:'plot', val:4 },
+  { id:'wrap',   emoji:'🩹', name:'Bandages',       desc:'Soigne 50 HP (utiliser en combat)', cost:30, type:'item', val:50, useIn:'fight' },
+  { id:'potion', emoji:'🧪', name:'Élixir rouge',   desc:'Soigne 100 HP instantanément', cost:80, type:'item', val:100, useIn:'fight' },
+];
+
+const MOVES = [
+  { id:'jab',      label:'JAB',      emoji:'👊', class:'jab',     dmgMult:1.0, rageCost:0,  desc:'Coup rapide' },
+  { id:'cross',    label:'CROSS',    emoji:'🤜', class:'cross',   dmgMult:1.4, rageCost:0,  desc:'Coup fort' },
+  { id:'hook',     label:'HOOK',     emoji:'↩️', class:'hook',    dmgMult:1.7, rageCost:0,  desc:'Crochet' },
+  { id:'uppercut', label:'UPPER',    emoji:'⬆️', class:'uppercut',dmgMult:2.0, rageCost:0,  desc:'Uppercut' },
+  { id:'special',  label:'SPÉCIAL',  emoji:'⚡', class:'special', dmgMult:3.5, rageCost:30, desc:'Attaque spéciale (coûte 30 Rage)' },
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+
+let state = {
+  gold: 50,
+  day: 1,
+  player: { hp: 100, maxHp: 100, atk: 20, def: 5, spd: 10, rage: 0, maxRage: 100, streak: 0 },
+  plots: Array.from({length:8}, (_,i) => ({ id:i, locked: i>=8, crop:null, plantedAt:null, growTime:null })),
+  inventory: {},
+  equipped: {},
+  wins: 0,
+  fightState: 'select', // 'select' | 'intro' | 'active' | 'victory' | 'defeat'
+  currentEnemy: null,
+  enemyHp: 0,
+  selectedSeed: null,
+  tick: 0,
+};
+
+// ═══════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  showScreen('screenGame');
+  renderAll();
+  setInterval(gameTick, 1000);
+}
+
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  if(tab === 'fight') renderFight();
+  if(tab === 'shop') renderShop();
+  if(tab === 'inv') renderInv();
+}
+
+// ═══════════════════════════════════════
+// TICK
+// ═══════════════════════════════════════
+
+function gameTick() {
+  state.tick++;
+  // Every 30 real seconds = advance day
+  if(state.tick % 120 === 0) {
+    state.day++;
+    document.getElementById('hudDay').textContent = state.day;
+    toast(`☀️ Jour ${state.day} — Bonne récolte !`, 'success');
+    // Regen 5 HP per day
+    state.player.hp = Math.min(state.player.maxHp, state.player.hp + 5);
+    updateHUD();
+  }
+  // Update farm plots (growing)
+  let anyReady = false;
+  state.plots.forEach(plot => {
+    if(plot.crop && plot.growTime) {
+      const elapsed = state.tick - plot.plantedAt;
+      if(elapsed >= plot.growTime && plot.status !== 'ready') {
+        plot.status = 'ready';
+        anyReady = true;
+      }
+    }
+  });
+  if(anyReady) { renderFarm(); }
+  // Every 5 ticks update progress bars
+  if(state.tick % 5 === 0) renderFarmProgress();
+}
+
+// ═══════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════
+
+function renderAll() {
+  updateHUD();
+  renderFarm();
+  renderSeeds();
+}
+
+function updateHUD() {
+  document.getElementById('hudGold').textContent = state.gold;
+  document.getElementById('hudHP').textContent = state.player.hp;
+  document.getElementById('hudStreak').textContent = state.player.streak;
+}
+
+// ═══════════════════════════════════════
+// FARM
+// ═══════════════════════════════════════
+
+function renderFarm() {
+  const grid = document.getElementById('farmGrid');
+  grid.innerHTML = '';
+  state.plots.forEach((plot, i) => {
+    const el = document.createElement('div');
+    el.className = 'plot';
+    el.dataset.plot = i;
+    if(plot.locked) {
+      el.classList.add('locked');
+      el.innerHTML = `<span class="plot-lock-icon">🔒</span>`;
+    } else if(!plot.crop) {
+      el.classList.add('empty');
+      el.innerHTML = `<span style="font-size:1rem;color:#333">+</span>`;
+      el.onclick = () => plantSeed(i);
+    } else {
+      const elapsed = state.tick - plot.plantedAt;
+      const prog = Math.min(1, elapsed / plot.growTime);
+      if(plot.status === 'ready') {
+        el.classList.add('ready');
+        el.innerHTML = `<span class="plot-emoji">${plot.crop.emoji}</span><span class="plot-time">PRÊT!</span><div class="plot-progress"><div class="plot-progress-bar" style="width:100%"></div></div>`;
+        el.onclick = () => harvest(i, el);
+      } else {
+        el.classList.add('growing');
+        const remaining = Math.max(0, plot.growTime - elapsed);
+        el.innerHTML = `<span class="plot-emoji" style="opacity:0.6;filter:grayscale(0.5)">${plot.crop.emoji}</span><span class="plot-time">${remaining}s</span><div class="plot-progress"><div class="plot-progress-bar" style="width:${prog*100}%"></div></div>`;
+      }
+    }
+    grid.appendChild(el);
+  });
+}
+
+function renderFarmProgress() {
+  state.plots.forEach((plot, i) => {
+    if(!plot.crop || plot.status === 'ready') return;
+    const el = document.querySelector(`.plot[data-plot="${i}"]`);
+    if(!el) return;
+    const elapsed = state.tick - plot.plantedAt;
+    const prog = Math.min(1, elapsed / plot.growTime);
+    const bar = el.querySelector('.plot-progress-bar');
+    const timeEl = el.querySelector('.plot-time');
+    if(bar) bar.style.width = (prog*100)+'%';
+    if(timeEl) timeEl.textContent = Math.max(0, plot.growTime - elapsed)+'s';
+  });
+}
+
+function renderSeeds() {
+  const row = document.getElementById('seedsRow');
+  row.innerHTML = '';
+  SEEDS.forEach(seed => {
+    const btn = document.createElement('div');
+    btn.className = 'seed-btn' + (seed.id === state.selectedSeed ? ' selected' : '') + (seed.unlockDay > state.day ? ' locked-seed' : '');
+    btn.dataset.seed = seed.id;
+    btn.innerHTML = `<span class="seed-emoji">${seed.emoji}</span><span class="seed-name">${seed.name}</span><span class="seed-cost">💰${seed.cost}</span><span class="seed-time">⏱${seed.growTime}s</span>`;
+    if(seed.unlockDay <= state.day) {
+      btn.onclick = () => selectSeed(seed.id);
+    }
+    row.appendChild(btn);
+  });
+}
+
+function selectSeed(id) {
+  state.selectedSeed = state.selectedSeed === id ? null : id;
+  renderSeeds();
+}
+
+function plantSeed(plotIdx) {
+  if(!state.selectedSeed) { toast('Sélectionne une graine d\'abord !', 'error'); return; }
+  const seed = SEEDS.find(s => s.id === state.selectedSeed);
+  if(!seed) return;
+  if(state.gold < seed.cost) { toast('Pas assez d\'or !', 'error'); return; }
+  state.gold -= seed.cost;
+  state.plots[plotIdx].crop = seed;
+  state.plots[plotIdx].plantedAt = state.tick;
+  state.plots[plotIdx].growTime = seed.growTime;
+  state.plots[plotIdx].status = 'growing';
+  updateHUD();
+  renderFarm();
+}
+
+function harvest(plotIdx, el) {
+  const plot = state.plots[plotIdx];
+  if(!plot.crop || plot.status !== 'ready') return;
+  const crop = plot.crop;
+  // Add to inventory
+  state.inventory[crop.id] = (state.inventory[crop.id] || 0) + 1;
+  const gold = crop.sell;
+  state.gold += gold;
+  // Reset plot
+  state.plots[plotIdx] = { id: plotIdx, locked: false, crop: null, plantedAt: null, growTime: null };
+  updateHUD();
+  renderFarm();
+  // Float animation
+  const rect = el.getBoundingClientRect();
+  spawnFloat(`+💰${gold}`, rect.left + rect.width/2, rect.top, 'harvest-float');
+  toast(`${crop.emoji} Récolte ! +${gold} or`, 'gold');
+}
+
+// ═══════════════════════════════════════
+// FIGHT
+// ═══════════════════════════════════════
+
+function renderFight() {
+  const area = document.getElementById('fightArea');
+  if(state.fightState === 'select') {
+    renderEnemySelect(area);
+  } else if(state.fightState === 'intro') {
+    renderFightIntro(area);
+  } else if(state.fightState === 'active') {
+    renderFightActive(area);
+  } else if(state.fightState === 'victory') {
+    renderFightVictory(area);
+  } else if(state.fightState === 'defeat') {
+    renderFightDefeat(area);
+  }
+}
+
+function renderEnemySelect(area) {
+  const available = ENEMIES.filter(e => e.unlockDay <= state.day);
+  const locked = ENEMIES.filter(e => e.unlockDay > state.day);
+  area.innerHTML = `
+    <div class="fight-intro" style="padding-top:1rem">
+      <div style="font-family:'Black Ops One',cursive;font-size:1.1rem;color:var(--red)">⚔️ CHOISIR UN ADVERSAIRE</div>
+      <div class="enemy-list">
+        ${available.map(e => `
+          <div class="enemy-card" onclick="startFightWith('${e.id}')">
+            <span class="ec-emoji">${e.emoji}</span>
+            <div class="ec-info">
+              <div class="ec-name">${e.name}</div>
+              <div class="ec-title">${e.title} — HP: ${e.hp}</div>
+            </div>
+            <span class="ec-diff diff-${e.diff}">${e.diff.toUpperCase()}</span>
+          </div>`).join('')}
+        ${locked.map(e => `
+          <div class="enemy-card locked-enemy">
+            <span class="ec-emoji">🔒</span>
+            <div class="ec-info">
+              <div class="ec-name">??? </div>
+              <div class="ec-title">Débloquer au Jour ${e.unlockDay}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderFightIntro(area) {
+  const e = state.currentEnemy;
+  area.innerHTML = `
+    <div class="fight-intro">
+      <div class="fight-intro-emoji">${e.emoji}</div>
+      <h2>${e.name}</h2>
+      <p>${e.title} — ${e.hp} HP<br/>Attaque: ${e.atk[0]}–${e.atk[1]} · Défense: ${e.def}</p>
+      <div class="fight-rewards">
+        <div class="reward-item"><div class="reward-val">💰${e.reward.gold}</div><div class="reward-label">Or</div></div>
+        <div class="reward-item"><div class="reward-val">⭐${e.reward.xp}</div><div class="reward-label">XP</div></div>
+      </div>
+      <button class="btn-fight-start" onclick="beginFight()">🥊 COMBAT !</button>
+    </div>`;
+}
+
+function renderFightActive(area) {
+  const e = state.currentEnemy;
+  const p = state.player;
+  const enemyHpPct = Math.max(0, (state.enemyHp / e.hp) * 100);
+  const playerHpPct = Math.max(0, (p.hp / p.maxHp) * 100);
+  area.innerHTML = `
+    <div class="fight-stage">
+      <div class="ring-lines"></div>
+      <div class="opponent-wrap">
+        <div class="hp-bars">
+          <div class="hp-row">
+            <span class="hp-label enemy">${e.name.split(' ')[0]}</span>
+            <div class="hp-bar-track"><div class="hp-bar-fill enemy" id="enemyHpBar" style="width:${enemyHpPct}%"></div></div>
+            <span class="hp-val enemy" id="enemyHpVal">${state.enemyHp}</span>
+          </div>
+        </div>
+        <span class="opponent-emoji" id="opponentEmoji">${e.emoji}</span>
+        <div class="opponent-name">${e.name}</div>
+        <div class="opponent-title">${e.title}</div>
+        <div class="hp-bars" style="margin-top:0.4rem">
+          <div class="hp-row">
+            <span class="hp-label player">Toi</span>
+            <div class="hp-bar-track"><div class="hp-bar-fill player" id="playerHpBar" style="width:${playerHpPct}%"></div></div>
+            <span class="hp-val player" id="playerHpVal">${p.hp}</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.3rem;align-items:center">
+          <span style="font-size:0.6rem;color:var(--muted);font-family:'Oswald',sans-serif;letter-spacing:.08em">RAGE</span>
+          <div style="flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden">
+            <div id="rageBar" style="height:100%;background:linear-gradient(90deg,#e8a019,var(--yellow));border-radius:3px;transition:width 0.3s;width:${(p.rage/p.maxRage)*100}%"></div>
+          </div>
+          <span id="rageVal" style="font-family:'Black Ops One',cursive;font-size:0.65rem;color:var(--yellow)">${p.rage}</span>
+        </div>
+      </div>
+    </div>
+    <div class="fight-log" id="fightLog">Prêt à te battre !</div>
+    <div class="fight-controls">
+      <div class="fight-moves">
+        ${MOVES.map(m => `
+          <button class="move-btn ${m.class}" onclick="playerAttack('${m.id}')" ${m.rageCost > 0 && p.rage < m.rageCost ? 'disabled' : ''}>
+            ${m.emoji} ${m.label}
+          </button>`).join('')}
+      </div>
+      <div class="fight-actions-row">
+        <button class="btn-use-food" onclick="openFoodModal()">🍱 Utiliser aliment</button>
+        <button class="btn-flee" onclick="fleeFight()">🏃 Fuir</button>
+      </div>
+    </div>`;
+}
+
+function renderFightVictory(area) {
+  const e = state.currentEnemy;
+  area.innerHTML = `
+    <div class="fight-victory">
+      <div class="fight-victory-emoji">🏆</div>
+      <h2>VICTOIRE !</h2>
+      <p>${e.name} est K.O. ! Tu remportes les récompenses.</p>
+      <div class="fight-rewards">
+        <div class="reward-item"><div class="reward-val">💰${e.reward.gold}</div><div class="reward-label">Or gagné</div></div>
+        <div class="reward-item"><div class="reward-val">🔥${state.player.streak}</div><div class="reward-label">Série</div></div>
+      </div>
+      <button class="btn-fight-next" onclick="afterVictory()">Continuer →</button>
+    </div>`;
+}
+
+function renderFightDefeat(area) {
+  area.innerHTML = `
+    <div class="fight-defeat">
+      <div class="fight-defeat-emoji">💀</div>
+      <h2>K.O. !</h2>
+      <p>Tu as perdu ce combat. Récupère tes forces à la ferme et reviens plus fort !</p>
+      <button class="btn-fight-start" style="background:var(--muted);box-shadow:none" onclick="afterDefeat()">Retenter</button>
+    </div>`;
+}
+
+function startFightWith(enemyId) {
+  const enemy = ENEMIES.find(e => e.id === enemyId);
+  state.currentEnemy = enemy;
+  state.enemyHp = enemy.hp;
+  state.fightState = 'intro';
+  renderFight();
+}
+
+function beginFight() {
+  state.fightState = 'active';
+  renderFight();
+}
+
+function playerAttack(moveId) {
+  const move = MOVES.find(m => m.id === moveId);
+  const p = state.player;
+  const e = state.currentEnemy;
+  if(move.rageCost > 0 && p.rage < move.rageCost) { toast('Pas assez de Rage !', 'error'); return; }
+
+  // Player deals damage
+  const baseDmg = p.atk * move.dmgMult;
+  const variance = (Math.random() * 0.4 + 0.8); // 80-120%
+  let dmg = Math.max(1, Math.round(baseDmg * variance) - e.def);
+  const isCrit = Math.random() < 0.15;
+  if(isCrit) dmg = Math.round(dmg * 1.8);
+
+  state.enemyHp -= dmg;
+  p.rage = Math.min(p.maxRage, p.rage + 15 + (move.rageCost > 0 ? 0 : 5));
+  if(move.rageCost > 0) p.rage -= move.rageCost;
+
+  // Visual feedback
+  const oppEl = document.getElementById('opponentEmoji');
+  if(oppEl) { oppEl.classList.remove('hit'); void oppEl.offsetWidth; oppEl.classList.add('hit'); }
+  const rect = oppEl ? oppEl.getBoundingClientRect() : {left:200, top:200, width:80};
+  spawnDmgNumber(isCrit ? `💥${dmg}` : dmg, rect.left + rect.width/2, rect.top, 'enemy-dmg');
+
+  setFightLog(`<span class="dmg-enemy">${isCrit ? '⭐ CRITIQUE ! ' : ''}Tu fais ${dmg} dégâts avec ${move.label}</span>`);
+
+  if(state.enemyHp <= 0) {
+    state.enemyHp = 0;
+    endFight(true);
+    return;
+  }
+
+  // Update HP bar
+  updateFightBars();
+
+  // Enemy attacks after brief delay
+  setTimeout(() => enemyAttack(), 400);
+}
+
+function enemyAttack() {
+  if(state.fightState !== 'active') return;
+  const p = state.player;
+  const e = state.currentEnemy;
+  const rawDmg = e.atk[0] + Math.floor(Math.random() * (e.atk[1] - e.atk[0] + 1));
+  const dmg = Math.max(1, rawDmg - Math.floor(p.def * 0.5));
+  p.hp = Math.max(0, p.hp - dmg);
+  updateHUD();
+  updateFightBars();
+
+  const pEl = document.getElementById('playerHpBar');
+  const rect = pEl ? pEl.getBoundingClientRect() : {left:100, top:300, width:100};
+  spawnDmgNumber(`-${dmg}`, rect.left + rect.width/2, rect.top, 'player-dmg');
+  setFightLog(`<span class="dmg-player">${e.name} t'attaque pour ${dmg} dégâts !</span>`);
+
+  if(p.hp <= 0) {
+    p.hp = 0;
+    endFight(false);
+  }
+}
+
+function updateFightBars() {
+  const e = state.currentEnemy;
+  const p = state.player;
+  const eBar = document.getElementById('enemyHpBar');
+  const pBar = document.getElementById('playerHpBar');
+  const eVal = document.getElementById('enemyHpVal');
+  const pVal = document.getElementById('playerHpVal');
+  const rageBar = document.getElementById('rageBar');
+  const rageVal = document.getElementById('rageVal');
+  if(eBar) eBar.style.width = Math.max(0,(state.enemyHp/e.hp)*100)+'%';
+  if(pBar) pBar.style.width = Math.max(0,(p.hp/p.maxHp)*100)+'%';
+  if(eVal) eVal.textContent = Math.max(0, state.enemyHp);
+  if(pVal) pVal.textContent = p.hp;
+  if(rageBar) rageBar.style.width = (p.rage/p.maxRage)*100+'%';
+  if(rageVal) rageVal.textContent = p.rage;
+  // Re-enable/disable special button based on rage
+  const specBtn = document.querySelector('.move-btn.special');
+  const specMove = MOVES.find(m=>m.id==='special');
+  if(specBtn) specBtn.disabled = p.rage < specMove.rageCost;
+}
+
+function setFightLog(html) {
+  const log = document.getElementById('fightLog');
+  if(log) log.innerHTML = html;
+}
+
+function endFight(won) {
+  const e = state.currentEnemy;
+  if(won) {
+    state.gold += e.reward.gold;
+    state.player.streak++;
+    state.wins++;
+    state.fightState = 'victory';
+    updateHUD();
+    renderFight();
+  } else {
+    state.player.streak = 0;
+    state.fightState = 'defeat';
+    updateHUD();
+    renderFight();
+  }
+}
+
+function afterVictory() {
+  // Restore some HP
+  state.player.hp = Math.min(state.player.maxHp, state.player.hp + 20);
+  state.player.rage = 0;
+  state.fightState = 'select';
+  updateHUD();
+  renderFight();
+}
+
+function afterDefeat() {
+  // Restore some HP
+  state.player.hp = Math.min(state.player.maxHp, Math.round(state.player.maxHp * 0.4));
+  state.player.rage = 0;
+  state.fightState = 'select';
+  updateHUD();
+  renderFight();
+}
+
+function fleeFight() {
+  // Lose some HP on flee
+  state.player.hp = Math.max(1, state.player.hp - 10);
+  state.player.streak = 0;
+  state.player.rage = 0;
+  state.fightState = 'select';
+  updateHUD();
+  renderFight();
+  toast('Tu as fui... (-10 HP)', 'error');
+}
+
+function openFoodModal() {
+  const items = Object.entries(state.inventory).filter(([id,qty]) => qty > 0);
+  const seeds = SEEDS.filter(s => items.some(([id]) => id === s.id));
+  if(seeds.length === 0) { toast('Aucun aliment dans ton inventaire !', 'error'); return; }
+  showModal('🍱 Utiliser un aliment', 'Choisis un aliment à consommer pendant le combat.', `
+    <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem">
+      ${seeds.map(s => `
+        <button onclick="useFoodInFight('${s.id}')" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:0.8rem;font-family:'DM Sans',sans-serif;font-size:0.85rem;display:flex;align-items:center;gap:0.8rem;cursor:pointer;width:100%">
+          <span style="font-size:1.5rem">${s.emoji}</span>
+          <span style="flex:1;text-align:left">${s.name} (×${state.inventory[s.id]})</span>
+          <span style="color:var(--green);font-size:0.75rem">${s.heal>0?`+${s.heal} HP `:''} ${s.atk>0?`+${s.atk} ATK`:''}</span>
+        </button>`).join('')}
+    </div>
+  `, [{ label:'Annuler', action:'closeModal()' }]);
+}
+
+function useFoodInFight(seedId) {
+  closeModal();
+  const seed = SEEDS.find(s => s.id === seedId);
+  if(!seed || !state.inventory[seedId]) return;
+  state.inventory[seedId]--;
+  if(seed.heal > 0) {
+    state.player.hp = Math.min(state.player.maxHp, state.player.hp + seed.heal);
+    toast(`${seed.emoji} +${seed.heal} HP !`, 'success');
+  }
+  if(seed.atk > 0) {
+    state.player.atk += seed.atk;
+    toast(`${seed.emoji} +${seed.atk} ATK temporaire !`, 'success');
+  }
+  updateHUD();
+  updateFightBars();
+}
+
+// ═══════════════════════════════════════
+// SHOP
+// ═══════════════════════════════════════
+
+function renderShop() {
+  const area = document.getElementById('shopArea');
+  const equips = SHOP_ITEMS.filter(i => i.type === 'equip');
+  const items = SHOP_ITEMS.filter(i => i.type !== 'equip');
+  area.innerHTML = `
+    <div>
+      <div class="shop-section-title">⚔️ Équipement</div>
+      <div class="shop-grid">
+        ${equips.map(item => {
+          const owned = !!state.equipped[item.id];
+          const afford = state.gold >= item.cost;
+          return `<div class="shop-item ${owned?'owned':''} ${!afford&&!owned?'cant-afford':''}" onclick="${owned ? '' : `buyItem('${item.id}')`}">
+            <span class="shop-item-emoji">${item.emoji}</span>
+            <div class="shop-item-name">${item.name}</div>
+            <div class="shop-item-desc">${item.desc}</div>
+            <div class="shop-item-price">💰 ${owned ? 'Possédé' : item.cost}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div>
+      <div class="shop-section-title">🧪 Consommables</div>
+      <div class="shop-grid">
+        ${items.map(item => {
+          const qty = state.inventory[item.id] || 0;
+          const afford = state.gold >= item.cost;
+          return `<div class="shop-item ${!afford?'cant-afford':''}" onclick="buyItem('${item.id}')">
+            <span class="shop-item-emoji">${item.emoji}</span>
+            <div class="shop-item-name">${item.name} ${qty>0?`<span style='color:var(--yellow);font-size:0.65rem'>(×${qty})</span>`:''}</div>
+            <div class="shop-item-desc">${item.desc}</div>
+            <div class="shop-item-price">💰 ${item.cost}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+function buyItem(itemId) {
+  const item = SHOP_ITEMS.find(i => i.id === itemId);
+  if(!item) return;
+  if(state.gold < item.cost) { toast('Pas assez d\'or !', 'error'); return; }
+  if(item.type === 'equip' && state.equipped[item.id]) { toast('Déjà équipé !', 'error'); return; }
+  state.gold -= item.cost;
+  if(item.type === 'equip') {
+    state.equipped[item.id] = true;
+    state.player[item.stat] += item.val;
+    toast(`${item.emoji} ${item.name} équipé !`, 'success');
+  } else if(item.type === 'plot') {
+    // Unlock plots
+    let unlocked = 0;
+    for(let i=0; i<state.plots.length && unlocked < item.val; i++) {
+      if(state.plots[i].locked) { state.plots[i].locked = false; unlocked++; }
+    }
+    if(unlocked === 0) toast('Toutes les parcelles sont déjà débloquées !', 'error');
+    else { toast(`🟫 ${unlocked} nouvelles parcelles !`, 'success'); renderFarm(); }
+  } else {
+    state.inventory[item.id] = (state.inventory[item.id] || 0) + 1;
+    toast(`${item.emoji} Acheté !`, 'success');
+  }
+  updateHUD();
+  renderShop();
+}
+
+// ═══════════════════════════════════════
+// INVENTORY
+// ═══════════════════════════════════════
+
+function renderInv() {
+  const area = document.getElementById('invArea');
+  const p = state.player;
+  // Build inv items
+  const invItems = SEEDS.filter(s => state.inventory[s.id] > 0)
+    .concat(SHOP_ITEMS.filter(s => state.inventory[s.id] > 0 && s.type !== 'equip'));
+
+  const slots = [...invItems];
+  while(slots.length < 16) slots.push(null);
+
+  area.innerHTML = `
+    <div class="player-stats-card">
+      <div class="player-stats-title">📊 Statistiques du combattant</div>
+      <div class="stats-rows">
+        <div class="stat-row stat-atk">
+          <span class="stat-row-label">⚔️ Attaque</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.min(100,(p.atk/80)*100}%"></div></div>
+          <span class="stat-row-val">${p.atk}</span>
+        </div>
+        <div class="stat-row stat-def">
+          <span class="stat-row-label">🛡️ Défense</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.min(100,(p.def/60)*100}%"></div></div>
+          <span class="stat-row-val">${p.def}</span>
+        </div>
+        <div class="stat-row stat-spd">
+          <span class="stat-row-label">👟 Vitesse</span>
+          <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.min(100,(p.spd/60)*100}%"></div></div>
+          <span class="stat-row-val">${p.spd}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:1rem;margin-top:0.8rem;flex-wrap:wrap">
+        <span style="font-size:0.7rem;color:var(--muted)">Victoires: <b style="color:var(--yellow)">${state.wins}</b></span>
+        <span style="font-size:0.7rem;color:var(--muted)">Série: <b style="color:var(--red)">${state.player.streak}</b></span>
+        <span style="font-size:0.7rem;color:var(--muted)">Or total: <b style="color:var(--yellow)">${state.gold}</b></span>
+      </div>
+    </div>
+    <div>
+      <div class="shop-section-title">🎒 Inventaire</div>
+      <div class="inv-grid">
+        ${slots.map(item => item ? `
+          <div class="inv-item" onclick="useItemFromInv('${item.id}')">
+            <span class="inv-emoji">${item.emoji}</span>
+            <span class="inv-qty">${state.inventory[item.id]}</span>
+          </div>` : `<div class="inv-item empty-slot"></div>`
+        ).join('')}
+      </div>
+      ${invItems.length === 0 ? `<p style="text-align:center;color:var(--muted);font-size:0.75rem;padding:1rem">Aucun objet. Récolte des cultures !</p>` : ''}
+    </div>`;
+}
+
+function useItemFromInv(id) {
+  const seed = SEEDS.find(s => s.id === id);
+  const item = SHOP_ITEMS.find(s => s.id === id);
+  const obj = seed || item;
+  if(!obj) return;
+  const qty = state.inventory[id] || 0;
+  if(qty <= 0) return;
+  if(obj.useIn === 'fight' && state.fightState !== 'active') {
+    showModal(`${obj.emoji} ${obj.name}`, obj.desc, '', [
+      { label: '✓ Utiliser (hors combat)', action: `doUseItem('${id}')` },
+      { label: 'Annuler', action: 'closeModal()' }
+    ]);
+  } else {
+    doUseItem(id);
+  }
+}
+
+function doUseItem(id) {
+  closeModal();
+  const seed = SEEDS.find(s => s.id === id);
+  const item = SHOP_ITEMS.find(s => s.id === id);
+  const obj = seed || item;
+  if(!obj || !state.inventory[id]) return;
+  state.inventory[id]--;
+  if(obj.heal > 0) {
+    state.player.hp = Math.min(state.player.maxHp, state.player.hp + (obj.val || obj.heal));
+    toast(`${obj.emoji} +${obj.val || obj.heal} HP !`, 'success');
+  }
+  if(seed && seed.atk > 0) {
+    state.player.atk += seed.atk;
+    toast(`${obj.emoji} +${seed.atk} ATK !`, 'success');
+  }
+  updateHUD();
+  renderInv();
+}
+
+// ═══════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════
+
+function showModal(title, desc, extraHtml, actions) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalDesc').textContent = desc;
+  document.getElementById('modalExtra').innerHTML = extraHtml || '';
+  const actionsEl = document.getElementById('modalActions');
+  actionsEl.innerHTML = '';
+  (actions || []).forEach(a => {
+    const btn = document.createElement('button');
+    btn.textContent = a.label;
+    btn.className = a.primary ? 'btn-modal-primary' : 'btn-modal-secondary';
+    btn.setAttribute('onclick', a.action);
+    actionsEl.appendChild(btn);
+  });
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if(e && e.target !== document.getElementById('modalOverlay')) return;
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+function spawnFloat(text, x, y, cls) {
+  const el = document.createElement('div');
+  el.className = cls;
+  el.textContent = text;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+
+function spawnDmgNumber(text, x, y, cls) {
+  const el = document.createElement('div');
+  el.className = 'dmg-number ' + cls;
+  el.textContent = text;
+  el.style.left = (x - 20) + 'px';
+  el.style.top = (y - 10) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 900);
+}
+
+// Prevent default touch behavior on game screen to avoid scroll conflicts
+document.addEventListener('touchmove', e => {
+  if(document.getElementById('screenGame').classList.contains('active')) {
+    const scrollable = e.target.closest('.tab-panel, .seeds-row, .enemy-list, .shop-area, .inv-area');
+    if(!scrollable) e.preventDefault();
+  }
+}, { passive: false });
+</script>
+</body>
+</html>

@@ -7,291 +7,189 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Raleway:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  /* Letterboxd-inspired green palette */
-  --bg:#0d1117;
-  --bg2:#111820;
-  --bg3:#162030;
-  --panel:#182030;
-  --panel2:#1e2a3a;
-  --panel3:#243040;
-  --border:#2a3d55;
-  --border2:#3a5070;
-  --green:#00c030;
-  --green2:#00e040;
-  --green3:#80f0a0;
-  --greenglow:rgba(0,192,48,0.3);
-  --greendim:#00802a;
-  --teal:#00b4a0;
-  --tealbright:#00d4bc;
-  --red:#e0303a;
-  --redbright:#ff4050;
-  --amber:#e0a000;
-  --amberbright:#ffc020;
-  --blue:#2060c0;
-  --bluebright:#3080f0;
-  --purple:#8040d0;
-  --purplebright:#a060f0;
-  --orange:#d05000;
-  --orangebright:#f07020;
-  --text:#c8dde8;
-  --text2:#7a9ab0;
-  --text3:#405870;
-  --white:#e8f4f8;
-  --shadow:rgba(0,0,0,0.7);
+  --bg:#0d1117;--bg2:#111820;--bg3:#162030;--panel:#182030;--panel2:#1e2a3a;--panel3:#243040;
+  --border:#2a3d55;--border2:#3a5070;
+  --green:#00c030;--green2:#00e040;--green3:#80f0a0;--greenglow:rgba(0,192,48,0.3);--greendim:#00802a;
+  --teal:#00b4a0;--tealbright:#00d4bc;--red:#e0303a;--redbright:#ff4050;
+  --amber:#e0a000;--amberbright:#ffc020;--blue:#2060c0;--bluebright:#3080f0;
+  --purple:#8040d0;--purplebright:#a060f0;--orange:#d05000;--orangebright:#f07020;
+  --text:#c8dde8;--text2:#7a9ab0;--text3:#405870;--white:#e8f4f8;--shadow:rgba(0,0,0,0.7);
 }
+html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville',serif;height:100%;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;}
 
-html,body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Libre Baskerville',serif;
-  height:100%;
-  overflow:hidden;
-  user-select:none;
-  -webkit-user-select:none;
-  touch-action:none;
-}
-
-/* ═══════════════════════════════
-   TITLE SCREEN
-═══════════════════════════════ */
+/* SCREENS */
 .screen{display:none;width:100%;height:100vh;overflow:hidden;}
 .screen.active{display:flex;flex-direction:column;}
 
-#screenTitle{
-  background:
-    radial-gradient(ellipse 120% 80% at 50% 20%, rgba(0,80,30,0.5) 0%,transparent 55%),
-    radial-gradient(ellipse 60% 60% at 80% 80%, rgba(0,30,60,0.4) 0%,transparent 55%),
-    linear-gradient(180deg, #090e12 0%, #0d1117 100%);
-  align-items:center;justify-content:center;position:relative;overflow:hidden;
-}
-
-.title-scanlines{
-  position:absolute;inset:0;pointer-events:none;z-index:1;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
-}
-.title-grid{
-  position:absolute;inset:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(0,192,48,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,192,48,0.04) 1px, transparent 1px);
-  background-size:40px 40px;
-}
-
-.title-frame{
-  position:relative;z-index:2;
-  background:rgba(24,32,48,0.95);
-  border:1px solid var(--border2);
-  padding:2.5rem 2.5rem 3rem;
-  max-width:360px;width:90%;
-  text-align:center;
-  box-shadow:0 0 80px rgba(0,0,0,0.8), 0 0 40px rgba(0,192,48,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
-}
-.title-frame::before{
-  content:'';position:absolute;inset:0;
-  border:1px solid rgba(0,192,48,0.15);
-  pointer-events:none;
-}
+/* TITLE SCREEN */
+#screenTitle{background:radial-gradient(ellipse 120% 80% at 50% 20%,rgba(0,80,30,0.5) 0%,transparent 55%),radial-gradient(ellipse 60% 60% at 80% 80%,rgba(0,30,60,0.4) 0%,transparent 55%),linear-gradient(180deg,#090e12 0%,#0d1117 100%);align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.title-scanlines{position:absolute;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);}
+.title-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,192,48,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,192,48,0.04) 1px,transparent 1px);background-size:40px 40px;}
+.title-frame{position:relative;z-index:2;background:rgba(24,32,48,0.95);border:1px solid var(--border2);padding:2.5rem 2.5rem 3rem;max-width:360px;width:90%;text-align:center;box-shadow:0 0 80px rgba(0,0,0,0.8),0 0 40px rgba(0,192,48,0.08),inset 0 1px 0 rgba(255,255,255,0.05);}
+.title-frame::before{content:'';position:absolute;inset:0;border:1px solid rgba(0,192,48,0.15);pointer-events:none;}
 .title-corner{position:absolute;width:20px;height:20px;border-color:var(--green);border-style:solid;}
 .title-corner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px;}
 .title-corner.tr{top:-1px;right:-1px;border-width:2px 2px 0 0;}
 .title-corner.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;}
 .title-corner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
-
 .title-crest{font-size:4rem;display:block;margin-bottom:0.8rem;filter:drop-shadow(0 0 20px rgba(0,192,48,0.6));animation:crestFloat 4s ease-in-out infinite;}
 @keyframes crestFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-
-.title-main{
-  font-family:'Raleway',sans-serif;font-weight:900;
-  font-size:clamp(2rem,8vw,3rem);
-  color:var(--white);
-  letter-spacing:-0.02em;
-  line-height:1;margin-bottom:0.2rem;
-}
+.title-main{font-family:'Raleway',sans-serif;font-weight:900;font-size:clamp(2rem,8vw,3rem);color:var(--white);letter-spacing:-0.02em;line-height:1;margin-bottom:0.2rem;}
 .title-main span{color:var(--green);}
-.title-sub{
-  font-family:'Raleway',sans-serif;font-size:0.62rem;
-  letter-spacing:0.35em;color:var(--text3);
-  text-transform:uppercase;margin-bottom:0.6rem;
-}
-.title-divider{
-  width:100%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--border2),transparent);
-  margin:0.8rem 0;
-}
-.title-tagline{
-  font-size:0.82rem;color:var(--text2);
-  font-style:italic;margin-bottom:1.8rem;
-}
-.title-name-input{
-  width:100%;background:rgba(0,0,0,0.4);
-  border:1px solid var(--border2);
-  border-bottom:2px solid var(--green);
-  color:var(--white);
-  font-family:'Libre Baskerville',serif;font-size:0.95rem;
-  padding:0.7rem 1rem;margin-bottom:0.8rem;
-  outline:none;text-align:center;
-  transition:all 0.2s;
-}
+.title-sub{font-family:'Raleway',sans-serif;font-size:0.62rem;letter-spacing:0.35em;color:var(--text3);text-transform:uppercase;margin-bottom:0.6rem;}
+.title-divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:0.8rem 0;}
+.title-tagline{font-size:0.82rem;color:var(--text2);font-style:italic;margin-bottom:1.8rem;}
+.title-name-input{width:100%;background:rgba(0,0,0,0.4);border:1px solid var(--border2);border-bottom:2px solid var(--green);color:var(--white);font-family:'Libre Baskerville',serif;font-size:0.95rem;padding:0.7rem 1rem;margin-bottom:0.8rem;outline:none;text-align:center;transition:all 0.2s;}
 .title-name-input:focus{border-color:var(--green);box-shadow:0 0 0 1px rgba(0,192,48,0.2);}
 .title-name-input::placeholder{color:var(--text3);}
-
-.btn-title{
-  width:100%;
-  background:var(--green);
-  border:none;color:#060e08;
-  font-family:'Raleway',sans-serif;font-size:0.88rem;font-weight:700;
-  letter-spacing:0.12em;padding:0.85rem;cursor:pointer;
-  position:relative;overflow:hidden;
-  transition:all 0.15s;
-  text-transform:uppercase;
-  margin-bottom:0.5rem;
-}
-.btn-title::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(255,255,255,0.15) 0%,transparent 100%);
-}
+.btn-title{width:100%;background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.12em;padding:0.85rem;cursor:pointer;position:relative;overflow:hidden;transition:all 0.15s;text-transform:uppercase;margin-bottom:0.5rem;}
+.btn-title::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.15) 0%,transparent 100%);}
 .btn-title:hover{background:var(--green2);}
 .btn-title:active{transform:scale(0.98);}
-.btn-title.secondary{
-  background:transparent;border:1px solid var(--border2);
-  color:var(--text3);font-size:0.72rem;font-weight:400;
-  padding:0.55rem;letter-spacing:0.08em;
-}
+.btn-title.secondary{background:transparent;border:1px solid var(--border2);color:var(--text3);font-size:0.72rem;font-weight:400;padding:0.55rem;letter-spacing:0.08em;}
 .btn-title.secondary:hover{border-color:var(--green);color:var(--green);}
 .title-disclaimer{font-size:0.6rem;color:var(--text3);margin-top:1rem;font-style:italic;}
+
+/* ═══════ NARRATOR SYSTEM ═══════ */
+.narrator-overlay{
+  position:fixed;bottom:0;left:0;right:0;z-index:500;
+  display:flex;align-items:flex-end;
+  pointer-events:none;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  transform:translateY(110%);
+}
+.narrator-overlay.show{transform:translateY(0);pointer-events:all;}
+.narrator-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(2px);}
+.narrator-box{
+  position:relative;z-index:1;
+  width:100%;
+  background:linear-gradient(180deg,#0d1822 0%,#0a1218 100%);
+  border-top:2px solid var(--border2);
+  display:flex;align-items:flex-end;gap:0;
+  min-height:130px;
+  box-shadow:0 -8px 32px rgba(0,0,0,0.7);
+}
+.narrator-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0.4;}
+
+/* Character portrait area */
+.narrator-portrait{
+  width:90px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding:0 0 0 0.5rem;
+  position:relative;
+}
+.char-sprite{
+  width:80px;height:80px;
+  display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 0 12px rgba(0,192,48,0.3));
+  animation:charBob 2.5s ease-in-out infinite;
+  position:relative;z-index:1;
+}
+.char-sprite img{
+  width:72px;height:72px;object-fit:contain;
+  display:block;
+}
+/* Fallback emoji style (si SVG absent) */
+.char-sprite .emoji-fallback{
+  font-size:3.8rem;line-height:1;
+}
+@keyframes charBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.char-sprite.villain{filter:drop-shadow(0 0 14px rgba(255,60,0,0.5));animation-duration:1.8s;}
+
+.char-name-tag{
+  background:var(--panel2);border:1px solid var(--border2);
+  font-family:'Raleway',sans-serif;font-size:0.5rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:2px 8px;margin-bottom:4px;
+  color:var(--white);width:100%;text-align:center;
+}
+.char-name-tag.fraise{border-color:#e04070;color:#ff80a0;}
+.char-name-tag.poire{border-color:#80c020;color:#c0f040;}
+.char-name-tag.banane{border-color:#e0a000;color:#ffd040;}
+.char-name-tag.narrateur{border-color:var(--border2);color:var(--text2);}
+
+/* Dialogue bubble */
+.narrator-content{
+  flex:1;padding:0.8rem 1rem;
+  display:flex;flex-direction:column;gap:0.4rem;
+  justify-content:center;
+}
+.narrator-text{
+  font-size:0.82rem;color:var(--white);line-height:1.6;
+  font-family:'Libre Baskerville',serif;
+  min-height:2.5rem;
+}
+.narrator-text .narrator-char-inline{
+  font-family:'Raleway',sans-serif;font-weight:700;font-size:0.75rem;
+}
+.narrator-cursor{display:inline-block;width:2px;height:0.9em;background:var(--green);margin-left:2px;animation:cursorBlink 0.7s step-end infinite;vertical-align:middle;}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+.narrator-footer{display:flex;align-items:center;justify-content:space-between;margin-top:0.3rem;}
+.narrator-tap-hint{font-family:'Raleway',sans-serif;font-size:0.48rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
+.btn-narrator-next{
+  background:transparent;border:1px solid var(--border2);
+  color:var(--text2);font-family:'Raleway',sans-serif;font-size:0.6rem;font-weight:600;
+  padding:0.3rem 0.8rem;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;
+  transition:all 0.1s;-webkit-tap-highlight-color:transparent;
+}
+.btn-narrator-next:hover{border-color:var(--green);color:var(--green);}
+.btn-narrator-next:active{transform:scale(0.95);}
+.btn-narrator-skip{
+  background:transparent;border:none;color:var(--text3);
+  font-family:'Raleway',sans-serif;font-size:0.52rem;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  text-decoration:underline;text-underline-offset:3px;
+}
+
+/* Story progress dots */
+.narrator-dots{display:flex;gap:4px;align-items:center;}
+.ndot{width:5px;height:5px;border-radius:50%;background:var(--border2);transition:background 0.2s;}
+.ndot.active{background:var(--green);}
+.ndot.done{background:var(--greendim);}
 
 /* ═══════════════════════════════
    MAIN GAME
 ═══════════════════════════════ */
-#screenGame{
-  background:
-    radial-gradient(ellipse 100% 50% at 50% 0%, rgba(0,50,20,0.15) 0%,transparent 50%),
-    var(--bg);
-  flex-direction:column;position:relative;
-}
-
-/* TOP BAR */
-.topbar{
-  background:linear-gradient(180deg,#0f1820 0%,#0d1520 100%);
-  border-bottom:1px solid var(--border);
-  padding:0 0.8rem;
-  display:flex;align-items:center;gap:0.6rem;
-  flex-shrink:0;z-index:20;height:44px;
-}
-.topbar-logo{
-  font-family:'Raleway',sans-serif;font-weight:900;
-  font-size:0.95rem;color:var(--white);
-  white-space:nowrap;letter-spacing:-0.01em;
-}
+#screenGame{background:radial-gradient(ellipse 100% 50% at 50% 0%,rgba(0,50,20,0.15) 0%,transparent 50%),var(--bg);flex-direction:column;position:relative;}
+.topbar{background:linear-gradient(180deg,#0f1820 0%,#0d1520 100%);border-bottom:1px solid var(--border);padding:0 0.8rem;display:flex;align-items:center;gap:0.6rem;flex-shrink:0;z-index:20;height:44px;}
+.topbar-logo{font-family:'Raleway',sans-serif;font-weight:900;font-size:0.95rem;color:var(--white);white-space:nowrap;letter-spacing:-0.01em;}
 .topbar-logo span{color:var(--green);}
 .topbar-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
-.topbar-skills{
-  display:flex;gap:0.25rem;align-items:center;
-  overflow-x:auto;flex:1;scrollbar-width:none;
-}
+.topbar-skills{display:flex;gap:0.25rem;align-items:center;overflow-x:auto;flex:1;scrollbar-width:none;}
 .topbar-skills::-webkit-scrollbar{display:none;}
-.skill-chip{
-  display:flex;align-items:center;gap:3px;
-  background:var(--panel2);border:1px solid var(--border);
-  padding:0.18rem 0.45rem;
-  white-space:nowrap;cursor:pointer;
-  transition:border-color 0.15s;flex-shrink:0;
-}
+.skill-chip{display:flex;align-items:center;gap:3px;background:var(--panel2);border:1px solid var(--border);padding:0.18rem 0.45rem;white-space:nowrap;cursor:pointer;transition:border-color 0.15s;flex-shrink:0;}
 .skill-chip:hover{border-color:var(--green);}
 .skill-chip-icon{font-size:0.65rem;}
-.skill-chip-val{
-  font-family:'DM Mono',monospace;
-  font-size:0.6rem;color:var(--green);
-}
+.skill-chip-val{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--green);}
 .topbar-right{display:flex;align-items:center;gap:0.4rem;}
-.topbar-gold{
-  display:flex;align-items:center;gap:0.3rem;
-  font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--amberbright);
-  background:var(--panel2);border:1px solid var(--border);
-  padding:0.18rem 0.55rem;
-}
-
-/* VITALS */
-.vitals-bar{
-  background:rgba(0,0,0,0.3);
-  border-bottom:1px solid var(--border);
-  padding:0.25rem 0.8rem;
-  display:flex;align-items:center;gap:0.6rem;
-  flex-shrink:0;height:30px;
-}
+.topbar-gold{display:flex;align-items:center;gap:0.3rem;font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--amberbright);background:var(--panel2);border:1px solid var(--border);padding:0.18rem 0.55rem;}
+.vitals-bar{background:rgba(0,0,0,0.3);border-bottom:1px solid var(--border);padding:0.25rem 0.8rem;display:flex;align-items:center;gap:0.6rem;flex-shrink:0;height:30px;}
 .vital{display:flex;align-items:center;gap:0.3rem;flex:1;}
 .vital-icon{font-size:0.65rem;}
-.vital-track{
-  flex:1;height:8px;
-  border:1px solid rgba(255,255,255,0.06);
-  background:rgba(0,0,0,0.5);
-  position:relative;overflow:hidden;
-}
+.vital-track{flex:1;height:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.5);position:relative;overflow:hidden;}
 .vital-fill{height:100%;transition:width 0.3s ease;}
 .vital-fill.hp{background:linear-gradient(90deg,#5a0a0a,#c02030,#e04050);}
 .vital-fill.hunger{background:linear-gradient(90deg,#4a3000,#c08000,#e0c000);}
 .vital-fill.xp{background:linear-gradient(90deg,#004a1a,#00a030,var(--green));}
-.vital-val{
-  font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--text2);
-  width:36px;text-align:right;flex-shrink:0;
-}
-.vital-label{
-  font-family:'Raleway',sans-serif;font-size:0.48rem;color:var(--text3);
-  letter-spacing:0.06em;text-transform:uppercase;width:22px;flex-shrink:0;
-}
-
-/* GAME BODY */
+.vital-val{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--text2);width:36px;text-align:right;flex-shrink:0;}
+.vital-label{font-family:'Raleway',sans-serif;font-size:0.48rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;width:22px;flex-shrink:0;}
 .game-body{flex:1;display:flex;overflow:hidden;min-height:0;position:relative;}
 .content-area{flex:1;overflow:hidden;position:relative;display:flex;flex-direction:column;}
-.tab-panel{
-  display:none;flex:1;overflow-y:auto;overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
-}
+.tab-panel{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
 .tab-panel::-webkit-scrollbar{width:3px;}
 .tab-panel::-webkit-scrollbar-thumb{background:var(--border);}
 .tab-panel.active{display:flex;flex-direction:column;}
-
-/* SIDEBAR */
-.sidebar{
-  width:180px;flex-shrink:0;
-  display:flex;flex-direction:column;
-  border-left:1px solid var(--border);
-  background:var(--panel);
-  overflow:hidden;
-}
-.minimap-wrap{
-  padding:0.5rem;border-bottom:1px solid var(--border);
-  background:rgba(0,0,0,0.3);flex-shrink:0;
-}
-.minimap{
-  width:100%;aspect-ratio:1;
-  background:
-    radial-gradient(ellipse 60% 50% at 35% 40%,rgba(0,30,15,0.9) 0%,transparent 60%),
-    radial-gradient(ellipse 50% 40% at 70% 65%,rgba(0,15,30,0.9) 0%,transparent 55%),
-    #080f08;
-  border:1px solid var(--border);
-  position:relative;overflow:hidden;
-}
-.minimap-dot{
-  position:absolute;border-radius:50%;
-  transform:translate(-50%,-50%);cursor:pointer;
-  transition:all 0.2s;
-}
+.sidebar{width:180px;flex-shrink:0;display:flex;flex-direction:column;border-left:1px solid var(--border);background:var(--panel);overflow:hidden;}
+.minimap-wrap{padding:0.5rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.3);flex-shrink:0;}
+.minimap{width:100%;aspect-ratio:1;background:radial-gradient(ellipse 60% 50% at 35% 40%,rgba(0,30,15,0.9) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 70% 65%,rgba(0,15,30,0.9) 0%,transparent 55%),#080f08;border:1px solid var(--border);position:relative;overflow:hidden;}
+.minimap-dot{position:absolute;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;transition:all 0.2s;}
 .minimap-dot.current{animation:minimapPulse 1.5s ease-in-out infinite;}
 @keyframes minimapPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.5)}}
-.minimap-label{
-  font-family:'Raleway',sans-serif;font-size:0.45rem;
-  color:var(--text3);text-align:center;margin-top:0.3rem;
-  letter-spacing:0.12em;text-transform:uppercase;
-}
+.minimap-label{font-family:'Raleway',sans-serif;font-size:0.45rem;color:var(--text3);text-align:center;margin-top:0.3rem;letter-spacing:0.12em;text-transform:uppercase;}
 .skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;padding:0.4rem;}
-.skill-entry{
-  background:var(--panel2);border:1px solid var(--border);
-  padding:0.3rem 0.4rem;cursor:pointer;transition:border-color 0.15s;
-}
+.skill-entry{background:var(--panel2);border:1px solid var(--border);padding:0.3rem 0.4rem;cursor:pointer;transition:border-color 0.15s;}
 .skill-entry:hover{border-color:var(--green);}
 .skill-entry-top{display:flex;align-items:center;justify-content:space-between;}
 .skill-icon{font-size:0.8rem;}
@@ -299,15 +197,7 @@ html,body{
 .skill-level{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--green);font-weight:500;}
 .skill-xp-track{width:100%;height:2px;background:rgba(255,255,255,0.04);margin-top:2px;}
 .skill-xp-fill{height:100%;background:var(--green);transition:width 0.4s;}
-
-/* CHAT LOG */
-.chat-log{
-  height:72px;flex-shrink:0;
-  background:rgba(0,0,0,0.5);
-  border-top:1px solid var(--border);
-  overflow-y:auto;padding:0.35rem 0.6rem;
-  scrollbar-width:none;
-}
+.chat-log{height:72px;flex-shrink:0;background:rgba(0,0,0,0.5);border-top:1px solid var(--border);overflow-y:auto;padding:0.35rem 0.6rem;scrollbar-width:none;}
 .chat-log::-webkit-scrollbar{display:none;}
 .chat-line{font-family:'Libre Baskerville',serif;font-size:0.7rem;line-height:1.5;}
 .chat-line.combat{color:var(--amberbright);}
@@ -318,134 +208,56 @@ html,body{
 .chat-line.quest{color:var(--bluebright);}
 .chat-line.sys{color:var(--text3);font-style:italic;}
 .chat-line.special{color:var(--orangebright);font-weight:700;}
-
-/* TAB BAR */
-.tab-bar{
-  background:linear-gradient(180deg,#0f1820,#0d1520);
-  border-top:1px solid var(--border);
-  display:flex;flex-shrink:0;z-index:15;
-}
-.tab-btn{
-  flex:1;padding:0.4rem 0.15rem;border:none;background:none;
-  color:var(--text3);
-  font-family:'Raleway',sans-serif;font-size:0.42rem;
-  letter-spacing:0.06em;text-transform:uppercase;font-weight:600;
-  cursor:pointer;border-right:1px solid var(--border);
-  border-top:2px solid transparent;
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  transition:all 0.15s;-webkit-tap-highlight-color:transparent;
-  position:relative;
-}
+.chat-line.story{color:#ff80a0;font-style:italic;}
+.tab-bar{background:linear-gradient(180deg,#0f1820,#0d1520);border-top:1px solid var(--border);display:flex;flex-shrink:0;z-index:15;}
+.tab-btn{flex:1;padding:0.4rem 0.15rem;border:none;background:none;color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.42rem;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;cursor:pointer;border-right:1px solid var(--border);border-top:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all 0.15s;-webkit-tap-highlight-color:transparent;position:relative;}
 .tab-btn:last-child{border-right:none;}
 .tab-btn.active{color:var(--green);border-top-color:var(--green);background:rgba(0,192,48,0.06);}
 .tab-btn .t-icon{font-size:0.95rem;}
-.tab-notif{
-  position:absolute;top:4px;right:calc(50% - 14px);
-  width:5px;height:5px;background:var(--red);border-radius:50%;
-  animation:blink 1s ease-in-out infinite;
-}
+.tab-notif{position:absolute;top:4px;right:calc(50% - 14px);width:5px;height:5px;background:var(--red);border-radius:50%;animation:blink 1s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* ═══════════════════════════════
-   WORLD MAP
-═══════════════════════════════ */
-.map-region{
-  position:absolute;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:all 0.2s;-webkit-tap-highlight-color:transparent;
-}
+/* WORLD */
+.map-region{position:absolute;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
 .map-region:active{transform:translate(-50%,-50%) scale(0.9);}
 .map-region.locked{opacity:0.25;cursor:not-allowed;filter:grayscale(1);}
-.region-bubble{
-  background:rgba(0,0,0,0.7);border:1px solid var(--border2);
-  border-radius:50%;display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.6);
-}
-.map-region:not(.locked):hover .region-bubble{
-  border-color:var(--green);
-  box-shadow:0 0 16px var(--greenglow),0 2px 8px rgba(0,0,0,0.6);
-}
-.map-region.active .region-bubble{
-  border-color:var(--green2);
-  box-shadow:0 0 20px var(--greenglow);
-  animation:regionPulse 2s ease-in-out infinite;
-}
+.region-bubble{background:rgba(0,0,0,0.7);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.6);}
+.map-region:not(.locked):hover .region-bubble{border-color:var(--green);box-shadow:0 0 16px var(--greenglow),0 2px 8px rgba(0,0,0,0.6);}
+.map-region.active .region-bubble{border-color:var(--green2);box-shadow:0 0 20px var(--greenglow);animation:regionPulse 2s ease-in-out infinite;}
 @keyframes regionPulse{0%,100%{box-shadow:0 0 10px var(--greenglow)}50%{box-shadow:0 0 24px rgba(0,192,48,0.55)}}
 .region-emoji{font-size:1.4rem;display:block;}
-.region-label{
-  font-family:'Raleway',sans-serif;font-size:0.5rem;
-  letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--text2);margin-top:3px;text-align:center;
-  text-shadow:0 1px 4px rgba(0,0,0,0.9);
-}
+.region-label{font-family:'Raleway',sans-serif;font-size:0.5rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);margin-top:3px;text-align:center;text-shadow:0 1px 4px rgba(0,0,0,0.9);}
 .map-region.active .region-label{color:var(--green);}
 .region-level{font-family:'DM Mono',monospace;font-size:0.45rem;color:var(--text3);}
-
-.map-event-popup{
-  position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);
-  background:var(--panel);border:1px solid var(--border2);
-  padding:0.8rem 1.1rem;min-width:200px;max-width:290px;
-  z-index:10;text-align:center;
-  box-shadow:0 8px 32px rgba(0,0,0,0.6);
-}
+.map-event-popup{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--border2);padding:0.8rem 1.1rem;min-width:200px;max-width:290px;z-index:10;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.6);}
 .map-event-popup::before{content:'';position:absolute;inset:0;border:1px solid rgba(0,192,48,0.1);pointer-events:none;}
 .popup-title{font-family:'Raleway',sans-serif;font-weight:700;font-size:0.88rem;color:var(--white);margin-bottom:0.3rem;}
 .popup-desc{font-size:0.7rem;color:var(--text2);line-height:1.5;margin-bottom:0.8rem;font-style:italic;}
-.btn-popup{
-  background:var(--green);border:none;color:#060e08;
-  font-family:'Raleway',sans-serif;font-size:0.7rem;font-weight:700;
-  padding:0.45rem 1.3rem;cursor:pointer;
-  transition:all 0.1s;display:inline-block;margin:0 0.2rem;
-  -webkit-tap-highlight-color:transparent;letter-spacing:0.06em;text-transform:uppercase;
-}
+.btn-popup{background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-size:0.7rem;font-weight:700;padding:0.45rem 1.3rem;cursor:pointer;transition:all 0.1s;display:inline-block;margin:0 0.2rem;-webkit-tap-highlight-color:transparent;letter-spacing:0.06em;text-transform:uppercase;}
 .btn-popup:hover{background:var(--green2);}
 .btn-popup:active{transform:scale(0.95);}
 .btn-popup.secondary{background:transparent;border:1px solid var(--border2);color:var(--text3);}
 .btn-popup.secondary:hover{border-color:var(--green);color:var(--green);}
 
-/* ═══════════════════════════════
-   FARM
-═══════════════════════════════ */
+/* FARM */
 .farm-panel{padding:0.6rem;}
 .farm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:0.6rem;}
-.plot-rs{
-  aspect-ratio:1;position:relative;cursor:pointer;
-  transition:all 0.15s;-webkit-tap-highlight-color:transparent;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  overflow:hidden;
-}
+.plot-rs{aspect-ratio:1;position:relative;cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
 .plot-rs:active{transform:scale(0.9);}
-.plot-rs.empty{
-  background:repeating-linear-gradient(45deg,#0a0f08 0px,#0a0f08 4px,#080d06 4px,#080d06 8px);
-  border:1px dashed #1e2e1a;
-}
+.plot-rs.empty{background:repeating-linear-gradient(45deg,#0a0f08 0px,#0a0f08 4px,#080d06 4px,#080d06 8px);border:1px dashed #1e2e1a;}
 .plot-rs.growing{background:#0a120a;border:1px solid #1a2e1a;}
-.plot-rs.ready{
-  background:#0a1a0a;border:1px solid var(--green);
-  box-shadow:0 0 10px rgba(0,192,48,0.2);
-  animation:plotReady 1.5s ease-in-out infinite;
-}
+.plot-rs.ready{background:#0a1a0a;border:1px solid var(--green);box-shadow:0 0 10px rgba(0,192,48,0.2);animation:plotReady 1.5s ease-in-out infinite;}
 @keyframes plotReady{0%,100%{box-shadow:0 0 5px rgba(0,192,48,0.15)}50%{box-shadow:0 0 18px rgba(0,192,48,0.4)}}
 .plot-rs.locked{background:#080d06;border:1px solid #141e12;opacity:0.3;cursor:not-allowed;}
 .plot-emoji{font-size:1.5rem;line-height:1;}
 .plot-progress{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.04);}
 .plot-progress-fill{height:100%;background:var(--green);transition:width 0.5s;}
-.plot-ready-tag{
-  position:absolute;top:2px;right:2px;
-  background:var(--green);color:#060e08;
-  font-family:'Raleway',sans-serif;font-size:0.4rem;font-weight:700;
-  padding:1px 3px;letter-spacing:0.05em;text-transform:uppercase;
-}
+.plot-ready-tag{position:absolute;top:2px;right:2px;background:var(--green);color:#060e08;font-family:'Raleway',sans-serif;font-size:0.4rem;font-weight:700;padding:1px 3px;letter-spacing:0.05em;text-transform:uppercase;}
 .plot-time{font-size:0.45rem;color:var(--text3);font-family:'DM Mono',monospace;}
-
 .seeds-section{background:var(--panel2);border:1px solid var(--border);padding:0.5rem;}
 .seeds-title{font-family:'Raleway',sans-serif;font-size:0.58rem;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;font-weight:700;}
 .seeds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
-.seed-btn{
-  background:var(--panel3);border:1px solid var(--border);
-  padding:0.35rem 0.25rem;cursor:pointer;text-align:center;
-  transition:all 0.12s;-webkit-tap-highlight-color:transparent;
-}
+.seed-btn{background:var(--panel3);border:1px solid var(--border);padding:0.35rem 0.25rem;cursor:pointer;text-align:center;transition:all 0.12s;-webkit-tap-highlight-color:transparent;}
 .seed-btn:active{transform:scale(0.93);}
 .seed-btn.selected{border-color:var(--green);background:rgba(0,192,48,0.08);}
 .seed-btn.locked{opacity:0.25;cursor:not-allowed;}
@@ -454,15 +266,9 @@ html,body{
 .seed-cost{font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--amberbright);}
 .seed-time{font-size:0.4rem;color:var(--text3);}
 
-/* ═══════════════════════════════
-   COOKING
-═══════════════════════════════ */
+/* COOKING */
 .recipes-panel{padding:0.6rem;}
-.recipe-card-rs{
-  background:var(--panel2);border:1px solid var(--border);
-  margin-bottom:0.5rem;overflow:hidden;cursor:pointer;
-  transition:border-color 0.15s;
-}
+.recipe-card-rs{background:var(--panel2);border:1px solid var(--border);margin-bottom:0.5rem;overflow:hidden;cursor:pointer;transition:border-color 0.15s;}
 .recipe-card-rs:hover{border-color:var(--green);}
 .recipe-card-rs:active{transform:scale(0.98);}
 .recipe-card-rs.locked{opacity:0.3;cursor:not-allowed;}
@@ -472,60 +278,22 @@ html,body{
 .recipe-name-rs{font-family:'Raleway',sans-serif;font-weight:700;font-size:0.8rem;color:var(--white);}
 .recipe-desc-rs{font-size:0.63rem;color:var(--text2);font-style:italic;margin-top:1px;line-height:1.4;}
 .recipe-lvl-req{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--green);}
-.recipe-ingredients{
-  padding:0.35rem 0.7rem;border-top:1px solid var(--border);
-  display:flex;gap:0.3rem;flex-wrap:wrap;align-items:center;justify-content:space-between;
-}
-.ing-chip{
-  display:flex;align-items:center;gap:0.2rem;
-  background:var(--panel3);border:1px solid var(--border);
-  padding:0.12rem 0.35rem;font-size:0.58rem;
-  font-family:'Raleway',sans-serif;
-}
+.recipe-ingredients{padding:0.35rem 0.7rem;border-top:1px solid var(--border);display:flex;gap:0.3rem;flex-wrap:wrap;align-items:center;justify-content:space-between;}
+.ing-chip{display:flex;align-items:center;gap:0.2rem;background:var(--panel3);border:1px solid var(--border);padding:0.12rem 0.35rem;font-size:0.58rem;font-family:'Raleway',sans-serif;}
 .ing-chip.have{border-color:var(--green);color:var(--green2);}
 .ing-chip.missing{color:var(--text3);}
-.btn-cook-rs{
-  background:var(--green);border:none;color:#060e08;
-  font-family:'Raleway',sans-serif;font-size:0.65rem;font-weight:700;
-  padding:0.35rem 0.9rem;cursor:pointer;
-  transition:all 0.1s;-webkit-tap-highlight-color:transparent;
-  text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;
-}
+.btn-cook-rs{background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-size:0.65rem;font-weight:700;padding:0.35rem 0.9rem;cursor:pointer;transition:all 0.1s;-webkit-tap-highlight-color:transparent;text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;}
 .btn-cook-rs:hover{background:var(--green2);}
 .btn-cook-rs:active{transform:scale(0.95);}
 .btn-cook-rs:disabled{background:var(--panel3);border:1px solid var(--border);color:var(--text3);cursor:not-allowed;}
 
-/* ═══════════════════════════════
-   COMBAT
-═══════════════════════════════ */
-.combat-screen{
-  flex:1;display:flex;flex-direction:column;overflow:hidden;
-  background:
-    radial-gradient(ellipse 100% 50% at 50% 0%,rgba(80,10,10,0.25) 0%,transparent 55%),
-    var(--bg);
-}
-.combat-arena{
-  flex:1;display:flex;align-items:flex-end;justify-content:space-between;
-  padding:0.5rem 1rem 0.3rem;position:relative;overflow:hidden;min-height:0;
-}
-.arena-bg{
-  position:absolute;inset:0;
-  background:
-    linear-gradient(180deg,rgba(60,10,10,0.15) 0%,transparent 40%),
-    repeating-linear-gradient(90deg,transparent 0px,transparent 80px,rgba(0,192,48,0.015) 80px,rgba(0,192,48,0.015) 81px);
-}
-.arena-floor{
-  position:absolute;bottom:0;left:0;right:0;height:25%;
-  background:linear-gradient(180deg,transparent,rgba(0,0,0,0.4));
-  border-top:1px solid rgba(0,192,48,0.04);
-}
+/* COMBAT */
+.combat-screen{flex:1;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(ellipse 100% 50% at 50% 0%,rgba(80,10,10,0.25) 0%,transparent 55%),var(--bg);}
+.combat-arena{flex:1;display:flex;align-items:flex-end;justify-content:space-between;padding:0.5rem 1rem 0.3rem;position:relative;overflow:hidden;min-height:0;}
+.arena-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(60,10,10,0.15) 0%,transparent 40%),repeating-linear-gradient(90deg,transparent 0px,transparent 80px,rgba(0,192,48,0.015) 80px,rgba(0,192,48,0.015) 81px);}
+.arena-floor{position:absolute;bottom:0;left:0;right:0;height:25%;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.4));border-top:1px solid rgba(0,192,48,0.04);}
 .combatant{display:flex;flex-direction:column;align-items:center;z-index:2;}
-.combatant-sprite{
-  font-size:clamp(2.5rem,10vw,4.5rem);
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.8));
-  animation:combatFloat 3s ease-in-out infinite;
-  display:block;line-height:1;
-}
+.combatant-sprite{font-size:clamp(2.5rem,10vw,4.5rem);filter:drop-shadow(0 4px 12px rgba(0,0,0,0.8));animation:combatFloat 3s ease-in-out infinite;display:block;line-height:1;}
 .combatant-sprite.player{animation-direction:reverse;animation-duration:2.5s;}
 @keyframes combatFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .combatant-sprite.hit{animation:combatHit 0.3s forwards;}
@@ -535,14 +303,7 @@ html,body{
 .combatant-shadow{width:38px;height:4px;background:rgba(0,0,0,0.5);border-radius:50%;filter:blur(3px);margin-top:1px;}
 .combatant-name{font-family:'Raleway',sans-serif;font-size:0.52rem;color:var(--text2);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;}
 .combat-vs{font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:900;color:rgba(0,192,48,0.1);z-index:1;align-self:center;letter-spacing:0.1em;}
-
-/* COMBAT BARS */
-.combat-bars{
-  padding:0.4rem 0.7rem;
-  display:flex;flex-direction:column;gap:0.3rem;
-  flex-shrink:0;background:rgba(0,0,0,0.25);
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-}
+.combat-bars{padding:0.4rem 0.7rem;display:flex;flex-direction:column;gap:0.3rem;flex-shrink:0;background:rgba(0,0,0,0.25);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .cbar-row{display:flex;align-items:center;gap:0.4rem;}
 .cbar-label{font-family:'Raleway',sans-serif;font-size:0.48rem;color:var(--text3);width:80px;flex-shrink:0;text-transform:uppercase;letter-spacing:0.04em;}
 .cbar-track{flex:1;height:10px;border:1px solid rgba(255,255,255,0.05);background:rgba(0,0,0,0.6);position:relative;overflow:hidden;}
@@ -552,8 +313,6 @@ html,body{
 .cbar-fill.player-hp{background:linear-gradient(90deg,#054010,#008030,var(--green));}
 .cbar-fill.rage{background:linear-gradient(90deg,#4a2000,#c06000,var(--amberbright));}
 .cbar-val{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text2);width:55px;text-align:right;flex-shrink:0;}
-
-/* STATUS EFFECTS */
 .status-row{padding:0.25rem 0.7rem;display:flex;gap:0.3rem;flex-wrap:wrap;min-height:1.5rem;align-items:center;flex-shrink:0;}
 .status-pill{padding:0.1rem 0.4rem;font-family:'Raleway',sans-serif;font-size:0.45rem;font-weight:600;letter-spacing:0.06em;border:1px solid;}
 .status-pill.buff{background:rgba(0,192,48,0.1);border-color:var(--green);color:var(--green);}
@@ -561,27 +320,10 @@ html,body{
 .status-pill.burn{background:rgba(208,80,0,0.1);border-color:var(--orange);color:var(--orangebright);}
 .status-pill.poison{background:rgba(0,192,48,0.08);border-color:var(--teal);color:var(--tealbright);}
 .status-pill.stun{background:rgba(32,96,192,0.1);border-color:var(--blue);color:var(--bluebright);}
-
-/* COMBAT ACTIONS */
-.combat-actions{
-  background:var(--panel);border-top:1px solid var(--border);
-  padding:0.4rem;flex-shrink:0;
-}
-.combat-action-title{
-  font-family:'Raleway',sans-serif;font-size:0.48rem;font-weight:700;
-  color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;
-  margin-bottom:0.3rem;text-align:center;
-}
+.combat-actions{background:var(--panel);border-top:1px solid var(--border);padding:0.4rem;flex-shrink:0;}
+.combat-action-title{font-family:'Raleway',sans-serif;font-size:0.48rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:0.3rem;text-align:center;}
 .combat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.25rem;margin-bottom:0.25rem;}
-.combat-btn{
-  background:var(--panel2);border:1px solid var(--border);
-  color:var(--text2);padding:0.4rem 0.15rem;
-  font-family:'Raleway',sans-serif;font-size:0.5rem;font-weight:600;
-  letter-spacing:0.03em;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  transition:all 0.12s;-webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;text-transform:uppercase;
-}
+.combat-btn{background:var(--panel2);border:1px solid var(--border);color:var(--text2);padding:0.4rem 0.15rem;font-family:'Raleway',sans-serif;font-size:0.5rem;font-weight:600;letter-spacing:0.03em;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all 0.12s;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;text-transform:uppercase;}
 .combat-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.04) 0%,transparent 50%);}
 .combat-btn:active:not(:disabled){transform:scale(0.92);}
 .combat-btn:disabled{opacity:0.2;cursor:not-allowed;}
@@ -600,21 +342,12 @@ html,body{
 .combat-btn.flee{border-color:#2a0a0a;color:var(--red);}
 .combat-actions-row2{display:grid;grid-template-columns:1fr 1fr;gap:0.25rem;}
 
-/* ═══════════════════════════════
-   MONSTER SELECT
-═══════════════════════════════ */
-.monster-card{
-  background:var(--panel2);border:1px solid var(--border);
-  padding:0.6rem 0.8rem;margin-bottom:0.4rem;
-  display:flex;align-items:center;gap:0.7rem;cursor:pointer;
-  transition:border-color 0.15s;-webkit-tap-highlight-color:transparent;
-}
+/* MONSTER SELECT */
+.monster-card{background:var(--panel2);border:1px solid var(--border);padding:0.6rem 0.8rem;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;transition:border-color 0.15s;-webkit-tap-highlight-color:transparent;}
 .monster-card:hover{border-color:var(--green);}
 .monster-card:active{transform:scale(0.98);}
 
-/* ═══════════════════════════════
-   QUESTS
-═══════════════════════════════ */
+/* QUESTS */
 .quests-panel{padding:0.6rem;}
 .quest-card{background:var(--panel2);border:1px solid var(--border);margin-bottom:0.4rem;overflow:hidden;}
 .quest-header{display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.6rem;}
@@ -631,24 +364,13 @@ html,body{
 .quest-task.done{color:var(--green2);}
 .quest-task.todo{color:var(--text3);}
 
-/* ═══════════════════════════════
-   SHOP
-═══════════════════════════════ */
+/* SHOP */
 .shop-panel{padding:0.6rem;}
 .shop-tabs{display:flex;gap:1px;margin-bottom:0.5rem;}
-.shop-tab{
-  flex:1;padding:0.35rem;background:var(--panel2);border:1px solid var(--border);
-  font-family:'Raleway',sans-serif;font-size:0.52rem;font-weight:600;
-  letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--text3);cursor:pointer;text-align:center;transition:all 0.1s;
-}
+.shop-tab{flex:1;padding:0.35rem;background:var(--panel2);border:1px solid var(--border);font-family:'Raleway',sans-serif;font-size:0.52rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);cursor:pointer;text-align:center;transition:all 0.1s;}
 .shop-tab.active{border-color:var(--green);color:var(--green);background:rgba(0,192,48,0.07);}
 .shop-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
-.shop-item-card{
-  background:var(--panel2);border:1px solid var(--border);
-  padding:0.55rem;cursor:pointer;transition:border-color 0.15s;
-  position:relative;-webkit-tap-highlight-color:transparent;
-}
+.shop-item-card{background:var(--panel2);border:1px solid var(--border);padding:0.55rem;cursor:pointer;transition:border-color 0.15s;position:relative;-webkit-tap-highlight-color:transparent;}
 .shop-item-card:hover{border-color:var(--green);}
 .shop-item-card:active{transform:scale(0.95);}
 .shop-item-card.owned{border-color:var(--green);}
@@ -659,16 +381,10 @@ html,body{
 .shop-item-desc{font-size:0.56rem;color:var(--text3);margin-top:1px;line-height:1.4;}
 .shop-item-price{display:flex;align-items:center;gap:0.25rem;margin-top:0.4rem;font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--amberbright);}
 
-/* ═══════════════════════════════
-   INVENTORY
-═══════════════════════════════ */
+/* INVENTORY */
 .inv-panel{padding:0.6rem;}
 .inv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
-.inv-slot{
-  aspect-ratio:1;background:var(--panel2);border:1px solid var(--border);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;transition:border-color 0.15s;position:relative;overflow:hidden;
-}
+.inv-slot{aspect-ratio:1;background:var(--panel2);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.15s;position:relative;overflow:hidden;}
 .inv-slot:hover:not(.empty){border-color:var(--green);}
 .inv-slot:active:not(.empty){transform:scale(0.9);}
 .inv-slot.empty{border-style:dashed;border-color:#141e14;cursor:default;}
@@ -676,14 +392,8 @@ html,body{
 .inv-slot-qty{position:absolute;bottom:1px;right:3px;font-family:'DM Mono',monospace;font-size:0.52rem;color:var(--green);}
 .inv-slot-name{font-size:0.4rem;color:var(--text3);font-family:'Raleway',sans-serif;margin-top:1px;text-align:center;}
 
-/* ═══════════════════════════════
-   DAMAGE FLOATS
-═══════════════════════════════ */
-.dmg-float{
-  position:fixed;pointer-events:none;z-index:999;
-  font-family:'Raleway',sans-serif;font-weight:900;
-  animation:floatUp 0.9s ease-out forwards;
-}
+/* DAMAGE FLOATS */
+.dmg-float{position:fixed;pointer-events:none;z-index:999;font-family:'Raleway',sans-serif;font-weight:900;animation:floatUp 0.9s ease-out forwards;}
 .dmg-float.enemy-dmg{color:var(--amberbright);font-size:1.5rem;text-shadow:0 0 10px rgba(224,160,0,0.5);}
 .dmg-float.player-dmg{color:var(--redbright);font-size:1.3rem;}
 .dmg-float.crit-dmg{color:white;font-size:1.9rem;text-shadow:0 0 20px rgba(0,192,48,0.8);}
@@ -691,44 +401,18 @@ html,body{
 .dmg-float.loot{color:var(--green3);font-size:1.1rem;}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-48px) scale(1.2)}100%{opacity:0;transform:translateY(-85px) scale(0.8)}}
 
-/* ═══════════════════════════════
-   TOAST
-═══════════════════════════════ */
-.toast{
-  position:fixed;top:55px;left:50%;
-  transform:translateX(-50%) translateY(-8px);
-  background:var(--panel);border:1px solid var(--border2);
-  padding:0.5rem 1.1rem;
-  font-family:'Raleway',sans-serif;font-size:0.7rem;font-weight:600;
-  letter-spacing:0.06em;
-  pointer-events:none;opacity:0;
-  transition:all 0.25s;z-index:2000;
-  white-space:nowrap;max-width:90vw;color:var(--white);
-  box-shadow:0 4px 20px rgba(0,0,0,0.5);
-}
+/* TOAST */
+.toast{position:fixed;top:55px;left:50%;transform:translateX(-50%) translateY(-8px);background:var(--panel);border:1px solid var(--border2);padding:0.5rem 1.1rem;font-family:'Raleway',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.06em;pointer-events:none;opacity:0;transition:all 0.25s;z-index:2000;white-space:nowrap;max-width:90vw;color:var(--white);box-shadow:0 4px 20px rgba(0,0,0,0.5);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.good{border-color:var(--green);color:var(--green2);}
 .toast.bad{border-color:var(--red);color:var(--redbright);}
 .toast.level{border-color:var(--teal);color:var(--tealbright);background:rgba(0,20,20,0.95);}
 .toast.loot{border-color:var(--green2);color:var(--green3);}
 
-/* ═══════════════════════════════
-   LEVEL UP OVERLAY
-═══════════════════════════════ */
-.levelup-overlay{
-  position:fixed;inset:0;z-index:900;
-  background:rgba(0,0,0,0.88);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity 0.3s;
-}
+/* LEVEL UP OVERLAY */
+.levelup-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
 .levelup-overlay.show{opacity:1;pointer-events:all;}
-.levelup-box{
-  background:var(--panel);border:1px solid var(--green);
-  padding:2rem 2.5rem;text-align:center;
-  box-shadow:0 0 60px rgba(0,192,48,0.2);
-  animation:levelupEntry 0.45s cubic-bezier(0.175,0.885,0.32,1.275);
-  max-width:300px;width:90%;position:relative;
-}
+.levelup-box{background:var(--panel);border:1px solid var(--green);padding:2rem 2.5rem;text-align:center;box-shadow:0 0 60px rgba(0,192,48,0.2);animation:levelupEntry 0.45s cubic-bezier(0.175,0.885,0.32,1.275);max-width:300px;width:90%;position:relative;}
 .levelup-box::before{content:'';position:absolute;inset:4px;border:1px solid rgba(0,192,48,0.15);pointer-events:none;}
 @keyframes levelupEntry{0%{transform:scale(0.4) rotate(-8deg);opacity:0}100%{transform:scale(1);opacity:1}}
 .lu-skill-icon{font-size:3.5rem;display:block;margin-bottom:0.4rem;}
@@ -736,57 +420,25 @@ html,body{
 .lu-sub{font-family:'Libre Baskerville',serif;font-size:0.8rem;color:var(--text2);font-style:italic;}
 .lu-bonuses{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin:0.9rem 0;}
 .lu-bonus{background:rgba(0,192,48,0.1);border:1px solid var(--green);padding:0.25rem 0.6rem;font-family:'Raleway',sans-serif;font-size:0.62rem;color:var(--green);letter-spacing:0.06em;font-weight:700;}
-.btn-lu-ok{
-  background:var(--green);border:none;color:#060e08;
-  font-family:'Raleway',sans-serif;font-size:0.88rem;font-weight:700;
-  letter-spacing:0.1em;text-transform:uppercase;
-  padding:0.7rem 2.5rem;cursor:pointer;
-  margin-top:0.5rem;transition:all 0.1s;
-}
+.btn-lu-ok{background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-size:0.88rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.7rem 2.5rem;cursor:pointer;margin-top:0.5rem;transition:all 0.1s;}
 .btn-lu-ok:hover{background:var(--green2);}
 .btn-lu-ok:active{transform:scale(0.96);}
 
-/* ═══════════════════════════════
-   MODAL
-═══════════════════════════════ */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:800;
-  display:flex;align-items:flex-end;
-  opacity:0;pointer-events:none;transition:opacity 0.25s;
-}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:800;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.25s;}
 .modal-overlay.open{opacity:1;pointer-events:all;}
-.modal-box{
-  background:var(--panel);border-top:1px solid var(--border2);
-  width:100%;padding:1.3rem 1.3rem 2.5rem;
-  transform:translateY(30px);transition:transform 0.3s;
-  max-height:85vh;overflow-y:auto;position:relative;
-  box-shadow:0 -4px 30px rgba(0,0,0,0.5);
-}
+.modal-box{background:var(--panel);border-top:1px solid var(--border2);width:100%;padding:1.3rem 1.3rem 2.5rem;transform:translateY(30px);transition:transform 0.3s;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 -4px 30px rgba(0,0,0,0.5);}
 .modal-overlay.open .modal-box{transform:translateY(0);}
 .modal-title-rs{font-family:'Raleway',sans-serif;font-weight:700;font-size:1.1rem;color:var(--white);margin-bottom:0.25rem;}
 .modal-desc-rs{font-size:0.76rem;color:var(--text2);line-height:1.6;font-style:italic;margin-bottom:0.9rem;}
 .modal-actions{display:flex;flex-direction:column;gap:0.4rem;margin-top:0.6rem;}
-.btn-modal{
-  background:var(--green);border:none;color:#060e08;
-  font-family:'Raleway',sans-serif;font-size:0.85rem;font-weight:700;
-  padding:0.75rem;cursor:pointer;width:100%;
-  text-transform:uppercase;letter-spacing:0.1em;
-  -webkit-tap-highlight-color:transparent;transition:all 0.1s;
-}
+.btn-modal{background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-size:0.85rem;font-weight:700;padding:0.75rem;cursor:pointer;width:100%;text-transform:uppercase;letter-spacing:0.1em;-webkit-tap-highlight-color:transparent;transition:all 0.1s;}
 .btn-modal:hover{background:var(--green2);}
 .btn-modal:active{transform:scale(0.98);}
 .btn-modal.secondary{background:transparent;border:1px solid var(--border2);color:var(--text3);font-size:0.75rem;font-weight:400;}
 .btn-modal.secondary:hover{border-color:var(--green);color:var(--green);}
-
-/* SECTION TITLES */
-.section-title{
-  font-family:'Raleway',sans-serif;font-size:0.62rem;font-weight:700;
-  letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--green);margin:0.5rem 0 0.35rem;
-  display:flex;align-items:center;gap:0.5rem;
-}
+.section-title{font-family:'Raleway',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--green);margin:0.5rem 0 0.35rem;display:flex;align-items:center;gap:0.5rem;}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
-
 ::-webkit-scrollbar{width:3px;height:3px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);}
@@ -799,10 +451,8 @@ html,body{
   <div class="title-scanlines"></div>
   <div class="title-grid"></div>
   <div class="title-frame">
-    <div class="title-corner tl"></div>
-    <div class="title-corner tr"></div>
-    <div class="title-corner bl"></div>
-    <div class="title-corner br"></div>
+    <div class="title-corner tl"></div><div class="title-corner tr"></div>
+    <div class="title-corner bl"></div><div class="title-corner br"></div>
     <span class="title-crest">🥊</span>
     <div class="title-main">LUNCH<span>BOXE</span></div>
     <div class="title-sub">World of Cuisine</div>
@@ -826,28 +476,11 @@ html,body{
       <div class="topbar-gold" id="topbarGold">💰 0</div>
     </div>
   </div>
-
   <div class="vitals-bar">
-    <div class="vital">
-      <span class="vital-icon">❤️</span>
-      <span class="vital-label">HP</span>
-      <div class="vital-track"><div class="vital-fill hp" id="vitalHp" style="width:100%"></div></div>
-      <span class="vital-val" id="vitalHpVal">100/100</span>
-    </div>
-    <div class="vital">
-      <span class="vital-icon">🍖</span>
-      <span class="vital-label">Faim</span>
-      <div class="vital-track"><div class="vital-fill hunger" id="vitalHunger" style="width:80%"></div></div>
-      <span class="vital-val" id="vitalHungerVal">80/100</span>
-    </div>
-    <div class="vital">
-      <span class="vital-icon">⭐</span>
-      <span class="vital-label">XP</span>
-      <div class="vital-track"><div class="vital-fill xp" id="vitalXp" style="width:0%"></div></div>
-      <span class="vital-val" id="vitalXpVal">Niv.1</span>
-    </div>
+    <div class="vital"><span class="vital-icon">❤️</span><span class="vital-label">HP</span><div class="vital-track"><div class="vital-fill hp" id="vitalHp" style="width:100%"></div></div><span class="vital-val" id="vitalHpVal">100/100</span></div>
+    <div class="vital"><span class="vital-icon">🍖</span><span class="vital-label">Faim</span><div class="vital-track"><div class="vital-fill hunger" id="vitalHunger" style="width:80%"></div></div><span class="vital-val" id="vitalHungerVal">80/100</span></div>
+    <div class="vital"><span class="vital-icon">⭐</span><span class="vital-label">XP</span><div class="vital-track"><div class="vital-fill xp" id="vitalXp" style="width:0%"></div></div><span class="vital-val" id="vitalXpVal">Niv.1</span></div>
   </div>
-
   <div class="game-body">
     <div class="content-area">
       <div class="tab-panel active" id="panelWorld"></div>
@@ -859,41 +492,44 @@ html,body{
       <div class="tab-panel" id="panelInv"></div>
       <div class="chat-log" id="chatLog">
         <div class="chat-line sys">Bienvenue dans Lunch Boxe: World of Cuisine.</div>
-        <div class="chat-line sys">Choisis une zone sur la carte pour commencer ton aventure.</div>
       </div>
     </div>
-
     <div class="sidebar">
-      <div class="minimap-wrap">
-        <div class="minimap" id="minimap"></div>
-        <div class="minimap-label" id="minimapLabel">Carte</div>
-      </div>
+      <div class="minimap-wrap"><div class="minimap" id="minimap"></div><div class="minimap-label" id="minimapLabel">Carte</div></div>
       <div class="skills-grid" id="sidebarSkills"></div>
     </div>
   </div>
-
   <div class="tab-bar">
-    <button class="tab-btn active" id="tabWorld" onclick="switchTab('World')">
-      <span class="t-icon">🗺️</span>Monde
-    </button>
-    <button class="tab-btn" id="tabFarm" onclick="switchTab('Farm')">
-      <span class="t-icon">🌱</span>Ferme
-    </button>
-    <button class="tab-btn" id="tabCook" onclick="switchTab('Cook')">
-      <span class="t-icon">🍳</span>Cuisine
-    </button>
-    <button class="tab-btn" id="tabFight" onclick="switchTab('Fight')">
-      <span class="t-icon">⚔️</span>Combat
-    </button>
-    <button class="tab-btn" id="tabQuests" onclick="switchTab('Quests')">
-      <span class="t-icon">📜</span>Quêtes
-    </button>
-    <button class="tab-btn" id="tabShop" onclick="switchTab('Shop')">
-      <span class="t-icon">🏪</span>Marché
-    </button>
-    <button class="tab-btn" id="tabInv" onclick="switchTab('Inv')">
-      <span class="t-icon">🎒</span>Sac
-    </button>
+    <button class="tab-btn active" id="tabWorld" onclick="switchTab('World')"><span class="t-icon">🗺️</span>Monde</button>
+    <button class="tab-btn" id="tabFarm" onclick="switchTab('Farm')"><span class="t-icon">🌱</span>Ferme</button>
+    <button class="tab-btn" id="tabCook" onclick="switchTab('Cook')"><span class="t-icon">🍳</span>Cuisine</button>
+    <button class="tab-btn" id="tabFight" onclick="switchTab('Fight')"><span class="t-icon">⚔️</span>Combat</button>
+    <button class="tab-btn" id="tabQuests" onclick="switchTab('Quests')"><span class="t-icon">📜</span>Quêtes</button>
+    <button class="tab-btn" id="tabShop" onclick="switchTab('Shop')"><span class="t-icon">🏪</span>Marché</button>
+    <button class="tab-btn" id="tabInv" onclick="switchTab('Inv')"><span class="t-icon">🎒</span>Sac</button>
+  </div>
+</div>
+
+<!-- NARRATOR SYSTEM -->
+<div class="narrator-overlay" id="narratorOverlay" onclick="narratorTap()">
+  <div class="narrator-box" onclick="e=>e.stopPropagation()">
+    <div class="narrator-portrait">
+      <!-- Le sprite du personnage : mis à jour dynamiquement par JS -->
+      <div class="char-sprite" id="narratorSprite">
+        <!-- Le contenu SVG ou emoji est injecté ici par showNarratorLine() -->
+      </div>
+      <div class="char-name-tag fraise" id="narratorNameTag">Fraise</div>
+    </div>
+    <div class="narrator-content">
+      <div class="narrator-text" id="narratorText"></div>
+      <div class="narrator-footer">
+        <div class="narrator-dots" id="narratorDots"></div>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <button class="btn-narrator-skip" onclick="skipNarrator()">Passer</button>
+          <button class="btn-narrator-next" id="narratorNextBtn" onclick="narratorNext()">Suivant ▶</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -918,6 +554,265 @@ html,body{
 
 <script>
 'use strict';
+
+// ═══════════════════════════════════════════
+//  NARRATOR SYSTEM
+// ═══════════════════════════════════════════
+
+// Définition des personnages avec leurs fichiers SVG
+const CHARS = {
+  fraise: {
+    svgFile: 'fraise.svg',
+    fallbackEmoji: '🍓',
+    tag: 'fraise',
+    name: 'Fraise',
+    role: 'alliée',
+    villain: false
+  },
+  poire: {
+    svgFile: 'poire.svg',
+    fallbackEmoji: '🍐',
+    tag: 'poire',
+    name: 'Poire',
+    role: 'allié',
+    villain: false
+  },
+  banane: {
+    svgFile: 'banane.svg',
+    fallbackEmoji: '🍌',
+    tag: 'banane',
+    name: 'Banane',
+    role: 'villain',
+    villain: true
+  },
+  narrateur: {
+    svgFile: null,
+    fallbackEmoji: '📖',
+    tag: 'narrateur',
+    name: 'Narrateur',
+    role: 'narrateur',
+    villain: false
+  },
+};
+
+// Cache pour savoir si un SVG a pu charger
+const SVG_STATUS = {}; // 'ok' | 'fail' | undefined
+
+// Précharge les SVGs pour détecter les erreurs avant affichage
+function preloadSVGs() {
+  ['fraise', 'poire', 'banane'].forEach(id => {
+    const char = CHARS[id];
+    if (!char.svgFile) return;
+    const img = new Image();
+    img.onload = () => { SVG_STATUS[id] = 'ok'; };
+    img.onerror = () => { SVG_STATUS[id] = 'fail'; };
+    img.src = char.svgFile;
+  });
+}
+
+// Génère le HTML du sprite selon disponibilité du SVG
+function getCharSpriteHTML(charId) {
+  const char = CHARS[charId];
+  if (!char) return `<span class="emoji-fallback">❓</span>`;
+
+  if (char.svgFile && SVG_STATUS[charId] !== 'fail') {
+    // SVG disponible (ou pas encore testé → on tente quand même)
+    return `<img
+      src="${char.svgFile}"
+      alt="${char.name}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"
+      style="width:72px;height:72px;object-fit:contain;display:block;"
+    ><span class="emoji-fallback" style="display:none;font-size:3.8rem;line-height:1;">${char.fallbackEmoji}</span>`;
+  }
+
+  // Pas de SVG → emoji de secours
+  return `<span class="emoji-fallback" style="font-size:3.8rem;line-height:1;">${char.fallbackEmoji}</span>`;
+}
+
+// Toutes les séquences de dialogue du jeu
+const STORY_SEQUENCES = {
+  intro: [
+    { char:'fraise', text:'Enfin ! Un combattant courageux qui ose affronter ce monde devenu fou... Je suis Fraise, et j\'ai besoin de ton aide !' },
+    { char:'poire',  text:'Moi c\'est Poire. Écoute ce que Fraise a à dire, c\'est sérieux. Depuis que Banane a pris le contrôle du Donjon de la Friture, tous les fruits et légumes tremblent.' },
+    { char:'fraise', text:'La Banane nous a réduits en esclavage ! Elle vole nos récoltes, corrompt les monstres... Tu dois cultiver, cuisiner, et devenir assez fort pour la vaincre !' },
+    { char:'banane', text:'Hahaha ! Un nouveau petit guerrier ? Tes légumes m\'appartiennent. Tes cuisines m\'appartiennent. TOI tu m\'appartiens. Ou tu seras écrasé en purée !' },
+    { char:'poire',  text:'Ne t\'inquiète pas ! On est là pour toi. Commence par cultiver dans la ferme, puis cuisine des plats pour te renforcer. On se bat ensemble !' },
+  ],
+  firstHarvest: [
+    { char:'fraise', text:'Tu as réussi ta première récolte ! Je savais que tu y arriverais. Chaque légume que tu récupères, c\'est un affront de plus à la Banane.' },
+    { char:'poire',  text:'Bien joué ! Maintenant cuisine ces ingrédients. Un bon plat peut doubler ta force en combat — crois-moi, j\'en sais quelque chose.' },
+  ],
+  firstCook: [
+    { char:'fraise', text:'Mmh, ça sent BON ! Tu es vraiment doué en cuisine. Mange ça avant de combattre — un ventre plein, c\'est un combattant fort !' },
+    { char:'poire',  text:'La Banane ne cuisine jamais elle-même. C\'est pour ça qu\'elle perdra... Les vrais guerriers savent se nourrir.' },
+  ],
+  firstFight: [
+    { char:'poire',  text:'Ton premier combat approche ! Rappelle-toi : Défense réduit les dégâts de 62%. N\'hésite pas à bloquer les coups puissants.' },
+    { char:'fraise', text:'Et si tu accumules de la Rage, le coup Ultime ⚡ est dévastateur ! On croit en toi !' },
+  ],
+  firstVictory: [
+    { char:'fraise', text:'VICTOIRE ! Tu as vaincu ton premier ennemi ! La Banane va grincer des dents en apprenant ça.' },
+    { char:'poire',  text:'Excellent combat ! Continue à progresser. Plus tu bats de monstres, plus tu t\'approches du Donjon de la Friture... et de la Banane.' },
+  ],
+  firstDefeat: [
+    { char:'poire',  text:'Aïe... Tu t\'es battu courageusement. Mais ce n\'est pas une défaite — c\'est une leçon.' },
+    { char:'fraise', text:'Mange et repose-toi ! Cuisine quelque chose de bon, équipe-toi mieux, et reviens. On n\'abandonne pas !' },
+    { char:'banane', text:'Hahaha ! Le petit guerrier est tombé ! Reste chez toi, tu n\'es pas de taille. La cuisine appartient à la BANANE !' },
+  ],
+  dangerZone: [
+    { char:'banane', text:'Tu t\'aventures dans mes terres ? Intéressant. Mes serviteurs vont s\'occuper de toi... personnellement.' },
+    { char:'fraise', text:'Fais attention ! Cette zone est dangereuse. Cuisine des plats puissants avant de te battre ici.' },
+  ],
+  reachDungeon: [
+    { char:'fraise', text:'Le Donjon de la Friture... On y est enfin. Je ne pensais pas qu\'on arriverait jusqu\'ici un jour.' },
+    { char:'poire',  text:'La Banane est quelque part là-dedans. Prépare tes meilleurs plats, équipe-toi au maximum. C\'est le combat final.' },
+    { char:'banane', text:'Vous osez pénétrer dans MON donjon ?! Vous êtes fous ! Mes champions vous broieront avant même que vous m\'atteigniez !' },
+    { char:'fraise', text:'On n\'a plus peur de toi, Banane ! Ensemble, on est imbattables. Allons-y !' },
+  ],
+  bossWarning: [
+    { char:'banane', text:'Mon champion, le Bento Bakemono, n\'a jamais connu la défaite. Tu seras le dernier à essayer... et le dernier à échouer !' },
+    { char:'poire',  text:'C\'est le boss final. Utilise TOUT — ton meilleur équipement, tes meilleures recettes. On ne peut pas rater ça.' },
+  ],
+  level5: [
+    { char:'poire',  text:'Niveau 5 ! Tu es maintenant bien plus fort qu\'au début. La Banane commence à s\'inquiéter, j\'en suis sûr.' },
+    { char:'fraise', text:'Des zones encore plus dangereuses s\'ouvrent à toi. Reste prudent — et n\'oublie pas de manger !' },
+  ],
+  level10: [
+    { char:'banane', text:'Niveau 10 ?! Impossible ! Comment es-tu arrivé jusqu\'ici ?! Mes monstres sont pourtant... bien nourris.' },
+    { char:'fraise', text:'La Banane a PEUR ! Tu vois ? Continue comme ça. Le Donjon n\'est plus très loin maintenant.' },
+    { char:'poire',  text:'C\'est le moment de viser les zones de haut niveau. Tu es prêt pour le Marais de l\'Ail et le Pic du Piment !' },
+  ],
+};
+
+// État du narrateur
+let NAR = {
+  queue: [],
+  currentSeq: null,
+  currentIdx: 0,
+  isTyping: false,
+  typeTimer: null,
+  seenSeqs: new Set(),
+  enabled: true,
+};
+
+function loadNarratorState() {
+  try {
+    const raw = localStorage.getItem('lunchboxe_nar_v1');
+    if (raw) NAR.seenSeqs = new Set(JSON.parse(raw));
+  } catch(e) {}
+}
+function saveNarratorState() {
+  try { localStorage.setItem('lunchboxe_nar_v1', JSON.stringify([...NAR.seenSeqs])); } catch(e) {}
+}
+
+function triggerStory(seqId, force=false) {
+  if (!NAR.enabled) return;
+  if (!force && NAR.seenSeqs.has(seqId)) return;
+  const seq = STORY_SEQUENCES[seqId];
+  if (!seq) return;
+  NAR.seenSeqs.add(seqId);
+  saveNarratorState();
+  if (document.getElementById('narratorOverlay').classList.contains('show')) {
+    NAR.queue.push(seqId);
+    return;
+  }
+  startNarratorSeq(seq, seqId);
+}
+
+function startNarratorSeq(seq, seqId) {
+  NAR.currentSeq = seq;
+  NAR.currentIdx = 0;
+  showNarratorLine(0);
+}
+
+function showNarratorLine(idx) {
+  const seq = NAR.currentSeq;
+  if (!seq || idx >= seq.length) { closeNarrator(); return; }
+  const line = seq[idx];
+  const charId = line.char;
+  const char = CHARS[charId] || CHARS.narrateur;
+
+  // ── Mise à jour du sprite avec SVG + fallback emoji ──
+  const spriteEl = document.getElementById('narratorSprite');
+  spriteEl.innerHTML = getCharSpriteHTML(charId);
+  spriteEl.className = 'char-sprite' + (char.villain ? ' villain' : '');
+
+  // ── Mise à jour du tag de nom ──
+  const tag = document.getElementById('narratorNameTag');
+  tag.textContent = char.name;
+  tag.className = 'char-name-tag ' + char.tag;
+
+  // ── Mise à jour des points de progression ──
+  const dots = document.getElementById('narratorDots');
+  dots.innerHTML = seq.map((_, i) =>
+    `<div class="ndot ${i < idx ? 'done' : i === idx ? 'active' : ''}"></div>`
+  ).join('');
+
+  // ── Bouton suivant / fermer ──
+  const nextBtn = document.getElementById('narratorNextBtn');
+  nextBtn.textContent = idx === seq.length - 1 ? 'Fermer ✕' : 'Suivant ▶';
+
+  // ── Affichage ──
+  document.getElementById('narratorOverlay').classList.add('show');
+  typeNarratorText(line.text);
+  addLog(`💬 <b>${char.name}</b> : ${line.text}`, 'story');
+}
+
+function typeNarratorText(text) {
+  clearTimeout(NAR.typeTimer);
+  NAR.isTyping = true;
+  const el = document.getElementById('narratorText');
+  el.innerHTML = '';
+  let i = 0;
+  function tick() {
+    if (i < text.length) {
+      el.innerHTML = text.slice(0, i + 1) + '<span class="narrator-cursor"></span>';
+      i++;
+      NAR.typeTimer = setTimeout(tick, 22);
+    } else {
+      el.innerHTML = text;
+      NAR.isTyping = false;
+    }
+  }
+  tick();
+}
+
+function narratorTap() {
+  if (NAR.isTyping) {
+    clearTimeout(NAR.typeTimer);
+    NAR.isTyping = false;
+    const line = NAR.currentSeq[NAR.currentIdx];
+    document.getElementById('narratorText').innerHTML = line ? line.text : '';
+  }
+}
+
+function narratorNext() {
+  clearTimeout(NAR.typeTimer);
+  NAR.isTyping = false;
+  NAR.currentIdx++;
+  if (!NAR.currentSeq || NAR.currentIdx >= NAR.currentSeq.length) {
+    closeNarrator();
+  } else {
+    showNarratorLine(NAR.currentIdx);
+  }
+}
+
+function skipNarrator() {
+  clearTimeout(NAR.typeTimer);
+  NAR.isTyping = false;
+  closeNarrator();
+}
+
+function closeNarrator() {
+  document.getElementById('narratorOverlay').classList.remove('show');
+  NAR.currentSeq = null;
+  NAR.currentIdx = 0;
+  if (NAR.queue.length > 0) {
+    const nextId = NAR.queue.shift();
+    const seq = STORY_SEQUENCES[nextId];
+    if (seq) setTimeout(() => startNarratorSeq(seq, nextId), 400);
+  }
+}
 
 // ═══════════════════════════════════════════
 //  DATA
@@ -1068,10 +963,8 @@ let G = {
 function saveGame() {
   try {
     const save = {
-      playerName:G.playerName,gold:G.gold,day:G.day,tick:G.tick,
-      level:G.level,xp:G.xp,player:G.player,
-      skills:G.skills,skillLevels:G.skillLevels,
-      plots:G.plots,inventory:G.inventory,cooked:G.cooked,equipped:G.equipped,
+      playerName:G.playerName,gold:G.gold,day:G.day,tick:G.tick,level:G.level,xp:G.xp,player:G.player,
+      skills:G.skills,skillLevels:G.skillLevels,plots:G.plots,inventory:G.inventory,cooked:G.cooked,equipped:G.equipped,
       wins:G.wins,monstersKilled:G.monstersKilled,totalHarvests:G.totalHarvests,totalCooks:G.totalCooks,
       quests:G.quests,uniqueCooksToday:[...G.uniqueCooksToday],
     };
@@ -1107,8 +1000,9 @@ function handleStartGame() {
   G.playerName = name;
   showScreen('screenGame');
   document.getElementById('playerNameDisplay').textContent = name;
+  loadNarratorState();
   initGame();
-  addLog(`Bienvenue, <b>${name}</b> ! Ton aventure commence.`, 'sys');
+  setTimeout(() => triggerStory('intro'), 800);
 }
 function handleLoadGame() {
   const name = document.getElementById('playerNameInput').value.trim();
@@ -1116,14 +1010,17 @@ function handleLoadGame() {
   if (!loaded) { showToast('Aucune sauvegarde trouvée !','bad'); return; }
   showScreen('screenGame');
   document.getElementById('playerNameDisplay').textContent = G.playerName;
+  loadNarratorState();
   initGame();
   addLog(`Partie chargée — Bienvenue, <b>${G.playerName}</b> !`, 'sys');
 }
 function initGame() {
+  preloadSVGs();
   renderTopSkills(); renderSidebarSkills(); renderMinimap(); updateHUD(); renderWorld();
   setInterval(gameTick, 1000);
   setInterval(saveGame, 20000);
   setInterval(hungerTick, 5000);
+  checkQuestNotif();
 }
 
 // ═══════════════════════════════════════════
@@ -1212,22 +1109,15 @@ function switchTab(tab) {
 function renderWorld() {
   const panel=document.getElementById('panelWorld');
   let html=`<div style="position:relative;flex:1;overflow:hidden;min-height:200px;" id="worldMapInner">
-    <div style="position:absolute;inset:0;background:
-      radial-gradient(ellipse 60% 50% at 30% 40%,rgba(0,30,15,0.8) 0%,transparent 55%),
-      radial-gradient(ellipse 50% 45% at 72% 62%,rgba(0,15,30,0.7) 0%,transparent 50%),
-      #080f08;"></div>
-    <div style="position:absolute;inset:0;background:
-      repeating-linear-gradient(0deg,rgba(0,192,48,0.012) 0px,rgba(0,192,48,0.012) 1px,transparent 1px,transparent 48px),
-      repeating-linear-gradient(90deg,rgba(0,192,48,0.012) 0px,rgba(0,192,48,0.012) 1px,transparent 1px,transparent 48px);"></div>`;
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 30% 40%,rgba(0,30,15,0.8) 0%,transparent 55%),radial-gradient(ellipse 50% 45% at 72% 62%,rgba(0,15,30,0.7) 0%,transparent 50%),#080f08;"></div>
+    <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,192,48,0.012) 0px,rgba(0,192,48,0.012) 1px,transparent 1px,transparent 48px),repeating-linear-gradient(90deg,rgba(0,192,48,0.012) 0px,rgba(0,192,48,0.012) 1px,transparent 1px,transparent 48px);"></div>`;
   WORLD_REGIONS.forEach(r=>{
     const locked=r.minLevel>G.level;
     const isCurrent=G.currentRegion===r.id;
     html+=`<div class="map-region ${locked?'locked':''} ${isCurrent?'active':''}"
       style="left:${r.x}%;top:${r.y}%;transform:translate(-50%,-50%)"
       onclick="${locked?'':("selectRegion('"+r.id+"')")}">
-      <div class="region-bubble" style="width:52px;height:52px">
-        <span class="region-emoji">${r.emoji}</span>
-      </div>
+      <div class="region-bubble" style="width:52px;height:52px"><span class="region-emoji">${r.emoji}</span></div>
       <div class="region-label">${r.name.split(' ').slice(0,2).join(' ')}</div>
       ${locked?`<div class="region-level">Niv.${r.minLevel}</div>`:''}
     </div>`;
@@ -1236,14 +1126,17 @@ function renderWorld() {
   panel.innerHTML=html;
   if (G.currentRegion) showRegionPopup(G.currentRegion);
 }
-function selectRegion(id) { G.currentRegion=id; renderWorld(); renderMinimap(); }
+function selectRegion(id) {
+  G.currentRegion=id;
+  renderWorld(); renderMinimap();
+  if (id==='donjon_friture') triggerStory('reachDungeon');
+  else if (id==='pic_piment' || id==='marais_ail') triggerStory('dangerZone');
+}
 function showRegionPopup(regionId) {
   const region=WORLD_REGIONS.find(r=>r.id===regionId);
   if (!region) return;
-  const mapInner=document.getElementById('worldMapInner');
-  if (!mapInner) return;
-  const existing=mapInner.querySelector('.map-event-popup');
-  if (existing) existing.remove();
+  const mapInner=document.getElementById('worldMapInner'); if (!mapInner) return;
+  const existing=mapInner.querySelector('.map-event-popup'); if (existing) existing.remove();
   const popup=document.createElement('div');
   popup.className='map-event-popup';
   popup.innerHTML=`<div class="popup-title">${region.emoji} ${region.name}</div>
@@ -1260,8 +1153,7 @@ function goFightRegion(id) { G.currentRegion=id; switchTab('Fight'); }
 // ═══════════════════════════════════════════
 function checkFarmNotif() {
   const ready=G.plots.filter(p=>p.status==='ready').length;
-  const btn=document.getElementById('tabFarm');
-  const ex=btn.querySelector('.tab-notif');
+  const btn=document.getElementById('tabFarm'); const ex=btn.querySelector('.tab-notif');
   if (ready>0&&!ex){const n=document.createElement('span');n.className='tab-notif';btn.appendChild(n);}
   else if(ready===0&&ex)ex.remove();
 }
@@ -1296,13 +1188,10 @@ function renderFarm() {
     <div class="seeds-title">🌱 Graines — Farming Niv.${farmLvl}</div>
     <div class="seeds-grid">`;
   SEEDS.forEach(seed=>{
-    const locked=seed.unlockLevel>farmLvl;
-    const sel=G.selectedSeed===seed.id;
+    const locked=seed.unlockLevel>farmLvl; const sel=G.selectedSeed===seed.id;
     seedsHtml+=`<div class="seed-btn ${locked?'locked':''} ${sel?'selected':''}" onclick="${locked?'':("selectSeed('"+seed.id+"')")}">
-      <span class="seed-emoji">${seed.emoji}</span>
-      <span class="seed-name">${seed.name}</span>
-      <span class="seed-cost">💰${seed.cost}</span>
-      <span class="seed-time">⏱${seed.time}s</span>
+      <span class="seed-emoji">${seed.emoji}</span><span class="seed-name">${seed.name}</span>
+      <span class="seed-cost">💰${seed.cost}</span><span class="seed-time">⏱${seed.time}s</span>
     </div>`;
   });
   seedsHtml+='</div></div>';
@@ -1319,10 +1208,8 @@ function updateFarmProgress() {
     if (!plot.crop||plot.status==='ready'||plot.locked) return;
     const seed=SEEDS.find(s=>s.id===plot.crop); if(!seed) return;
     const elapsed=G.tick-plot.plantedAt;
-    const prog=Math.min(1,elapsed/seed.time);
-    const rem=Math.max(0,seed.time-elapsed);
-    const bar=document.getElementById('plotbar_'+i);
-    const pl=document.getElementById('plot_'+i);
+    const prog=Math.min(1,elapsed/seed.time); const rem=Math.max(0,seed.time-elapsed);
+    const bar=document.getElementById('plotbar_'+i); const pl=document.getElementById('plot_'+i);
     if (bar) bar.style.width=(prog*100)+'%';
     if (pl){const t=pl.querySelector('.plot-time');if(t)t.textContent=rem+'s';}
   });
@@ -1348,6 +1235,7 @@ function harvest(idx){
   checkQuestProgress('harvest',1);
   addLog(`${seed.emoji} Récolte ! <b>${seed.name}</b> → +${seed.sell}💰 +${seed.farmXp}XP`,'loot');
   showToast(`${seed.emoji} Récolté — +${seed.sell} Or !`,'loot');
+  if (G.totalHarvests===1) setTimeout(()=>triggerStory('firstHarvest'),300);
 }
 
 // ═══════════════════════════════════════════
@@ -1358,15 +1246,13 @@ function renderCook() {
   const cookLvl=G.skillLevels.cooking||1;
   const available=RECIPES.filter(r=>r.level<=cookLvl);
   const locked=RECIPES.filter(r=>r.level>cookLvl);
-  let html=`<div class="recipes-panel">
-    <div class="section-title">🍳 Cuisine — Niv.${cookLvl}</div>`;
+  let html=`<div class="recipes-panel"><div class="section-title">🍳 Cuisine — Niv.${cookLvl}</div>`;
   if (available.length===0) html+=`<div style="text-align:center;padding:2rem;color:var(--text3);font-style:italic;font-size:0.78rem;">Récolte des légumes pour débloquer les recettes.</div>`;
   available.forEach(r=>{
     const canCook=canMakeRecipe(r);
     let ingsHtml='';
     Object.entries(r.ings).forEach(([id,qty])=>{
-      const seed=SEEDS.find(s=>s.id===id);
-      const have=(G.inventory[id]||0)>=qty;
+      const seed=SEEDS.find(s=>s.id===id); const have=(G.inventory[id]||0)>=qty;
       ingsHtml+=`<span class="ing-chip ${have?'have':'missing'}">${seed?.emoji||'?'}×${qty}${have?' ✓':''}</span>`;
     });
     html+=`<div class="recipe-card-rs" onclick="${canCook?("cookRecipe('"+r.id+"')"):''}">
@@ -1391,8 +1277,7 @@ function renderCook() {
         <div class="recipe-info-col">
           <div class="recipe-name-rs" style="color:var(--text3)">${r.name}</div>
           <div class="recipe-desc-rs">Niveau Cuisine ${r.level} requis</div>
-        </div>
-      </div></div>`;
+        </div></div></div>`;
     });
   }
   html+='</div>';
@@ -1410,6 +1295,7 @@ function cookRecipe(recipeId){
   addLog(`${recipe.emoji} <b>${recipe.name}</b> cuisiné ! +${recipe.cookXp}XP`,'skill');
   showToast(`${recipe.emoji} ${recipe.name} cuisiné !`,'good');
   renderCook(); updateHUD();
+  if (G.totalCooks===1) setTimeout(()=>triggerStory('firstCook'),400);
 }
 function useCookedDish(recipeId){
   const recipe=RECIPES.find(r=>r.id===recipeId);
@@ -1446,7 +1332,6 @@ function renderFightPanel(){
   else if (G.fightState==='victory') renderFightVictory(panel);
   else if (G.fightState==='defeat') renderFightDefeat(panel);
 }
-
 function renderMonsterSelect(panel){
   const region=WORLD_REGIONS.find(r=>r.id===G.currentRegion);
   const regionMonsters=G.currentRegion
@@ -1501,6 +1386,8 @@ function startFight(monsterId){
   G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};
   G.defending=false; G.combatLog=[];
   addLog(`⚔ Combat contre <b>${m.name}</b> !`,'combat');
+  if (G.monstersKilled===0) triggerStory('firstFight');
+  if (m.boss && m.id==='bento_bakemono') triggerStory('bossWarning');
   renderFightPanel();
 }
 
@@ -1559,10 +1446,8 @@ function renderCombatActive(panel){
   </div>`;
 }
 
-// ═══════ FIX: Victory & Defeat screens use G.player directly ═══════
 function renderFightVictory(panel){
-  const m=G.currentMonster;
-  const goldWon=m._goldWon||0;
+  const m=G.currentMonster; const goldWon=m._goldWon||0;
   panel.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:2rem 1.5rem;text-align:center;flex:1;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(0,60,20,0.3) 0%,transparent 60%),var(--bg);">
     <span style="font-size:4rem;filter:drop-shadow(0 0 24px rgba(0,192,48,0.5));animation:crestFloat 3s ease-in-out infinite;">🏆</span>
     <div style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.8rem;color:var(--green);letter-spacing:-0.01em;">VICTOIRE !</div>
@@ -1651,7 +1536,7 @@ function enemyTurn(){
     else if(sp.eff==='selfHeal'){G.enemyHp=Math.min(m.hp,G.enemyHp+30);addCombatLog(`💚 <b>${sp.name}</b> ! +30HP ennemi.`,'sys');}
     else if(sp.eff==='burnDebuff'){G.debuffs.burn=4;G.debuffs.atk=8;G.debuffs.rounds=4;addCombatLog(`🍜 <b>${sp.name}</b> ! Brûlure+ATK-8.`,'damage');}
     else if(sp.eff==='pierceHeavy'){const d=Math.round(calcEDmg(m)*2.2);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🌮 <b>${sp.name}</b> ! -${d}HP !`,'damage');}
-    else if(sp.eff==='poisonStun'){G.debuffs.poison=4;if(Math.random()<0.4)G.debuffs.stun=1;addCombatLog(`🍩 <b>${sp.name}</b> ! Poison+(étourdi?)`, 'damage');}
+    else if(sp.eff==='poisonStun'){G.debuffs.poison=4;if(Math.random()<0.4)G.debuffs.stun=1;addCombatLog(`🍩 <b>${sp.name}</b> ! Poison+(étourdi?)`,'damage');}
     else if(sp.eff==='statsNuke'){G.debuffs.atk=Math.round(p.atk*0.1);G.debuffs.def=Math.round(p.def*0.1);G.debuffs.rounds=4;addCombatLog(`🍱 <b>${sp.name}</b> ! Stats réduits 4t.`,'damage');}
     else usedSpecial=false;
   }
@@ -1691,7 +1576,6 @@ function endFight(won){
   G.defending=false;
   if(won){
     const goldWon=m.gold[0]+Math.floor(Math.random()*(m.gold[1]-m.gold[0]+1));
-    // Store goldWon in monster obj for display
     G.currentMonster._goldWon=goldWon;
     G.gold+=goldWon; G.player.streak++; G.wins++; G.monstersKilled++;
     gainXP(m.xp);gainSkillXp('attack',m.xp);gainSkillXp('hitpoints',Math.round(m.xp*0.5));
@@ -1701,26 +1585,23 @@ function endFight(won){
     G.fightState='victory';
     addLog(`🏆 <b>${m.name}</b> vaincu ! +${goldWon}💰 +${m.xp}XP`,'combat');
     checkQuestProgress('kill',1);
+    if (G.monstersKilled===1) setTimeout(()=>triggerStory('firstVictory'),800);
   } else {
     G.player.streak=0; G.fightState='defeat';
     addLog(`💀 Défaite contre ${m.name}...`,'damage');
+    setTimeout(()=>triggerStory('firstDefeat'),800);
   }
   updateHUD(); renderFightPanel(); saveGame();
 }
 
-// ═══ FIX: afterVictory and afterDefeat reset fightState to 'select' ═══
 function afterVictory(){
   G.player.hp=Math.min(G.player.maxHp,G.player.hp+15);
-  G.player.rage=0;
-  G.fightState='select';
-  G.currentMonster=null;
+  G.player.rage=0; G.fightState='select'; G.currentMonster=null;
   updateHUD(); renderFightPanel();
 }
 function afterDefeat(){
   G.player.hp=Math.min(G.player.maxHp,Math.round(G.player.maxHp*0.35));
-  G.player.rage=0;
-  G.fightState='select';
-  G.currentMonster=null;
+  G.player.rage=0; G.fightState='select'; G.currentMonster=null;
   updateHUD(); renderFightPanel();
 }
 function attemptFlee(){
@@ -1754,16 +1635,11 @@ function updateCombatDisplay(){
   if(G.debuffs.stun>0)sh+=`<span class="status-pill stun">⚡(${G.debuffs.stun})</span>`;
   const sr=document.getElementById('statusRow');if(sr)sr.innerHTML=sh;
 }
-
-function addCombatLog(text,type){
-  G.combatLog.push({text,type});
-  addLog(text,type);
-}
-
+function addCombatLog(text,type){G.combatLog.push({text,type});addLog(text,type);}
 function animEnemy(type){const el=document.getElementById('enemySprite');if(!el)return;el.classList.remove('hit','dodge');void el.offsetWidth;el.classList.add(type);}
 function animPlayer(){const el=document.getElementById('playerSprite');if(!el)return;el.classList.remove('attacking');void el.offsetWidth;el.classList.add('attacking');}
 
-// ─── EAT MODAL ───
+// EAT MODAL
 function openEatModal(){
   const dishes=RECIPES.filter(r=>(G.cooked[r.id]||0)>0);
   const rawItems=SEEDS.filter(s=>(G.inventory[s.id]||0)>0&&(s.heal>0||s.atk>0));
@@ -2021,6 +1897,8 @@ function gainXP(amount){
     document.getElementById('luSub').textContent='Tu deviens plus puissant !';
     document.getElementById('luBonuses').innerHTML=bonuses.map(b=>`<div class="lu-bonus">${b}</div>`).join('');
     document.getElementById('levelupOverlay').classList.add('show');
+    if(G.level===5) setTimeout(()=>triggerStory('level5'),1200);
+    if(G.level===10) setTimeout(()=>triggerStory('level10'),1200);
   }
   updateHUD();
 }
@@ -2078,7 +1956,6 @@ function addLog(msg,type='sys'){
   log.appendChild(line);log.scrollTop=log.scrollHeight;
   if(log.children.length>60)log.removeChild(log.firstChild);
 }
-function spawnFloat(text,relEl){spawnDmgAt(text,relEl,'loot');}
 function spawnDmgAt(text,relEl,cls){
   const el=document.createElement('div');
   el.className=`dmg-float ${cls}`;el.textContent=text;
@@ -2086,9 +1963,7 @@ function spawnDmgAt(text,relEl,cls){
   document.body.appendChild(el);setTimeout(()=>el.remove(),950);
 }
 
-// ═══════════════════════════════════════════
-//  TOUCH
-// ═══════════════════════════════════════════
+// TOUCH
 document.addEventListener('touchmove',e=>{
   if(document.getElementById('screenGame').classList.contains('active')){
     const scrollable=e.target.closest('.tab-panel,.seeds-grid,.shop-panel,.inv-panel,.recipes-panel,.quests-panel,.modal-box,.chat-log');

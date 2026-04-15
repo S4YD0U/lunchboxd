@@ -74,6 +74,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .ndot.done{background:var(--greendim);}
 
 /* TOP BAR */
+.vitals-bar { display: none !important; }
 .topbar{background:linear-gradient(180deg,#0f1820 0%,#0d1520 100%);border-bottom:1px solid var(--border);padding:0 0.8rem;display:flex;align-items:center;gap:0.6rem;flex-shrink:0;z-index:100;position:relative;height:48px;}
 .topbar-logo{font-family:'Raleway',sans-serif;font-weight:900;font-size:0.95rem;color:var(--white);white-space:nowrap;letter-spacing:-0.01em;}
 .topbar-logo span{color:var(--green);}

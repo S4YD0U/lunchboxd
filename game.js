@@ -27,6 +27,7 @@ function closeNavDrawer(){
   document.getElementById('drawerBackdrop').classList.remove('show');
 }
 
+
 // ══════════════════════════════════
 //  NARRATOR
 // ══════════════════════════════════

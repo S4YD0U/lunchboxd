@@ -166,8 +166,142 @@ function drawLootboxRewards(lb){const rewards=[];for(let d=0;d<lb.drawCount;d++)
 function applyLootboxRewards(rewards){const p=G.player;rewards.forEach(r=>{if(r.type==='gold'){G.gold+=r.qty;addLog(`💰 +${r.qty} Or de lootbox !`,'loot');}else if(r.type==='seed'){G.inventory[r.id]=(G.inventory[r.id]||0)+r.qty;addLog(`${r.emoji} +${r.qty} ${r.name} !`,'loot');}else if(r.type==='item'){G.inventory[r.id]=(G.inventory[r.id]||0)+r.qty;addLog(`${r.emoji} +${r.qty} ${r.name} !`,'loot');}else if(r.type==='equip'){if(!G.equipped[r.id]){const item=SHOP_ITEMS.find(i=>i.id===r.id);if(item){G.equipped[r.id]=true;G.player[item.stat]=(G.player[item.stat]||0)+item.val;addLog(`⚔️ Équipé : ${r.name} !`,'skill');}}else{G.gold+=50;addLog(`⚔️ ${r.name} déjà possédé → +50 Or !`,'loot');}}else if(r.type==='hpbonus'){p.maxHp+=r.qty;p.hp+=r.qty;addLog(`💖 +${r.qty} HP Max !`,'heal');}else if(r.type==='atkbonus'){p.atk+=r.qty;addLog(`🗡️ +${r.qty} ATK permanent !`,'skill');}else if(r.type==='curse'){p.maxHp=Math.max(20,p.maxHp-10);p.hp=Math.min(p.hp,p.maxHp);addLog(`💀 Malédiction ! -10 HP Max !`,'damage');}});updateHUD();}
 
 let pendingLootboxRewards=null;
-function openLootbox(lbId){const lb=LOOTBOXES.find(l=>l.id===lbId);if(!lb)return;if(G.gold<lb.cost){showToast('Pas assez d\'or !','bad');return;}G.gold-=lb.cost;updateHUD();const rewards=drawLootboxRewards(lb);pendingLootboxRewards=rewards;const overlay=document.getElementById('lbOpeningOverlay');const boxAnim=document.getElementById('lbBoxAnim');const title=document.getElementById('lbOpeningTitle');const sub=document.getElementById('lbOpeningSub');const grid=document.getElementById('lbRewardsGrid');boxAnim.textContent=lb.emoji;title.textContent='Ouverture en cours...';sub.textContent=lb.name;grid.innerHTML='';overlay.classList.add('show');setTimeout(()=>{title.textContent='Tu as obtenu !';grid.innerHTML=rewards.map((r,i)=>{const rc={common:'lb-rarity-common',rare:'lb-rarity-rare',legendary:'lb-rarity-legendary',debuff:'lb-rarity-legendary'}[r.rarity]||'lb-rarity-common';return`<div class="lb-reward-item" style="animation-delay:${i*0.12}s"><span class="lb-reward-emoji">${r.emoji}</span><div class="lb-reward-info"><div class="lb-reward-name">${r.name}</div><div class="lb-reward-qty">${r.type==='gold'?'💰 +'+r.qty+' Or':'×'+r.qty}</div></div><span class="lb-reward-rarity ${rc}">${r.rarity==='debuff'?'MALÉDICTION':r.rarity.toUpperCase()}</span></div>`;}).join('');},1600);if(lbId==='banane_secrete')setTimeout(()=>triggerStory('lootboxLegendary'),3000);}
-function collectLootbox(){if(pendingLootboxRewards){applyLootboxRewards(pendingLootboxRewards);pendingLootboxRewards=null;}document.getElementById('lbOpeningOverlay').classList.remove('show');showToast('Récompenses récupérées !','loot');if(document.getElementById('panelShop').classList.contains('active'))renderShop();saveGame();}
+
+// ══════════════════════════════════
+//  LOOTBOX — OVERLAY DYNAMIQUE (CORRIGÉ)
+// ══════════════════════════════════
+function ensureLootboxOverlay(){
+  let overlay=document.getElementById('lbOpeningOverlay');
+  if(overlay)return overlay;
+  overlay=document.createElement('div');
+  overlay.id='lbOpeningOverlay';
+  overlay.style.cssText=[
+    'position:fixed','inset:0','z-index:9500',
+    'background:rgba(0,0,0,0.94)',
+    'display:flex','flex-direction:column',
+    'align-items:center','justify-content:center',
+    'gap:0.9rem','padding:2rem 1.2rem',
+    'opacity:0','pointer-events:none',
+    'transition:opacity 0.3s ease',
+  ].join(';');
+  overlay.innerHTML=`
+    <div id="lbBoxAnim" style="font-size:5rem;line-height:1;"></div>
+    <div id="lbOpeningTitle" style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.5rem;color:#fff;text-align:center;letter-spacing:-0.01em;"></div>
+    <div id="lbOpeningSub" style="font-size:0.75rem;color:#888;font-style:italic;text-align:center;"></div>
+    <div id="lbRewardsGrid" style="display:flex;flex-direction:column;gap:0.45rem;width:100%;max-width:380px;max-height:52vh;overflow-y:auto;"></div>
+    <button
+      id="lbCollectBtn"
+      onclick="collectLootbox()"
+      style="margin-top:0.4rem;background:#00c030;border:none;color:#060e08;font-family:'Raleway',sans-serif;font-weight:700;font-size:0.9rem;padding:0.8rem 2.8rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;display:none;">
+      ✓ Récupérer les récompenses
+    </button>
+  `;
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+function openLootbox(lbId){
+  const lb=LOOTBOXES.find(l=>l.id===lbId);
+  if(!lb)return;
+  if(G.gold<lb.cost){showToast('Pas assez d\'or !','bad');return;}
+  G.gold-=lb.cost;
+  updateHUD();
+
+  const rewards=drawLootboxRewards(lb);
+  pendingLootboxRewards=rewards;
+
+  const overlay=ensureLootboxOverlay();
+  const boxAnim=document.getElementById('lbBoxAnim');
+  const title=document.getElementById('lbOpeningTitle');
+  const sub=document.getElementById('lbOpeningSub');
+  const grid=document.getElementById('lbRewardsGrid');
+  const collectBtn=document.getElementById('lbCollectBtn');
+
+  // Reset state
+  boxAnim.textContent=lb.emoji;
+  boxAnim.style.animation='crestFloat 0.8s ease-in-out infinite';
+  title.textContent='Ouverture en cours...';
+  sub.textContent=lb.name;
+  grid.innerHTML='';
+  collectBtn.style.display='none';
+
+  // Show overlay
+  overlay.style.opacity='1';
+  overlay.style.pointerEvents='all';
+
+  // Reveal rewards after animation delay
+  setTimeout(()=>{
+    boxAnim.style.animation='none';
+    title.textContent='Tu as obtenu !';
+    grid.innerHTML=rewards.map((r,i)=>{
+      const rarityColors={
+        common:'rgba(180,180,180,0.15)',
+        rare:'rgba(0,120,220,0.18)',
+        legendary:'rgba(220,160,0,0.18)',
+        debuff:'rgba(200,30,30,0.18)',
+      };
+      const rarityBorder={
+        common:'rgba(180,180,180,0.3)',
+        rare:'rgba(80,160,255,0.5)',
+        legendary:'rgba(255,200,0,0.6)',
+        debuff:'rgba(255,60,60,0.5)',
+      };
+      const rarityLabel={common:'COMMUN',rare:'RARE',legendary:'LÉGENDAIRE',debuff:'MALÉDICTION'};
+      const rarityTextColor={common:'#aaa',rare:'#60a8ff',legendary:'#ffd040',debuff:'#ff5555'};
+      const bg=rarityColors[r.rarity]||rarityColors.common;
+      const border=rarityBorder[r.rarity]||rarityBorder.common;
+      const label=rarityLabel[r.rarity]||'COMMUN';
+      const color=rarityTextColor[r.rarity]||'#aaa';
+      return`<div style="
+        display:flex;align-items:center;gap:0.7rem;
+        background:${bg};border:1px solid ${border};
+        padding:0.5rem 0.75rem;
+        opacity:0;animation:lbItemReveal 0.4s ease forwards;
+        animation-delay:${i*0.13}s;
+      ">
+        <span style="font-size:1.9rem;line-height:1;">${r.emoji}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:'Raleway',sans-serif;font-weight:700;font-size:0.82rem;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.name}</div>
+          <div style="font-size:0.62rem;color:#999;margin-top:1px;">${r.type==='gold'?'💰 +'+r.qty+' Or':'×'+r.qty}</div>
+        </div>
+        <span style="font-size:0.48rem;font-family:'Raleway',sans-serif;font-weight:700;letter-spacing:0.08em;color:${color};border:1px solid ${color};padding:2px 6px;white-space:nowrap;">${label}</span>
+      </div>`;
+    }).join('');
+
+    // Show collect button after all cards are revealed
+    setTimeout(()=>{collectBtn.style.display='block';},rewards.length*130+300);
+  },1400);
+
+  // Inject keyframe if not already present
+  if(!document.getElementById('lbKeyframes')){
+    const style=document.createElement('style');
+    style.id='lbKeyframes';
+    style.textContent=`
+      @keyframes lbItemReveal {
+        from { opacity:0; transform:translateY(10px); }
+        to   { opacity:1; transform:translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  if(lbId==='banane_secrete')setTimeout(()=>triggerStory('lootboxLegendary'),3000);
+}
+
+function collectLootbox(){
+  if(pendingLootboxRewards){
+    applyLootboxRewards(pendingLootboxRewards);
+    pendingLootboxRewards=null;
+  }
+  const overlay=document.getElementById('lbOpeningOverlay');
+  if(overlay){
+    overlay.style.opacity='0';
+    overlay.style.pointerEvents='none';
+  }
+  showToast('Récompenses récupérées !','loot');
+  if(document.getElementById('panelShop').classList.contains('active'))renderShop();
+  saveGame();
+}
 
 const QUESTS=[
   {id:'first_harvest',name:'Les Premiers Pas',icon:'🌱',status:'active',desc:'Récolte ta première culture.',unlockAfter:null,tasks:[{id:'harvest1',label:'Récolter 1 légume',goal:1,progress:0,type:'harvest'}],reward:{gold:30,xp:50,cookXp:20},rewardDesc:'30 Or + 50 XP'},

@@ -171,32 +171,12 @@ let pendingLootboxRewards=null;
 //  LOOTBOX — OVERLAY DYNAMIQUE (CORRIGÉ)
 // ══════════════════════════════════
 function ensureLootboxOverlay(){
-  let overlay=document.getElementById('lbOpeningOverlay');
-  if(overlay)return overlay;
-  overlay=document.createElement('div');
-  overlay.id='lbOpeningOverlay';
-  overlay.style.cssText=[
-    'position:fixed','inset:0','z-index:9500',
-    'background:rgba(0,0,0,0.94)',
-    'display:flex','flex-direction:column',
-    'align-items:center','justify-content:center',
-    'gap:0.9rem','padding:2rem 1.2rem',
-    'opacity:0','pointer-events:none',
-    'transition:opacity 0.3s ease',
-  ].join(';');
-  overlay.innerHTML=`
-    <div id="lbBoxAnim" style="font-size:5rem;line-height:1;"></div>
-    <div id="lbOpeningTitle" style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.5rem;color:#fff;text-align:center;letter-spacing:-0.01em;"></div>
-    <div id="lbOpeningSub" style="font-size:0.75rem;color:#888;font-style:italic;text-align:center;"></div>
-    <div id="lbRewardsGrid" style="display:flex;flex-direction:column;gap:0.45rem;width:100%;max-width:380px;max-height:52vh;overflow-y:auto;"></div>
-    <button
-      id="lbCollectBtn"
-      onclick="collectLootbox()"
-      style="margin-top:0.4rem;background:#00c030;border:none;color:#060e08;font-family:'Raleway',sans-serif;font-weight:700;font-size:0.9rem;padding:0.8rem 2.8rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;display:none;">
-      ✓ Récupérer les récompenses
-    </button>
-  `;
-  document.body.appendChild(overlay);
+  // Utilise l'overlay déjà présent dans le HTML
+  const overlay=document.getElementById('lbOpeningOverlay');
+  if(!overlay)return null;
+  // S'assurer que le bouton collect a le bon id
+  const btn=overlay.querySelector('.btn-lb-collect');
+  if(btn&&!btn.id)btn.id='lbCollectBtn';
   return overlay;
 }
 
@@ -215,7 +195,7 @@ function openLootbox(lbId){
   const title=document.getElementById('lbOpeningTitle');
   const sub=document.getElementById('lbOpeningSub');
   const grid=document.getElementById('lbRewardsGrid');
-  const collectBtn=document.getElementById('lbCollectBtn');
+  const collectBtn=document.getElementById('lbCollectBtn')||overlay.querySelector('.btn-lb-collect');
 
   // Reset state
   boxAnim.textContent=lb.emoji;
@@ -226,6 +206,7 @@ function openLootbox(lbId){
   collectBtn.style.display='none';
 
   // Show overlay
+  overlay.classList.add('show');
   overlay.style.opacity='1';
   overlay.style.pointerEvents='all';
 
@@ -295,6 +276,7 @@ function collectLootbox(){
   }
   const overlay=document.getElementById('lbOpeningOverlay');
   if(overlay){
+    overlay.classList.remove('show');
     overlay.style.opacity='0';
     overlay.style.pointerEvents='none';
   }
@@ -329,7 +311,7 @@ const LEVEL_XP=[0,80,190,340,540,800,1150,1600,2200,2900,3800,5000,6500,8300,105
 // ══════════════════════════════════
 let G={
   playerName:'Champion',gold:80,day:1,tick:0,level:1,xp:0,
-  player:{hp:100,maxHp:100,atk:8,def:4,spd:8,rage:0,maxRage:100,hunger:80,maxHunger:100,streak:0},
+  player:{hp:100,maxHp:100,atk:6,def:4,spd:8,rage:0,maxRage:100,hunger:80,maxHunger:100,streak:0},
   skills:{farming:0,cooking:0,attack:0,defence:0,strength:0,hitpoints:0,prayer:0},
   skillLevels:{farming:1,cooking:1,attack:1,defence:1,strength:1,hitpoints:1,prayer:1},
   plots:Array.from({length:8},(_,i)=>({id:i,locked:false,crop:null,plantedAt:0,status:null})),
@@ -361,12 +343,20 @@ function loadGame(name){try{const raw=localStorage.getItem('lunchboxe_woc_v2')||
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function handleStartGame(){const name=document.getElementById('playerNameInput').value.trim()||'Champion';G.playerName=name;showScreen('screenGame');document.getElementById('playerNameDisplay').textContent=name;loadNarratorState();initGame();setTimeout(()=>triggerStory('intro'),800);}
 function handleLoadGame(){const name=document.getElementById('playerNameInput').value.trim();const loaded=loadGame(name||null);if(!loaded){showToast('Aucune sauvegarde trouvée !','bad');return;}showScreen('screenGame');document.getElementById('playerNameDisplay').textContent=G.playerName;loadNarratorState();initGame();addLog(`Partie chargée — Bienvenue, <b>${G.playerName}</b> !`,'sys');}
-function initGame(){preloadSVGs();renderDrawerSkills();renderSidebarSkills();renderMinimap();updateHUD();renderWorld();setInterval(gameTick,1000);setInterval(saveGame,20000);setInterval(hungerTick,5000);checkQuestNotif();}
+function initGame(){preloadSVGs();renderDrawerSkills();renderSidebarSkills();renderMinimap();updateHUD();renderWorld();
+// Éviter les doublons d'intervals si reinit
+if(window._gameTickInterval)clearInterval(window._gameTickInterval);
+if(window._saveInterval)clearInterval(window._saveInterval);
+if(window._hungerInterval)clearInterval(window._hungerInterval);
+window._gameTickInterval=setInterval(gameTick,1000);
+window._saveInterval=setInterval(saveGame,20000);
+window._hungerInterval=setInterval(hungerTick,5000);
+checkQuestNotif();}
 
 // ══════════════════════════════════
 //  TICKS
 // ══════════════════════════════════
-function gameTick(){G.tick++;let anyReady=false;G.plots.forEach(p=>{if(p.crop&&!p.locked&&p.status!=='ready'){const elapsed=G.tick-p.plantedAt;const seed=SEEDS.find(s=>s.id===p.crop);if(seed&&elapsed>=seed.time){p.status='ready';anyReady=true;}}});if(anyReady){checkFarmNotif();if(document.getElementById('panelFarm').classList.contains('active'))renderFarm();}if(G.tick%5===0&&document.getElementById('panelFarm').classList.contains('active'))updateFarmProgress();}
+function gameTick(){G.tick++;let anyReady=false;let readyCount=0;G.plots.forEach(p=>{if(p.crop&&!p.locked&&p.status!=='ready'){const elapsed=G.tick-p.plantedAt;const seed=SEEDS.find(s=>s.id===p.crop);if(seed&&elapsed>=seed.time){p.status='ready';anyReady=true;readyCount++;const readySeed=SEEDS.find(s=>s.id===p.crop);if(readySeed)addLog(`${readySeed.emoji} <b>${readySeed.name}</b> est prête à récolter !`,'loot');}}});if(anyReady){checkFarmNotif();showToast(`🌱 ${readyCount} culture${readyCount>1?'s':''}  prête${readyCount>1?'s':''}  ! Allez à la Ferme.`,'loot');if(document.getElementById('panelFarm').classList.contains('active'))renderFarm();}if(G.tick%5===0&&document.getElementById('panelFarm').classList.contains('active'))updateFarmProgress();}
 function hungerTick(){G.player.hunger=Math.max(0,G.player.hunger-1);if(G.player.hunger<20){G.player.hp=Math.max(1,G.player.hp-2);}updateHUD();}
 
 // ══════════════════════════════════
@@ -423,7 +413,9 @@ function checkFarmNotif(){const ready=G.plots.filter(p=>p.status==='ready').leng
 function renderFarm(){const panel=document.getElementById('panelFarm');const readyCount=G.plots.filter(p=>p.status==='ready').length;let plotsHtml='<div class="farm-grid">';G.plots.forEach((plot,i)=>{if(plot.locked){plotsHtml+=`<div class="plot-rs locked"><span style="font-size:0.9rem">🔒</span></div>`;return;}if(!plot.crop){plotsHtml+=`<div class="plot-rs empty" onclick="plantOnPlot(${i})"><span style="font-size:1rem;color:#1e3018">+</span></div>`;return;}const seed=SEEDS.find(s=>s.id===plot.crop);const elapsed=G.tick-plot.plantedAt;const prog=Math.min(1,elapsed/(seed?.time||30));if(plot.status==='ready'){plotsHtml+=`<div class="plot-rs ready" onclick="harvest(${i})" id="plot_${i}"><span class="plot-emoji">${seed?.emoji||'?'}</span><div class="plot-ready-tag">PRÊT</div><div class="plot-progress"><div class="plot-progress-fill" style="width:100%"></div></div></div>`;}else{const rem=Math.max(0,(seed?.time||30)-elapsed);plotsHtml+=`<div class="plot-rs growing" id="plot_${i}"><span class="plot-emoji" style="opacity:0.5;filter:grayscale(0.5)">${seed?.emoji||'?'}</span><span class="plot-time">${rem}s</span><div class="plot-progress"><div class="plot-progress-fill" id="plotbar_${i}" style="width:${prog*100}%"></div></div></div>`;}});plotsHtml+='</div>';const farmLvl=G.skillLevels.farming||1;let seedsHtml=`<div class="seeds-section"><div class="seeds-title">🌱 Graines — Farming Niv.${farmLvl}</div><div class="seeds-grid">`;SEEDS.forEach(seed=>{const locked=seed.unlockLevel>farmLvl;const sel=G.selectedSeed===seed.id;seedsHtml+=`<div class="seed-btn ${locked?'locked':''} ${sel?'selected':''}" onclick="${locked?'':("selectSeed('"+seed.id+"')")}"><span class="seed-emoji">${seed.emoji}</span><span class="seed-name">${seed.name}</span><span class="seed-cost">💰${seed.cost}</span><span class="seed-time">⏱${seed.time}s</span></div>`;});seedsHtml+='</div></div>';panel.innerHTML=`<div class="farm-panel"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;"><span class="section-title" style="margin:0;font-size:0.62rem">🌱 Ferme</span>${readyCount>0?`<span style="font-size:0.65rem;color:var(--green2);font-family:'DM Mono',monospace;">✓ ${readyCount} prête${readyCount>1?'s':''}</span>`:''}</div>${plotsHtml}${seedsHtml}</div>`;}
 function updateFarmProgress(){G.plots.forEach((plot,i)=>{if(!plot.crop||plot.status==='ready'||plot.locked)return;const seed=SEEDS.find(s=>s.id===plot.crop);if(!seed)return;const elapsed=G.tick-plot.plantedAt;const prog=Math.min(1,elapsed/seed.time);const rem=Math.max(0,seed.time-elapsed);const bar=document.getElementById('plotbar_'+i);const pl=document.getElementById('plot_'+i);if(bar)bar.style.width=(prog*100)+'%';if(pl){const t=pl.querySelector('.plot-time');if(t)t.textContent=rem+'s';}});}
 function selectSeed(id){G.selectedSeed=(G.selectedSeed===id)?null:id;renderFarm();}
-function plantOnPlot(idx){if(!G.selectedSeed){showToast('Sélectionne une graine d\'abord !','bad');return;}const seed=SEEDS.find(s=>s.id===G.selectedSeed);if(!seed)return;const farmLvl=G.skillLevels.farming||1;if(seed.unlockLevel>farmLvl){showToast('Niveau farming insuffisant !','bad');return;}if((G.inventory[seed.id]||0)>0){G.inventory[seed.id]--;addLog(`Planté ${seed.emoji} <b>${seed.name}</b> depuis l'inventaire.`,'skill');}else{if(G.gold<seed.cost){showToast('Pas assez d\'or et aucune graine en stock !','bad');return;}G.gold-=seed.cost;addLog(`Planté ${seed.emoji} <b>${seed.name}</b> en parcelle ${idx+1} (achat: -${seed.cost}💰).`,'skill');}G.plots[idx]={...G.plots[idx],crop:seed.id,plantedAt:G.tick,status:'growing'};updateHUD();renderFarm();}
+function plantOnPlot(idx){if(!G.selectedSeed){showToast('Sélectionne une graine d\'abord !','bad');return;}const seed=SEEDS.find(s=>s.id===G.selectedSeed);if(!seed)return;const farmLvl=G.skillLevels.farming||1;if(seed.unlockLevel>farmLvl){showToast(`Farming niv.${seed.unlockLevel} requis !`,'bad');return;}const hasInInv=(G.inventory[seed.id]||0)>0;if(hasInInv){// Utilise la graine de l'inventaire sans frais
+G.inventory[seed.id]--;addLog(`${seed.emoji} Planté <b>${seed.name}</b> depuis l'inventaire.`,'skill');}else{// Achète et plante directement
+if(G.gold<seed.cost){showToast(`Pas assez d'or ! (${seed.cost}💰)`, 'bad');return;}G.gold-=seed.cost;addLog(`${seed.emoji} Planté <b>${seed.name}</b> (acheté ${seed.cost}💰).`,'skill');}G.plots[idx]={...G.plots[idx],crop:seed.id,plantedAt:G.tick,status:'growing'};showToast(`${seed.emoji} ${seed.name} planté ! Prêt dans ${seed.time}s`,'good');updateHUD();renderFarm();}
 function harvest(idx){const plot=G.plots[idx];if(!plot.crop||plot.status!=='ready')return;const seed=SEEDS.find(s=>s.id===plot.crop);if(!seed)return;G.inventory[seed.id]=(G.inventory[seed.id]||0)+1;G.gold+=seed.sell;G.totalHarvests++;gainSkillXp('farming',seed.farmXp);G.plots[idx]={id:idx,locked:false,crop:null,plantedAt:0,status:null};updateHUD();renderFarm();checkFarmNotif();checkQuestProgress('harvest',1);addLog(`${seed.emoji} Récolte ! <b>${seed.name}</b> → +${seed.sell}💰 +${seed.farmXp}XP`,'loot');showToast(`${seed.emoji} Récolté — +${seed.sell} Or !`,'loot');if(G.totalHarvests===1)setTimeout(()=>triggerStory('firstHarvest'),300);}
 
 // ══════════════════════════════════
@@ -454,7 +446,8 @@ if(!usedSpecial){let dmg=calcEDmg(m);const defMult=G.defending?0.38:1;const buff
 G.defending=false;updateHUD();updateCombatDisplay();document.querySelectorAll('.combat-btn').forEach(b=>{const cls=b.className;const mv=COMBAT_MOVES.find(x=>cls.includes(x.cat));b.disabled=!!(mv&&mv.rage>0&&p.rage<mv.rage);});if(p.hp<=0){p.hp=0;endFight(false);}}
 function calcEDmg(m){return m.atk[0]+Math.floor(Math.random()*(m.atk[1]-m.atk[0]+1));}
 function dealPlayerDmg(dmg){const el=document.getElementById('playerSprite');if(el){el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');}spawnDmgAt(`-${dmg}`,el,'player-dmg');}
-function endFight(won){const m=G.currentMonster;G.buffs={atk:0,def:0,rounds:0,nextCrit:false};G.debuffs={atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0};G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};G.defending=false;if(won){const goldWon=m.gold[0]+Math.floor(Math.random()*(m.gold[1]-m.gold[0]+1));G.currentMonster._goldWon=goldWon;G.gold+=goldWon;G.player.streak++;G.wins++;G.monstersKilled++;gainXP(m.xp);gainSkillXp('attack',m.xp);gainSkillXp('hitpoints',Math.round(m.xp*0.5));if(m.loot){Object.entries(m.loot).forEach(([id,chance])=>{if(Math.random()<chance){G.inventory[id]=(G.inventory[id]||0)+1;const seed=SEEDS.find(s=>s.id===id);addLog(`💎 Loot : ${seed?.emoji||'?'} <b>${seed?.name||id}</b> !`,'loot');}});}G.fightState='victory';addLog(`🏆 <b>${m.name}</b> vaincu ! +${goldWon}💰 +${m.xp}XP`,'combat');checkQuestProgress('kill',1);if(G.monstersKilled===1)setTimeout(()=>triggerStory('firstVictory'),800);}else{G.player.streak=0;G.fightState='defeat';addLog(`💀 Défaite contre ${m.name}...`,'damage');setTimeout(()=>triggerStory('firstDefeat'),800);}updateHUD();switchTab('Fight');saveGame();}
+function endFight(won){const m=G.currentMonster;G.buffs={atk:0,def:0,rounds:0,nextCrit:false};G.debuffs={atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0};G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};G.defending=false;if(won){const goldWon=m.gold[0]+Math.floor(Math.random()*(m.gold[1]-m.gold[0]+1));G.currentMonster._goldWon=goldWon;G.gold+=goldWon;G.player.streak++;G.wins++;G.monstersKilled++;gainXP(m.xp);gainSkillXp('attack',m.xp);gainSkillXp('hitpoints',Math.round(m.xp*0.5));if(m.loot){Object.entries(m.loot).forEach(([id,chance])=>{if(Math.random()<chance){G.inventory[id]=(G.inventory[id]||0)+1;const seed=SEEDS.find(s=>s.id===id);addLog(`💎 Loot : ${seed?.emoji||'?'} <b>${seed?.name||id}</b> !`,'loot');}});}G.fightState='victory';addLog(`🏆 <b>${m.name}</b> vaincu ! +${goldWon}💰 +${m.xp}XP`,'combat');checkQuestProgress('kill',1);if(G.monstersKilled===1)setTimeout(()=>triggerStory('firstVictory'),800);}else{G.player.streak=0;G.fightState='defeat';addLog(`💀 Défaite contre ${m.name}...`,'damage');setTimeout(()=>triggerStory('firstDefeat'),800);}updateHUD();// Force l'onglet Combat visible
+document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));const navFight=document.getElementById('navFight');if(navFight)navFight.classList.add('active');document.getElementById('panelFight').classList.add('active');document.getElementById('topbarCurrentTab').textContent='⚔️ Combat';renderFightPanel();saveGame();}
 function afterVictory(){G.player.hp=Math.min(G.player.maxHp,G.player.hp+15);G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();}
 function afterDefeat(){G.player.hp=Math.min(G.player.maxHp,Math.round(G.player.maxHp*0.35));G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();}
 function attemptFlee(){const penalty=Math.round(G.player.maxHp*0.1);G.player.hp=Math.max(1,G.player.hp-penalty);G.player.streak=0;G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();addLog(`🏃 Fuite ! (-${penalty}HP)`,'damage');showToast(`Fuite ! -${penalty} HP`,'bad');}

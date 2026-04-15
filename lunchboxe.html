@@ -17,12 +17,10 @@
   --text:#c8dde8;--text2:#7a9ab0;--text3:#405870;--white:#e8f4f8;--shadow:rgba(0,0,0,0.7);
 }
 html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville',serif;height:100%;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;}
-
-/* SCREENS */
 .screen{display:none;width:100%;height:100vh;overflow:hidden;}
 .screen.active{display:flex;flex-direction:column;}
 
-/* TITLE SCREEN */
+/* TITLE */
 #screenTitle{background:radial-gradient(ellipse 120% 80% at 50% 20%,rgba(0,80,30,0.5) 0%,transparent 55%),radial-gradient(ellipse 60% 60% at 80% 80%,rgba(0,30,60,0.4) 0%,transparent 55%),linear-gradient(180deg,#090e12 0%,#0d1117 100%);align-items:center;justify-content:center;position:relative;overflow:hidden;}
 .title-scanlines{position:absolute;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);}
 .title-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,192,48,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,192,48,0.04) 1px,transparent 1px);background-size:40px 40px;}
@@ -51,107 +49,38 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .btn-title.secondary:hover{border-color:var(--green);color:var(--green);}
 .title-disclaimer{font-size:0.6rem;color:var(--text3);margin-top:1rem;font-style:italic;}
 
-/* ═══════ NARRATOR SYSTEM ═══════ */
-.narrator-overlay{
-  position:fixed;bottom:0;left:0;right:0;z-index:500;
-  display:flex;align-items:flex-end;
-  pointer-events:none;
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  transform:translateY(110%);
-}
+/* NARRATOR */
+.narrator-overlay{position:fixed;bottom:0;left:0;right:0;z-index:500;display:flex;align-items:flex-end;pointer-events:none;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);transform:translateY(110%);}
 .narrator-overlay.show{transform:translateY(0);pointer-events:all;}
 .narrator-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(2px);}
-.narrator-box{
-  position:relative;z-index:1;
-  width:100%;
-  background:linear-gradient(180deg,#0d1822 0%,#0a1218 100%);
-  border-top:2px solid var(--border2);
-  display:flex;align-items:flex-end;gap:0;
-  min-height:130px;
-  box-shadow:0 -8px 32px rgba(0,0,0,0.7);
-}
+.narrator-box{position:relative;z-index:1;width:100%;background:linear-gradient(180deg,#0d1822 0%,#0a1218 100%);border-top:2px solid var(--border2);display:flex;align-items:flex-end;gap:0;min-height:130px;box-shadow:0 -8px 32px rgba(0,0,0,0.7);}
 .narrator-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0.4;}
-
-/* Character portrait area */
-.narrator-portrait{
-  width:90px;flex-shrink:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
-  padding:0 0 0 0.5rem;
-  position:relative;
-}
-.char-sprite{
-  width:80px;height:80px;
-  display:flex;align-items:center;justify-content:center;
-  filter:drop-shadow(0 0 12px rgba(0,192,48,0.3));
-  animation:charBob 2.5s ease-in-out infinite;
-  position:relative;z-index:1;
-}
-.char-sprite img{
-  width:72px;height:72px;object-fit:contain;
-  display:block;
-}
-/* Fallback emoji style (si SVG absent) */
-.char-sprite .emoji-fallback{
-  font-size:3.8rem;line-height:1;
-}
+.narrator-portrait{width:90px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 0 0 0.5rem;position:relative;}
+.char-sprite{width:80px;height:80px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 12px rgba(0,192,48,0.3));animation:charBob 2.5s ease-in-out infinite;position:relative;z-index:1;}
+.char-sprite img{width:72px;height:72px;object-fit:contain;display:block;}
+.char-sprite .emoji-fallback{font-size:3.8rem;line-height:1;}
 @keyframes charBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .char-sprite.villain{filter:drop-shadow(0 0 14px rgba(255,60,0,0.5));animation-duration:1.8s;}
-
-.char-name-tag{
-  background:var(--panel2);border:1px solid var(--border2);
-  font-family:'Raleway',sans-serif;font-size:0.5rem;font-weight:700;
-  letter-spacing:0.1em;text-transform:uppercase;
-  padding:2px 8px;margin-bottom:4px;
-  color:var(--white);width:100%;text-align:center;
-}
+.char-name-tag{background:var(--panel2);border:1px solid var(--border2);font-family:'Raleway',sans-serif;font-size:0.5rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;margin-bottom:4px;color:var(--white);width:100%;text-align:center;}
 .char-name-tag.fraise{border-color:#e04070;color:#ff80a0;}
 .char-name-tag.poire{border-color:#80c020;color:#c0f040;}
 .char-name-tag.banane{border-color:#e0a000;color:#ffd040;}
 .char-name-tag.narrateur{border-color:var(--border2);color:var(--text2);}
-
-/* Dialogue bubble */
-.narrator-content{
-  flex:1;padding:0.8rem 1rem;
-  display:flex;flex-direction:column;gap:0.4rem;
-  justify-content:center;
-}
-.narrator-text{
-  font-size:0.82rem;color:var(--white);line-height:1.6;
-  font-family:'Libre Baskerville',serif;
-  min-height:2.5rem;
-}
-.narrator-text .narrator-char-inline{
-  font-family:'Raleway',sans-serif;font-weight:700;font-size:0.75rem;
-}
+.narrator-content{flex:1;padding:0.8rem 1rem;display:flex;flex-direction:column;gap:0.4rem;justify-content:center;}
+.narrator-text{font-size:0.82rem;color:var(--white);line-height:1.6;font-family:'Libre Baskerville',serif;min-height:2.5rem;}
 .narrator-cursor{display:inline-block;width:2px;height:0.9em;background:var(--green);margin-left:2px;animation:cursorBlink 0.7s step-end infinite;vertical-align:middle;}
 @keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
-
 .narrator-footer{display:flex;align-items:center;justify-content:space-between;margin-top:0.3rem;}
 .narrator-tap-hint{font-family:'Raleway',sans-serif;font-size:0.48rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
-.btn-narrator-next{
-  background:transparent;border:1px solid var(--border2);
-  color:var(--text2);font-family:'Raleway',sans-serif;font-size:0.6rem;font-weight:600;
-  padding:0.3rem 0.8rem;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;
-  transition:all 0.1s;-webkit-tap-highlight-color:transparent;
-}
+.btn-narrator-next{background:transparent;border:1px solid var(--border2);color:var(--text2);font-family:'Raleway',sans-serif;font-size:0.6rem;font-weight:600;padding:0.3rem 0.8rem;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;transition:all 0.1s;-webkit-tap-highlight-color:transparent;}
 .btn-narrator-next:hover{border-color:var(--green);color:var(--green);}
-.btn-narrator-next:active{transform:scale(0.95);}
-.btn-narrator-skip{
-  background:transparent;border:none;color:var(--text3);
-  font-family:'Raleway',sans-serif;font-size:0.52rem;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  text-decoration:underline;text-underline-offset:3px;
-}
-
-/* Story progress dots */
+.btn-narrator-skip{background:transparent;border:none;color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.52rem;cursor:pointer;-webkit-tap-highlight-color:transparent;text-decoration:underline;text-underline-offset:3px;}
 .narrator-dots{display:flex;gap:4px;align-items:center;}
 .ndot{width:5px;height:5px;border-radius:50%;background:var(--border2);transition:background 0.2s;}
 .ndot.active{background:var(--green);}
 .ndot.done{background:var(--greendim);}
 
-/* ═══════════════════════════════
-   MAIN GAME
-═══════════════════════════════ */
+/* ═══ MAIN GAME ═══ */
 #screenGame{background:radial-gradient(ellipse 100% 50% at 50% 0%,rgba(0,50,20,0.15) 0%,transparent 50%),var(--bg);flex-direction:column;position:relative;}
 .topbar{background:linear-gradient(180deg,#0f1820 0%,#0d1520 100%);border-bottom:1px solid var(--border);padding:0 0.8rem;display:flex;align-items:center;gap:0.6rem;flex-shrink:0;z-index:20;height:44px;}
 .topbar-logo{font-family:'Raleway',sans-serif;font-weight:900;font-size:0.95rem;color:var(--white);white-space:nowrap;letter-spacing:-0.01em;}
@@ -165,6 +94,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .skill-chip-val{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--green);}
 .topbar-right{display:flex;align-items:center;gap:0.4rem;}
 .topbar-gold{display:flex;align-items:center;gap:0.3rem;font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--amberbright);background:var(--panel2);border:1px solid var(--border);padding:0.18rem 0.55rem;}
+
+/* Sidebar toggle button - visible on small screens */
+.sidebar-toggle{display:none;background:transparent;border:1px solid var(--border);color:var(--text2);font-size:0.7rem;padding:0.18rem 0.5rem;cursor:pointer;font-family:'Raleway',sans-serif;-webkit-tap-highlight-color:transparent;}
+@media (max-width:899px){.sidebar-toggle{display:flex;align-items:center;gap:4px;}}
+
 .vitals-bar{background:rgba(0,0,0,0.3);border-bottom:1px solid var(--border);padding:0.25rem 0.8rem;display:flex;align-items:center;gap:0.6rem;flex-shrink:0;height:30px;}
 .vital{display:flex;align-items:center;gap:0.3rem;flex:1;}
 .vital-icon{font-size:0.65rem;}
@@ -175,13 +109,20 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .vital-fill.xp{background:linear-gradient(90deg,#004a1a,#00a030,var(--green));}
 .vital-val{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--text2);width:36px;text-align:right;flex-shrink:0;}
 .vital-label{font-family:'Raleway',sans-serif;font-size:0.48rem;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;width:22px;flex-shrink:0;}
+
 .game-body{flex:1;display:flex;overflow:hidden;min-height:0;position:relative;}
-.content-area{flex:1;overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.content-area{flex:1;overflow:hidden;position:relative;display:flex;flex-direction:column;min-width:0;}
 .tab-panel{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
 .tab-panel::-webkit-scrollbar{width:3px;}
 .tab-panel::-webkit-scrollbar-thumb{background:var(--border);}
 .tab-panel.active{display:flex;flex-direction:column;}
-.sidebar{width:180px;flex-shrink:0;display:flex;flex-direction:column;border-left:1px solid var(--border);background:var(--panel);overflow:hidden;}
+
+/* SIDEBAR - hidden on small screens, shown on large */
+.sidebar{width:180px;flex-shrink:0;display:flex;flex-direction:column;border-left:1px solid var(--border);background:var(--panel);overflow:hidden;transition:transform 0.3s,width 0.3s;}
+@media (max-width:899px){
+  .sidebar{position:absolute;right:0;top:0;bottom:0;z-index:50;transform:translateX(100%);}
+  .sidebar.open{transform:translateX(0);}
+}
 .minimap-wrap{padding:0.5rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.3);flex-shrink:0;}
 .minimap{width:100%;aspect-ratio:1;background:radial-gradient(ellipse 60% 50% at 35% 40%,rgba(0,30,15,0.9) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 70% 65%,rgba(0,15,30,0.9) 0%,transparent 55%),#080f08;border:1px solid var(--border);position:relative;overflow:hidden;}
 .minimap-dot{position:absolute;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;transition:all 0.2s;}
@@ -197,6 +138,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .skill-level{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--green);font-weight:500;}
 .skill-xp-track{width:100%;height:2px;background:rgba(255,255,255,0.04);margin-top:2px;}
 .skill-xp-fill{height:100%;background:var(--green);transition:width 0.4s;}
+
 .chat-log{height:72px;flex-shrink:0;background:rgba(0,0,0,0.5);border-top:1px solid var(--border);overflow-y:auto;padding:0.35rem 0.6rem;scrollbar-width:none;}
 .chat-log::-webkit-scrollbar{display:none;}
 .chat-line{font-family:'Libre Baskerville',serif;font-size:0.7rem;line-height:1.5;}
@@ -209,11 +151,18 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .chat-line.sys{color:var(--text3);font-style:italic;}
 .chat-line.special{color:var(--orangebright);font-weight:700;}
 .chat-line.story{color:#ff80a0;font-style:italic;}
-.tab-bar{background:linear-gradient(180deg,#0f1820,#0d1520);border-top:1px solid var(--border);display:flex;flex-shrink:0;z-index:15;}
-.tab-btn{flex:1;padding:0.4rem 0.15rem;border:none;background:none;color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.42rem;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;cursor:pointer;border-right:1px solid var(--border);border-top:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all 0.15s;-webkit-tap-highlight-color:transparent;position:relative;}
+
+/* TAB BAR - responsive */
+.tab-bar{background:linear-gradient(180deg,#0f1820,#0d1520);border-top:1px solid var(--border);display:flex;flex-shrink:0;z-index:15;overflow-x:auto;scrollbar-width:none;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-btn{flex:1;min-width:44px;padding:0.4rem 0.15rem;border:none;background:none;color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.42rem;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;cursor:pointer;border-right:1px solid var(--border);border-top:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all 0.15s;-webkit-tap-highlight-color:transparent;position:relative;white-space:nowrap;}
 .tab-btn:last-child{border-right:none;}
 .tab-btn.active{color:var(--green);border-top-color:var(--green);background:rgba(0,192,48,0.06);}
 .tab-btn .t-icon{font-size:0.95rem;}
+@media (max-width:899px){
+  .tab-btn{font-size:0.38rem;padding:0.35rem 0.1rem;}
+  .tab-btn .t-icon{font-size:0.85rem;}
+}
 .tab-notif{position:absolute;top:4px;right:calc(50% - 14px);width:5px;height:5px;background:var(--red);border-radius:50%;animation:blink 1s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
@@ -341,8 +290,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .combat-btn.eat{border-color:#2a1a0a;color:var(--amberbright);}
 .combat-btn.flee{border-color:#2a0a0a;color:var(--red);}
 .combat-actions-row2{display:grid;grid-template-columns:1fr 1fr;gap:0.25rem;}
-
-/* MONSTER SELECT */
 .monster-card{background:var(--panel2);border:1px solid var(--border);padding:0.6rem 0.8rem;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;transition:border-color 0.15s;-webkit-tap-highlight-color:transparent;}
 .monster-card:hover{border-color:var(--green);}
 .monster-card:active{transform:scale(0.98);}
@@ -366,8 +313,9 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 
 /* SHOP */
 .shop-panel{padding:0.6rem;}
-.shop-tabs{display:flex;gap:1px;margin-bottom:0.5rem;}
-.shop-tab{flex:1;padding:0.35rem;background:var(--panel2);border:1px solid var(--border);font-family:'Raleway',sans-serif;font-size:0.52rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);cursor:pointer;text-align:center;transition:all 0.1s;}
+.shop-tabs{display:flex;gap:1px;margin-bottom:0.5rem;overflow-x:auto;scrollbar-width:none;}
+.shop-tabs::-webkit-scrollbar{display:none;}
+.shop-tab{flex:1;min-width:60px;padding:0.35rem;background:var(--panel2);border:1px solid var(--border);font-family:'Raleway',sans-serif;font-size:0.52rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);cursor:pointer;text-align:center;transition:all 0.1s;white-space:nowrap;}
 .shop-tab.active{border-color:var(--green);color:var(--green);background:rgba(0,192,48,0.07);}
 .shop-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
 .shop-item-card{background:var(--panel2);border:1px solid var(--border);padding:0.55rem;cursor:pointer;transition:border-color 0.15s;position:relative;-webkit-tap-highlight-color:transparent;}
@@ -380,6 +328,60 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .shop-item-name{font-family:'Raleway',sans-serif;font-weight:700;font-size:0.68rem;color:var(--white);}
 .shop-item-desc{font-size:0.56rem;color:var(--text3);margin-top:1px;line-height:1.4;}
 .shop-item-price{display:flex;align-items:center;gap:0.25rem;margin-top:0.4rem;font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--amberbright);}
+
+/* ═══ LOOTBOX ═══ */
+.lootbox-grid{display:grid;grid-template-columns:1fr;gap:0.5rem;}
+.lootbox-card{background:var(--panel2);border:1px solid var(--border2);padding:0.8rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.lootbox-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.02) 0%,transparent 60%);}
+.lootbox-card:active{transform:scale(0.97);}
+.lootbox-card.lb-common{border-color:#2a5040;}
+.lootbox-card.lb-common:hover{border-color:var(--teal);box-shadow:0 0 16px rgba(0,180,160,0.15);}
+.lootbox-card.lb-rare{border-color:#3a2060;}
+.lootbox-card.lb-rare:hover{border-color:var(--purplebright);box-shadow:0 0 16px rgba(128,64,208,0.2);}
+.lootbox-card.lb-legendary{border-color:#603010;}
+.lootbox-card.lb-legendary:hover{border-color:var(--orangebright);box-shadow:0 0 20px rgba(208,80,0,0.25);}
+.lootbox-card.cant-afford{opacity:0.4;cursor:not-allowed;}
+.lootbox-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:0.5rem;}
+.lootbox-emoji-wrap{position:relative;width:56px;height:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.lootbox-emoji-big{font-size:2.6rem;display:block;animation:lbFloat 3s ease-in-out infinite;}
+@keyframes lbFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-4px) rotate(3deg)}}
+.lootbox-rarity-badge{position:absolute;bottom:-2px;right:-2px;font-family:'Raleway',sans-serif;font-size:0.38rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:1px 4px;}
+.lb-badge-common{background:rgba(0,180,160,0.2);color:var(--tealbright);border:1px solid var(--teal);}
+.lb-badge-rare{background:rgba(128,64,208,0.2);color:var(--purplebright);border:1px solid var(--purple);}
+.lb-badge-legendary{background:rgba(208,80,0,0.2);color:var(--orangebright);border:1px solid var(--orange);}
+.lootbox-info{flex:1;}
+.lootbox-name{font-family:'Raleway',sans-serif;font-weight:700;font-size:0.88rem;color:var(--white);}
+.lootbox-desc{font-size:0.62rem;color:var(--text2);font-style:italic;line-height:1.4;margin-top:2px;}
+.lootbox-contents{font-size:0.6rem;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace;}
+.lootbox-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:0.45rem;margin-top:0.45rem;}
+.lootbox-price{font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--amberbright);display:flex;align-items:center;gap:0.25rem;}
+.btn-open-lb{background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-size:0.68rem;font-weight:700;padding:0.4rem 1.1rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;-webkit-tap-highlight-color:transparent;transition:all 0.1s;}
+.btn-open-lb:hover{background:var(--green2);}
+.btn-open-lb:active{transform:scale(0.95);}
+.lb-badge-legendary + .btn-open-lb{background:var(--orange);}
+.lb-badge-legendary + .btn-open-lb:hover{background:var(--orangebright);}
+
+/* LOOTBOX OPENING OVERLAY */
+.lb-opening-overlay{position:fixed;inset:0;z-index:950;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.lb-opening-overlay.show{opacity:1;pointer-events:all;}
+.lb-box-anim{font-size:5rem;display:block;margin-bottom:1rem;animation:lbShake 0.5s ease-in-out 0s 3;}
+@keyframes lbShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg) scale(1.1)}40%{transform:rotate(12deg) scale(1.1)}60%{transform:rotate(-8deg)}80%{transform:rotate(8deg)}}
+.lb-opening-title{font-family:'Raleway',sans-serif;font-weight:900;font-size:1.4rem;color:var(--white);margin-bottom:0.3rem;letter-spacing:-0.01em;}
+.lb-opening-sub{font-size:0.75rem;color:var(--text2);font-style:italic;margin-bottom:1.5rem;}
+.lb-rewards-grid{display:flex;flex-direction:column;gap:0.5rem;width:100%;max-width:320px;padding:0 1.5rem;}
+.lb-reward-item{display:flex;align-items:center;gap:0.8rem;background:var(--panel2);border:1px solid var(--border2);padding:0.6rem 0.8rem;animation:rewardReveal 0.4s ease-out both;}
+@keyframes rewardReveal{0%{opacity:0;transform:translateX(-20px)}100%{opacity:1;transform:translateX(0)}}
+.lb-reward-emoji{font-size:1.8rem;flex-shrink:0;}
+.lb-reward-info{flex:1;}
+.lb-reward-name{font-family:'Raleway',sans-serif;font-weight:700;font-size:0.78rem;color:var(--white);}
+.lb-reward-qty{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--green);}
+.lb-reward-rarity{font-family:'Raleway',sans-serif;font-size:0.48rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:1px 5px;}
+.lb-rarity-common{background:rgba(0,180,160,0.15);color:var(--tealbright);border:1px solid var(--teal);}
+.lb-rarity-rare{background:rgba(128,64,208,0.15);color:var(--purplebright);border:1px solid var(--purple);}
+.lb-rarity-legendary{background:rgba(208,80,0,0.15);color:var(--orangebright);border:1px solid var(--orange);}
+.btn-lb-collect{background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.8rem 2.5rem;cursor:pointer;margin-top:1.5rem;transition:all 0.1s;-webkit-tap-highlight-color:transparent;}
+.btn-lb-collect:hover{background:var(--green2);}
+.btn-lb-collect:active{transform:scale(0.96);}
 
 /* INVENTORY */
 .inv-panel{padding:0.6rem;}
@@ -409,7 +411,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 .toast.level{border-color:var(--teal);color:var(--tealbright);background:rgba(0,20,20,0.95);}
 .toast.loot{border-color:var(--green2);color:var(--green3);}
 
-/* LEVEL UP OVERLAY */
+/* LEVEL UP */
 .levelup-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
 .levelup-overlay.show{opacity:1;pointer-events:all;}
 .levelup-box{background:var(--panel);border:1px solid var(--green);padding:2rem 2.5rem;text-align:center;box-shadow:0 0 60px rgba(0,192,48,0.2);animation:levelupEntry 0.45s cubic-bezier(0.175,0.885,0.32,1.275);max-width:300px;width:90%;position:relative;}
@@ -474,6 +476,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
     <div class="topbar-skills" id="topbarSkills"></div>
     <div class="topbar-right">
       <div class="topbar-gold" id="topbarGold">💰 0</div>
+      <button class="sidebar-toggle" onclick="toggleSidebar()">🗺 ▶</button>
     </div>
   </div>
   <div class="vitals-bar">
@@ -494,7 +497,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
         <div class="chat-line sys">Bienvenue dans Lunch Boxe: World of Cuisine.</div>
       </div>
     </div>
-    <div class="sidebar">
+    <div class="sidebar" id="mainSidebar">
       <div class="minimap-wrap"><div class="minimap" id="minimap"></div><div class="minimap-label" id="minimapLabel">Carte</div></div>
       <div class="skills-grid" id="sidebarSkills"></div>
     </div>
@@ -510,14 +513,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
   </div>
 </div>
 
-<!-- NARRATOR SYSTEM -->
+<!-- NARRATOR -->
 <div class="narrator-overlay" id="narratorOverlay" onclick="narratorTap()">
   <div class="narrator-box" onclick="e=>e.stopPropagation()">
     <div class="narrator-portrait">
-      <!-- Le sprite du personnage : mis à jour dynamiquement par JS -->
-      <div class="char-sprite" id="narratorSprite">
-        <!-- Le contenu SVG ou emoji est injecté ici par showNarratorLine() -->
-      </div>
+      <div class="char-sprite" id="narratorSprite"></div>
       <div class="char-name-tag fraise" id="narratorNameTag">Fraise</div>
     </div>
     <div class="narrator-content">
@@ -531,6 +531,15 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
       </div>
     </div>
   </div>
+</div>
+
+<!-- LOOTBOX OPENING OVERLAY -->
+<div class="lb-opening-overlay" id="lbOpeningOverlay">
+  <span class="lb-box-anim" id="lbBoxAnim">📦</span>
+  <div class="lb-opening-title" id="lbOpeningTitle">Ouverture...</div>
+  <div class="lb-opening-sub" id="lbOpeningSub">Voyons ce que tu as obtenu !</div>
+  <div class="lb-rewards-grid" id="lbRewardsGrid"></div>
+  <button class="btn-lb-collect" onclick="collectLootbox()">Récupérer !</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -555,397 +564,345 @@ html,body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville'
 <script>
 'use strict';
 
-// ═══════════════════════════════════════════
-//  NARRATOR SYSTEM
-// ═══════════════════════════════════════════
-
-// Définition des personnages avec leurs fichiers SVG
-const CHARS = {
-  fraise: {
-    svgFile: 'fraise.svg',
-    fallbackEmoji: '🍓',
-    tag: 'fraise',
-    name: 'Fraise',
-    role: 'alliée',
-    villain: false
-  },
-  poire: {
-    svgFile: 'poire.svg',
-    fallbackEmoji: '🍐',
-    tag: 'poire',
-    name: 'Poire',
-    role: 'allié',
-    villain: false
-  },
-  banane: {
-    svgFile: 'banane.svg',
-    fallbackEmoji: '🍌',
-    tag: 'banane',
-    name: 'Banane',
-    role: 'villain',
-    villain: true
-  },
-  narrateur: {
-    svgFile: null,
-    fallbackEmoji: '📖',
-    tag: 'narrateur',
-    name: 'Narrateur',
-    role: 'narrateur',
-    villain: false
-  },
-};
-
-// Cache pour savoir si un SVG a pu charger
-const SVG_STATUS = {}; // 'ok' | 'fail' | undefined
-
-// Précharge les SVGs pour détecter les erreurs avant affichage
-function preloadSVGs() {
-  ['fraise', 'poire', 'banane'].forEach(id => {
-    const char = CHARS[id];
-    if (!char.svgFile) return;
-    const img = new Image();
-    img.onload = () => { SVG_STATUS[id] = 'ok'; };
-    img.onerror = () => { SVG_STATUS[id] = 'fail'; };
-    img.src = char.svgFile;
-  });
+// ══════════════════════════════════
+//  SIDEBAR TOGGLE (iPad fix)
+// ══════════════════════════════════
+function toggleSidebar(){
+  const sb=document.getElementById('mainSidebar');
+  sb.classList.toggle('open');
 }
-
-// Génère le HTML du sprite selon disponibilité du SVG
-function getCharSpriteHTML(charId) {
-  const char = CHARS[charId];
-  if (!char) return `<span class="emoji-fallback">❓</span>`;
-
-  if (char.svgFile && SVG_STATUS[charId] !== 'fail') {
-    // SVG disponible (ou pas encore testé → on tente quand même)
-    return `<img
-      src="${char.svgFile}"
-      alt="${char.name}"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"
-      style="width:72px;height:72px;object-fit:contain;display:block;"
-    ><span class="emoji-fallback" style="display:none;font-size:3.8rem;line-height:1;">${char.fallbackEmoji}</span>`;
-  }
-
-  // Pas de SVG → emoji de secours
-  return `<span class="emoji-fallback" style="font-size:3.8rem;line-height:1;">${char.fallbackEmoji}</span>`;
-}
-
-// Toutes les séquences de dialogue du jeu
-const STORY_SEQUENCES = {
-  intro: [
-    { char:'fraise', text:'Enfin ! Un combattant courageux qui ose affronter ce monde devenu fou... Je suis Fraise, et j\'ai besoin de ton aide !' },
-    { char:'poire',  text:'Moi c\'est Poire. Écoute ce que Fraise a à dire, c\'est sérieux. Depuis que Banane a pris le contrôle du Donjon de la Friture, tous les fruits et légumes tremblent.' },
-    { char:'fraise', text:'La Banane nous a réduits en esclavage ! Elle vole nos récoltes, corrompt les monstres... Tu dois cultiver, cuisiner, et devenir assez fort pour la vaincre !' },
-    { char:'banane', text:'Hahaha ! Un nouveau petit guerrier ? Tes légumes m\'appartiennent. Tes cuisines m\'appartiennent. TOI tu m\'appartiens. Ou tu seras écrasé en purée !' },
-    { char:'poire',  text:'Ne t\'inquiète pas ! On est là pour toi. Commence par cultiver dans la ferme, puis cuisine des plats pour te renforcer. On se bat ensemble !' },
-  ],
-  firstHarvest: [
-    { char:'fraise', text:'Tu as réussi ta première récolte ! Je savais que tu y arriverais. Chaque légume que tu récupères, c\'est un affront de plus à la Banane.' },
-    { char:'poire',  text:'Bien joué ! Maintenant cuisine ces ingrédients. Un bon plat peut doubler ta force en combat — crois-moi, j\'en sais quelque chose.' },
-  ],
-  firstCook: [
-    { char:'fraise', text:'Mmh, ça sent BON ! Tu es vraiment doué en cuisine. Mange ça avant de combattre — un ventre plein, c\'est un combattant fort !' },
-    { char:'poire',  text:'La Banane ne cuisine jamais elle-même. C\'est pour ça qu\'elle perdra... Les vrais guerriers savent se nourrir.' },
-  ],
-  firstFight: [
-    { char:'poire',  text:'Ton premier combat approche ! Rappelle-toi : Défense réduit les dégâts de 62%. N\'hésite pas à bloquer les coups puissants.' },
-    { char:'fraise', text:'Et si tu accumules de la Rage, le coup Ultime ⚡ est dévastateur ! On croit en toi !' },
-  ],
-  firstVictory: [
-    { char:'fraise', text:'VICTOIRE ! Tu as vaincu ton premier ennemi ! La Banane va grincer des dents en apprenant ça.' },
-    { char:'poire',  text:'Excellent combat ! Continue à progresser. Plus tu bats de monstres, plus tu t\'approches du Donjon de la Friture... et de la Banane.' },
-  ],
-  firstDefeat: [
-    { char:'poire',  text:'Aïe... Tu t\'es battu courageusement. Mais ce n\'est pas une défaite — c\'est une leçon.' },
-    { char:'fraise', text:'Mange et repose-toi ! Cuisine quelque chose de bon, équipe-toi mieux, et reviens. On n\'abandonne pas !' },
-    { char:'banane', text:'Hahaha ! Le petit guerrier est tombé ! Reste chez toi, tu n\'es pas de taille. La cuisine appartient à la BANANE !' },
-  ],
-  dangerZone: [
-    { char:'banane', text:'Tu t\'aventures dans mes terres ? Intéressant. Mes serviteurs vont s\'occuper de toi... personnellement.' },
-    { char:'fraise', text:'Fais attention ! Cette zone est dangereuse. Cuisine des plats puissants avant de te battre ici.' },
-  ],
-  reachDungeon: [
-    { char:'fraise', text:'Le Donjon de la Friture... On y est enfin. Je ne pensais pas qu\'on arriverait jusqu\'ici un jour.' },
-    { char:'poire',  text:'La Banane est quelque part là-dedans. Prépare tes meilleurs plats, équipe-toi au maximum. C\'est le combat final.' },
-    { char:'banane', text:'Vous osez pénétrer dans MON donjon ?! Vous êtes fous ! Mes champions vous broieront avant même que vous m\'atteigniez !' },
-    { char:'fraise', text:'On n\'a plus peur de toi, Banane ! Ensemble, on est imbattables. Allons-y !' },
-  ],
-  bossWarning: [
-    { char:'banane', text:'Mon champion, le Bento Bakemono, n\'a jamais connu la défaite. Tu seras le dernier à essayer... et le dernier à échouer !' },
-    { char:'poire',  text:'C\'est le boss final. Utilise TOUT — ton meilleur équipement, tes meilleures recettes. On ne peut pas rater ça.' },
-  ],
-  level5: [
-    { char:'poire',  text:'Niveau 5 ! Tu es maintenant bien plus fort qu\'au début. La Banane commence à s\'inquiéter, j\'en suis sûr.' },
-    { char:'fraise', text:'Des zones encore plus dangereuses s\'ouvrent à toi. Reste prudent — et n\'oublie pas de manger !' },
-  ],
-  level10: [
-    { char:'banane', text:'Niveau 10 ?! Impossible ! Comment es-tu arrivé jusqu\'ici ?! Mes monstres sont pourtant... bien nourris.' },
-    { char:'fraise', text:'La Banane a PEUR ! Tu vois ? Continue comme ça. Le Donjon n\'est plus très loin maintenant.' },
-    { char:'poire',  text:'C\'est le moment de viser les zones de haut niveau. Tu es prêt pour le Marais de l\'Ail et le Pic du Piment !' },
-  ],
-};
-
-// État du narrateur
-let NAR = {
-  queue: [],
-  currentSeq: null,
-  currentIdx: 0,
-  isTyping: false,
-  typeTimer: null,
-  seenSeqs: new Set(),
-  enabled: true,
-};
-
-function loadNarratorState() {
-  try {
-    const raw = localStorage.getItem('lunchboxe_nar_v1');
-    if (raw) NAR.seenSeqs = new Set(JSON.parse(raw));
-  } catch(e) {}
-}
-function saveNarratorState() {
-  try { localStorage.setItem('lunchboxe_nar_v1', JSON.stringify([...NAR.seenSeqs])); } catch(e) {}
-}
-
-function triggerStory(seqId, force=false) {
-  if (!NAR.enabled) return;
-  if (!force && NAR.seenSeqs.has(seqId)) return;
-  const seq = STORY_SEQUENCES[seqId];
-  if (!seq) return;
-  NAR.seenSeqs.add(seqId);
-  saveNarratorState();
-  if (document.getElementById('narratorOverlay').classList.contains('show')) {
-    NAR.queue.push(seqId);
-    return;
-  }
-  startNarratorSeq(seq, seqId);
-}
-
-function startNarratorSeq(seq, seqId) {
-  NAR.currentSeq = seq;
-  NAR.currentIdx = 0;
-  showNarratorLine(0);
-}
-
-function showNarratorLine(idx) {
-  const seq = NAR.currentSeq;
-  if (!seq || idx >= seq.length) { closeNarrator(); return; }
-  const line = seq[idx];
-  const charId = line.char;
-  const char = CHARS[charId] || CHARS.narrateur;
-
-  // ── Mise à jour du sprite avec SVG + fallback emoji ──
-  const spriteEl = document.getElementById('narratorSprite');
-  spriteEl.innerHTML = getCharSpriteHTML(charId);
-  spriteEl.className = 'char-sprite' + (char.villain ? ' villain' : '');
-
-  // ── Mise à jour du tag de nom ──
-  const tag = document.getElementById('narratorNameTag');
-  tag.textContent = char.name;
-  tag.className = 'char-name-tag ' + char.tag;
-
-  // ── Mise à jour des points de progression ──
-  const dots = document.getElementById('narratorDots');
-  dots.innerHTML = seq.map((_, i) =>
-    `<div class="ndot ${i < idx ? 'done' : i === idx ? 'active' : ''}"></div>`
-  ).join('');
-
-  // ── Bouton suivant / fermer ──
-  const nextBtn = document.getElementById('narratorNextBtn');
-  nextBtn.textContent = idx === seq.length - 1 ? 'Fermer ✕' : 'Suivant ▶';
-
-  // ── Affichage ──
-  document.getElementById('narratorOverlay').classList.add('show');
-  typeNarratorText(line.text);
-  addLog(`💬 <b>${char.name}</b> : ${line.text}`, 'story');
-}
-
-function typeNarratorText(text) {
-  clearTimeout(NAR.typeTimer);
-  NAR.isTyping = true;
-  const el = document.getElementById('narratorText');
-  el.innerHTML = '';
-  let i = 0;
-  function tick() {
-    if (i < text.length) {
-      el.innerHTML = text.slice(0, i + 1) + '<span class="narrator-cursor"></span>';
-      i++;
-      NAR.typeTimer = setTimeout(tick, 22);
-    } else {
-      el.innerHTML = text;
-      NAR.isTyping = false;
+// Close sidebar when tapping content area on mobile
+document.addEventListener('click',function(e){
+  if(window.innerWidth<900){
+    const sb=document.getElementById('mainSidebar');
+    if(sb.classList.contains('open')&&!sb.contains(e.target)&&!e.target.closest('.sidebar-toggle')){
+      sb.classList.remove('open');
     }
   }
-  tick();
-}
+},{passive:true});
 
-function narratorTap() {
-  if (NAR.isTyping) {
-    clearTimeout(NAR.typeTimer);
-    NAR.isTyping = false;
-    const line = NAR.currentSeq[NAR.currentIdx];
-    document.getElementById('narratorText').innerHTML = line ? line.text : '';
-  }
-}
+// ══════════════════════════════════
+//  NARRATOR
+// ══════════════════════════════════
+const CHARS={
+  fraise:{svgFile:'fraise.svg',fallbackEmoji:'🍓',tag:'fraise',name:'Fraise',villain:false},
+  poire:{svgFile:'poire.svg',fallbackEmoji:'🍐',tag:'poire',name:'Poire',villain:false},
+  banane:{svgFile:'banane.svg',fallbackEmoji:'🍌',tag:'banane',name:'Banane',villain:true},
+  narrateur:{svgFile:null,fallbackEmoji:'📖',tag:'narrateur',name:'Narrateur',villain:false},
+};
+const SVG_STATUS={};
+function preloadSVGs(){['fraise','poire','banane'].forEach(id=>{const c=CHARS[id];if(!c.svgFile)return;const img=new Image();img.onload=()=>{SVG_STATUS[id]='ok';};img.onerror=()=>{SVG_STATUS[id]='fail';};img.src=c.svgFile;});}
+function getCharSpriteHTML(charId){const c=CHARS[charId];if(!c)return`<span class="emoji-fallback">❓</span>`;if(c.svgFile&&SVG_STATUS[charId]!=='fail')return`<img src="${c.svgFile}" alt="${c.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" style="width:72px;height:72px;object-fit:contain;display:block;"><span class="emoji-fallback" style="display:none;font-size:3.8rem;line-height:1;">${c.fallbackEmoji}</span>`;return`<span class="emoji-fallback" style="font-size:3.8rem;line-height:1;">${c.fallbackEmoji}</span>`;}
 
-function narratorNext() {
-  clearTimeout(NAR.typeTimer);
-  NAR.isTyping = false;
-  NAR.currentIdx++;
-  if (!NAR.currentSeq || NAR.currentIdx >= NAR.currentSeq.length) {
-    closeNarrator();
-  } else {
-    showNarratorLine(NAR.currentIdx);
-  }
-}
+const STORY_SEQUENCES={
+  intro:[
+    {char:'fraise',text:'Enfin ! Un combattant courageux qui ose affronter ce monde devenu fou... Je suis Fraise, et j\'ai besoin de ton aide !'},
+    {char:'poire',text:'Moi c\'est Poire. Écoute ce que Fraise a à dire, c\'est sérieux. Depuis que Banane a pris le contrôle du Donjon de la Friture, tous les fruits et légumes tremblent.'},
+    {char:'fraise',text:'La Banane nous a réduits en esclavage ! Elle vole nos récoltes, corrompt les monstres... Tu dois cultiver, cuisiner, et devenir assez fort pour la vaincre !'},
+    {char:'banane',text:'Hahaha ! Un nouveau petit guerrier ? Tes légumes m\'appartiennent. Tes cuisines m\'appartiennent. TOI tu m\'appartiens. Ou tu seras écrasé en purée !'},
+    {char:'poire',text:'Ne t\'inquiète pas ! On est là pour toi. Commence par cultiver dans la ferme, puis cuisine des plats pour te renforcer. On se bat ensemble !'},
+  ],
+  firstHarvest:[{char:'fraise',text:'Tu as réussi ta première récolte ! Je savais que tu y arriverais.'},{char:'poire',text:'Bien joué ! Maintenant cuisine ces ingrédients. Un bon plat peut doubler ta force en combat !'}],
+  firstCook:[{char:'fraise',text:'Mmh, ça sent BON ! Tu es vraiment doué en cuisine. Mange ça avant de combattre !'},{char:'poire',text:'La Banane ne cuisine jamais elle-même. C\'est pour ça qu\'elle perdra...'}],
+  firstFight:[{char:'poire',text:'Ton premier combat approche ! Rappelle-toi : Défense réduit les dégâts de 62%.'},{char:'fraise',text:'Et si tu accumules de la Rage, le coup Ultime ⚡ est dévastateur !'}],
+  firstVictory:[{char:'fraise',text:'VICTOIRE ! Tu as vaincu ton premier ennemi ! La Banane va grincer des dents.'},{char:'poire',text:'Excellent combat ! Continue à progresser vers le Donjon de la Friture.'}],
+  firstDefeat:[{char:'poire',text:'Aïe... Tu t\'es battu courageusement. Mais ce n\'est pas une défaite — c\'est une leçon.'},{char:'fraise',text:'Mange et repose-toi ! Cuisine quelque chose de bon et reviens.'},{char:'banane',text:'Hahaha ! Le petit guerrier est tombé ! Reste chez toi !'}],
+  dangerZone:[{char:'banane',text:'Tu t\'aventures dans mes terres ? Mes serviteurs vont s\'occuper de toi...'},{char:'fraise',text:'Fais attention ! Cette zone est dangereuse. Cuisine des plats puissants avant de te battre ici.'}],
+  reachDungeon:[{char:'fraise',text:'Le Donjon de la Friture... On y est enfin.'},{char:'poire',text:'Prépare tes meilleurs plats, équipe-toi au maximum. C\'est le combat final.'},{char:'banane',text:'Vous osez pénétrer dans MON donjon ?! Vous êtes fous !'},{char:'fraise',text:'On n\'a plus peur de toi, Banane ! Allons-y !'}],
+  bossWarning:[{char:'banane',text:'Mon champion, le Bento Bakemono, n\'a jamais connu la défaite !'},{char:'poire',text:'Utilise TOUT — ton meilleur équipement, tes meilleures recettes.'}],
+  level5:[{char:'poire',text:'Niveau 5 ! Tu es maintenant bien plus fort. La Banane commence à s\'inquiéter.'},{char:'fraise',text:'Des zones encore plus dangereuses s\'ouvrent à toi !'}],
+  level10:[{char:'banane',text:'Niveau 10 ?! Impossible !'},{char:'fraise',text:'La Banane a PEUR ! Continue comme ça.'},{char:'poire',text:'Tu es prêt pour le Marais de l\'Ail et le Pic du Piment !'}],
+  lootboxLegendary:[{char:'fraise',text:'Une Banane Secrète ?! C\'est la plus rare des lootboxes... On dit que la Banane y cache ses plus grands secrets !'},{char:'banane',text:'Espèce de... Comment tu as mis la main sur ça ?! Ces ressources m\'APPARTIENNENT !'}],
+};
 
-function skipNarrator() {
-  clearTimeout(NAR.typeTimer);
-  NAR.isTyping = false;
-  closeNarrator();
-}
+let NAR={queue:[],currentSeq:null,currentIdx:0,isTyping:false,typeTimer:null,seenSeqs:new Set(),enabled:true};
+function loadNarratorState(){try{const r=localStorage.getItem('lunchboxe_nar_v1');if(r)NAR.seenSeqs=new Set(JSON.parse(r));}catch(e){}}
+function saveNarratorState(){try{localStorage.setItem('lunchboxe_nar_v1',JSON.stringify([...NAR.seenSeqs]));}catch(e){}}
+function triggerStory(seqId,force=false){if(!NAR.enabled)return;if(!force&&NAR.seenSeqs.has(seqId))return;const seq=STORY_SEQUENCES[seqId];if(!seq)return;NAR.seenSeqs.add(seqId);saveNarratorState();if(document.getElementById('narratorOverlay').classList.contains('show')){NAR.queue.push(seqId);return;}startNarratorSeq(seq,seqId);}
+function startNarratorSeq(seq){NAR.currentSeq=seq;NAR.currentIdx=0;showNarratorLine(0);}
+function showNarratorLine(idx){const seq=NAR.currentSeq;if(!seq||idx>=seq.length){closeNarrator();return;}const line=seq[idx];const charId=line.char;const char=CHARS[charId]||CHARS.narrateur;const spriteEl=document.getElementById('narratorSprite');spriteEl.innerHTML=getCharSpriteHTML(charId);spriteEl.className='char-sprite'+(char.villain?' villain':'');const tag=document.getElementById('narratorNameTag');tag.textContent=char.name;tag.className='char-name-tag '+char.tag;const dots=document.getElementById('narratorDots');dots.innerHTML=seq.map((_,i)=>`<div class="ndot ${i<idx?'done':i===idx?'active':''}"></div>`).join('');const nextBtn=document.getElementById('narratorNextBtn');nextBtn.textContent=idx===seq.length-1?'Fermer ✕':'Suivant ▶';document.getElementById('narratorOverlay').classList.add('show');typeNarratorText(line.text);addLog(`💬 <b>${char.name}</b> : ${line.text}`,'story');}
+function typeNarratorText(text){clearTimeout(NAR.typeTimer);NAR.isTyping=true;const el=document.getElementById('narratorText');el.innerHTML='';let i=0;function tick(){if(i<text.length){el.innerHTML=text.slice(0,i+1)+'<span class="narrator-cursor"></span>';i++;NAR.typeTimer=setTimeout(tick,22);}else{el.innerHTML=text;NAR.isTyping=false;}}tick();}
+function narratorTap(){if(NAR.isTyping){clearTimeout(NAR.typeTimer);NAR.isTyping=false;const line=NAR.currentSeq[NAR.currentIdx];document.getElementById('narratorText').innerHTML=line?line.text:'';}}
+function narratorNext(){clearTimeout(NAR.typeTimer);NAR.isTyping=false;NAR.currentIdx++;if(!NAR.currentSeq||NAR.currentIdx>=NAR.currentSeq.length){closeNarrator();}else{showNarratorLine(NAR.currentIdx);}}
+function skipNarrator(){clearTimeout(NAR.typeTimer);NAR.isTyping=false;closeNarrator();}
+function closeNarrator(){document.getElementById('narratorOverlay').classList.remove('show');NAR.currentSeq=null;NAR.currentIdx=0;if(NAR.queue.length>0){const nextId=NAR.queue.shift();const seq=STORY_SEQUENCES[nextId];if(seq)setTimeout(()=>startNarratorSeq(seq,nextId),400);}}
 
-function closeNarrator() {
-  document.getElementById('narratorOverlay').classList.remove('show');
-  NAR.currentSeq = null;
-  NAR.currentIdx = 0;
-  if (NAR.queue.length > 0) {
-    const nextId = NAR.queue.shift();
-    const seq = STORY_SEQUENCES[nextId];
-    if (seq) setTimeout(() => startNarratorSeq(seq, nextId), 400);
-  }
-}
-
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  DATA
-// ═══════════════════════════════════════════
-const WORLD_REGIONS = [
-  { id:'village_potage',   name:'Village du Potage',    emoji:'🏘️', dot:'#00c030', x:20, y:22, minLevel:1,  desc:'Le point de départ. Marchands, légumes, herbes fraîches.' },
-  { id:'plaines_tomate',   name:'Plaines de la Tomate', emoji:'🍅', dot:'#e04050', x:42, y:35, minLevel:1,  desc:'Vastes champs rouges. Les tomates poussent à toute allure.' },
-  { id:'foret_champignon', name:'Forêt des Champignons',emoji:'🍄', dot:'#e07020', x:65, y:25, minLevel:3,  desc:'Forêt sombre et humide. Champignons magiques — et créatures.' },
-  { id:'pic_piment',       name:'Pic du Piment Rouge',  emoji:'🌋', dot:'#c02030', x:75, y:55, minLevel:5,  desc:'Volcans, piments brûlants. Zone dangereuse.' },
-  { id:'marais_ail',       name:'Marais de l\'Ail',     emoji:'🧄', dot:'#00a030', x:30, y:60, minLevel:7,  desc:'Vapeurs d\'ail repoussant les non-initiés. Ingrédients précieux.' },
-  { id:'cite_epicier',     name:'Cité de l\'Épicier',   emoji:'🏛️', dot:'#e0c000', x:52, y:75, minLevel:1,  desc:'La grande ville marchande. Le Grand Échange y est actif.' },
-  { id:'donjon_friture',   name:'Donjon de la Friture', emoji:'🏰', dot:'#d05000', x:82, y:82, minLevel:10, desc:'La dungeon finale. Le Bento Bakemono attend.' },
+// ══════════════════════════════════
+const WORLD_REGIONS=[
+  {id:'village_potage',name:'Village du Potage',emoji:'🏘️',dot:'#00c030',x:20,y:22,minLevel:1,desc:'Le point de départ. Marchands, légumes, herbes fraîches.'},
+  {id:'plaines_tomate',name:'Plaines de la Tomate',emoji:'🍅',dot:'#e04050',x:42,y:35,minLevel:1,desc:'Vastes champs rouges. Les tomates poussent à toute allure.'},
+  {id:'foret_champignon',name:'Forêt des Champignons',emoji:'🍄',dot:'#e07020',x:65,y:25,minLevel:3,desc:'Forêt sombre et humide. Champignons magiques — et créatures.'},
+  {id:'pic_piment',name:'Pic du Piment Rouge',emoji:'🌋',dot:'#c02030',x:75,y:55,minLevel:5,desc:'Volcans, piments brûlants. Zone dangereuse.'},
+  {id:'marais_ail',name:'Marais de l\'Ail',emoji:'🧄',dot:'#00a030',x:30,y:60,minLevel:7,desc:'Vapeurs d\'ail repoussant les non-initiés. Ingrédients précieux.'},
+  {id:'cite_epicier',name:'Cité de l\'Épicier',emoji:'🏛️',dot:'#e0c000',x:52,y:75,minLevel:1,desc:'La grande ville marchande. Le Grand Échange y est actif.'},
+  {id:'donjon_friture',name:'Donjon de la Friture',emoji:'🏰',dot:'#d05000',x:82,y:82,minLevel:10,desc:'La dungeon finale. Le Bento Bakemono attend.'},
 ];
 
-const MONSTERS = [
-  { id:'radis_rebelle',   name:'Radis Rebelle',      emoji:'🥬', region:'plaines_tomate',   level:1,  hp:60,   atk:[4,9],   def:2,  xp:15, gold:[8,18],  loot:{lettuce:0.6,tomato:0.3}, desc:'Un légume récalcitrant qui refuse d\'être cuisiné.', special:null },
-  { id:'oignon_pleureur', name:'Oignon Pleureur',    emoji:'🧅', region:'plaines_tomate',   level:2,  hp:85,   atk:[6,13],  def:3,  xp:22, gold:[12,25], loot:{onion:0.7,carrot:0.4},   desc:'Ses pleurs aveuglent les combattants imprudents.', special:{name:'Larmes Acres',eff:'blind',chance:0.25} },
-  { id:'carotte_karate',  name:'Carotte Karaté',     emoji:'🥕', region:'plaines_tomate',   level:3,  hp:100,  atk:[8,16],  def:4,  xp:30, gold:[15,30], loot:{carrot:0.8,berry:0.3},   desc:'Maître des arts martiaux des légumes-racines.', special:{name:'Coup d\'Orange',eff:'stun',chance:0.2} },
-  { id:'nugget_ninja',    name:'Nugget Ninja',       emoji:'🍗', region:'plaines_tomate',   level:4,  hp:120,  atk:[10,18], def:5,  xp:40, gold:[20,38], loot:{egg:0.5,rice:0.4},       desc:'Aussi rapide qu\'une frite tombant dans l\'huile.', special:{name:'Double Frappe',eff:'doubleHit',chance:0.2} },
-  { id:'fantome_fromage', name:'Fantôme du Fromage', emoji:'🧀', region:'foret_champignon', level:5,  hp:180,  atk:[13,22], def:8,  xp:65, gold:[35,65], loot:{mushroom:0.6,garlic:0.3},desc:'Personne ne sait d\'où vient son odeur...', special:{name:'Phase Camembert',eff:'armorPierce',chance:0.22} },
-  { id:'champignon_sage', name:'Champignon Sage',    emoji:'🍄', region:'foret_champignon', level:6,  hp:160,  atk:[12,20], def:9,  xp:58, gold:[30,55], loot:{mushroom:0.8,avocado:0.25},desc:'Ancien et sage, il frappe quand il le faut.', special:{name:'Spore Toxique',eff:'poison',chance:0.28} },
-  { id:'baguette_berserk',name:'Baguette Berserk',   emoji:'🥖', region:'foret_champignon', level:7,  hp:220,  atk:[16,26], def:10, xp:88, gold:[50,90], loot:{garlic:0.4,onion:0.5},   desc:'Jean-Baptiste "Pain Dur" Croûton. Inarrêtable.', special:{name:'Fournée Ardente',eff:'burn',chance:0.22} },
-  { id:'chili_diable',    name:'Démon Piment',       emoji:'🌶️', region:'pic_piment',       level:8,  hp:260,  atk:[18,30], def:11, xp:105,gold:[65,110],loot:{chili:0.7,pepper:0.4},   desc:'La chaleur incarnée en légume furieux.', special:{name:'Flammes Infernales',eff:'burnHeavy',chance:0.3} },
-  { id:'curry_kaiser',    name:'Curry Kaiser',       emoji:'🍛', region:'pic_piment',       level:9,  hp:320,  atk:[20,34], def:13, xp:130,gold:[80,135],loot:{chili:0.5,steak:0.3},    desc:'Masque de curcuma. Chaque coup dégaze de la vapeur.', special:{name:'Madras Infernal',eff:'blindBurn',chance:0.28} },
-  { id:'avocat_avocat',   name:'Avocat l\'Avocat',   emoji:'🥑', region:'marais_ail',       level:10, hp:380,  atk:[22,36], def:14, xp:155,gold:[100,165],loot:{avocado:0.7,lemon:0.4}, desc:'Maître du Barreau Vert.', special:{name:'Recours en Grasse',eff:'selfHeal',chance:0.28} },
-  { id:'ramen_ronin',     name:'Ramen Rônin',        emoji:'🍜', region:'marais_ail',       level:11, hp:420,  atk:[24,40], def:12, xp:180,gold:[115,185],loot:{rice:0.5,mushroom:0.4,egg:0.3},desc:'Exilé du clan Tonkotsu.', special:{name:'Umami Flambé',eff:'burnDebuff',chance:0.28} },
-  { id:'taco_titan',      name:'Taco Titan',         emoji:'🌮', region:'donjon_friture',   level:14, hp:600,  atk:[28,45], def:20, xp:280,gold:[200,320],loot:{steak:0.5,pepper:0.5,chili:0.4},desc:'148kg de maïs et de colère.', special:{name:'Fold en Acier',eff:'pierceHeavy',chance:0.25},boss:true },
-  { id:'donut_diable',    name:'Donut Diable',       emoji:'🍩', region:'donjon_friture',   level:16, hp:750,  atk:[32,52], def:18, xp:360,gold:[280,420],loot:{steak:0.6,avocado:0.4}, desc:'Il lévite légèrement.', special:{name:'Spirale Satanique',eff:'poisonStun',chance:0.3},boss:true },
-  { id:'bento_bakemono',  name:'Bento Bakemono',     emoji:'🍱', region:'donjon_friture',   level:20, hp:1200, atk:[42,65], def:28, xp:600,gold:[500,800],loot:{steak:0.8,avocado:0.6,mushroom:0.7},desc:'Le Démon Suprême des Lunchs.', special:{name:'Explosion de Laque',eff:'statsNuke',chance:0.3},boss:true },
+const MONSTERS=[
+  {id:'radis_rebelle',name:'Radis Rebelle',emoji:'🥬',region:'plaines_tomate',level:1,hp:60,atk:[4,9],def:2,xp:15,gold:[8,18],loot:{lettuce:0.6,tomato:0.3},desc:'Un légume récalcitrant qui refuse d\'être cuisiné.',special:null},
+  {id:'oignon_pleureur',name:'Oignon Pleureur',emoji:'🧅',region:'plaines_tomate',level:2,hp:85,atk:[6,13],def:3,xp:22,gold:[12,25],loot:{onion:0.7,carrot:0.4},desc:'Ses pleurs aveuglent les combattants imprudents.',special:{name:'Larmes Acres',eff:'blind',chance:0.25}},
+  {id:'carotte_karate',name:'Carotte Karaté',emoji:'🥕',region:'plaines_tomate',level:3,hp:100,atk:[8,16],def:4,xp:30,gold:[15,30],loot:{carrot:0.8,berry:0.3},desc:'Maître des arts martiaux des légumes-racines.',special:{name:'Coup d\'Orange',eff:'stun',chance:0.2}},
+  {id:'nugget_ninja',name:'Nugget Ninja',emoji:'🍗',region:'plaines_tomate',level:4,hp:120,atk:[10,18],def:5,xp:40,gold:[20,38],loot:{egg:0.5,rice:0.4},desc:'Aussi rapide qu\'une frite tombant dans l\'huile.',special:{name:'Double Frappe',eff:'doubleHit',chance:0.2}},
+  {id:'fantome_fromage',name:'Fantôme du Fromage',emoji:'🧀',region:'foret_champignon',level:5,hp:180,atk:[13,22],def:8,xp:65,gold:[35,65],loot:{mushroom:0.6,garlic:0.3},desc:'Personne ne sait d\'où vient son odeur...',special:{name:'Phase Camembert',eff:'armorPierce',chance:0.22}},
+  {id:'champignon_sage',name:'Champignon Sage',emoji:'🍄',region:'foret_champignon',level:6,hp:160,atk:[12,20],def:9,xp:58,gold:[30,55],loot:{mushroom:0.8,avocado:0.25},desc:'Ancien et sage, il frappe quand il le faut.',special:{name:'Spore Toxique',eff:'poison',chance:0.28}},
+  {id:'baguette_berserk',name:'Baguette Berserk',emoji:'🥖',region:'foret_champignon',level:7,hp:220,atk:[16,26],def:10,xp:88,gold:[50,90],loot:{garlic:0.4,onion:0.5},desc:'Jean-Baptiste "Pain Dur" Croûton. Inarrêtable.',special:{name:'Fournée Ardente',eff:'burn',chance:0.22}},
+  {id:'chili_diable',name:'Démon Piment',emoji:'🌶️',region:'pic_piment',level:8,hp:260,atk:[18,30],def:11,xp:105,gold:[65,110],loot:{chili:0.7,pepper:0.4},desc:'La chaleur incarnée en légume furieux.',special:{name:'Flammes Infernales',eff:'burnHeavy',chance:0.3}},
+  {id:'curry_kaiser',name:'Curry Kaiser',emoji:'🍛',region:'pic_piment',level:9,hp:320,atk:[20,34],def:13,xp:130,gold:[80,135],loot:{chili:0.5,steak:0.3},desc:'Masque de curcuma. Chaque coup dégaze de la vapeur.',special:{name:'Madras Infernal',eff:'blindBurn',chance:0.28}},
+  {id:'avocat_avocat',name:'Avocat l\'Avocat',emoji:'🥑',region:'marais_ail',level:10,hp:380,atk:[22,36],def:14,xp:155,gold:[100,165],loot:{avocado:0.7,lemon:0.4},desc:'Maître du Barreau Vert.',special:{name:'Recours en Grasse',eff:'selfHeal',chance:0.28}},
+  {id:'ramen_ronin',name:'Ramen Rônin',emoji:'🍜',region:'marais_ail',level:11,hp:420,atk:[24,40],def:12,xp:180,gold:[115,185],loot:{rice:0.5,mushroom:0.4,egg:0.3},desc:'Exilé du clan Tonkotsu.',special:{name:'Umami Flambé',eff:'burnDebuff',chance:0.28}},
+  {id:'taco_titan',name:'Taco Titan',emoji:'🌮',region:'donjon_friture',level:14,hp:600,atk:[28,45],def:20,xp:280,gold:[200,320],loot:{steak:0.5,pepper:0.5,chili:0.4},desc:'148kg de maïs et de colère.',special:{name:'Fold en Acier',eff:'pierceHeavy',chance:0.25},boss:true},
+  {id:'donut_diable',name:'Donut Diable',emoji:'🍩',region:'donjon_friture',level:16,hp:750,atk:[32,52],def:18,xp:360,gold:[280,420],loot:{steak:0.6,avocado:0.4},desc:'Il lévite légèrement.',special:{name:'Spirale Satanique',eff:'poisonStun',chance:0.3},boss:true},
+  {id:'bento_bakemono',name:'Bento Bakemono',emoji:'🍱',region:'donjon_friture',level:20,hp:1200,atk:[42,65],def:28,xp:600,gold:[500,800],loot:{steak:0.8,avocado:0.6,mushroom:0.7},desc:'Le Démon Suprême des Lunchs.',special:{name:'Explosion de Laque',eff:'statsNuke',chance:0.3},boss:true},
 ];
 
-const SEEDS = [
-  { id:'lettuce',  emoji:'🥬', name:'Salade',     cost:8,   time:18, sell:14, heal:8,  atk:0,  farmXp:12, cookXp:5,  unlockLevel:1 },
-  { id:'tomato',   emoji:'🍅', name:'Tomate',     cost:10,  time:22, sell:18, heal:6,  atk:2,  farmXp:15, cookXp:7,  unlockLevel:1 },
-  { id:'carrot',   emoji:'🥕', name:'Carotte',    cost:12,  time:28, sell:22, heal:14, atk:0,  farmXp:18, cookXp:8,  unlockLevel:1 },
-  { id:'lemon',    emoji:'🍋', name:'Citron',     cost:18,  time:38, sell:30, heal:5,  atk:4,  farmXp:22, cookXp:10, unlockLevel:2 },
-  { id:'berry',    emoji:'🫐', name:'Myrtille',   cost:16,  time:28, sell:28, heal:12, atk:2,  farmXp:20, cookXp:9,  unlockLevel:2 },
-  { id:'onion',    emoji:'🧅', name:'Oignon',     cost:18,  time:35, sell:34, heal:0,  atk:6,  farmXp:24, cookXp:10, unlockLevel:2 },
-  { id:'chili',    emoji:'🌶️', name:'Piment',     cost:22,  time:50, sell:42, heal:0,  atk:9,  farmXp:30, cookXp:15, unlockLevel:3 },
-  { id:'rice',     emoji:'🌾', name:'Riz',        cost:14,  time:40, sell:28, heal:10, atk:1,  farmXp:20, cookXp:9,  unlockLevel:2 },
-  { id:'egg',      emoji:'🥚', name:'Œuf',        cost:12,  time:25, sell:20, heal:16, atk:1,  farmXp:16, cookXp:8,  unlockLevel:2 },
-  { id:'pepper',   emoji:'🫑', name:'Poivron',    cost:25,  time:45, sell:48, heal:0,  atk:10, farmXp:32, cookXp:15, unlockLevel:4 },
-  { id:'mushroom', emoji:'🍄', name:'Champignon', cost:28,  time:65, sell:60, heal:22, atk:0,  farmXp:40, cookXp:18, unlockLevel:3 },
-  { id:'garlic',   emoji:'🧄', name:'Ail',        cost:20,  time:42, sell:36, heal:0,  atk:12, farmXp:28, cookXp:13, unlockLevel:3 },
-  { id:'avocado',  emoji:'🥑', name:'Avocat',     cost:30,  time:60, sell:60, heal:20, atk:5,  farmXp:38, cookXp:17, unlockLevel:5 },
-  { id:'steak',    emoji:'🥩', name:'Bœuf',       cost:55,  time:100,sell:110,heal:40, atk:12, farmXp:65, cookXp:30, unlockLevel:6 },
+const SEEDS=[
+  {id:'lettuce',emoji:'🥬',name:'Salade',cost:8,time:18,sell:14,heal:8,atk:0,farmXp:12,cookXp:5,unlockLevel:1},
+  {id:'tomato',emoji:'🍅',name:'Tomate',cost:10,time:22,sell:18,heal:6,atk:2,farmXp:15,cookXp:7,unlockLevel:1},
+  {id:'carrot',emoji:'🥕',name:'Carotte',cost:12,time:28,sell:22,heal:14,atk:0,farmXp:18,cookXp:8,unlockLevel:1},
+  {id:'lemon',emoji:'🍋',name:'Citron',cost:18,time:38,sell:30,heal:5,atk:4,farmXp:22,cookXp:10,unlockLevel:2},
+  {id:'berry',emoji:'🫐',name:'Myrtille',cost:16,time:28,sell:28,heal:12,atk:2,farmXp:20,cookXp:9,unlockLevel:2},
+  {id:'onion',emoji:'🧅',name:'Oignon',cost:18,time:35,sell:34,heal:0,atk:6,farmXp:24,cookXp:10,unlockLevel:2},
+  {id:'chili',emoji:'🌶️',name:'Piment',cost:22,time:50,sell:42,heal:0,atk:9,farmXp:30,cookXp:15,unlockLevel:3},
+  {id:'rice',emoji:'🌾',name:'Riz',cost:14,time:40,sell:28,heal:10,atk:1,farmXp:20,cookXp:9,unlockLevel:2},
+  {id:'egg',emoji:'🥚',name:'Œuf',cost:12,time:25,sell:20,heal:16,atk:1,farmXp:16,cookXp:8,unlockLevel:2},
+  {id:'pepper',emoji:'🫑',name:'Poivron',cost:25,time:45,sell:48,heal:0,atk:10,farmXp:32,cookXp:15,unlockLevel:4},
+  {id:'mushroom',emoji:'🍄',name:'Champignon',cost:28,time:65,sell:60,heal:22,atk:0,farmXp:40,cookXp:18,unlockLevel:3},
+  {id:'garlic',emoji:'🧄',name:'Ail',cost:20,time:42,sell:36,heal:0,atk:12,farmXp:28,cookXp:13,unlockLevel:3},
+  {id:'avocado',emoji:'🥑',name:'Avocat',cost:30,time:60,sell:60,heal:20,atk:5,farmXp:38,cookXp:17,unlockLevel:5},
+  {id:'steak',emoji:'🥩',name:'Bœuf',cost:55,time:100,sell:110,heal:40,atk:12,farmXp:65,cookXp:30,unlockLevel:6},
 ];
 
-const RECIPES = [
-  { id:'salade_boxeur',  emoji:'🥗', name:'Salade du Boxeur',    level:1,  desc:'Soigne 55 HP et +8 ATK pour 4 rounds.',     ings:{lettuce:1,tomato:1,lemon:1},        eff:{heal:55,atkBuff:8,buffRounds:4},             cookXp:40 },
-  { id:'soupe_energie',  emoji:'🍲', name:'Soupe Énergie',       level:2,  desc:'Soigne 35 HP, restaure 20 Faim.',           ings:{tomato:2,onion:1,carrot:1},          eff:{heal:35,hunger:20},                          cookXp:55 },
-  { id:'omelette_furie', emoji:'🍳', name:'Omelette Furie',      level:3,  desc:'+30 DEF pour 5 rounds.',                    ings:{egg:2,mushroom:1},                   eff:{defBuff:30,buffRounds:5},                    cookXp:65 },
-  { id:'piment_rage',    emoji:'🔥', name:'Purée Enflammée',     level:3,  desc:'Rage max + prochain coup CRIT garanti.',    ings:{chili:2,tomato:1},                   eff:{rageMax:true,nextCrit:true},                 cookXp:70 },
-  { id:'rizotto',        emoji:'🍚', name:'Rizotto Champion',    level:4,  desc:'Soigne 80 HP + +8 ATK permanents.',         ings:{rice:2,mushroom:1,garlic:1},         eff:{heal:80,atkPerm:8},                          cookXp:90 },
-  { id:'poivronade',     emoji:'🌶️', name:'Poivronade Infernale',level:5,  desc:'+20 ATK 7 rounds + CRIT prochain.',        ings:{pepper:2,chili:1,onion:1},           eff:{atkBuff:20,buffRounds:7,nextCrit:true},      cookXp:110 },
-  { id:'smoothie_vert',  emoji:'🥤', name:'Smoothie Vert',       level:5,  desc:'Soigne 90 HP immédiatement.',               ings:{avocado:1,berry:2,lemon:1},          eff:{heal:90},                                    cookXp:100 },
-  { id:'bruschetta',     emoji:'🥖', name:'Bruschetta Explosive', level:4, desc:'+30 HP Max permanents.',                   ings:{tomato:2,garlic:1},                  eff:{maxHpBonus:30},                              cookXp:80 },
-  { id:'burger_maison',  emoji:'🍔', name:'Burger Maison',       level:7,  desc:'Soigne 120 HP + +18 ATK pour 6 rounds.',   ings:{steak:1,lettuce:1,tomato:1},         eff:{heal:120,atkBuff:18,buffRounds:6},           cookXp:150 },
-  { id:'festin_boxeur',  emoji:'🍱', name:'Festin du Boxeur',    level:10, desc:'Soigne HP max + tous stats +10%.',          ings:{steak:2,avocado:1,mushroom:1,rice:1},eff:{healFull:true,statsBoost:0.10,buffRounds:8}, cookXp:250 },
+const RECIPES=[
+  {id:'salade_boxeur',emoji:'🥗',name:'Salade du Boxeur',level:1,desc:'Soigne 55 HP et +8 ATK pour 4 rounds.',ings:{lettuce:1,tomato:1,lemon:1},eff:{heal:55,atkBuff:8,buffRounds:4},cookXp:40},
+  {id:'soupe_energie',emoji:'🍲',name:'Soupe Énergie',level:2,desc:'Soigne 35 HP, restaure 20 Faim.',ings:{tomato:2,onion:1,carrot:1},eff:{heal:35,hunger:20},cookXp:55},
+  {id:'omelette_furie',emoji:'🍳',name:'Omelette Furie',level:3,desc:'+30 DEF pour 5 rounds.',ings:{egg:2,mushroom:1},eff:{defBuff:30,buffRounds:5},cookXp:65},
+  {id:'piment_rage',emoji:'🔥',name:'Purée Enflammée',level:3,desc:'Rage max + prochain coup CRIT garanti.',ings:{chili:2,tomato:1},eff:{rageMax:true,nextCrit:true},cookXp:70},
+  {id:'rizotto',emoji:'🍚',name:'Rizotto Champion',level:4,desc:'Soigne 80 HP + +8 ATK permanents.',ings:{rice:2,mushroom:1,garlic:1},eff:{heal:80,atkPerm:8},cookXp:90},
+  {id:'poivronade',emoji:'🌶️',name:'Poivronade Infernale',level:5,desc:'+20 ATK 7 rounds + CRIT prochain.',ings:{pepper:2,chili:1,onion:1},eff:{atkBuff:20,buffRounds:7,nextCrit:true},cookXp:110},
+  {id:'smoothie_vert',emoji:'🥤',name:'Smoothie Vert',level:5,desc:'Soigne 90 HP immédiatement.',ings:{avocado:1,berry:2,lemon:1},eff:{heal:90},cookXp:100},
+  {id:'bruschetta',emoji:'🥖',name:'Bruschetta Explosive',level:4,desc:'+30 HP Max permanents.',ings:{tomato:2,garlic:1},eff:{maxHpBonus:30},cookXp:80},
+  {id:'burger_maison',emoji:'🍔',name:'Burger Maison',level:7,desc:'Soigne 120 HP + +18 ATK pour 6 rounds.',ings:{steak:1,lettuce:1,tomato:1},eff:{heal:120,atkBuff:18,buffRounds:6},cookXp:150},
+  {id:'festin_boxeur',emoji:'🍱',name:'Festin du Boxeur',level:10,desc:'Soigne HP max + tous stats +10%.',ings:{steak:2,avocado:1,mushroom:1,rice:1},eff:{healFull:true,statsBoost:0.10,buffRounds:8},cookXp:250},
 ];
 
-const SKILLS_DEF = [
-  { id:'farming',   icon:'🌱', name:'Farming',   xpPerLevel:[0,50,120,220,360,550,800,1120,1520,2020] },
-  { id:'cooking',   icon:'🍳', name:'Cooking',   xpPerLevel:[0,60,140,260,420,640,920,1280,1720,2280] },
-  { id:'attack',    icon:'⚔️', name:'Attack',    xpPerLevel:[0,80,180,320,500,740,1040,1420,1900,2500] },
-  { id:'defence',   icon:'🛡️', name:'Defence',   xpPerLevel:[0,80,180,320,500,740,1040,1420,1900,2500] },
-  { id:'strength',  icon:'💪', name:'Strength',  xpPerLevel:[0,80,180,320,500,740,1040,1420,1900,2500] },
-  { id:'hitpoints', icon:'❤️', name:'Hitpoints', xpPerLevel:[0,100,230,400,620,900,1260,1720,2300,3000] },
-  { id:'prayer',    icon:'✨', name:'Prayer',    xpPerLevel:[0,60,140,260,420,640,920,1280,1720,2280] },
+const SKILLS_DEF=[
+  {id:'farming',icon:'🌱',name:'Farming',xpPerLevel:[0,50,120,220,360,550,800,1120,1520,2020]},
+  {id:'cooking',icon:'🍳',name:'Cooking',xpPerLevel:[0,60,140,260,420,640,920,1280,1720,2280]},
+  {id:'attack',icon:'⚔️',name:'Attack',xpPerLevel:[0,80,180,320,500,740,1040,1420,1900,2500]},
+  {id:'defence',icon:'🛡️',name:'Defence',xpPerLevel:[0,80,180,320,500,740,1040,1420,1900,2500]},
+  {id:'strength',icon:'💪',name:'Strength',xpPerLevel:[0,80,180,320,500,740,1040,1420,1900,2500]},
+  {id:'hitpoints',icon:'❤️',name:'Hitpoints',xpPerLevel:[0,100,230,400,620,900,1260,1720,2300,3000]},
+  {id:'prayer',icon:'✨',name:'Prayer',xpPerLevel:[0,60,140,260,420,640,920,1280,1720,2280]},
 ];
 
-const SHOP_ITEMS = [
-  { id:'gloves',     emoji:'🥊', name:'Gants Pro',       desc:'+12 ATK permanents',      cost:120, type:'equip', stat:'atk', val:12 },
-  { id:'helmet',     emoji:'⛑️', name:'Casque Cuir',     desc:'+16 DEF permanents',      cost:100, type:'equip', stat:'def', val:16 },
-  { id:'boots',      emoji:'👟', name:'Bottes Rapides',  desc:'+14 SPD permanents',      cost:110, type:'equip', stat:'spd', val:14 },
-  { id:'apron',      emoji:'👘', name:'Tablier Renforcé',desc:'+10 DEF permanents',      cost:90,  type:'equip', stat:'def', val:10 },
-  { id:'bandage',    emoji:'🩹', name:'Bandage',         desc:'Soigne 70 HP',            cost:25,  type:'item',  heal:70 },
-  { id:'potion',     emoji:'🧪', name:'Élixir Rouge',    desc:'Soigne 180 HP',           cost:80,  type:'item',  heal:180 },
-  { id:'rage_drink', emoji:'⚡', name:'Boisson Rage',    desc:'Rage max instantanée',    cost:55,  type:'item',  rageMax:true },
-  { id:'antidote',   emoji:'💊', name:'Antidote',        desc:'Soigne poison et brûlure',cost:35,  type:'item',  cure:true },
-  { id:'plot5',      emoji:'🟫', name:'4 Parcelles',     desc:'Débloquer 4 parcelles',   cost:150, type:'plot',  val:4 },
+const SHOP_ITEMS=[
+  {id:'gloves',emoji:'🥊',name:'Gants Pro',desc:'+12 ATK permanents',cost:120,type:'equip',stat:'atk',val:12},
+  {id:'helmet',emoji:'⛑️',name:'Casque Cuir',desc:'+16 DEF permanents',cost:100,type:'equip',stat:'def',val:16},
+  {id:'boots',emoji:'👟',name:'Bottes Rapides',desc:'+14 SPD permanents',cost:110,type:'equip',stat:'spd',val:14},
+  {id:'apron',emoji:'👘',name:'Tablier Renforcé',desc:'+10 DEF permanents',cost:90,type:'equip',stat:'def',val:10},
+  {id:'bandage',emoji:'🩹',name:'Bandage',desc:'Soigne 70 HP',cost:25,type:'item',heal:70},
+  {id:'potion',emoji:'🧪',name:'Élixir Rouge',desc:'Soigne 180 HP',cost:80,type:'item',heal:180},
+  {id:'rage_drink',emoji:'⚡',name:'Boisson Rage',desc:'Rage max instantanée',cost:55,type:'item',rageMax:true},
+  {id:'antidote',emoji:'💊',name:'Antidote',desc:'Soigne poison et brûlure',cost:35,type:'item',cure:true},
+  {id:'plot5',emoji:'🟫',name:'4 Parcelles',desc:'Débloquer 4 parcelles',cost:150,type:'plot',val:4},
 ];
 
-const QUESTS = [
-  { id:'first_harvest', name:'Les Premiers Pas', icon:'🌱', status:'active',
-    desc:'Récolte ta première culture.', unlockAfter:null,
-    tasks:[{id:'harvest1',label:'Récolter 1 légume',goal:1,progress:0,type:'harvest'}],
-    reward:{gold:30,xp:50,cookXp:20},rewardDesc:'30 Or + 50 XP' },
-  { id:'first_fight', name:'Baptême du Feu', icon:'⚔️', status:'locked',
-    desc:'Vaincs ton premier monstre.',unlockAfter:'first_harvest',
-    tasks:[{id:'fight1',label:'Vaincre 1 monstre',goal:1,progress:0,type:'kill'}],
-    reward:{gold:50,xp:80,atkBonus:3},rewardDesc:'50 Or + 80 XP + +3 ATK' },
-  { id:'chef_apprenti', name:'L\'Apprenti Chef', icon:'🍳', status:'locked',
-    desc:'Cuisine 3 plats différents.',unlockAfter:'first_fight',
-    tasks:[{id:'cook3',label:'Cuisiner 3 plats',goal:3,progress:0,type:'cook'}],
-    reward:{gold:80,xp:120,maxHpBonus:20},rewardDesc:'80 Or + +20 HP Max' },
-  { id:'conquerant', name:'Conquérant des Plaines', icon:'🏆', status:'locked',
-    desc:'Élimine 5 monstres.',unlockAfter:'chef_apprenti',
-    tasks:[{id:'kill5',label:'Vaincre 5 monstres',goal:5,progress:0,type:'kill'}],
-    reward:{gold:150,xp:200,defBonus:5},rewardDesc:'150 Or + +5 DEF' },
-  { id:'maitre_fermier', name:'Maître Fermier', icon:'🌾', status:'locked',
-    desc:'Récolte 20 cultures.',unlockAfter:'conquerant',
-    tasks:[{id:'harvest20',label:'Récolter 20 légumes',goal:20,progress:0,type:'harvest'}],
-    reward:{gold:200,xp:300,farmingBonus:5},rewardDesc:'200 Or + +5 Farming' },
+// ══════════════════════════════════
+//  LOOTBOXES DATA
+// ══════════════════════════════════
+const LOOTBOXES=[
+  {
+    id:'bento_box',
+    emoji:'📦',
+    name:'Bento Box',
+    rarity:'common',
+    cost:100,
+    desc:'Une boîte mystérieuse remplie de légumes et d\'ingrédients de base. Contenu garanti !',
+    contents:'Graines · Ingrédients · Or',
+    rewards:[
+      // Format: {type:'seed'|'item'|'gold'|'equip', id, qty, weight, rarity}
+      {type:'gold',id:null,qty:[20,50],weight:30,rarity:'common',emoji:'💰',name:'Or'},
+      {type:'seed',id:'lettuce',qty:[2,4],weight:20,rarity:'common',emoji:'🥬',name:'Salade'},
+      {type:'seed',id:'tomato',qty:[2,3],weight:20,rarity:'common',emoji:'🍅',name:'Tomate'},
+      {type:'seed',id:'carrot',qty:[1,3],weight:15,rarity:'common',emoji:'🥕',name:'Carotte'},
+      {type:'seed',id:'onion',qty:[1,2],weight:10,rarity:'common',emoji:'🧅',name:'Oignon'},
+      {type:'seed',id:'rice',qty:[1,2],weight:10,rarity:'common',emoji:'🌾',name:'Riz'},
+      {type:'seed',id:'mushroom',qty:[1,2],weight:5,rarity:'rare',emoji:'🍄',name:'Champignon'},
+      {type:'item',id:'bandage',qty:[1,2],weight:8,rarity:'common',emoji:'🩹',name:'Bandage'},
+      {type:'item',id:'antidote',qty:[1,1],weight:5,rarity:'common',emoji:'💊',name:'Antidote'},
+      {type:'seed',id:'chili',qty:[1,2],weight:4,rarity:'rare',emoji:'🌶️',name:'Piment'},
+    ],
+    drawCount:3,
+  },
+  {
+    id:'lunchbox_rare',
+    emoji:'🍱',
+    name:'Lunchbox Légendaire',
+    rarity:'rare',
+    cost:300,
+    desc:'Une boîte de haute qualité avec du matériel rare et des ingrédients précieux. Meilleures chances !',
+    contents:'Équipement · Ingrédients rares · Bonus stats',
+    rewards:[
+      {type:'gold',id:null,qty:[80,180],weight:15,rarity:'common',emoji:'💰',name:'Or'},
+      {type:'item',id:'potion',qty:[1,2],weight:15,rarity:'rare',emoji:'🧪',name:'Élixir Rouge'},
+      {type:'item',id:'rage_drink',qty:[1,1],weight:10,rarity:'rare',emoji:'⚡',name:'Boisson Rage'},
+      {type:'seed',id:'avocado',qty:[1,3],weight:15,rarity:'rare',emoji:'🥑',name:'Avocat'},
+      {type:'seed',id:'steak',qty:[1,2],weight:10,rarity:'rare',emoji:'🥩',name:'Bœuf'},
+      {type:'seed',id:'pepper',qty:[2,4],weight:12,rarity:'rare',emoji:'🫑',name:'Poivron'},
+      {type:'seed',id:'garlic',qty:[2,3],weight:10,rarity:'common',emoji:'🧄',name:'Ail'},
+      {type:'equip',id:'apron',qty:[1,1],weight:5,rarity:'rare',emoji:'👘',name:'Tablier Renforcé'},
+      {type:'equip',id:'helmet',qty:[1,1],weight:5,rarity:'rare',emoji:'⛑️',name:'Casque Cuir'},
+      {type:'equip',id:'boots',qty:[1,1],weight:4,rarity:'rare',emoji:'👟',name:'Bottes Rapides'},
+      {type:'equip',id:'gloves',qty:[1,1],weight:4,rarity:'legendary',emoji:'🥊',name:'Gants Pro'},
+      {type:'hpbonus',id:null,qty:[15,30],weight:3,rarity:'legendary',emoji:'💖',name:'Bonus HP Max'},
+      {type:'atkbonus',id:null,qty:[5,10],weight:3,rarity:'legendary',emoji:'🗡️',name:'Bonus ATK'},
+    ],
+    drawCount:4,
+  },
+  {
+    id:'banane_secrete',
+    emoji:'🍌',
+    name:'Banane Secrète',
+    rarity:'legendary',
+    cost:150,
+    desc:'La boîte maudite de la Banane elle-même. Risquée — mais les récompenses peuvent être EXTRAORDINAIRES.',
+    contents:'Jackpot possible · Malédiction possible · Butin unique',
+    rewards:[
+      {type:'gold',id:null,qty:[0,500],weight:20,rarity:'common',emoji:'💰',name:'Or volé'},
+      {type:'curse',id:null,qty:[1,1],weight:15,rarity:'debuff',emoji:'💀',name:'Malédiction (-10 HP Max)'},
+      {type:'seed',id:'chili',qty:[3,6],weight:10,rarity:'rare',emoji:'🌶️',name:'Piments Enragés'},
+      {type:'seed',id:'avocado',qty:[2,4],weight:10,rarity:'rare',emoji:'🥑',name:'Avocats Volés'},
+      {type:'seed',id:'steak',qty:[1,3],weight:8,rarity:'rare',emoji:'🥩',name:'Bœuf Dérobé'},
+      {type:'item',id:'potion',qty:[2,3],weight:8,rarity:'rare',emoji:'🧪',name:'Élixirs'},
+      {type:'item',id:'rage_drink',qty:[2,2],weight:6,rarity:'rare',emoji:'⚡',name:'Rage Banane'},
+      {type:'equip',id:'gloves',qty:[1,1],weight:5,rarity:'legendary',emoji:'🥊',name:'Gants Pro'},
+      {type:'hpbonus',id:null,qty:[20,50],weight:4,rarity:'legendary',emoji:'💖',name:'Jackpot HP'},
+      {type:'atkbonus',id:null,qty:[8,15],weight:3,rarity:'legendary',emoji:'🗡️',name:'Jackpot ATK'},
+      {type:'gold',id:null,qty:[300,800],weight:2,rarity:'legendary',emoji:'💰',name:'Trésor de la Banane'},
+    ],
+    drawCount:3,
+  },
 ];
 
-const COMBAT_MOVES = [
-  { id:'slash',    label:'Tranche',  emoji:'⚔️', cat:'strike',  mult:1.0, rage:0,  gain:12, acc:0.90 },
-  { id:'crush',    label:'Écrase',   emoji:'🔨', cat:'strike',  mult:1.6, rage:0,  gain:16, acc:0.83 },
-  { id:'stab',     label:'Perce',    emoji:'🗡️', cat:'strike',  mult:2.0, rage:0,  gain:20, acc:0.76 },
-  { id:'smash',    label:'Dévaste',  emoji:'💥', cat:'strike',  mult:2.8, rage:0,  gain:25, acc:0.68 },
-  { id:'fireball', label:'Brasier',  emoji:'🔥', cat:'magic',   mult:1.8, rage:20, gain:0,  acc:0.92 },
-  { id:'icespike', label:'Glacial',  emoji:'❄️', cat:'magic',   mult:1.5, rage:15, gain:0,  acc:0.95 },
-  { id:'special',  label:'Ultime',   emoji:'⚡', cat:'special', mult:4.0, rage:40, gain:0,  acc:0.95 },
-  { id:'defend',   label:'Défense',  emoji:'🛡️', cat:'defend',  mult:0,   rage:0,  gain:10, acc:1 },
+// Draw N rewards from lootbox (weighted)
+function drawLootboxRewards(lb){
+  const rewards=[];
+  for(let d=0;d<lb.drawCount;d++){
+    const totalWeight=lb.rewards.reduce((a,r)=>a+r.weight,0);
+    let roll=Math.random()*totalWeight;
+    let chosen=null;
+    for(const r of lb.rewards){roll-=r.weight;if(roll<=0){chosen=r;break;}}
+    if(!chosen)chosen=lb.rewards[0];
+    const qty=Array.isArray(chosen.qty)?chosen.qty[0]+Math.floor(Math.random()*(chosen.qty[1]-chosen.qty[0]+1)):chosen.qty;
+    rewards.push({...chosen,qty});
+  }
+  return rewards;
+}
+
+function applyLootboxRewards(rewards){
+  const p=G.player;
+  rewards.forEach(r=>{
+    if(r.type==='gold'){G.gold+=r.qty;addLog(`💰 +${r.qty} Or de lootbox !`,'loot');}
+    else if(r.type==='seed'){G.inventory[r.id]=(G.inventory[r.id]||0)+r.qty;addLog(`${r.emoji} +${r.qty} ${r.name} !`,'loot');}
+    else if(r.type==='item'){G.inventory[r.id]=(G.inventory[r.id]||0)+r.qty;addLog(`${r.emoji} +${r.qty} ${r.name} !`,'loot');}
+    else if(r.type==='equip'){
+      if(!G.equipped[r.id]){
+        const item=SHOP_ITEMS.find(i=>i.id===r.id);
+        if(item){G.equipped[r.id]=true;G.player[item.stat]=(G.player[item.stat]||0)+item.val;addLog(`⚔️ Équipé : ${r.name} !`,'skill');}
+      }else{G.gold+=50;addLog(`⚔️ ${r.name} déjà possédé → +50 Or !`,'loot');}
+    }
+    else if(r.type==='hpbonus'){p.maxHp+=r.qty;p.hp+=r.qty;addLog(`💖 +${r.qty} HP Max !`,'heal');}
+    else if(r.type==='atkbonus'){p.atk+=r.qty;addLog(`🗡️ +${r.qty} ATK permanent !`,'skill');}
+    else if(r.type==='curse'){p.maxHp=Math.max(20,p.maxHp-10);p.hp=Math.min(p.hp,p.maxHp);addLog(`💀 Malédiction ! -10 HP Max !`,'damage');}
+  });
+  updateHUD();
+}
+
+let pendingLootboxRewards=null;
+
+function openLootbox(lbId){
+  const lb=LOOTBOXES.find(l=>l.id===lbId);if(!lb)return;
+  if(G.gold<lb.cost){showToast('Pas assez d\'or !','bad');return;}
+  G.gold-=lb.cost;updateHUD();
+  const rewards=drawLootboxRewards(lb);
+  pendingLootboxRewards=rewards;
+  // Show animation
+  const overlay=document.getElementById('lbOpeningOverlay');
+  const boxAnim=document.getElementById('lbBoxAnim');
+  const title=document.getElementById('lbOpeningTitle');
+  const sub=document.getElementById('lbOpeningSub');
+  const grid=document.getElementById('lbRewardsGrid');
+  boxAnim.textContent=lb.emoji;
+  title.textContent='Ouverture en cours...';
+  sub.textContent=lb.name;
+  grid.innerHTML='';
+  overlay.classList.add('show');
+  // Show box shake then reveal rewards
+  setTimeout(()=>{
+    title.textContent='Tu as obtenu !';
+    grid.innerHTML=rewards.map((r,i)=>{
+      const rc={common:'lb-rarity-common',rare:'lb-rarity-rare',legendary:'lb-rarity-legendary',debuff:'lb-rarity-legendary'}[r.rarity]||'lb-rarity-common';
+      return `<div class="lb-reward-item" style="animation-delay:${i*0.12}s">
+        <span class="lb-reward-emoji">${r.emoji}</span>
+        <div class="lb-reward-info">
+          <div class="lb-reward-name">${r.name}</div>
+          <div class="lb-reward-qty">${r.type==='gold'?'💰 +'+r.qty+' Or':'×'+r.qty}</div>
+        </div>
+        <span class="lb-reward-rarity ${rc}">${r.rarity==='debuff'?'MALÉDICTION':r.rarity.toUpperCase()}</span>
+      </div>`;
+    }).join('');
+  },1600);
+  if(lbId==='banane_secrete') setTimeout(()=>triggerStory('lootboxLegendary'),3000);
+}
+
+function collectLootbox(){
+  if(pendingLootboxRewards){
+    applyLootboxRewards(pendingLootboxRewards);
+    pendingLootboxRewards=null;
+  }
+  document.getElementById('lbOpeningOverlay').classList.remove('show');
+  showToast('Récompenses récupérées !','loot');
+  if(document.getElementById('panelShop').classList.contains('active'))renderShop();
+  saveGame();
+}
+
+const QUESTS=[
+  {id:'first_harvest',name:'Les Premiers Pas',icon:'🌱',status:'active',desc:'Récolte ta première culture.',unlockAfter:null,tasks:[{id:'harvest1',label:'Récolter 1 légume',goal:1,progress:0,type:'harvest'}],reward:{gold:30,xp:50,cookXp:20},rewardDesc:'30 Or + 50 XP'},
+  {id:'first_fight',name:'Baptême du Feu',icon:'⚔️',status:'locked',desc:'Vaincs ton premier monstre.',unlockAfter:'first_harvest',tasks:[{id:'fight1',label:'Vaincre 1 monstre',goal:1,progress:0,type:'kill'}],reward:{gold:50,xp:80,atkBonus:3},rewardDesc:'50 Or + 80 XP + +3 ATK'},
+  {id:'chef_apprenti',name:'L\'Apprenti Chef',icon:'🍳',status:'locked',desc:'Cuisine 3 plats différents.',unlockAfter:'first_fight',tasks:[{id:'cook3',label:'Cuisiner 3 plats',goal:3,progress:0,type:'cook'}],reward:{gold:80,xp:120,maxHpBonus:20},rewardDesc:'80 Or + +20 HP Max'},
+  {id:'conquerant',name:'Conquérant des Plaines',icon:'🏆',status:'locked',desc:'Élimine 5 monstres.',unlockAfter:'chef_apprenti',tasks:[{id:'kill5',label:'Vaincre 5 monstres',goal:5,progress:0,type:'kill'}],reward:{gold:150,xp:200,defBonus:5},rewardDesc:'150 Or + +5 DEF'},
+  {id:'maitre_fermier',name:'Maître Fermier',icon:'🌾',status:'locked',desc:'Récolte 20 cultures.',unlockAfter:'conquerant',tasks:[{id:'harvest20',label:'Récolter 20 légumes',goal:20,progress:0,type:'harvest'}],reward:{gold:200,xp:300,farmingBonus:5},rewardDesc:'200 Or + +5 Farming'},
 ];
 
-const LEVEL_XP = [0,80,190,340,540,800,1150,1600,2200,2900,3800,5000,6500,8300,10500,13000,16000,19500,23500,28000];
+const COMBAT_MOVES=[
+  {id:'slash',label:'Tranche',emoji:'⚔️',cat:'strike',mult:1.0,rage:0,gain:12,acc:0.90},
+  {id:'crush',label:'Écrase',emoji:'🔨',cat:'strike',mult:1.6,rage:0,gain:16,acc:0.83},
+  {id:'stab',label:'Perce',emoji:'🗡️',cat:'strike',mult:2.0,rage:0,gain:20,acc:0.76},
+  {id:'smash',label:'Dévaste',emoji:'💥',cat:'strike',mult:2.8,rage:0,gain:25,acc:0.68},
+  {id:'fireball',label:'Brasier',emoji:'🔥',cat:'magic',mult:1.8,rage:20,gain:0,acc:0.92},
+  {id:'icespike',label:'Glacial',emoji:'❄️',cat:'magic',mult:1.5,rage:15,gain:0,acc:0.95},
+  {id:'special',label:'Ultime',emoji:'⚡',cat:'special',mult:4.0,rage:40,gain:0,acc:0.95},
+  {id:'defend',label:'Défense',emoji:'🛡️',cat:'defend',mult:0,rage:0,gain:10,acc:1},
+];
 
-// ═══════════════════════════════════════════
+const LEVEL_XP=[0,80,190,340,540,800,1150,1600,2200,2900,3800,5000,6500,8300,10500,13000,16000,19500,23500,28000];
+
+// ══════════════════════════════════
 //  GAME STATE
-// ═══════════════════════════════════════════
-let G = {
-  playerName:'Champion', gold:80, day:1, tick:0, level:1, xp:0,
+// ══════════════════════════════════
+let G={
+  playerName:'Champion',gold:80,day:1,tick:0,level:1,xp:0,
   player:{hp:100,maxHp:100,atk:20,def:6,spd:8,rage:0,maxRage:100,hunger:80,maxHunger:100,streak:0},
   skills:{farming:0,cooking:0,attack:0,defence:0,strength:0,hitpoints:0,prayer:0},
   skillLevels:{farming:1,cooking:1,attack:1,defence:1,strength:1,hitpoints:1,prayer:1},
   plots:Array.from({length:8},(_,i)=>({id:i,locked:false,crop:null,plantedAt:0,status:null})),
-  inventory:{}, cooked:{}, equipped:{},
-  wins:0, monstersKilled:0, totalHarvests:0, totalCooks:0,
+  inventory:{},cooked:{},equipped:{},
+  wins:0,monstersKilled:0,totalHarvests:0,totalCooks:0,
   currentRegion:null,
   fightState:'select',
-  currentMonster:null, enemyHp:0, enemyPatternIdx:0, enemySpecialUsed:{},
+  currentMonster:null,enemyHp:0,enemyPatternIdx:0,enemySpecialUsed:{},
   buffs:{atk:0,def:0,rounds:0,nextCrit:false},
   debuffs:{atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0},
   enemyDebuffs:{def:0,rounds:0,burn:0,poison:0},
@@ -957,801 +914,133 @@ let G = {
   uniqueCooksToday:new Set(),
 };
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  SAVE / LOAD
-// ═══════════════════════════════════════════
-function saveGame() {
-  try {
-    const save = {
-      playerName:G.playerName,gold:G.gold,day:G.day,tick:G.tick,level:G.level,xp:G.xp,player:G.player,
-      skills:G.skills,skillLevels:G.skillLevels,plots:G.plots,inventory:G.inventory,cooked:G.cooked,equipped:G.equipped,
-      wins:G.wins,monstersKilled:G.monstersKilled,totalHarvests:G.totalHarvests,totalCooks:G.totalCooks,
-      quests:G.quests,uniqueCooksToday:[...G.uniqueCooksToday],
-    };
-    localStorage.setItem('lunchboxe_woc_v2', JSON.stringify(save));
-  } catch(e){}
+// ══════════════════════════════════
+function saveGame(){
+  try{
+    const save={playerName:G.playerName,gold:G.gold,day:G.day,tick:G.tick,level:G.level,xp:G.xp,player:G.player,skills:G.skills,skillLevels:G.skillLevels,plots:G.plots,inventory:G.inventory,cooked:G.cooked,equipped:G.equipped,wins:G.wins,monstersKilled:G.monstersKilled,totalHarvests:G.totalHarvests,totalCooks:G.totalCooks,quests:G.quests,uniqueCooksToday:[...G.uniqueCooksToday]};
+    localStorage.setItem('lunchboxe_woc_v2',JSON.stringify(save));
+  }catch(e){}
 }
-function loadGame(name) {
-  try {
-    const raw = localStorage.getItem('lunchboxe_woc_v2') || localStorage.getItem('lunchboxe_woc_v1');
-    if (!raw) return false;
-    const save = JSON.parse(raw);
-    Object.assign(G, save);
-    if (name) G.playerName = name;
-    G.fightState='select'; G.currentMonster=null; G.enemyHp=0;
+function loadGame(name){
+  try{
+    const raw=localStorage.getItem('lunchboxe_woc_v2')||localStorage.getItem('lunchboxe_woc_v1');
+    if(!raw)return false;
+    const save=JSON.parse(raw);
+    Object.assign(G,save);
+    if(name)G.playerName=name;
+    G.fightState='select';G.currentMonster=null;G.enemyHp=0;
     G.buffs={atk:0,def:0,rounds:0,nextCrit:false};
     G.debuffs={atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0};
     G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};
-    G.defending=false; G.combatLog=[];
+    G.defending=false;G.combatLog=[];
     G.uniqueCooksToday=new Set(G.uniqueCooksToday||[]);
     return true;
-  } catch(e){ return false; }
+  }catch(e){return false;}
 }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-function handleStartGame() {
-  const name = document.getElementById('playerNameInput').value.trim() || 'Champion';
-  G.playerName = name;
-  showScreen('screenGame');
-  document.getElementById('playerNameDisplay').textContent = name;
-  loadNarratorState();
-  initGame();
-  setTimeout(() => triggerStory('intro'), 800);
-}
-function handleLoadGame() {
-  const name = document.getElementById('playerNameInput').value.trim();
-  const loaded = loadGame(name||null);
-  if (!loaded) { showToast('Aucune sauvegarde trouvée !','bad'); return; }
-  showScreen('screenGame');
-  document.getElementById('playerNameDisplay').textContent = G.playerName;
-  loadNarratorState();
-  initGame();
-  addLog(`Partie chargée — Bienvenue, <b>${G.playerName}</b> !`, 'sys');
-}
-function initGame() {
-  preloadSVGs();
-  renderTopSkills(); renderSidebarSkills(); renderMinimap(); updateHUD(); renderWorld();
-  setInterval(gameTick, 1000);
-  setInterval(saveGame, 20000);
-  setInterval(hungerTick, 5000);
-  checkQuestNotif();
-}
+// ══════════════════════════════════
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function handleStartGame(){const name=document.getElementById('playerNameInput').value.trim()||'Champion';G.playerName=name;showScreen('screenGame');document.getElementById('playerNameDisplay').textContent=name;loadNarratorState();initGame();setTimeout(()=>triggerStory('intro'),800);}
+function handleLoadGame(){const name=document.getElementById('playerNameInput').value.trim();const loaded=loadGame(name||null);if(!loaded){showToast('Aucune sauvegarde trouvée !','bad');return;}showScreen('screenGame');document.getElementById('playerNameDisplay').textContent=G.playerName;loadNarratorState();initGame();addLog(`Partie chargée — Bienvenue, <b>${G.playerName}</b> !`,'sys');}
+function initGame(){preloadSVGs();renderTopSkills();renderSidebarSkills();renderMinimap();updateHUD();renderWorld();setInterval(gameTick,1000);setInterval(saveGame,20000);setInterval(hungerTick,5000);checkQuestNotif();}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  TICKS
-// ═══════════════════════════════════════════
-function gameTick() {
-  G.tick++;
-  let anyReady = false;
-  G.plots.forEach(p=>{
-    if (p.crop && !p.locked && p.status!=='ready') {
-      const elapsed = G.tick - p.plantedAt;
-      const seed = SEEDS.find(s=>s.id===p.crop);
-      if (seed && elapsed>=seed.time) { p.status='ready'; anyReady=true; }
-    }
-  });
-  if (anyReady) { checkFarmNotif(); if (document.getElementById('panelFarm').classList.contains('active')) renderFarm(); }
-  if (G.tick%5===0 && document.getElementById('panelFarm').classList.contains('active')) updateFarmProgress();
-}
-function hungerTick() {
-  G.player.hunger = Math.max(0, G.player.hunger-1);
-  if (G.player.hunger<20) { G.player.hp=Math.max(1,G.player.hp-2); }
-  updateHUD();
-}
+// ══════════════════════════════════
+function gameTick(){G.tick++;let anyReady=false;G.plots.forEach(p=>{if(p.crop&&!p.locked&&p.status!=='ready'){const elapsed=G.tick-p.plantedAt;const seed=SEEDS.find(s=>s.id===p.crop);if(seed&&elapsed>=seed.time){p.status='ready';anyReady=true;}}});if(anyReady){checkFarmNotif();if(document.getElementById('panelFarm').classList.contains('active'))renderFarm();}if(G.tick%5===0&&document.getElementById('panelFarm').classList.contains('active'))updateFarmProgress();}
+function hungerTick(){G.player.hunger=Math.max(0,G.player.hunger-1);if(G.player.hunger<20){G.player.hp=Math.max(1,G.player.hp-2);}updateHUD();}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  HUD
-// ═══════════════════════════════════════════
-function updateHUD() {
-  const p = G.player;
-  document.getElementById('topbarGold').textContent = `💰 ${G.gold}`;
-  document.getElementById('vitalHp').style.width = Math.max(0,(p.hp/p.maxHp)*100)+'%';
-  document.getElementById('vitalHpVal').textContent = `${p.hp}/${p.maxHp}`;
-  document.getElementById('vitalHunger').style.width = Math.max(0,(p.hunger/p.maxHunger)*100)+'%';
-  document.getElementById('vitalHungerVal').textContent = `${p.hunger}/${p.maxHunger}`;
-  const lvl=G.level;
-  const xpNext=LEVEL_XP[lvl]||LEVEL_XP[LEVEL_XP.length-1];
-  const xpBase=lvl>1?LEVEL_XP[lvl-1]:0;
-  const prog=Math.min(100,((G.xp-xpBase)/(xpNext-xpBase))*100);
-  document.getElementById('vitalXp').style.width=prog+'%';
-  document.getElementById('vitalXpVal').textContent=`Niv.${lvl}`;
-}
-function renderTopSkills() {
-  document.getElementById('topbarSkills').innerHTML = SKILLS_DEF.slice(0,5).map(s=>`
-    <div class="skill-chip"><span class="skill-chip-icon">${s.icon}</span><span class="skill-chip-val">${G.skillLevels[s.id]||1}</span></div>`).join('');
-}
-function renderSidebarSkills() {
-  document.getElementById('sidebarSkills').innerHTML = SKILLS_DEF.map(s=>{
-    const lvl=G.skillLevels[s.id]||1;
-    const xpHave=G.skills[s.id]||0;
-    const xpBase=s.xpPerLevel[lvl-1]||0;
-    const xpNext=s.xpPerLevel[lvl]||s.xpPerLevel[s.xpPerLevel.length-1];
-    const prog=Math.min(100,((xpHave-xpBase)/(xpNext-xpBase))*100)||0;
-    return `<div class="skill-entry"><div class="skill-entry-top"><span class="skill-icon">${s.icon}</span><span class="skill-level">${lvl}</span></div>
-      <span class="skill-name">${s.name}</span>
-      <div class="skill-xp-track"><div class="skill-xp-fill" style="width:${prog}%"></div></div></div>`;
-  }).join('');
-}
-function renderMinimap() {
-  document.getElementById('minimap').innerHTML = WORLD_REGIONS.map(r=>{
-    const isCurrent=G.currentRegion===r.id;
-    const locked=r.minLevel>G.level;
-    return `<div class="minimap-dot ${isCurrent?'current':''}"
-      style="left:${r.x}%;top:${r.y}%;width:${isCurrent?10:7}px;height:${isCurrent?10:7}px;background:${locked?'#2a3d55':r.dot};opacity:${locked?0.3:1}"
-      onclick="switchTab('World');selectRegion('${r.id}')" title="${r.name}"></div>`;
-  }).join('');
-  const cur=WORLD_REGIONS.find(r=>r.id===G.currentRegion);
-  document.getElementById('minimapLabel').textContent=cur?cur.name:'Carte du Monde';
-}
+// ══════════════════════════════════
+function updateHUD(){const p=G.player;document.getElementById('topbarGold').textContent=`💰 ${G.gold}`;document.getElementById('vitalHp').style.width=Math.max(0,(p.hp/p.maxHp)*100)+'%';document.getElementById('vitalHpVal').textContent=`${p.hp}/${p.maxHp}`;document.getElementById('vitalHunger').style.width=Math.max(0,(p.hunger/p.maxHunger)*100)+'%';document.getElementById('vitalHungerVal').textContent=`${p.hunger}/${p.maxHunger}`;const lvl=G.level;const xpNext=LEVEL_XP[lvl]||LEVEL_XP[LEVEL_XP.length-1];const xpBase=lvl>1?LEVEL_XP[lvl-1]:0;const prog=Math.min(100,((G.xp-xpBase)/(xpNext-xpBase))*100);document.getElementById('vitalXp').style.width=prog+'%';document.getElementById('vitalXpVal').textContent=`Niv.${lvl}`;}
+function renderTopSkills(){document.getElementById('topbarSkills').innerHTML=SKILLS_DEF.slice(0,5).map(s=>`<div class="skill-chip"><span class="skill-chip-icon">${s.icon}</span><span class="skill-chip-val">${G.skillLevels[s.id]||1}</span></div>`).join('');}
+function renderSidebarSkills(){document.getElementById('sidebarSkills').innerHTML=SKILLS_DEF.map(s=>{const lvl=G.skillLevels[s.id]||1;const xpHave=G.skills[s.id]||0;const xpBase=s.xpPerLevel[lvl-1]||0;const xpNext=s.xpPerLevel[lvl]||s.xpPerLevel[s.xpPerLevel.length-1];const prog=Math.min(100,((xpHave-xpBase)/(xpNext-xpBase))*100)||0;return`<div class="skill-entry"><div class="skill-entry-top"><span class="skill-icon">${s.icon}</span><span class="skill-level">${lvl}</span></div><span class="skill-name">${s.name}</span><div class="skill-xp-track"><div class="skill-xp-fill" style="width:${prog}%"></div></div></div>`;}).join('');}
+function renderMinimap(){document.getElementById('minimap').innerHTML=WORLD_REGIONS.map(r=>{const isCurrent=G.currentRegion===r.id;const locked=r.minLevel>G.level;return`<div class="minimap-dot ${isCurrent?'current':''}" style="left:${r.x}%;top:${r.y}%;width:${isCurrent?10:7}px;height:${isCurrent?10:7}px;background:${locked?'#2a3d55':r.dot};opacity:${locked?0.3:1}" onclick="switchTab('World');selectRegion('${r.id}')" title="${r.name}"></div>`;}).join('');const cur=WORLD_REGIONS.find(r=>r.id===G.currentRegion);document.getElementById('minimapLabel').textContent=cur?cur.name:'Carte du Monde';}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  TABS
-// ═══════════════════════════════════════════
-function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  const cap=tab.charAt(0).toUpperCase()+tab.slice(1);
-  document.getElementById('tab'+cap).classList.add('active');
-  document.getElementById('panel'+cap).classList.add('active');
-  const renders={World:renderWorld,Farm:renderFarm,Cook:renderCook,Fight:renderFightPanel,Quests:renderQuests,Shop:renderShop,Inv:renderInv};
-  if (renders[tab]) renders[tab]();
-}
+// ══════════════════════════════════
+function switchTab(tab){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));const cap=tab.charAt(0).toUpperCase()+tab.slice(1);document.getElementById('tab'+cap).classList.add('active');document.getElementById('panel'+cap).classList.add('active');const renders={World:renderWorld,Farm:renderFarm,Cook:renderCook,Fight:renderFightPanel,Quests:renderQuests,Shop:renderShop,Inv:renderInv};if(renders[tab])renders[tab]();}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  WORLD
-// ═══════════════════════════════════════════
-function renderWorld() {
-  const panel=document.getElementById('panelWorld');
-  let html=`<div style="position:relative;flex:1;overflow:hidden;min-height:200px;" id="worldMapInner">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 30% 40%,rgba(0,30,15,0.8) 0%,transparent 55%),radial-gradient(ellipse 50% 45% at 72% 62%,rgba(0,15,30,0.7) 0%,transparent 50%),#080f08;"></div>
-    <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,192,48,0.012) 0px,rgba(0,192,48,0.012) 1px,transparent 1px,transparent 48px),repeating-linear-gradient(90deg,rgba(0,192,48,0.012) 0px,rgba(0,192,48,0.012) 1px,transparent 1px,transparent 48px);"></div>`;
-  WORLD_REGIONS.forEach(r=>{
-    const locked=r.minLevel>G.level;
-    const isCurrent=G.currentRegion===r.id;
-    html+=`<div class="map-region ${locked?'locked':''} ${isCurrent?'active':''}"
-      style="left:${r.x}%;top:${r.y}%;transform:translate(-50%,-50%)"
-      onclick="${locked?'':("selectRegion('"+r.id+"')")}">
-      <div class="region-bubble" style="width:52px;height:52px"><span class="region-emoji">${r.emoji}</span></div>
-      <div class="region-label">${r.name.split(' ').slice(0,2).join(' ')}</div>
-      ${locked?`<div class="region-level">Niv.${r.minLevel}</div>`:''}
-    </div>`;
-  });
-  html+='</div>';
-  panel.innerHTML=html;
-  if (G.currentRegion) showRegionPopup(G.currentRegion);
-}
-function selectRegion(id) {
-  G.currentRegion=id;
-  renderWorld(); renderMinimap();
-  if (id==='donjon_friture') triggerStory('reachDungeon');
-  else if (id==='pic_piment' || id==='marais_ail') triggerStory('dangerZone');
-}
-function showRegionPopup(regionId) {
-  const region=WORLD_REGIONS.find(r=>r.id===regionId);
-  if (!region) return;
-  const mapInner=document.getElementById('worldMapInner'); if (!mapInner) return;
-  const existing=mapInner.querySelector('.map-event-popup'); if (existing) existing.remove();
-  const popup=document.createElement('div');
-  popup.className='map-event-popup';
-  popup.innerHTML=`<div class="popup-title">${region.emoji} ${region.name}</div>
-    <div class="popup-desc">${region.desc}</div>
-    <button class="btn-popup" onclick="goFightRegion('${regionId}')">⚔ Combattre</button>
-    <button class="btn-popup secondary" onclick="closeRegionPopup()">✕ Fermer</button>`;
-  mapInner.appendChild(popup);
-}
-function closeRegionPopup() { const el=document.querySelector('.map-event-popup'); if(el) el.remove(); }
-function goFightRegion(id) { G.currentRegion=id; switchTab('Fight'); }
+// ══════════════════════════════════
+function renderWorld(){const panel=document.getElementById('panelWorld');let html=`<div style="position:relative;flex:1;overflow:hidden;min-height:200px;" id="worldMapInner"><div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 30% 40%,rgba(0,30,15,0.8) 0%,transparent 55%),radial-gradient(ellipse 50% 45% at 72% 62%,rgba(0,15,30,0.7) 0%,transparent 50%),#080f08;"></div><div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,192,48,0.012) 0px,rgba(0,192,48,0.012) 1px,transparent 1px,transparent 48px),repeating-linear-gradient(90deg,rgba(0,192,48,0.012) 0px,rgba(0,192,48,0.012) 1px,transparent 1px,transparent 48px);"></div>`;WORLD_REGIONS.forEach(r=>{const locked=r.minLevel>G.level;const isCurrent=G.currentRegion===r.id;html+=`<div class="map-region ${locked?'locked':''} ${isCurrent?'active':''}" style="left:${r.x}%;top:${r.y}%;transform:translate(-50%,-50%)" onclick="${locked?'':("selectRegion('"+r.id+"')")}"><div class="region-bubble" style="width:52px;height:52px"><span class="region-emoji">${r.emoji}</span></div><div class="region-label">${r.name.split(' ').slice(0,2).join(' ')}</div>${locked?`<div class="region-level">Niv.${r.minLevel}</div>`:''}</div>`;});html+='</div>';panel.innerHTML=html;if(G.currentRegion)showRegionPopup(G.currentRegion);}
+function selectRegion(id){G.currentRegion=id;renderWorld();renderMinimap();if(id==='donjon_friture')triggerStory('reachDungeon');else if(id==='pic_piment'||id==='marais_ail')triggerStory('dangerZone');}
+function showRegionPopup(regionId){const region=WORLD_REGIONS.find(r=>r.id===regionId);if(!region)return;const mapInner=document.getElementById('worldMapInner');if(!mapInner)return;const existing=mapInner.querySelector('.map-event-popup');if(existing)existing.remove();const popup=document.createElement('div');popup.className='map-event-popup';popup.innerHTML=`<div class="popup-title">${region.emoji} ${region.name}</div><div class="popup-desc">${region.desc}</div><button class="btn-popup" onclick="goFightRegion('${regionId}')">⚔ Combattre</button><button class="btn-popup secondary" onclick="closeRegionPopup()">✕ Fermer</button>`;mapInner.appendChild(popup);}
+function closeRegionPopup(){const el=document.querySelector('.map-event-popup');if(el)el.remove();}
+function goFightRegion(id){G.currentRegion=id;switchTab('Fight');}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  FARM
-// ═══════════════════════════════════════════
-function checkFarmNotif() {
-  const ready=G.plots.filter(p=>p.status==='ready').length;
-  const btn=document.getElementById('tabFarm'); const ex=btn.querySelector('.tab-notif');
-  if (ready>0&&!ex){const n=document.createElement('span');n.className='tab-notif';btn.appendChild(n);}
-  else if(ready===0&&ex)ex.remove();
-}
-function renderFarm() {
-  const panel=document.getElementById('panelFarm');
-  const readyCount=G.plots.filter(p=>p.status==='ready').length;
-  let plotsHtml='<div class="farm-grid">';
-  G.plots.forEach((plot,i)=>{
-    if (plot.locked){plotsHtml+=`<div class="plot-rs locked"><span style="font-size:0.9rem">🔒</span></div>`;return;}
-    if (!plot.crop){plotsHtml+=`<div class="plot-rs empty" onclick="plantOnPlot(${i})"><span style="font-size:1rem;color:#1e3018">+</span></div>`;return;}
-    const seed=SEEDS.find(s=>s.id===plot.crop);
-    const elapsed=G.tick-plot.plantedAt;
-    const prog=Math.min(1,elapsed/(seed?.time||30));
-    if (plot.status==='ready'){
-      plotsHtml+=`<div class="plot-rs ready" onclick="harvest(${i})" id="plot_${i}">
-        <span class="plot-emoji">${seed?.emoji||'?'}</span>
-        <div class="plot-ready-tag">PRÊT</div>
-        <div class="plot-progress"><div class="plot-progress-fill" style="width:100%"></div></div>
-      </div>`;
-    } else {
-      const rem=Math.max(0,(seed?.time||30)-elapsed);
-      plotsHtml+=`<div class="plot-rs growing" id="plot_${i}">
-        <span class="plot-emoji" style="opacity:0.5;filter:grayscale(0.5)">${seed?.emoji||'?'}</span>
-        <span class="plot-time">${rem}s</span>
-        <div class="plot-progress"><div class="plot-progress-fill" id="plotbar_${i}" style="width:${prog*100}%"></div></div>
-      </div>`;
-    }
-  });
-  plotsHtml+='</div>';
-  const farmLvl=G.skillLevels.farming||1;
-  let seedsHtml=`<div class="seeds-section">
-    <div class="seeds-title">🌱 Graines — Farming Niv.${farmLvl}</div>
-    <div class="seeds-grid">`;
-  SEEDS.forEach(seed=>{
-    const locked=seed.unlockLevel>farmLvl; const sel=G.selectedSeed===seed.id;
-    seedsHtml+=`<div class="seed-btn ${locked?'locked':''} ${sel?'selected':''}" onclick="${locked?'':("selectSeed('"+seed.id+"')")}">
-      <span class="seed-emoji">${seed.emoji}</span><span class="seed-name">${seed.name}</span>
-      <span class="seed-cost">💰${seed.cost}</span><span class="seed-time">⏱${seed.time}s</span>
-    </div>`;
-  });
-  seedsHtml+='</div></div>';
-  panel.innerHTML=`<div class="farm-panel">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
-      <span class="section-title" style="margin:0;font-size:0.62rem">🌱 Ferme</span>
-      ${readyCount>0?`<span style="font-size:0.65rem;color:var(--green2);font-family:'DM Mono',monospace;">✓ ${readyCount} prête${readyCount>1?'s':''}</span>`:''}
-    </div>
-    ${plotsHtml}${seedsHtml}
-  </div>`;
-}
-function updateFarmProgress() {
-  G.plots.forEach((plot,i)=>{
-    if (!plot.crop||plot.status==='ready'||plot.locked) return;
-    const seed=SEEDS.find(s=>s.id===plot.crop); if(!seed) return;
-    const elapsed=G.tick-plot.plantedAt;
-    const prog=Math.min(1,elapsed/seed.time); const rem=Math.max(0,seed.time-elapsed);
-    const bar=document.getElementById('plotbar_'+i); const pl=document.getElementById('plot_'+i);
-    if (bar) bar.style.width=(prog*100)+'%';
-    if (pl){const t=pl.querySelector('.plot-time');if(t)t.textContent=rem+'s';}
-  });
-}
+// ══════════════════════════════════
+function checkFarmNotif(){const ready=G.plots.filter(p=>p.status==='ready').length;const btn=document.getElementById('tabFarm');const ex=btn.querySelector('.tab-notif');if(ready>0&&!ex){const n=document.createElement('span');n.className='tab-notif';btn.appendChild(n);}else if(ready===0&&ex)ex.remove();}
+function renderFarm(){const panel=document.getElementById('panelFarm');const readyCount=G.plots.filter(p=>p.status==='ready').length;let plotsHtml='<div class="farm-grid">';G.plots.forEach((plot,i)=>{if(plot.locked){plotsHtml+=`<div class="plot-rs locked"><span style="font-size:0.9rem">🔒</span></div>`;return;}if(!plot.crop){plotsHtml+=`<div class="plot-rs empty" onclick="plantOnPlot(${i})"><span style="font-size:1rem;color:#1e3018">+</span></div>`;return;}const seed=SEEDS.find(s=>s.id===plot.crop);const elapsed=G.tick-plot.plantedAt;const prog=Math.min(1,elapsed/(seed?.time||30));if(plot.status==='ready'){plotsHtml+=`<div class="plot-rs ready" onclick="harvest(${i})" id="plot_${i}"><span class="plot-emoji">${seed?.emoji||'?'}</span><div class="plot-ready-tag">PRÊT</div><div class="plot-progress"><div class="plot-progress-fill" style="width:100%"></div></div></div>`;}else{const rem=Math.max(0,(seed?.time||30)-elapsed);plotsHtml+=`<div class="plot-rs growing" id="plot_${i}"><span class="plot-emoji" style="opacity:0.5;filter:grayscale(0.5)">${seed?.emoji||'?'}</span><span class="plot-time">${rem}s</span><div class="plot-progress"><div class="plot-progress-fill" id="plotbar_${i}" style="width:${prog*100}%"></div></div></div>`;}});plotsHtml+='</div>';const farmLvl=G.skillLevels.farming||1;let seedsHtml=`<div class="seeds-section"><div class="seeds-title">🌱 Graines — Farming Niv.${farmLvl}</div><div class="seeds-grid">`;SEEDS.forEach(seed=>{const locked=seed.unlockLevel>farmLvl;const sel=G.selectedSeed===seed.id;seedsHtml+=`<div class="seed-btn ${locked?'locked':''} ${sel?'selected':''}" onclick="${locked?'':("selectSeed('"+seed.id+"')")}"><span class="seed-emoji">${seed.emoji}</span><span class="seed-name">${seed.name}</span><span class="seed-cost">💰${seed.cost}</span><span class="seed-time">⏱${seed.time}s</span></div>`;});seedsHtml+='</div></div>';panel.innerHTML=`<div class="farm-panel"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;"><span class="section-title" style="margin:0;font-size:0.62rem">🌱 Ferme</span>${readyCount>0?`<span style="font-size:0.65rem;color:var(--green2);font-family:'DM Mono',monospace;">✓ ${readyCount} prête${readyCount>1?'s':''}</span>`:''}</div>${plotsHtml}${seedsHtml}</div>`;}
+function updateFarmProgress(){G.plots.forEach((plot,i)=>{if(!plot.crop||plot.status==='ready'||plot.locked)return;const seed=SEEDS.find(s=>s.id===plot.crop);if(!seed)return;const elapsed=G.tick-plot.plantedAt;const prog=Math.min(1,elapsed/seed.time);const rem=Math.max(0,seed.time-elapsed);const bar=document.getElementById('plotbar_'+i);const pl=document.getElementById('plot_'+i);if(bar)bar.style.width=(prog*100)+'%';if(pl){const t=pl.querySelector('.plot-time');if(t)t.textContent=rem+'s';}});}
 function selectSeed(id){G.selectedSeed=(G.selectedSeed===id)?null:id;renderFarm();}
-function plantOnPlot(idx){
-  if (!G.selectedSeed){showToast('Sélectionne une graine d\'abord !','bad');return;}
-  const seed=SEEDS.find(s=>s.id===G.selectedSeed); if(!seed) return;
-  if (G.gold<seed.cost){showToast('Pas assez d\'or !','bad');return;}
-  G.gold-=seed.cost;
-  G.plots[idx]={...G.plots[idx],crop:seed.id,plantedAt:G.tick,status:'growing'};
-  updateHUD(); renderFarm();
-  addLog(`Planté ${seed.emoji} <b>${seed.name}</b> en parcelle ${idx+1}.`,'skill');
-}
-function harvest(idx){
-  const plot=G.plots[idx]; if(!plot.crop||plot.status!=='ready') return;
-  const seed=SEEDS.find(s=>s.id===plot.crop); if(!seed) return;
-  G.inventory[seed.id]=(G.inventory[seed.id]||0)+1;
-  G.gold+=seed.sell; G.totalHarvests++;
-  gainSkillXp('farming',seed.farmXp);
-  G.plots[idx]={id:idx,locked:false,crop:null,plantedAt:0,status:null};
-  updateHUD(); renderFarm(); checkFarmNotif();
-  checkQuestProgress('harvest',1);
-  addLog(`${seed.emoji} Récolte ! <b>${seed.name}</b> → +${seed.sell}💰 +${seed.farmXp}XP`,'loot');
-  showToast(`${seed.emoji} Récolté — +${seed.sell} Or !`,'loot');
-  if (G.totalHarvests===1) setTimeout(()=>triggerStory('firstHarvest'),300);
-}
+function plantOnPlot(idx){if(!G.selectedSeed){showToast('Sélectionne une graine d\'abord !','bad');return;}const seed=SEEDS.find(s=>s.id===G.selectedSeed);if(!seed)return;if(G.gold<seed.cost){showToast('Pas assez d\'or !','bad');return;}G.gold-=seed.cost;G.plots[idx]={...G.plots[idx],crop:seed.id,plantedAt:G.tick,status:'growing'};updateHUD();renderFarm();addLog(`Planté ${seed.emoji} <b>${seed.name}</b> en parcelle ${idx+1}.`,'skill');}
+function harvest(idx){const plot=G.plots[idx];if(!plot.crop||plot.status!=='ready')return;const seed=SEEDS.find(s=>s.id===plot.crop);if(!seed)return;G.inventory[seed.id]=(G.inventory[seed.id]||0)+1;G.gold+=seed.sell;G.totalHarvests++;gainSkillXp('farming',seed.farmXp);G.plots[idx]={id:idx,locked:false,crop:null,plantedAt:0,status:null};updateHUD();renderFarm();checkFarmNotif();checkQuestProgress('harvest',1);addLog(`${seed.emoji} Récolte ! <b>${seed.name}</b> → +${seed.sell}💰 +${seed.farmXp}XP`,'loot');showToast(`${seed.emoji} Récolté — +${seed.sell} Or !`,'loot');if(G.totalHarvests===1)setTimeout(()=>triggerStory('firstHarvest'),300);}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  COOKING
-// ═══════════════════════════════════════════
-function renderCook() {
-  const panel=document.getElementById('panelCook');
-  const cookLvl=G.skillLevels.cooking||1;
-  const available=RECIPES.filter(r=>r.level<=cookLvl);
-  const locked=RECIPES.filter(r=>r.level>cookLvl);
-  let html=`<div class="recipes-panel"><div class="section-title">🍳 Cuisine — Niv.${cookLvl}</div>`;
-  if (available.length===0) html+=`<div style="text-align:center;padding:2rem;color:var(--text3);font-style:italic;font-size:0.78rem;">Récolte des légumes pour débloquer les recettes.</div>`;
-  available.forEach(r=>{
-    const canCook=canMakeRecipe(r);
-    let ingsHtml='';
-    Object.entries(r.ings).forEach(([id,qty])=>{
-      const seed=SEEDS.find(s=>s.id===id); const have=(G.inventory[id]||0)>=qty;
-      ingsHtml+=`<span class="ing-chip ${have?'have':'missing'}">${seed?.emoji||'?'}×${qty}${have?' ✓':''}</span>`;
-    });
-    html+=`<div class="recipe-card-rs" onclick="${canCook?("cookRecipe('"+r.id+"')"):''}">
-      <div class="recipe-header">
-        <span class="recipe-emoji-big">${r.emoji}</span>
-        <div class="recipe-info-col">
-          <div class="recipe-name-rs">${r.name}</div>
-          <div class="recipe-desc-rs">${r.desc}</div>
-          <div class="recipe-lvl-req">+${r.cookXp} XP · Stock: ${G.cooked[r.id]||0}</div>
-        </div>
-      </div>
-      <div class="recipe-ingredients">${ingsHtml}
-        <button class="btn-cook-rs" ${canCook?'':'disabled'}>Cuisiner</button>
-      </div>
-    </div>`;
-  });
-  if (locked.length>0){
-    html+=`<div class="section-title">🔒 Non débloquées</div>`;
-    locked.forEach(r=>{
-      html+=`<div class="recipe-card-rs locked"><div class="recipe-header">
-        <span class="recipe-emoji-big" style="filter:grayscale(1)">🔒</span>
-        <div class="recipe-info-col">
-          <div class="recipe-name-rs" style="color:var(--text3)">${r.name}</div>
-          <div class="recipe-desc-rs">Niveau Cuisine ${r.level} requis</div>
-        </div></div></div>`;
-    });
-  }
-  html+='</div>';
-  panel.innerHTML=html;
-}
+// ══════════════════════════════════
+function renderCook(){const panel=document.getElementById('panelCook');const cookLvl=G.skillLevels.cooking||1;const available=RECIPES.filter(r=>r.level<=cookLvl);const locked=RECIPES.filter(r=>r.level>cookLvl);let html=`<div class="recipes-panel"><div class="section-title">🍳 Cuisine — Niv.${cookLvl}</div>`;if(available.length===0)html+=`<div style="text-align:center;padding:2rem;color:var(--text3);font-style:italic;font-size:0.78rem;">Récolte des légumes pour débloquer les recettes.</div>`;available.forEach(r=>{const canCook=canMakeRecipe(r);let ingsHtml='';Object.entries(r.ings).forEach(([id,qty])=>{const seed=SEEDS.find(s=>s.id===id);const have=(G.inventory[id]||0)>=qty;ingsHtml+=`<span class="ing-chip ${have?'have':'missing'}">${seed?.emoji||'?'}×${qty}${have?' ✓':''}</span>`;});html+=`<div class="recipe-card-rs" onclick="${canCook?("cookRecipe('"+r.id+"')"):''}"><div class="recipe-header"><span class="recipe-emoji-big">${r.emoji}</span><div class="recipe-info-col"><div class="recipe-name-rs">${r.name}</div><div class="recipe-desc-rs">${r.desc}</div><div class="recipe-lvl-req">+${r.cookXp} XP · Stock: ${G.cooked[r.id]||0}</div></div></div><div class="recipe-ingredients">${ingsHtml}<button class="btn-cook-rs" ${canCook?'':'disabled'}>Cuisiner</button></div></div>`;});if(locked.length>0){html+=`<div class="section-title">🔒 Non débloquées</div>`;locked.forEach(r=>{html+=`<div class="recipe-card-rs locked"><div class="recipe-header"><span class="recipe-emoji-big" style="filter:grayscale(1)">🔒</span><div class="recipe-info-col"><div class="recipe-name-rs" style="color:var(--text3)">${r.name}</div><div class="recipe-desc-rs">Niveau Cuisine ${r.level} requis</div></div></div></div>`;});}html+='</div>';panel.innerHTML=html;}
 function canMakeRecipe(r){return Object.entries(r.ings).every(([id,qty])=>(G.inventory[id]||0)>=qty);}
-function cookRecipe(recipeId){
-  const recipe=RECIPES.find(r=>r.id===recipeId);
-  if (!recipe||!canMakeRecipe(recipe)){showToast('Ingrédients insuffisants !','bad');return;}
-  Object.entries(recipe.ings).forEach(([id,qty])=>{G.inventory[id]-=qty;});
-  G.cooked[recipeId]=(G.cooked[recipeId]||0)+1;
-  G.totalCooks++; G.uniqueCooksToday.add(recipeId);
-  gainSkillXp('cooking',recipe.cookXp);
-  checkQuestProgress('cook',1);
-  addLog(`${recipe.emoji} <b>${recipe.name}</b> cuisiné ! +${recipe.cookXp}XP`,'skill');
-  showToast(`${recipe.emoji} ${recipe.name} cuisiné !`,'good');
-  renderCook(); updateHUD();
-  if (G.totalCooks===1) setTimeout(()=>triggerStory('firstCook'),400);
-}
-function useCookedDish(recipeId){
-  const recipe=RECIPES.find(r=>r.id===recipeId);
-  if (!recipe||(G.cooked[recipeId]||0)<=0) return;
-  G.cooked[recipeId]--;
-  applyRecipeEffect(recipe);
-  addLog(`${recipe.emoji} <b>${recipe.name}</b> utilisé !`,'heal');
-  showToast(`${recipe.emoji} Utilisé !`,'good');
-  closeModal(); updateHUD();
-  if (G.fightState==='active') updateCombatDisplay();
-}
-function applyRecipeEffect(recipe){
-  const e=recipe.eff; const p=G.player;
-  if (e.heal) p.hp=Math.min(p.maxHp,p.hp+e.heal);
-  if (e.healFull) p.hp=p.maxHp;
-  if (e.hunger) p.hunger=Math.min(p.maxHunger,p.hunger+e.hunger);
-  if (e.rageMax) p.rage=p.maxRage;
-  if (e.atkPerm) p.atk+=e.atkPerm;
-  if (e.maxHpBonus){p.maxHp+=e.maxHpBonus;p.hp+=e.maxHpBonus;}
-  if (e.statsBoost){p.atk=Math.round(p.atk*(1+e.statsBoost));p.def=Math.round(p.def*(1+e.statsBoost));}
-  if (e.atkBuff&&e.buffRounds){G.buffs.atk=(G.buffs.atk||0)+e.atkBuff;G.buffs.rounds=Math.max(G.buffs.rounds||0,e.buffRounds);}
-  if (e.defBuff&&e.buffRounds){G.buffs.def=(G.buffs.def||0)+e.defBuff;G.buffs.rounds=Math.max(G.buffs.rounds||0,e.buffRounds);}
-  if (e.nextCrit) G.buffs.nextCrit=true;
-  updateHUD();
-}
+function cookRecipe(recipeId){const recipe=RECIPES.find(r=>r.id===recipeId);if(!recipe||!canMakeRecipe(recipe)){showToast('Ingrédients insuffisants !','bad');return;}Object.entries(recipe.ings).forEach(([id,qty])=>{G.inventory[id]-=qty;});G.cooked[recipeId]=(G.cooked[recipeId]||0)+1;G.totalCooks++;G.uniqueCooksToday.add(recipeId);gainSkillXp('cooking',recipe.cookXp);checkQuestProgress('cook',1);addLog(`${recipe.emoji} <b>${recipe.name}</b> cuisiné ! +${recipe.cookXp}XP`,'skill');showToast(`${recipe.emoji} ${recipe.name} cuisiné !`,'good');renderCook();updateHUD();if(G.totalCooks===1)setTimeout(()=>triggerStory('firstCook'),400);}
+function useCookedDish(recipeId){const recipe=RECIPES.find(r=>r.id===recipeId);if(!recipe||(G.cooked[recipeId]||0)<=0)return;G.cooked[recipeId]--;applyRecipeEffect(recipe);addLog(`${recipe.emoji} <b>${recipe.name}</b> utilisé !`,'heal');showToast(`${recipe.emoji} Utilisé !`,'good');closeModal();updateHUD();if(G.fightState==='active')updateCombatDisplay();}
+function applyRecipeEffect(recipe){const e=recipe.eff;const p=G.player;if(e.heal)p.hp=Math.min(p.maxHp,p.hp+e.heal);if(e.healFull)p.hp=p.maxHp;if(e.hunger)p.hunger=Math.min(p.maxHunger,p.hunger+e.hunger);if(e.rageMax)p.rage=p.maxRage;if(e.atkPerm)p.atk+=e.atkPerm;if(e.maxHpBonus){p.maxHp+=e.maxHpBonus;p.hp+=e.maxHpBonus;}if(e.statsBoost){p.atk=Math.round(p.atk*(1+e.statsBoost));p.def=Math.round(p.def*(1+e.statsBoost));}if(e.atkBuff&&e.buffRounds){G.buffs.atk=(G.buffs.atk||0)+e.atkBuff;G.buffs.rounds=Math.max(G.buffs.rounds||0,e.buffRounds);}if(e.defBuff&&e.buffRounds){G.buffs.def=(G.buffs.def||0)+e.defBuff;G.buffs.rounds=Math.max(G.buffs.rounds||0,e.buffRounds);}if(e.nextCrit)G.buffs.nextCrit=true;updateHUD();}
 
-// ═══════════════════════════════════════════
-//  FIGHT PANEL ROUTER
-// ═══════════════════════════════════════════
-function renderFightPanel(){
-  const panel=document.getElementById('panelFight');
-  if (G.fightState==='select') renderMonsterSelect(panel);
-  else if (G.fightState==='active') renderCombatActive(panel);
-  else if (G.fightState==='victory') renderFightVictory(panel);
-  else if (G.fightState==='defeat') renderFightDefeat(panel);
-}
-function renderMonsterSelect(panel){
-  const region=WORLD_REGIONS.find(r=>r.id===G.currentRegion);
-  const regionMonsters=G.currentRegion
-    ? MONSTERS.filter(m=>m.region===G.currentRegion)
-    : MONSTERS.filter(m=>m.level<=G.level+2);
-  let html=`<div style="padding:0.6rem;">`;
-  if (region){
-    html+=`<div style="background:var(--panel2);border:1px solid var(--border);padding:0.6rem 0.8rem;margin-bottom:0.7rem;display:flex;align-items:center;gap:0.6rem;">
-      <span style="font-size:2rem">${region.emoji}</span>
-      <div>
-        <div style="font-family:'Raleway',sans-serif;font-weight:700;font-size:0.82rem;color:var(--white);">${region.name}</div>
-        <div style="font-size:0.62rem;color:var(--text3);font-style:italic;">${region.desc}</div>
-      </div>
-    </div>`;
-  } else {
-    html+=`<div style="text-align:center;padding:1rem;color:var(--text3);font-size:0.75rem;font-style:italic;margin-bottom:0.5rem;">Choisis une région sur la carte pour combattre.</div>`;
-  }
-  if (regionMonsters.length===0){
-    html+=`<div style="text-align:center;padding:2rem;color:var(--text3);font-size:0.75rem;font-style:italic;">Aucun monstre ici. Explore d'autres régions.</div>`;
-  }
-  regionMonsters.forEach(m=>{
-    const diff=m.boss?'boss':m.level<=G.level?'easy':m.level<=G.level+3?'med':'hard';
-    const dc={easy:'var(--green)',med:'var(--amberbright)',hard:'var(--redbright)',boss:'var(--purplebright)'};
-    const dl={easy:'Facile',med:'Moyen',hard:'Difficile',boss:'BOSS'};
-    html+=`<div class="monster-card" onclick="startFight('${m.id}')">
-      <span style="font-size:2rem">${m.emoji}</span>
-      <div style="flex:1">
-        <div style="font-family:'Raleway',sans-serif;font-weight:700;font-size:0.8rem;color:var(--white);display:flex;align-items:center;gap:0.5rem;">
-          ${m.name}
-          ${m.boss?`<span style="font-size:0.48rem;background:rgba(128,64,208,0.2);border:1px solid var(--purplebright);color:var(--purplebright);padding:1px 5px;font-family:'Raleway',sans-serif;font-weight:700;letter-spacing:0.08em;">BOSS</span>`:''}
-        </div>
-        <div style="font-size:0.58rem;color:var(--text3);font-style:italic;margin-top:1px;">${m.desc}</div>
-        <div style="font-size:0.56rem;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace;">❤${m.hp} ⚔${m.atk[0]}-${m.atk[1]} 💰${m.gold[0]}-${m.gold[1]} ⭐${m.xp}</div>
-      </div>
-      <span style="font-family:'Raleway',sans-serif;font-size:0.58rem;font-weight:700;color:${dc[diff]};padding:0.15rem 0.45rem;border:1px solid ${dc[diff]};letter-spacing:0.06em;">${dl[diff]}</span>
-    </div>`;
-  });
-  html+=`</div>`;
-  panel.innerHTML=html;
-}
+// ══════════════════════════════════
+//  FIGHT
+// ══════════════════════════════════
+function renderFightPanel(){const panel=document.getElementById('panelFight');if(G.fightState==='select')renderMonsterSelect(panel);else if(G.fightState==='active')renderCombatActive(panel);else if(G.fightState==='victory')renderFightVictory(panel);else if(G.fightState==='defeat')renderFightDefeat(panel);}
+function renderMonsterSelect(panel){const region=WORLD_REGIONS.find(r=>r.id===G.currentRegion);const regionMonsters=G.currentRegion?MONSTERS.filter(m=>m.region===G.currentRegion):MONSTERS.filter(m=>m.level<=G.level+2);let html=`<div style="padding:0.6rem;">`;if(region){html+=`<div style="background:var(--panel2);border:1px solid var(--border);padding:0.6rem 0.8rem;margin-bottom:0.7rem;display:flex;align-items:center;gap:0.6rem;"><span style="font-size:2rem">${region.emoji}</span><div><div style="font-family:'Raleway',sans-serif;font-weight:700;font-size:0.82rem;color:var(--white);">${region.name}</div><div style="font-size:0.62rem;color:var(--text3);font-style:italic;">${region.desc}</div></div></div>`;}else{html+=`<div style="text-align:center;padding:1rem;color:var(--text3);font-size:0.75rem;font-style:italic;margin-bottom:0.5rem;">Choisis une région sur la carte pour combattre.</div>`;}if(regionMonsters.length===0){html+=`<div style="text-align:center;padding:2rem;color:var(--text3);font-size:0.75rem;font-style:italic;">Aucun monstre ici. Explore d'autres régions.</div>`;}regionMonsters.forEach(m=>{const diff=m.boss?'boss':m.level<=G.level?'easy':m.level<=G.level+3?'med':'hard';const dc={easy:'var(--green)',med:'var(--amberbright)',hard:'var(--redbright)',boss:'var(--purplebright)'};const dl={easy:'Facile',med:'Moyen',hard:'Difficile',boss:'BOSS'};html+=`<div class="monster-card" onclick="startFight('${m.id}')"><span style="font-size:2rem">${m.emoji}</span><div style="flex:1"><div style="font-family:'Raleway',sans-serif;font-weight:700;font-size:0.8rem;color:var(--white);display:flex;align-items:center;gap:0.5rem;">${m.name}${m.boss?`<span style="font-size:0.48rem;background:rgba(128,64,208,0.2);border:1px solid var(--purplebright);color:var(--purplebright);padding:1px 5px;font-family:'Raleway',sans-serif;font-weight:700;letter-spacing:0.08em;">BOSS</span>`:''}</div><div style="font-size:0.58rem;color:var(--text3);font-style:italic;margin-top:1px;">${m.desc}</div><div style="font-size:0.56rem;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace;">❤${m.hp} ⚔${m.atk[0]}-${m.atk[1]} 💰${m.gold[0]}-${m.gold[1]} ⭐${m.xp}</div></div><span style="font-family:'Raleway',sans-serif;font-size:0.58rem;font-weight:700;color:${dc[diff]};padding:0.15rem 0.45rem;border:1px solid ${dc[diff]};letter-spacing:0.06em;">${dl[diff]}</span></div>`;});html+='</div>';panel.innerHTML=html;}
 
-// ═══════════════════════════════════════════
-//  COMBAT
-// ═══════════════════════════════════════════
-function startFight(monsterId){
-  const m=MONSTERS.find(x=>x.id===monsterId); if(!m) return;
-  G.currentMonster=JSON.parse(JSON.stringify(m));
-  G.enemyHp=m.hp; G.enemyPatternIdx=0; G.enemySpecialUsed={};
-  G.fightState='active';
-  G.buffs={atk:0,def:0,rounds:0,nextCrit:false};
-  G.debuffs={atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0};
-  G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};
-  G.defending=false; G.combatLog=[];
-  addLog(`⚔ Combat contre <b>${m.name}</b> !`,'combat');
-  if (G.monstersKilled===0) triggerStory('firstFight');
-  if (m.boss && m.id==='bento_bakemono') triggerStory('bossWarning');
-  renderFightPanel();
-}
+function startFight(monsterId){const m=MONSTERS.find(x=>x.id===monsterId);if(!m)return;G.currentMonster=JSON.parse(JSON.stringify(m));G.enemyHp=m.hp;G.enemyPatternIdx=0;G.enemySpecialUsed={};G.fightState='active';G.buffs={atk:0,def:0,rounds:0,nextCrit:false};G.debuffs={atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0};G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};G.defending=false;G.combatLog=[];addLog(`⚔ Combat contre <b>${m.name}</b> !`,'combat');if(G.monstersKilled===0)triggerStory('firstFight');if(m.boss&&m.id==='bento_bakemono')triggerStory('bossWarning');renderFightPanel();}
 
-function renderCombatActive(panel){
-  const m=G.currentMonster; const p=G.player;
-  const enemyPct=Math.max(0,(G.enemyHp/m.hp)*100);
-  const playerPct=Math.max(0,(p.hp/p.maxHp)*100);
-  let statusHtml='';
-  if(G.buffs.rounds>0){if(G.buffs.atk>0)statusHtml+=`<span class="status-pill buff">+${G.buffs.atk}ATK(${G.buffs.rounds})</span>`;if(G.buffs.def>0)statusHtml+=`<span class="status-pill buff">+${G.buffs.def}DEF(${G.buffs.rounds})</span>`;}
-  if(G.buffs.nextCrit)statusHtml+=`<span class="status-pill buff">💥CRIT</span>`;
-  if(G.debuffs.burn>0)statusHtml+=`<span class="status-pill burn">🔥(${G.debuffs.burn})</span>`;
-  if(G.debuffs.poison>0)statusHtml+=`<span class="status-pill poison">☠(${G.debuffs.poison})</span>`;
-  if(G.debuffs.blind>0)statusHtml+=`<span class="status-pill debuff">👁(${G.debuffs.blind})</span>`;
-  if(G.debuffs.stun>0)statusHtml+=`<span class="status-pill stun">⚡(${G.debuffs.stun})</span>`;
-  const logLines=G.combatLog.slice(-2).map(l=>`<div class="chat-line ${l.type}">${l.text}</div>`).join('');
-  let movesHtml=COMBAT_MOVES.map(mv=>{
-    const tooLow=mv.rage>0&&p.rage<mv.rage;
-    const dis=tooLow?' disabled':'';
-    const cost=mv.rage>0?`<span class="cb-cost">${mv.rage}⚡</span>`:(mv.gain>0?`<span class="cb-cost">+${mv.gain}⚡</span>`:'');
-    return `<button class="combat-btn ${mv.cat}" onclick="playerMove('${mv.id}')"${dis}>
-      <span class="cb-emoji">${mv.emoji}</span>${mv.label}${cost}
-    </button>`;
-  }).join('');
-  panel.innerHTML=`<div class="combat-screen">
-    <div class="combat-arena">
-      <div class="arena-bg"></div><div class="arena-floor"></div>
-      <div class="combatant">
-        <span class="combatant-sprite" id="enemySprite">${m.emoji}</span>
-        <div class="combatant-shadow"></div>
-        <div class="combatant-name">${m.name}</div>
-      </div>
-      <div class="combat-vs">VS</div>
-      <div class="combatant">
-        <span class="combatant-sprite player" id="playerSprite">🥊</span>
-        <div class="combatant-shadow"></div>
-        <div class="combatant-name">Toi</div>
-      </div>
-    </div>
-    <div class="combat-bars">
-      <div class="cbar-row"><span class="cbar-label">${m.name.split(' ')[0]}</span><div class="cbar-track"><div class="cbar-fill enemy-hp" id="cb_enemyHp" style="width:${enemyPct}%"></div></div><span class="cbar-val" id="cb_enemyHpVal">${G.enemyHp}/${m.hp}</span></div>
-      <div class="cbar-row"><span class="cbar-label">Ton HP</span><div class="cbar-track"><div class="cbar-fill player-hp" id="cb_playerHp" style="width:${playerPct}%"></div></div><span class="cbar-val" id="cb_playerHpVal">${p.hp}/${p.maxHp}</span></div>
-      <div class="cbar-row"><span class="cbar-label">⚡ Rage</span><div class="cbar-track"><div class="cbar-fill rage" id="cb_rage" style="width:${(p.rage/p.maxRage)*100}%"></div></div><span class="cbar-val" id="cb_rageVal">${p.rage}/${p.maxRage}</span></div>
-    </div>
-    <div class="status-row" id="statusRow">${statusHtml}</div>
-    <div style="background:rgba(0,0,0,0.5);padding:0.3rem 0.6rem;min-height:2.4rem;flex-shrink:0;border-bottom:1px solid var(--border);" id="combatLogDisplay">
-      ${logLines||'<div class="chat-line sys">Le combat commence !</div>'}
-    </div>
-    <div class="combat-actions">
-      <div class="combat-action-title">⚔ Actions</div>
-      <div class="combat-grid">${movesHtml}</div>
-      <div class="combat-actions-row2">
-        <button class="combat-btn eat" onclick="openEatModal()"><span class="cb-emoji">🍖</span>Manger</button>
-        <button class="combat-btn flee" onclick="attemptFlee()"><span class="cb-emoji">🏃</span>Fuir</button>
-      </div>
-    </div>
-  </div>`;
-}
+function renderCombatActive(panel){const m=G.currentMonster;const p=G.player;const enemyPct=Math.max(0,(G.enemyHp/m.hp)*100);const playerPct=Math.max(0,(p.hp/p.maxHp)*100);let statusHtml='';if(G.buffs.rounds>0){if(G.buffs.atk>0)statusHtml+=`<span class="status-pill buff">+${G.buffs.atk}ATK(${G.buffs.rounds})</span>`;if(G.buffs.def>0)statusHtml+=`<span class="status-pill buff">+${G.buffs.def}DEF(${G.buffs.rounds})</span>`;}if(G.buffs.nextCrit)statusHtml+=`<span class="status-pill buff">💥CRIT</span>`;if(G.debuffs.burn>0)statusHtml+=`<span class="status-pill burn">🔥(${G.debuffs.burn})</span>`;if(G.debuffs.poison>0)statusHtml+=`<span class="status-pill poison">☠(${G.debuffs.poison})</span>`;if(G.debuffs.blind>0)statusHtml+=`<span class="status-pill debuff">👁(${G.debuffs.blind})</span>`;if(G.debuffs.stun>0)statusHtml+=`<span class="status-pill stun">⚡(${G.debuffs.stun})</span>`;const logLines=G.combatLog.slice(-2).map(l=>`<div class="chat-line ${l.type}">${l.text}</div>`).join('');let movesHtml=COMBAT_MOVES.map(mv=>{const tooLow=mv.rage>0&&p.rage<mv.rage;const dis=tooLow?' disabled':'';const cost=mv.rage>0?`<span class="cb-cost">${mv.rage}⚡</span>`:(mv.gain>0?`<span class="cb-cost">+${mv.gain}⚡</span>`:'');return`<button class="combat-btn ${mv.cat}" onclick="playerMove('${mv.id}')"${dis}><span class="cb-emoji">${mv.emoji}</span>${mv.label}${cost}</button>`;}).join('');panel.innerHTML=`<div class="combat-screen"><div class="combat-arena"><div class="arena-bg"></div><div class="arena-floor"></div><div class="combatant"><span class="combatant-sprite" id="enemySprite">${m.emoji}</span><div class="combatant-shadow"></div><div class="combatant-name">${m.name}</div></div><div class="combat-vs">VS</div><div class="combatant"><span class="combatant-sprite player" id="playerSprite">🥊</span><div class="combatant-shadow"></div><div class="combatant-name">Toi</div></div></div><div class="combat-bars"><div class="cbar-row"><span class="cbar-label">${m.name.split(' ')[0]}</span><div class="cbar-track"><div class="cbar-fill enemy-hp" id="cb_enemyHp" style="width:${enemyPct}%"></div></div><span class="cbar-val" id="cb_enemyHpVal">${G.enemyHp}/${m.hp}</span></div><div class="cbar-row"><span class="cbar-label">Ton HP</span><div class="cbar-track"><div class="cbar-fill player-hp" id="cb_playerHp" style="width:${playerPct}%"></div></div><span class="cbar-val" id="cb_playerHpVal">${p.hp}/${p.maxHp}</span></div><div class="cbar-row"><span class="cbar-label">⚡ Rage</span><div class="cbar-track"><div class="cbar-fill rage" id="cb_rage" style="width:${(p.rage/p.maxRage)*100}%"></div></div><span class="cbar-val" id="cb_rageVal">${p.rage}/${p.maxRage}</span></div></div><div class="status-row" id="statusRow">${statusHtml}</div><div style="background:rgba(0,0,0,0.5);padding:0.3rem 0.6rem;min-height:2.4rem;flex-shrink:0;border-bottom:1px solid var(--border);" id="combatLogDisplay">${logLines||'<div class="chat-line sys">Le combat commence !</div>'}</div><div class="combat-actions"><div class="combat-action-title">⚔ Actions</div><div class="combat-grid">${movesHtml}</div><div class="combat-actions-row2"><button class="combat-btn eat" onclick="openEatModal()"><span class="cb-emoji">🍖</span>Manger</button><button class="combat-btn flee" onclick="attemptFlee()"><span class="cb-emoji">🏃</span>Fuir</button></div></div></div>`;}
 
-function renderFightVictory(panel){
-  const m=G.currentMonster; const goldWon=m._goldWon||0;
-  panel.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:2rem 1.5rem;text-align:center;flex:1;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(0,60,20,0.3) 0%,transparent 60%),var(--bg);">
-    <span style="font-size:4rem;filter:drop-shadow(0 0 24px rgba(0,192,48,0.5));animation:crestFloat 3s ease-in-out infinite;">🏆</span>
-    <div style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.8rem;color:var(--green);letter-spacing:-0.01em;">VICTOIRE !</div>
-    <div style="font-size:0.78rem;color:var(--text2);font-style:italic;">${m.name} est vaincu !</div>
-    <div style="display:flex;gap:1.5rem;margin:0.5rem 0;background:var(--panel2);border:1px solid var(--border);padding:0.8rem 1.5rem;">
-      <div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--amberbright)">💰${goldWon}</div><div style="font-size:0.52rem;color:var(--text3);font-family:'Raleway',sans-serif;text-transform:uppercase;letter-spacing:0.08em;">Or gagné</div></div>
-      <div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--green)">⭐${m.xp}</div><div style="font-size:0.52rem;color:var(--text3);font-family:'Raleway',sans-serif;text-transform:uppercase;letter-spacing:0.08em;">XP</div></div>
-      <div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--tealbright)">🔥${G.player.streak}</div><div style="font-size:0.52rem;color:var(--text3);font-family:'Raleway',sans-serif;text-transform:uppercase;letter-spacing:0.08em;">Série</div></div>
-    </div>
-    <button style="background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-weight:700;font-size:0.95rem;padding:0.85rem 3rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;" onclick="afterVictory()">▶ Continuer</button>
-    <button style="background:transparent;border:1px solid var(--border2);color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.72rem;padding:0.55rem 1.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="switchTab('World')">← Retour à la carte</button>
-  </div>`;
-}
+function renderFightVictory(panel){const m=G.currentMonster;const goldWon=m._goldWon||0;panel.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:2rem 1.5rem;text-align:center;flex:1;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(0,60,20,0.3) 0%,transparent 60%),var(--bg);"><span style="font-size:4rem;filter:drop-shadow(0 0 24px rgba(0,192,48,0.5));animation:crestFloat 3s ease-in-out infinite;">🏆</span><div style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.8rem;color:var(--green);letter-spacing:-0.01em;">VICTOIRE !</div><div style="font-size:0.78rem;color:var(--text2);font-style:italic;">${m.name} est vaincu !</div><div style="display:flex;gap:1.5rem;margin:0.5rem 0;background:var(--panel2);border:1px solid var(--border);padding:0.8rem 1.5rem;"><div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--amberbright)">💰${goldWon}</div><div style="font-size:0.52rem;color:var(--text3);font-family:'Raleway',sans-serif;text-transform:uppercase;letter-spacing:0.08em;">Or gagné</div></div><div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--green)">⭐${m.xp}</div><div style="font-size:0.52rem;color:var(--text3);font-family:'Raleway',sans-serif;text-transform:uppercase;letter-spacing:0.08em;">XP</div></div><div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--tealbright)">🔥${G.player.streak}</div><div style="font-size:0.52rem;color:var(--text3);font-family:'Raleway',sans-serif;text-transform:uppercase;letter-spacing:0.08em;">Série</div></div></div><button style="background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-weight:700;font-size:0.95rem;padding:0.85rem 3rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;" onclick="afterVictory()">▶ Continuer</button><button style="background:transparent;border:1px solid var(--border2);color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.72rem;padding:0.55rem 1.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="switchTab('World')">← Retour à la carte</button></div>`;}
 
-function renderFightDefeat(panel){
-  panel.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:2rem 1.5rem;text-align:center;flex:1;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(80,10,10,0.3) 0%,transparent 60%),var(--bg);">
-    <span style="font-size:4rem;filter:drop-shadow(0 0 24px rgba(224,48,58,0.4));animation:crestFloat 3s ease-in-out infinite;">💀</span>
-    <div style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.8rem;color:var(--redbright);letter-spacing:-0.01em;">DÉFAITE</div>
-    <div style="font-size:0.78rem;color:var(--text2);font-style:italic;max-width:260px;">Tu as été vaincu... Récupère-toi et reviens plus fort.</div>
-    <div style="font-size:0.65rem;color:var(--text3);font-style:italic;background:var(--panel2);border:1px solid var(--border);padding:0.6rem 1rem;">Astuce : Cuisine des plats et utilise Défense pour encaisser.</div>
-    <button style="background:var(--panel2);border:1px solid var(--border2);color:var(--text2);font-family:'Raleway',sans-serif;font-weight:700;font-size:0.88rem;padding:0.8rem 2.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="afterDefeat()">↩ Réessayer</button>
-    <button style="background:transparent;border:1px solid var(--border);color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.72rem;padding:0.55rem 1.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="switchTab('World')">← Retour à la carte</button>
-  </div>`;
-}
+function renderFightDefeat(panel){panel.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:2rem 1.5rem;text-align:center;flex:1;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(80,10,10,0.3) 0%,transparent 60%),var(--bg);"><span style="font-size:4rem;filter:drop-shadow(0 0 24px rgba(224,48,58,0.4));animation:crestFloat 3s ease-in-out infinite;">💀</span><div style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.8rem;color:var(--redbright);letter-spacing:-0.01em;">DÉFAITE</div><div style="font-size:0.78rem;color:var(--text2);font-style:italic;max-width:260px;">Tu as été vaincu... Récupère-toi et reviens plus fort.</div><div style="font-size:0.65rem;color:var(--text3);font-style:italic;background:var(--panel2);border:1px solid var(--border);padding:0.6rem 1rem;">Astuce : Cuisine des plats et utilise Défense pour encaisser.</div><button style="background:var(--panel2);border:1px solid var(--border2);color:var(--text2);font-family:'Raleway',sans-serif;font-weight:700;font-size:0.88rem;padding:0.8rem 2.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="afterDefeat()">↩ Réessayer</button><button style="background:transparent;border:1px solid var(--border);color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.72rem;padding:0.55rem 1.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="switchTab('World')">← Retour à la carte</button></div>`;}
 
-// ─── COMBAT LOGIC ───
-function playerMove(moveId){
-  const move=COMBAT_MOVES.find(m=>m.id===moveId);
-  const p=G.player; const m=G.currentMonster;
-  if (G.debuffs.stun>0){G.debuffs.stun--;addCombatLog('Tu es étourdi(e) ! Tour perdu.','damage');updateCombatDisplay();setTimeout(()=>enemyTurn(),500);return;}
-  if (move.rage>0&&p.rage<move.rage){showToast('Rage insuffisante !','bad');return;}
-  G.defending=move.cat==='defend';
-  document.querySelectorAll('.combat-btn').forEach(b=>b.disabled=true);
-  if (move.cat==='defend'){addCombatLog('🛡 Position défensive.','sys');p.rage=Math.min(p.maxRage,p.rage+move.gain);updateCombatDisplay();setTimeout(()=>enemyTurn(),350);return;}
-  if (move.cat==='pray'){p.hp=Math.min(p.maxHp,p.hp+15);addCombatLog('✨ Prière : +15 HP.','heal');updateCombatDisplay();updateHUD();setTimeout(()=>enemyTurn(),350);return;}
-  const blindPenalty=G.debuffs.blind>0?0.65:1;
-  if (Math.random()>move.acc*blindPenalty){
-    addCombatLog(`Raté ! ${m.emoji} esquive.`,'sys');
-    if(G.debuffs.blind>0)G.debuffs.blind--;
-    p.rage=Math.min(p.maxRage,p.rage+Math.floor(move.gain*0.4));
-    updateCombatDisplay();animEnemy('dodge');setTimeout(()=>enemyTurn(),500);return;
-  }
-  const buffAtk=G.buffs.rounds>0?G.buffs.atk:0;
-  const debAtk=G.debuffs.rounds>0?G.debuffs.atk:0;
-  const totalAtk=Math.max(1,p.atk+buffAtk-debAtk);
-  const enemyDef=Math.max(0,(m.def||0)-(G.enemyDebuffs.def||0));
-  const baseDmg=totalAtk*move.mult;
-  const variance=0.85+Math.random()*0.3;
-  let dmg=Math.max(1,Math.round(baseDmg*variance)-Math.floor(enemyDef*0.65));
-  const isCrit=G.buffs.nextCrit||Math.random()<(0.05+(p.spd||8)*0.003);
-  if(isCrit){dmg=Math.round(dmg*2.2);G.buffs.nextCrit=false;}
-  if(move.rage>0)p.rage=Math.max(0,p.rage-move.rage);
-  p.rage=Math.min(p.maxRage,p.rage+move.gain);
-  if(G.buffs.rounds>0)G.buffs.rounds--;
-  if(G.debuffs.blind>0)G.debuffs.blind--;
-  G.enemyHp=Math.max(0,G.enemyHp-dmg);
-  gainSkillXp('attack',Math.round(dmg*0.8));gainSkillXp('strength',Math.round(dmg*0.5));
-  animPlayer('attack');setTimeout(()=>animEnemy('hit'),80);
-  const enemyEl=document.getElementById('enemySprite');
-  if(isCrit){spawnDmgAt(`💥${dmg}`,enemyEl,'crit-dmg');addCombatLog(`${move.emoji} CRITIQUE ! <b>${dmg}</b> dégâts !`,'combat');}
-  else{spawnDmgAt(dmg,enemyEl,'enemy-dmg');addCombatLog(`${move.emoji} <b>${dmg}</b> dégâts.`,'combat');}
-  if(G.enemyDebuffs.burn>0){const bd=6;G.enemyHp=Math.max(0,G.enemyHp-bd);G.enemyDebuffs.burn--;addCombatLog(`🔥 ${m.name} brûle : -${bd}HP`,'combat');}
-  updateCombatDisplay();
-  if(G.enemyHp<=0){setTimeout(()=>endFight(true),600);return;}
-  setTimeout(()=>enemyTurn(),600);
-}
+function playerMove(moveId){const move=COMBAT_MOVES.find(m=>m.id===moveId);const p=G.player;const m=G.currentMonster;if(G.debuffs.stun>0){G.debuffs.stun--;addCombatLog('Tu es étourdi(e) ! Tour perdu.','damage');updateCombatDisplay();setTimeout(()=>enemyTurn(),500);return;}if(move.rage>0&&p.rage<move.rage){showToast('Rage insuffisante !','bad');return;}G.defending=move.cat==='defend';document.querySelectorAll('.combat-btn').forEach(b=>b.disabled=true);if(move.cat==='defend'){addCombatLog('🛡 Position défensive.','sys');p.rage=Math.min(p.maxRage,p.rage+move.gain);updateCombatDisplay();setTimeout(()=>enemyTurn(),350);return;}if(move.cat==='pray'){p.hp=Math.min(p.maxHp,p.hp+15);addCombatLog('✨ Prière : +15 HP.','heal');updateCombatDisplay();updateHUD();setTimeout(()=>enemyTurn(),350);return;}const blindPenalty=G.debuffs.blind>0?0.65:1;if(Math.random()>move.acc*blindPenalty){addCombatLog(`Raté ! ${m.emoji} esquive.`,'sys');if(G.debuffs.blind>0)G.debuffs.blind--;p.rage=Math.min(p.maxRage,p.rage+Math.floor(move.gain*0.4));updateCombatDisplay();animEnemy('dodge');setTimeout(()=>enemyTurn(),500);return;}const buffAtk=G.buffs.rounds>0?G.buffs.atk:0;const debAtk=G.debuffs.rounds>0?G.debuffs.atk:0;const totalAtk=Math.max(1,p.atk+buffAtk-debAtk);const enemyDef=Math.max(0,(m.def||0)-(G.enemyDebuffs.def||0));const baseDmg=totalAtk*move.mult;const variance=0.85+Math.random()*0.3;let dmg=Math.max(1,Math.round(baseDmg*variance)-Math.floor(enemyDef*0.65));const isCrit=G.buffs.nextCrit||Math.random()<(0.05+(p.spd||8)*0.003);if(isCrit){dmg=Math.round(dmg*2.2);G.buffs.nextCrit=false;}if(move.rage>0)p.rage=Math.max(0,p.rage-move.rage);p.rage=Math.min(p.maxRage,p.rage+move.gain);if(G.buffs.rounds>0)G.buffs.rounds--;if(G.debuffs.blind>0)G.debuffs.blind--;G.enemyHp=Math.max(0,G.enemyHp-dmg);gainSkillXp('attack',Math.round(dmg*0.8));gainSkillXp('strength',Math.round(dmg*0.5));animPlayer('attack');setTimeout(()=>animEnemy('hit'),80);const enemyEl=document.getElementById('enemySprite');if(isCrit){spawnDmgAt(`💥${dmg}`,enemyEl,'crit-dmg');addCombatLog(`${move.emoji} CRITIQUE ! <b>${dmg}</b> dégâts !`,'combat');}else{spawnDmgAt(dmg,enemyEl,'enemy-dmg');addCombatLog(`${move.emoji} <b>${dmg}</b> dégâts.`,'combat');}if(G.enemyDebuffs.burn>0){const bd=6;G.enemyHp=Math.max(0,G.enemyHp-bd);G.enemyDebuffs.burn--;addCombatLog(`🔥 ${m.name} brûle : -${bd}HP`,'combat');}updateCombatDisplay();if(G.enemyHp<=0){setTimeout(()=>endFight(true),600);return;}setTimeout(()=>enemyTurn(),600);}
 
-function enemyTurn(){
-  if(G.fightState!=='active') return;
-  const p=G.player; const m=G.currentMonster;
-  if(G.debuffs.burn>0){const d=5;p.hp=Math.max(0,p.hp-d);G.debuffs.burn--;addCombatLog(`🔥 Brûlure : -${d}HP`,'damage');updateHUD();}
-  if(G.debuffs.poison>0){const d=8;p.hp=Math.max(0,p.hp-d);G.debuffs.poison--;addCombatLog(`☠ Poison : -${d}HP`,'damage');updateHUD();}
-  if(p.hp<=0){endFight(false);return;}
-  let usedSpecial=false;
-  const sp=m.special;
-  if(sp&&!G.enemySpecialUsed[m.id+'_sp']&&Math.random()<sp.chance){
-    usedSpecial=true;G.enemySpecialUsed[m.id+'_sp']=true;
-    if(sp.eff==='blind'){G.debuffs.blind=2;addCombatLog(`💫 <b>${sp.name}</b> ! Aveuglé 2t.`,'damage');}
-    else if(sp.eff==='stun'){if(Math.random()<0.5){G.debuffs.stun=1;addCombatLog(`⚡ <b>${sp.name}</b> ! Étourdi !`,'damage');}else{usedSpecial=false;}}
-    else if(sp.eff==='doubleHit'){const d1=calcEDmg(m),d2=calcEDmg(m);p.hp=Math.max(0,p.hp-d1-d2);dealPlayerDmg(d1+d2);addCombatLog(`⚡ <b>${sp.name}</b> ! -${d1} et -${d2}HP !`,'damage');}
-    else if(sp.eff==='poison'){G.debuffs.poison=4;addCombatLog(`☠ <b>${sp.name}</b> ! Poison 4t.`,'damage');}
-    else if(sp.eff==='burn'){G.debuffs.burn=3;addCombatLog(`🔥 <b>${sp.name}</b> ! Brûlure 3t.`,'damage');}
-    else if(sp.eff==='burnHeavy'){G.debuffs.burn=5;addCombatLog(`🔥 <b>${sp.name}</b> ! Brûlure intense !`,'damage');}
-    else if(sp.eff==='blindBurn'){G.debuffs.blind=2;G.debuffs.burn=3;addCombatLog(`🌶 <b>${sp.name}</b> ! Aveuglé+Brûlure !`,'damage');}
-    else if(sp.eff==='armorPierce'){const d=Math.round(calcEDmg(m)*1.5);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🧀 <b>${sp.name}</b> ! Perce armure -${d}HP !`,'damage');}
-    else if(sp.eff==='selfHeal'){G.enemyHp=Math.min(m.hp,G.enemyHp+30);addCombatLog(`💚 <b>${sp.name}</b> ! +30HP ennemi.`,'sys');}
-    else if(sp.eff==='burnDebuff'){G.debuffs.burn=4;G.debuffs.atk=8;G.debuffs.rounds=4;addCombatLog(`🍜 <b>${sp.name}</b> ! Brûlure+ATK-8.`,'damage');}
-    else if(sp.eff==='pierceHeavy'){const d=Math.round(calcEDmg(m)*2.2);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🌮 <b>${sp.name}</b> ! -${d}HP !`,'damage');}
-    else if(sp.eff==='poisonStun'){G.debuffs.poison=4;if(Math.random()<0.4)G.debuffs.stun=1;addCombatLog(`🍩 <b>${sp.name}</b> ! Poison+(étourdi?)`,'damage');}
-    else if(sp.eff==='statsNuke'){G.debuffs.atk=Math.round(p.atk*0.1);G.debuffs.def=Math.round(p.def*0.1);G.debuffs.rounds=4;addCombatLog(`🍱 <b>${sp.name}</b> ! Stats réduits 4t.`,'damage');}
-    else usedSpecial=false;
-  }
-  if(!usedSpecial){
-    let dmg=calcEDmg(m);
-    const defMult=G.defending?0.38:1;
-    const buffDef=G.buffs.rounds>0?G.buffs.def:0;
-    const netDef=Math.max(0,p.def+buffDef-(G.debuffs.def||0));
-    const finalDmg=Math.max(1,Math.round((dmg-Math.floor(netDef*0.55))*defMult));
-    p.hp=Math.max(0,p.hp-finalDmg);
-    dealPlayerDmg(finalDmg);
-    if(G.defending)addCombatLog(`🛡 Attaque bloquée : -${finalDmg}HP`,'damage');
-    else addCombatLog(`${m.emoji} ${m.name} frappe : -<b>${finalDmg}</b>HP`,'damage');
-    gainSkillXp('defence',Math.round(finalDmg*0.6));gainSkillXp('hitpoints',Math.round(finalDmg*0.3));
-  }
-  G.defending=false;
-  updateHUD(); updateCombatDisplay();
-  document.querySelectorAll('.combat-btn').forEach(b=>{
-    const cls=b.className;const mv=COMBAT_MOVES.find(x=>cls.includes(x.cat));
-    b.disabled=!!(mv&&mv.rage>0&&p.rage<mv.rage);
-  });
-  if(p.hp<=0){p.hp=0;endFight(false);}
-}
-
+function enemyTurn(){if(G.fightState!=='active')return;const p=G.player;const m=G.currentMonster;if(G.debuffs.burn>0){const d=5;p.hp=Math.max(0,p.hp-d);G.debuffs.burn--;addCombatLog(`🔥 Brûlure : -${d}HP`,'damage');updateHUD();}if(G.debuffs.poison>0){const d=8;p.hp=Math.max(0,p.hp-d);G.debuffs.poison--;addCombatLog(`☠ Poison : -${d}HP`,'damage');updateHUD();}if(p.hp<=0){endFight(false);return;}let usedSpecial=false;const sp=m.special;if(sp&&!G.enemySpecialUsed[m.id+'_sp']&&Math.random()<sp.chance){usedSpecial=true;G.enemySpecialUsed[m.id+'_sp']=true;if(sp.eff==='blind'){G.debuffs.blind=2;addCombatLog(`💫 <b>${sp.name}</b> ! Aveuglé 2t.`,'damage');}else if(sp.eff==='stun'){if(Math.random()<0.5){G.debuffs.stun=1;addCombatLog(`⚡ <b>${sp.name}</b> ! Étourdi !`,'damage');}else{usedSpecial=false;}}else if(sp.eff==='doubleHit'){const d1=calcEDmg(m),d2=calcEDmg(m);p.hp=Math.max(0,p.hp-d1-d2);dealPlayerDmg(d1+d2);addCombatLog(`⚡ <b>${sp.name}</b> ! -${d1} et -${d2}HP !`,'damage');}else if(sp.eff==='poison'){G.debuffs.poison=4;addCombatLog(`☠ <b>${sp.name}</b> ! Poison 4t.`,'damage');}else if(sp.eff==='burn'){G.debuffs.burn=3;addCombatLog(`🔥 <b>${sp.name}</b> ! Brûlure 3t.`,'damage');}else if(sp.eff==='burnHeavy'){G.debuffs.burn=5;addCombatLog(`🔥 <b>${sp.name}</b> ! Brûlure intense !`,'damage');}else if(sp.eff==='blindBurn'){G.debuffs.blind=2;G.debuffs.burn=3;addCombatLog(`🌶 <b>${sp.name}</b> ! Aveuglé+Brûlure !`,'damage');}else if(sp.eff==='armorPierce'){const d=Math.round(calcEDmg(m)*1.5);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🧀 <b>${sp.name}</b> ! Perce armure -${d}HP !`,'damage');}else if(sp.eff==='selfHeal'){G.enemyHp=Math.min(m.hp,G.enemyHp+30);addCombatLog(`💚 <b>${sp.name}</b> ! +30HP ennemi.`,'sys');}else if(sp.eff==='burnDebuff'){G.debuffs.burn=4;G.debuffs.atk=8;G.debuffs.rounds=4;addCombatLog(`🍜 <b>${sp.name}</b> ! Brûlure+ATK-8.`,'damage');}else if(sp.eff==='pierceHeavy'){const d=Math.round(calcEDmg(m)*2.2);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🌮 <b>${sp.name}</b> ! -${d}HP !`,'damage');}else if(sp.eff==='poisonStun'){G.debuffs.poison=4;if(Math.random()<0.4)G.debuffs.stun=1;addCombatLog(`🍩 <b>${sp.name}</b> ! Poison+(étourdi?)`,'damage');}else if(sp.eff==='statsNuke'){G.debuffs.atk=Math.round(p.atk*0.1);G.debuffs.def=Math.round(p.def*0.1);G.debuffs.rounds=4;addCombatLog(`🍱 <b>${sp.name}</b> ! Stats réduits 4t.`,'damage');}else usedSpecial=false;}
+if(!usedSpecial){let dmg=calcEDmg(m);const defMult=G.defending?0.38:1;const buffDef=G.buffs.rounds>0?G.buffs.def:0;const netDef=Math.max(0,p.def+buffDef-(G.debuffs.def||0));const finalDmg=Math.max(1,Math.round((dmg-Math.floor(netDef*0.55))*defMult));p.hp=Math.max(0,p.hp-finalDmg);dealPlayerDmg(finalDmg);if(G.defending)addCombatLog(`🛡 Attaque bloquée : -${finalDmg}HP`,'damage');else addCombatLog(`${m.emoji} ${m.name} frappe : -<b>${finalDmg}</b>HP`,'damage');gainSkillXp('defence',Math.round(finalDmg*0.6));gainSkillXp('hitpoints',Math.round(finalDmg*0.3));}
+G.defending=false;updateHUD();updateCombatDisplay();document.querySelectorAll('.combat-btn').forEach(b=>{const cls=b.className;const mv=COMBAT_MOVES.find(x=>cls.includes(x.cat));b.disabled=!!(mv&&mv.rage>0&&p.rage<mv.rage);});if(p.hp<=0){p.hp=0;endFight(false);}}
 function calcEDmg(m){return m.atk[0]+Math.floor(Math.random()*(m.atk[1]-m.atk[0]+1));}
-function dealPlayerDmg(dmg){
-  const el=document.getElementById('playerSprite');
-  if(el){el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');}
-  spawnDmgAt(`-${dmg}`,el,'player-dmg');
-}
-
-function endFight(won){
-  const m=G.currentMonster;
-  G.buffs={atk:0,def:0,rounds:0,nextCrit:false};
-  G.debuffs={atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0};
-  G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};
-  G.defending=false;
-  if(won){
-    const goldWon=m.gold[0]+Math.floor(Math.random()*(m.gold[1]-m.gold[0]+1));
-    G.currentMonster._goldWon=goldWon;
-    G.gold+=goldWon; G.player.streak++; G.wins++; G.monstersKilled++;
-    gainXP(m.xp);gainSkillXp('attack',m.xp);gainSkillXp('hitpoints',Math.round(m.xp*0.5));
-    if(m.loot){Object.entries(m.loot).forEach(([id,chance])=>{
-      if(Math.random()<chance){G.inventory[id]=(G.inventory[id]||0)+1;const seed=SEEDS.find(s=>s.id===id);addLog(`💎 Loot : ${seed?.emoji||'?'} <b>${seed?.name||id}</b> !`,'loot');}
-    });}
-    G.fightState='victory';
-    addLog(`🏆 <b>${m.name}</b> vaincu ! +${goldWon}💰 +${m.xp}XP`,'combat');
-    checkQuestProgress('kill',1);
-    if (G.monstersKilled===1) setTimeout(()=>triggerStory('firstVictory'),800);
-  } else {
-    G.player.streak=0; G.fightState='defeat';
-    addLog(`💀 Défaite contre ${m.name}...`,'damage');
-    setTimeout(()=>triggerStory('firstDefeat'),800);
-  }
-  updateHUD(); renderFightPanel(); saveGame();
-}
-
-function afterVictory(){
-  G.player.hp=Math.min(G.player.maxHp,G.player.hp+15);
-  G.player.rage=0; G.fightState='select'; G.currentMonster=null;
-  updateHUD(); renderFightPanel();
-}
-function afterDefeat(){
-  G.player.hp=Math.min(G.player.maxHp,Math.round(G.player.maxHp*0.35));
-  G.player.rage=0; G.fightState='select'; G.currentMonster=null;
-  updateHUD(); renderFightPanel();
-}
-function attemptFlee(){
-  const penalty=Math.round(G.player.maxHp*0.1);
-  G.player.hp=Math.max(1,G.player.hp-penalty);
-  G.player.streak=0;G.player.rage=0;
-  G.fightState='select';G.currentMonster=null;
-  updateHUD();renderFightPanel();
-  addLog(`🏃 Fuite ! (-${penalty}HP)`,'damage');
-  showToast(`Fuite ! -${penalty} HP`,'bad');
-}
-
-function updateCombatDisplay(){
-  const m=G.currentMonster; const p=G.player; if(!m) return;
-  const ePct=Math.max(0,(G.enemyHp/m.hp)*100);
-  const pPct=Math.max(0,(p.hp/p.maxHp)*100);
-  const eH=document.getElementById('cb_enemyHp');const eHV=document.getElementById('cb_enemyHpVal');
-  const pH=document.getElementById('cb_playerHp');const pHV=document.getElementById('cb_playerHpVal');
-  const rEl=document.getElementById('cb_rage');const rV=document.getElementById('cb_rageVal');
-  if(eH)eH.style.width=ePct+'%'; if(eHV)eHV.textContent=`${Math.max(0,G.enemyHp)}/${m.hp}`;
-  if(pH)pH.style.width=pPct+'%'; if(pHV)pHV.textContent=`${p.hp}/${p.maxHp}`;
-  if(rEl)rEl.style.width=(p.rage/p.maxRage*100)+'%'; if(rV)rV.textContent=`${p.rage}/${p.maxRage}`;
-  const ld=document.getElementById('combatLogDisplay');
-  if(ld)ld.innerHTML=G.combatLog.slice(-2).map(l=>`<div class="chat-line ${l.type}">${l.text}</div>`).join('')||'';
-  let sh='';
-  if(G.buffs.rounds>0){if(G.buffs.atk>0)sh+=`<span class="status-pill buff">+${G.buffs.atk}ATK(${G.buffs.rounds})</span>`;if(G.buffs.def>0)sh+=`<span class="status-pill buff">+${G.buffs.def}DEF(${G.buffs.rounds})</span>`;}
-  if(G.buffs.nextCrit)sh+=`<span class="status-pill buff">💥CRIT</span>`;
-  if(G.debuffs.burn>0)sh+=`<span class="status-pill burn">🔥(${G.debuffs.burn})</span>`;
-  if(G.debuffs.poison>0)sh+=`<span class="status-pill poison">☠(${G.debuffs.poison})</span>`;
-  if(G.debuffs.blind>0)sh+=`<span class="status-pill debuff">👁(${G.debuffs.blind})</span>`;
-  if(G.debuffs.stun>0)sh+=`<span class="status-pill stun">⚡(${G.debuffs.stun})</span>`;
-  const sr=document.getElementById('statusRow');if(sr)sr.innerHTML=sh;
-}
+function dealPlayerDmg(dmg){const el=document.getElementById('playerSprite');if(el){el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');}spawnDmgAt(`-${dmg}`,el,'player-dmg');}
+function endFight(won){const m=G.currentMonster;G.buffs={atk:0,def:0,rounds:0,nextCrit:false};G.debuffs={atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0};G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};G.defending=false;if(won){const goldWon=m.gold[0]+Math.floor(Math.random()*(m.gold[1]-m.gold[0]+1));G.currentMonster._goldWon=goldWon;G.gold+=goldWon;G.player.streak++;G.wins++;G.monstersKilled++;gainXP(m.xp);gainSkillXp('attack',m.xp);gainSkillXp('hitpoints',Math.round(m.xp*0.5));if(m.loot){Object.entries(m.loot).forEach(([id,chance])=>{if(Math.random()<chance){G.inventory[id]=(G.inventory[id]||0)+1;const seed=SEEDS.find(s=>s.id===id);addLog(`💎 Loot : ${seed?.emoji||'?'} <b>${seed?.name||id}</b> !`,'loot');}});}G.fightState='victory';addLog(`🏆 <b>${m.name}</b> vaincu ! +${goldWon}💰 +${m.xp}XP`,'combat');checkQuestProgress('kill',1);if(G.monstersKilled===1)setTimeout(()=>triggerStory('firstVictory'),800);}else{G.player.streak=0;G.fightState='defeat';addLog(`💀 Défaite contre ${m.name}...`,'damage');setTimeout(()=>triggerStory('firstDefeat'),800);}updateHUD();renderFightPanel();saveGame();}
+function afterVictory(){G.player.hp=Math.min(G.player.maxHp,G.player.hp+15);G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();}
+function afterDefeat(){G.player.hp=Math.min(G.player.maxHp,Math.round(G.player.maxHp*0.35));G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();}
+function attemptFlee(){const penalty=Math.round(G.player.maxHp*0.1);G.player.hp=Math.max(1,G.player.hp-penalty);G.player.streak=0;G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();addLog(`🏃 Fuite ! (-${penalty}HP)`,'damage');showToast(`Fuite ! -${penalty} HP`,'bad');}
+function updateCombatDisplay(){const m=G.currentMonster;const p=G.player;if(!m)return;const ePct=Math.max(0,(G.enemyHp/m.hp)*100);const pPct=Math.max(0,(p.hp/p.maxHp)*100);const eH=document.getElementById('cb_enemyHp'),eHV=document.getElementById('cb_enemyHpVal'),pH=document.getElementById('cb_playerHp'),pHV=document.getElementById('cb_playerHpVal'),rEl=document.getElementById('cb_rage'),rV=document.getElementById('cb_rageVal');if(eH)eH.style.width=ePct+'%';if(eHV)eHV.textContent=`${Math.max(0,G.enemyHp)}/${m.hp}`;if(pH)pH.style.width=pPct+'%';if(pHV)pHV.textContent=`${p.hp}/${p.maxHp}`;if(rEl)rEl.style.width=(p.rage/p.maxRage*100)+'%';if(rV)rV.textContent=`${p.rage}/${p.maxRage}`;const ld=document.getElementById('combatLogDisplay');if(ld)ld.innerHTML=G.combatLog.slice(-2).map(l=>`<div class="chat-line ${l.type}">${l.text}</div>`).join('')||'';let sh='';if(G.buffs.rounds>0){if(G.buffs.atk>0)sh+=`<span class="status-pill buff">+${G.buffs.atk}ATK(${G.buffs.rounds})</span>`;if(G.buffs.def>0)sh+=`<span class="status-pill buff">+${G.buffs.def}DEF(${G.buffs.rounds})</span>`;}if(G.buffs.nextCrit)sh+=`<span class="status-pill buff">💥CRIT</span>`;if(G.debuffs.burn>0)sh+=`<span class="status-pill burn">🔥(${G.debuffs.burn})</span>`;if(G.debuffs.poison>0)sh+=`<span class="status-pill poison">☠(${G.debuffs.poison})</span>`;if(G.debuffs.blind>0)sh+=`<span class="status-pill debuff">👁(${G.debuffs.blind})</span>`;if(G.debuffs.stun>0)sh+=`<span class="status-pill stun">⚡(${G.debuffs.stun})</span>`;const sr=document.getElementById('statusRow');if(sr)sr.innerHTML=sh;}
 function addCombatLog(text,type){G.combatLog.push({text,type});addLog(text,type);}
 function animEnemy(type){const el=document.getElementById('enemySprite');if(!el)return;el.classList.remove('hit','dodge');void el.offsetWidth;el.classList.add(type);}
 function animPlayer(){const el=document.getElementById('playerSprite');if(!el)return;el.classList.remove('attacking');void el.offsetWidth;el.classList.add('attacking');}
 
-// EAT MODAL
-function openEatModal(){
-  const dishes=RECIPES.filter(r=>(G.cooked[r.id]||0)>0);
-  const rawItems=SEEDS.filter(s=>(G.inventory[s.id]||0)>0&&(s.heal>0||s.atk>0));
-  const potions=SHOP_ITEMS.filter(s=>(G.inventory[s.id]||0)>0&&s.type==='item');
-  if(!dishes.length&&!rawItems.length&&!potions.length){showToast('Rien à manger !','bad');return;}
-  let html='<div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.4rem;">';
-  if(dishes.length){
-    html+=`<div class="section-title" style="font-size:0.58rem">👨‍🍳 Plats cuisinés</div>`;
-    dishes.forEach(r=>{html+=`<button onclick="useCookedDish('${r.id}')" style="background:var(--panel2);border:1px solid var(--border2);color:var(--text);padding:0.6rem 0.7rem;font-family:'Libre Baskerville',serif;font-size:0.8rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;width:100%;text-align:left;">
-      <span style="font-size:1.5rem">${r.emoji}</span>
-      <div style="flex:1"><b>${r.name}</b> <span style="color:var(--green);font-size:0.68rem">(×${G.cooked[r.id]})</span><br><span style="font-size:0.6rem;color:var(--text3);font-style:italic">${r.desc}</span></div>
-    </button>`;});
-  }
-  if(rawItems.length){
-    html+=`<div class="section-title" style="font-size:0.58rem">🌱 Ingrédients bruts</div>`;
-    rawItems.forEach(s=>{html+=`<button onclick="useRawSeed('${s.id}')" style="background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Libre Baskerville',serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left;">
-      <span style="font-size:1.2rem">${s.emoji}</span>
-      <span style="flex:1">${s.name} ×${G.inventory[s.id]}</span>
-      <span style="color:var(--green2);font-size:0.62rem">${s.heal>0?'+'+s.heal+'HP ':''}${s.atk>0?'+'+s.atk+'ATK':''}</span>
-    </button>`;});
-  }
-  if(potions.length){
-    html+=`<div class="section-title" style="font-size:0.58rem">🧪 Potions</div>`;
-    potions.forEach(it=>{html+=`<button onclick="usePotion('${it.id}')" style="background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Libre Baskerville',serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left;">
-      <span style="font-size:1.2rem">${it.emoji}</span>
-      <span style="flex:1">${it.name} ×${G.inventory[it.id]}</span>
-      <span style="color:var(--green2);font-size:0.62rem">${it.heal?'+'+it.heal+'HP':''}${it.rageMax?'Rage MAX':''}${it.cure?'Soigne':''}</span>
-    </button>`;});
-  }
-  html+='</div>';
-  showModal('🍖 Manger / Utiliser','Choisis un aliment à consommer.',html,[{label:'Fermer',action:'closeModal()'}]);
-}
-function useRawSeed(id){
-  const s=SEEDS.find(x=>x.id===id);if(!s||!G.inventory[id])return;
-  G.inventory[id]--;
-  if(s.heal>0){G.player.hp=Math.min(G.player.maxHp,G.player.hp+s.heal);addLog(`${s.emoji} +${s.heal}HP de ${s.name}`,'heal');}
-  if(s.atk>0){G.player.atk+=s.atk;addLog(`${s.emoji} +${s.atk}ATK de ${s.name}`,'skill');}
-  G.player.hunger=Math.min(G.player.maxHunger,G.player.hunger+8);
-  closeModal();updateHUD();if(G.fightState==='active')updateCombatDisplay();
-}
-function usePotion(id){
-  const it=SHOP_ITEMS.find(x=>x.id===id);if(!it||!G.inventory[id])return;
-  G.inventory[id]--;
-  if(it.heal){G.player.hp=Math.min(G.player.maxHp,G.player.hp+it.heal);addLog(`${it.emoji} +${it.heal}HP`,'heal');}
-  if(it.rageMax){G.player.rage=G.player.maxRage;addLog(`${it.emoji} Rage MAX !`,'combat');}
-  if(it.cure){G.debuffs.burn=0;G.debuffs.poison=0;G.debuffs.stun=0;addLog(`${it.emoji} Effets soignés !`,'heal');}
-  closeModal();updateHUD();if(G.fightState==='active')updateCombatDisplay();
-}
+function openEatModal(){const dishes=RECIPES.filter(r=>(G.cooked[r.id]||0)>0);const rawItems=SEEDS.filter(s=>(G.inventory[s.id]||0)>0&&(s.heal>0||s.atk>0));const potions=SHOP_ITEMS.filter(s=>(G.inventory[s.id]||0)>0&&s.type==='item');if(!dishes.length&&!rawItems.length&&!potions.length){showToast('Rien à manger !','bad');return;}let html='<div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.4rem;">';if(dishes.length){html+=`<div class="section-title" style="font-size:0.58rem">👨‍🍳 Plats cuisinés</div>`;dishes.forEach(r=>{html+=`<button onclick="useCookedDish('${r.id}')" style="background:var(--panel2);border:1px solid var(--border2);color:var(--text);padding:0.6rem 0.7rem;font-family:'Libre Baskerville',serif;font-size:0.8rem;display:flex;align-items:center;gap:0.7rem;cursor:pointer;width:100%;text-align:left;"><span style="font-size:1.5rem">${r.emoji}</span><div style="flex:1"><b>${r.name}</b> <span style="color:var(--green);font-size:0.68rem">(×${G.cooked[r.id]})</span><br><span style="font-size:0.6rem;color:var(--text3);font-style:italic">${r.desc}</span></div></button>`;});}if(rawItems.length){html+=`<div class="section-title" style="font-size:0.58rem">🌱 Ingrédients bruts</div>`;rawItems.forEach(s=>{html+=`<button onclick="useRawSeed('${s.id}')" style="background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Libre Baskerville',serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left;"><span style="font-size:1.2rem">${s.emoji}</span><span style="flex:1">${s.name} ×${G.inventory[s.id]}</span><span style="color:var(--green2);font-size:0.62rem">${s.heal>0?'+'+s.heal+'HP ':''}${s.atk>0?'+'+s.atk+'ATK':''}</span></button>`;});}if(potions.length){html+=`<div class="section-title" style="font-size:0.58rem">🧪 Potions</div>`;potions.forEach(it=>{html+=`<button onclick="usePotion('${it.id}')" style="background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:0.5rem 0.7rem;font-family:'Libre Baskerville',serif;font-size:0.78rem;display:flex;align-items:center;gap:0.6rem;cursor:pointer;width:100%;text-align:left;"><span style="font-size:1.2rem">${it.emoji}</span><span style="flex:1">${it.name} ×${G.inventory[it.id]}</span><span style="color:var(--green2);font-size:0.62rem">${it.heal?'+'+it.heal+'HP':''}${it.rageMax?'Rage MAX':''}${it.cure?'Soigne':''}</span></button>`;});}html+='</div>';showModal('🍖 Manger / Utiliser','Choisis un aliment à consommer.',html,[{label:'Fermer',action:'closeModal()'}]);}
+function useRawSeed(id){const s=SEEDS.find(x=>x.id===id);if(!s||!G.inventory[id])return;G.inventory[id]--;if(s.heal>0){G.player.hp=Math.min(G.player.maxHp,G.player.hp+s.heal);addLog(`${s.emoji} +${s.heal}HP de ${s.name}`,'heal');}if(s.atk>0){G.player.atk+=s.atk;addLog(`${s.emoji} +${s.atk}ATK de ${s.name}`,'skill');}G.player.hunger=Math.min(G.player.maxHunger,G.player.hunger+8);closeModal();updateHUD();if(G.fightState==='active')updateCombatDisplay();}
+function usePotion(id){const it=SHOP_ITEMS.find(x=>x.id===id);if(!it||!G.inventory[id])return;G.inventory[id]--;if(it.heal){G.player.hp=Math.min(G.player.maxHp,G.player.hp+it.heal);addLog(`${it.emoji} +${it.heal}HP`,'heal');}if(it.rageMax){G.player.rage=G.player.maxRage;addLog(`${it.emoji} Rage MAX !`,'combat');}if(it.cure){G.debuffs.burn=0;G.debuffs.poison=0;G.debuffs.stun=0;addLog(`${it.emoji} Effets soignés !`,'heal');}closeModal();updateHUD();if(G.fightState==='active')updateCombatDisplay();}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  QUESTS
-// ═══════════════════════════════════════════
-function checkQuestProgress(type,amount){
-  let anyCompleted=false;
-  G.quests.forEach(quest=>{
-    if(quest.status!=='active')return;
-    quest.tasks.forEach(task=>{if(task.type===type&&task.progress<task.goal)task.progress=Math.min(task.goal,task.progress+amount);});
-    if(quest.tasks.every(t=>t.progress>=t.goal)){completeQuest(quest);anyCompleted=true;}
-  });
-  if(anyCompleted)unlockNextQuests();
-  if(document.getElementById('panelQuests').classList.contains('active'))renderQuests();
-  checkQuestNotif();
-}
-function completeQuest(quest){
-  quest.status='complete';const r=quest.reward;
-  if(r.gold)G.gold+=r.gold;if(r.xp)gainXP(r.xp);if(r.cookXp)gainSkillXp('cooking',r.cookXp);
-  if(r.atkBonus)G.player.atk+=r.atkBonus;if(r.defBonus)G.player.def+=r.defBonus;
-  if(r.maxHpBonus){G.player.maxHp+=r.maxHpBonus;G.player.hp+=r.maxHpBonus;}
-  if(r.farmingBonus)G.skillLevels.farming=(G.skillLevels.farming||1)+1;
-  addLog(`📜 Quête <b>${quest.name}</b> accomplie ! ${quest.rewardDesc}`,'quest');
-  showToast(`📜 ${quest.name} accomplie !`,'good');updateHUD();
-}
-function unlockNextQuests(){
-  G.quests.forEach(q=>{
-    if(q.status==='locked'&&q.unlockAfter){
-      const parent=G.quests.find(x=>x.id===q.unlockAfter);
-      if(parent&&parent.status==='complete'){q.status='active';addLog(`📜 Nouvelle quête : <b>${q.name}</b>`,'quest');}
-    }
-  });
-}
-function checkQuestNotif(){
-  const active=G.quests.filter(q=>q.status==='active').length;
-  const btn=document.getElementById('tabQuests');const ex=btn.querySelector('.tab-notif');
-  if(active>0&&!ex){const n=document.createElement('span');n.className='tab-notif';btn.appendChild(n);}
-  else if(active===0&&ex)ex.remove();
-}
-function renderQuests(){
-  const panel=document.getElementById('panelQuests');
-  const order=['active','locked','complete'];
-  const sorted=[...G.quests].sort((a,b)=>order.indexOf(a.status)-order.indexOf(b.status));
-  let html='<div class="quests-panel">';
-  sorted.forEach(quest=>{
-    const sl={active:'En cours',complete:'Terminée',locked:'Verrouillée'};
-    html+=`<div class="quest-card"><div class="quest-header">
-      <span class="quest-icon">${quest.icon}</span>
-      <div class="quest-info">
-        <div class="quest-name">${quest.name}</div>
-        <div class="quest-desc">${quest.desc}</div>
-        ${quest.status==='active'?`<div style="font-size:0.6rem;color:var(--amberbright);margin-top:2px;font-family:'DM Mono',monospace;">🏆 ${quest.rewardDesc}</div>`:''}
-      </div>
-      <span class="quest-status ${quest.status}">${sl[quest.status]}</span>
-    </div>
-    ${quest.status==='active'?`<div class="quest-progress">${quest.tasks.map(t=>`<div class="quest-task ${t.progress>=t.goal?'done':'todo'}">${t.progress>=t.goal?'✓':'○'} ${t.label} (${t.progress}/${t.goal})</div>`).join('')}</div>`:''}
-    </div>`;
-  });
-  html+='</div>';
-  panel.innerHTML=html;checkQuestNotif();
-}
+// ══════════════════════════════════
+function checkQuestProgress(type,amount){let anyCompleted=false;G.quests.forEach(quest=>{if(quest.status!=='active')return;quest.tasks.forEach(task=>{if(task.type===type&&task.progress<task.goal)task.progress=Math.min(task.goal,task.progress+amount);});if(quest.tasks.every(t=>t.progress>=t.goal)){completeQuest(quest);anyCompleted=true;}});if(anyCompleted)unlockNextQuests();if(document.getElementById('panelQuests').classList.contains('active'))renderQuests();checkQuestNotif();}
+function completeQuest(quest){quest.status='complete';const r=quest.reward;if(r.gold)G.gold+=r.gold;if(r.xp)gainXP(r.xp);if(r.cookXp)gainSkillXp('cooking',r.cookXp);if(r.atkBonus)G.player.atk+=r.atkBonus;if(r.defBonus)G.player.def+=r.defBonus;if(r.maxHpBonus){G.player.maxHp+=r.maxHpBonus;G.player.hp+=r.maxHpBonus;}if(r.farmingBonus)G.skillLevels.farming=(G.skillLevels.farming||1)+1;addLog(`📜 Quête <b>${quest.name}</b> accomplie ! ${quest.rewardDesc}`,'quest');showToast(`📜 ${quest.name} accomplie !`,'good');updateHUD();}
+function unlockNextQuests(){G.quests.forEach(q=>{if(q.status==='locked'&&q.unlockAfter){const parent=G.quests.find(x=>x.id===q.unlockAfter);if(parent&&parent.status==='complete'){q.status='active';addLog(`📜 Nouvelle quête : <b>${q.name}</b>`,'quest');}}});}
+function checkQuestNotif(){const active=G.quests.filter(q=>q.status==='active').length;const btn=document.getElementById('tabQuests');const ex=btn.querySelector('.tab-notif');if(active>0&&!ex){const n=document.createElement('span');n.className='tab-notif';btn.appendChild(n);}else if(active===0&&ex)ex.remove();}
+function renderQuests(){const panel=document.getElementById('panelQuests');const order=['active','locked','complete'];const sorted=[...G.quests].sort((a,b)=>order.indexOf(a.status)-order.indexOf(b.status));let html='<div class="quests-panel">';sorted.forEach(quest=>{const sl={active:'En cours',complete:'Terminée',locked:'Verrouillée'};html+=`<div class="quest-card"><div class="quest-header"><span class="quest-icon">${quest.icon}</span><div class="quest-info"><div class="quest-name">${quest.name}</div><div class="quest-desc">${quest.desc}</div>${quest.status==='active'?`<div style="font-size:0.6rem;color:var(--amberbright);margin-top:2px;font-family:'DM Mono',monospace;">🏆 ${quest.rewardDesc}</div>`:''}</div><span class="quest-status ${quest.status}">${sl[quest.status]}</span></div>${quest.status==='active'?`<div class="quest-progress">${quest.tasks.map(t=>`<div class="quest-task ${t.progress>=t.goal?'done':'todo'}">${t.progress>=t.goal?'✓':'○'} ${t.label} (${t.progress}/${t.goal})</div>`).join('')}</div>`:''}</div>`;});html+='</div>';panel.innerHTML=html;checkQuestNotif();}
 
-// ═══════════════════════════════════════════
-//  SHOP
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
+//  SHOP (with Lootboxes tab)
+// ══════════════════════════════════
 function renderShop(){
   const panel=document.getElementById('panelShop');
   const tab=G.selectedShopTab||'equip';
@@ -1761,216 +1050,87 @@ function renderShop(){
       <div class="shop-tab ${tab==='equip'?'active':''}" onclick="setShopTab('equip')">⚔ Équip.</div>
       <div class="shop-tab ${tab==='item'?'active':''}" onclick="setShopTab('item')">🧪 Potions</div>
       <div class="shop-tab ${tab==='seed'?'active':''}" onclick="setShopTab('seed')">🌱 Graines</div>
+      <div class="shop-tab ${tab==='lootbox'?'active':''}" onclick="setShopTab('lootbox')">📦 Lootboxes</div>
     </div>`;
   if(tab==='equip'){
     html+='<div class="shop-grid-2">';
-    SHOP_ITEMS.filter(i=>i.type==='equip').forEach(item=>{
-      const owned=!!G.equipped[item.id];const afford=G.gold>=item.cost;
-      html+=`<div class="shop-item-card ${owned?'owned':''} ${!afford&&!owned?'cant-afford':''}" onclick="${owned?'':("buyItem('"+item.id+"')")}">
-        <span class="shop-item-emoji">${item.emoji}</span>
-        <div class="shop-item-name">${item.name}</div>
-        <div class="shop-item-desc">${item.desc}</div>
-        <div class="shop-item-price">💰 ${owned?'Possédé':item.cost}</div>
-      </div>`;
-    });
+    SHOP_ITEMS.filter(i=>i.type==='equip').forEach(item=>{const owned=!!G.equipped[item.id];const afford=G.gold>=item.cost;html+=`<div class="shop-item-card ${owned?'owned':''} ${!afford&&!owned?'cant-afford':''}" onclick="${owned?'':("buyItem('"+item.id+"')")}"><span class="shop-item-emoji">${item.emoji}</span><div class="shop-item-name">${item.name}</div><div class="shop-item-desc">${item.desc}</div><div class="shop-item-price">💰 ${owned?'Possédé':item.cost}</div></div>`;});
     html+='</div>';
-  } else if(tab==='item'){
+  }else if(tab==='item'){
     html+='<div class="shop-grid-2">';
-    SHOP_ITEMS.filter(i=>i.type!=='equip').forEach(item=>{
-      const qty=G.inventory[item.id]||0;const afford=G.gold>=item.cost;
-      html+=`<div class="shop-item-card ${!afford?'cant-afford':''}" onclick="buyItem('${item.id}')">
-        <span class="shop-item-emoji">${item.emoji}</span>
-        <div class="shop-item-name">${item.name}${qty>0?` <span style="color:var(--green);font-size:0.6rem">(×${qty})</span>`:''}</div>
-        <div class="shop-item-desc">${item.desc}</div>
-        <div class="shop-item-price">💰 ${item.cost}</div>
-      </div>`;
-    });
+    SHOP_ITEMS.filter(i=>i.type!=='equip').forEach(item=>{const qty=G.inventory[item.id]||0;const afford=G.gold>=item.cost;html+=`<div class="shop-item-card ${!afford?'cant-afford':''}" onclick="buyItem('${item.id}')"><span class="shop-item-emoji">${item.emoji}</span><div class="shop-item-name">${item.name}${qty>0?` <span style="color:var(--green);font-size:0.6rem">(×${qty})</span>`:''}</div><div class="shop-item-desc">${item.desc}</div><div class="shop-item-price">💰 ${item.cost}</div></div>`;});
     html+='</div>';
-  } else {
+  }else if(tab==='seed'){
     const farmLvl=G.skillLevels.farming||1;
     html+='<div class="shop-grid-2">';
-    SEEDS.forEach(seed=>{
-      const locked=seed.unlockLevel>farmLvl;const afford=G.gold>=seed.cost;
-      html+=`<div class="shop-item-card ${!afford||locked?'cant-afford':''}" onclick="${locked?'':("buySeeds('"+seed.id+"')")}">
-        <span class="shop-item-emoji">${seed.emoji}</span>
-        <div class="shop-item-name">${seed.name}${locked?` <span style="font-size:0.52rem;color:var(--text3)">(Niv.${seed.unlockLevel})</span>`:''}</div>
-        <div class="shop-item-desc">⏱${seed.time}s · Vend ${seed.sell}💰</div>
-        <div class="shop-item-price">💰 ${seed.cost}</div>
+    SEEDS.forEach(seed=>{const locked=seed.unlockLevel>farmLvl;const afford=G.gold>=seed.cost;html+=`<div class="shop-item-card ${!afford||locked?'cant-afford':''}" onclick="${locked?'':("buySeeds('"+seed.id+"')")}"><span class="shop-item-emoji">${seed.emoji}</span><div class="shop-item-name">${seed.name}${locked?` <span style="font-size:0.52rem;color:var(--text3)">(Niv.${seed.unlockLevel})</span>`:''}</div><div class="shop-item-desc">⏱${seed.time}s · Vend ${seed.sell}💰</div><div class="shop-item-price">💰 ${seed.cost}</div></div>`;});
+    html+='</div>';
+  }else if(tab==='lootbox'){
+    html+=`<div style="margin-bottom:0.6rem;font-size:0.65rem;color:var(--text3);font-style:italic;line-height:1.5;padding:0.5rem;background:var(--panel2);border:1px solid var(--border);">📦 Les lootboxes contiennent des récompenses aléatoires. Plus la rareté est élevée, meilleurs sont les gains — mais la <b style="color:var(--amberbright)">Banane Secrète</b> peut aussi te maudire !</div>`;
+    html+='<div class="lootbox-grid">';
+    LOOTBOXES.forEach(lb=>{
+      const afford=G.gold>=lb.cost;
+      const rarityClass={common:'lb-common',rare:'lb-rare',legendary:'lb-legendary'}[lb.rarity]||'lb-common';
+      const badgeClass={common:'lb-badge-common',rare:'lb-badge-rare',legendary:'lb-badge-legendary'}[lb.rarity]||'lb-badge-common';
+      html+=`<div class="lootbox-card ${rarityClass} ${!afford?'cant-afford':''}">
+        <div class="lootbox-header">
+          <div class="lootbox-emoji-wrap">
+            <span class="lootbox-emoji-big">${lb.emoji}</span>
+            <span class="lootbox-rarity-badge ${badgeClass}">${lb.rarity.toUpperCase()}</span>
+          </div>
+          <div class="lootbox-info">
+            <div class="lootbox-name">${lb.name}</div>
+            <div class="lootbox-desc">${lb.desc}</div>
+            <div class="lootbox-contents">🎁 ${lb.drawCount} récompenses · ${lb.contents}</div>
+          </div>
+        </div>
+        <div class="lootbox-footer">
+          <div class="lootbox-price">💰 ${lb.cost}</div>
+          <button class="btn-open-lb" ${!afford?'disabled':''} onclick="${afford?("openLootbox('"+lb.id+"')"):''}">
+            ${!afford?'Manque d\'or':'Ouvrir 📦'}
+          </button>
+        </div>
       </div>`;
     });
     html+='</div>';
   }
-  html+='</div>';panel.innerHTML=html;
+  html+='</div>';
+  panel.innerHTML=html;
 }
 function setShopTab(tab){G.selectedShopTab=tab;renderShop();}
-function buyItem(id){
-  const item=SHOP_ITEMS.find(i=>i.id===id);if(!item)return;
-  if(G.gold<item.cost){showToast('Pas assez d\'or !','bad');return;}
-  if(item.type==='equip'&&G.equipped[id]){showToast('Déjà équipé !','bad');return;}
-  G.gold-=item.cost;
-  if(item.type==='equip'){G.equipped[id]=true;G.player[item.stat]=(G.player[item.stat]||0)+item.val;addLog(`⚔ Équipé : <b>${item.name}</b> (+${item.val} ${item.stat})`,'skill');showToast(`${item.emoji} ${item.name} équipé !`,'good');}
-  else if(item.type==='plot'){let added=0;for(let i=0;i<G.plots.length&&added<item.val;i++){if(G.plots[i].locked){G.plots[i].locked=false;added++;}}if(added===0){const s=G.plots.length;for(let j=0;j<item.val;j++)G.plots.push({id:s+j,locked:false,crop:null,plantedAt:0,status:null});}showToast(`🟫 ${item.val} nouvelles parcelles !`,'good');if(document.getElementById('panelFarm').classList.contains('active'))renderFarm();}
-  else{G.inventory[id]=(G.inventory[id]||0)+1;showToast(`${item.emoji} Acheté !`,'good');}
-  updateHUD();renderShop();
-}
-function buySeeds(id){
-  const seed=SEEDS.find(s=>s.id===id);if(!seed)return;
-  if(G.gold<seed.cost){showToast('Pas assez d\'or !','bad');return;}
-  G.gold-=seed.cost;G.inventory[id]=(G.inventory[id]||0)+1;
-  showToast(`${seed.emoji} ${seed.name} acheté !`,'good');updateHUD();renderShop();
-}
+function buyItem(id){const item=SHOP_ITEMS.find(i=>i.id===id);if(!item)return;if(G.gold<item.cost){showToast('Pas assez d\'or !','bad');return;}if(item.type==='equip'&&G.equipped[id]){showToast('Déjà équipé !','bad');return;}G.gold-=item.cost;if(item.type==='equip'){G.equipped[id]=true;G.player[item.stat]=(G.player[item.stat]||0)+item.val;addLog(`⚔ Équipé : <b>${item.name}</b> (+${item.val} ${item.stat})`,'skill');showToast(`${item.emoji} ${item.name} équipé !`,'good');}else if(item.type==='plot'){let added=0;for(let i=0;i<G.plots.length&&added<item.val;i++){if(G.plots[i].locked){G.plots[i].locked=false;added++;}}if(added===0){const s=G.plots.length;for(let j=0;j<item.val;j++)G.plots.push({id:s+j,locked:false,crop:null,plantedAt:0,status:null});}showToast(`🟫 ${item.val} nouvelles parcelles !`,'good');if(document.getElementById('panelFarm').classList.contains('active'))renderFarm();}else{G.inventory[id]=(G.inventory[id]||0)+1;showToast(`${item.emoji} Acheté !`,'good');}updateHUD();renderShop();}
+function buySeeds(id){const seed=SEEDS.find(s=>s.id===id);if(!seed)return;if(G.gold<seed.cost){showToast('Pas assez d\'or !','bad');return;}G.gold-=seed.cost;G.inventory[id]=(G.inventory[id]||0)+1;showToast(`${seed.emoji} ${seed.name} acheté !`,'good');updateHUD();renderShop();}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  INVENTORY
-// ═══════════════════════════════════════════
-function renderInv(){
-  const panel=document.getElementById('panelInv'); const p=G.player;
-  const allItems=[
-    ...SEEDS.filter(s=>(G.inventory[s.id]||0)>0).map(s=>({...s,qty:G.inventory[s.id],src:'seed'})),
-    ...RECIPES.filter(r=>(G.cooked[r.id]||0)>0).map(r=>({...r,qty:G.cooked[r.id],src:'recipe'})),
-    ...SHOP_ITEMS.filter(s=>(G.inventory[s.id]||0)>0).map(s=>({...s,qty:G.inventory[s.id],src:'shop'})),
-  ];
-  const slots=[...allItems];while(slots.length<20)slots.push(null);
-  const skillRows=SKILLS_DEF.map(s=>{
-    const lvl=G.skillLevels[s.id]||1;
-    const xpHave=G.skills[s.id]||0;
-    const xpBase=s.xpPerLevel[Math.min(lvl-1,s.xpPerLevel.length-1)]||0;
-    const xpNext=s.xpPerLevel[Math.min(lvl,s.xpPerLevel.length-1)]||s.xpPerLevel[s.xpPerLevel.length-1];
-    const prog=Math.min(100,((xpHave-xpBase)/(xpNext-xpBase))*100)||0;
-    return `<div style="display:flex;align-items:center;gap:0.4rem;padding:0.2rem 0;">
-      <span style="font-size:0.9rem">${s.icon}</span>
-      <span style="font-family:'Raleway',sans-serif;font-size:0.5rem;color:var(--text3);flex:1;text-transform:uppercase;letter-spacing:0.06em;">${s.name}</span>
-      <span style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--green)">${lvl}</span>
-      <div style="width:45px;height:3px;background:rgba(255,255,255,0.04)"><div style="height:100%;width:${prog}%;background:var(--green)"></div></div>
-    </div>`;
-  }).join('');
-  panel.innerHTML=`<div class="inv-panel">
-    <div style="background:var(--panel2);border:1px solid var(--border);padding:0.7rem;margin-bottom:0.6rem;">
-      <div class="section-title" style="font-size:0.6rem">📊 ${G.playerName}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.5rem;">
-        <div style="font-size:0.65rem;color:var(--text2);">⚔️ ATK : <b style="color:var(--green)">${p.atk}</b></div>
-        <div style="font-size:0.65rem;color:var(--text2);">🛡️ DEF : <b style="color:var(--green)">${p.def}</b></div>
-        <div style="font-size:0.65rem;color:var(--text2);">👟 SPD : <b style="color:var(--green)">${p.spd}</b></div>
-        <div style="font-size:0.65rem;color:var(--text2);">🏆 Victoires : <b style="color:var(--green)">${G.wins}</b></div>
-        <div style="font-size:0.65rem;color:var(--text2);">🔥 Série : <b style="color:var(--green)">${p.streak}</b></div>
-        <div style="font-size:0.65rem;color:var(--text2);">💰 Or : <b style="color:var(--amberbright)">${G.gold}</b></div>
-      </div>
-      <div style="border-top:1px solid var(--border);padding-top:0.4rem">${skillRows}</div>
-    </div>
-    <div class="section-title" style="font-size:0.6rem">🎒 Sac à dos</div>
-    <div class="inv-grid">${slots.map(item=>!item?
-      `<div class="inv-slot empty"></div>`:
-      `<div class="inv-slot" onclick="useItemModal('${item.id}','${item.src}')">
-        <span class="inv-slot-emoji">${item.emoji}</span>
-        <span class="inv-slot-qty">${item.qty}</span>
-        <span class="inv-slot-name">${item.name.split(' ')[0]}</span>
-      </div>`).join('')}
-    </div>
-    ${allItems.length===0?'<div style="text-align:center;padding:1.5rem;color:var(--text3);font-style:italic;font-size:0.75rem;">Ton sac est vide.</div>':''}
-  </div>`;
-}
-function useItemModal(id,src){
-  let obj=null;
-  if(src==='seed')obj=SEEDS.find(s=>s.id===id);
-  else if(src==='recipe')obj=RECIPES.find(r=>r.id===id);
-  else obj=SHOP_ITEMS.find(s=>s.id===id);
-  if(!obj)return;
-  showModal(`${obj.emoji} ${obj.name}`,obj.desc||'','',[
-    {label:'Utiliser',primary:true,action:`${src==='recipe'?("useCookedDish('"+id+"')"):(src==='seed'?("useRawSeed('"+id+"')"):"usePotion('"+id+"')")}`},
-    {label:'Fermer',action:'closeModal()'},
-  ]);
-}
+// ══════════════════════════════════
+function renderInv(){const panel=document.getElementById('panelInv');const p=G.player;const allItems=[...SEEDS.filter(s=>(G.inventory[s.id]||0)>0).map(s=>({...s,qty:G.inventory[s.id],src:'seed'})),...RECIPES.filter(r=>(G.cooked[r.id]||0)>0).map(r=>({...r,qty:G.cooked[r.id],src:'recipe'})),...SHOP_ITEMS.filter(s=>(G.inventory[s.id]||0)>0).map(s=>({...s,qty:G.inventory[s.id],src:'shop'}))];const slots=[...allItems];while(slots.length<20)slots.push(null);const skillRows=SKILLS_DEF.map(s=>{const lvl=G.skillLevels[s.id]||1;const xpHave=G.skills[s.id]||0;const xpBase=s.xpPerLevel[Math.min(lvl-1,s.xpPerLevel.length-1)]||0;const xpNext=s.xpPerLevel[Math.min(lvl,s.xpPerLevel.length-1)]||s.xpPerLevel[s.xpPerLevel.length-1];const prog=Math.min(100,((xpHave-xpBase)/(xpNext-xpBase))*100)||0;return`<div style="display:flex;align-items:center;gap:0.4rem;padding:0.2rem 0;"><span style="font-size:0.9rem">${s.icon}</span><span style="font-family:'Raleway',sans-serif;font-size:0.5rem;color:var(--text3);flex:1;text-transform:uppercase;letter-spacing:0.06em;">${s.name}</span><span style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--green)">${lvl}</span><div style="width:45px;height:3px;background:rgba(255,255,255,0.04)"><div style="height:100%;width:${prog}%;background:var(--green)"></div></div></div>`;}).join('');panel.innerHTML=`<div class="inv-panel"><div style="background:var(--panel2);border:1px solid var(--border);padding:0.7rem;margin-bottom:0.6rem;"><div class="section-title" style="font-size:0.6rem">📊 ${G.playerName}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-bottom:0.5rem;"><div style="font-size:0.65rem;color:var(--text2);">⚔️ ATK : <b style="color:var(--green)">${p.atk}</b></div><div style="font-size:0.65rem;color:var(--text2);">🛡️ DEF : <b style="color:var(--green)">${p.def}</b></div><div style="font-size:0.65rem;color:var(--text2);">👟 SPD : <b style="color:var(--green)">${p.spd}</b></div><div style="font-size:0.65rem;color:var(--text2);">🏆 Victoires : <b style="color:var(--green)">${G.wins}</b></div><div style="font-size:0.65rem;color:var(--text2);">🔥 Série : <b style="color:var(--green)">${p.streak}</b></div><div style="font-size:0.65rem;color:var(--text2);">💰 Or : <b style="color:var(--amberbright)">${G.gold}</b></div></div><div style="border-top:1px solid var(--border);padding-top:0.4rem">${skillRows}</div></div><div class="section-title" style="font-size:0.6rem">🎒 Sac à dos</div><div class="inv-grid">${slots.map(item=>!item?`<div class="inv-slot empty"></div>`:`<div class="inv-slot" onclick="useItemModal('${item.id}','${item.src}')"><span class="inv-slot-emoji">${item.emoji}</span><span class="inv-slot-qty">${item.qty}</span><span class="inv-slot-name">${item.name.split(' ')[0]}</span></div>`).join('')}</div>${allItems.length===0?'<div style="text-align:center;padding:1.5rem;color:var(--text3);font-style:italic;font-size:0.75rem;">Ton sac est vide.</div>':''}</div>`;}
+function useItemModal(id,src){let obj=null;if(src==='seed')obj=SEEDS.find(s=>s.id===id);else if(src==='recipe')obj=RECIPES.find(r=>r.id===id);else obj=SHOP_ITEMS.find(s=>s.id===id);if(!obj)return;showModal(`${obj.emoji} ${obj.name}`,obj.desc||'',[],[{label:'Utiliser',primary:true,action:`${src==='recipe'?("useCookedDish('"+id+"')"):(src==='seed'?("useRawSeed('"+id+"')"):"usePotion('"+id+"')")}`},{label:'Fermer',action:'closeModal()'}]);}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  XP / LEVELING
-// ═══════════════════════════════════════════
-function gainXP(amount){
-  G.xp+=amount;
-  const maxLvl=LEVEL_XP.length;
-  while(G.level<maxLvl&&G.xp>=LEVEL_XP[G.level]){
-    G.level++;
-    G.player.maxHp+=10;G.player.hp+=10;G.player.atk+=2;
-    if(G.level%2===0)G.player.def+=2;
-    const bonuses=['+10 HP Max','+2 ATK'];if(G.level%2===0)bonuses.push('+2 DEF');
-    document.getElementById('luTitle').textContent=`NIVEAU ${G.level} !`;
-    document.getElementById('luIcon').textContent='⭐';
-    document.getElementById('luSub').textContent='Tu deviens plus puissant !';
-    document.getElementById('luBonuses').innerHTML=bonuses.map(b=>`<div class="lu-bonus">${b}</div>`).join('');
-    document.getElementById('levelupOverlay').classList.add('show');
-    if(G.level===5) setTimeout(()=>triggerStory('level5'),1200);
-    if(G.level===10) setTimeout(()=>triggerStory('level10'),1200);
-  }
-  updateHUD();
-}
-function gainSkillXp(skillId,amount){
-  const def=SKILLS_DEF.find(s=>s.id===skillId);if(!def)return;
-  G.skills[skillId]=(G.skills[skillId]||0)+amount;
-  const curLvl=G.skillLevels[skillId]||1;
-  const maxSkillLvl=def.xpPerLevel.length-1;
-  if(curLvl<maxSkillLvl&&G.skills[skillId]>=def.xpPerLevel[curLvl]){
-    G.skillLevels[skillId]=curLvl+1;
-    document.getElementById('luTitle').textContent=`${def.name.toUpperCase()} ${curLvl+1} !`;
-    document.getElementById('luIcon').textContent=def.icon;
-    document.getElementById('luSub').textContent=`Niveau ${def.name} augmente !`;
-    document.getElementById('luBonuses').innerHTML=`<div class="lu-bonus">Niveau ${curLvl+1}</div>`;
-    document.getElementById('levelupOverlay').classList.add('show');
-    addLog(`${def.icon} <b>${def.name}</b> → Niveau ${curLvl+1} !`,'skill');
-    showToast(`${def.icon} ${def.name} Niv.${curLvl+1} !`,'level');
-  }
-  renderTopSkills();renderSidebarSkills();
-}
+// ══════════════════════════════════
+function gainXP(amount){G.xp+=amount;const maxLvl=LEVEL_XP.length;while(G.level<maxLvl&&G.xp>=LEVEL_XP[G.level]){G.level++;G.player.maxHp+=10;G.player.hp+=10;G.player.atk+=2;if(G.level%2===0)G.player.def+=2;const bonuses=['+10 HP Max','+2 ATK'];if(G.level%2===0)bonuses.push('+2 DEF');document.getElementById('luTitle').textContent=`NIVEAU ${G.level} !`;document.getElementById('luIcon').textContent='⭐';document.getElementById('luSub').textContent='Tu deviens plus puissant !';document.getElementById('luBonuses').innerHTML=bonuses.map(b=>`<div class="lu-bonus">${b}</div>`).join('');document.getElementById('levelupOverlay').classList.add('show');if(G.level===5)setTimeout(()=>triggerStory('level5'),1200);if(G.level===10)setTimeout(()=>triggerStory('level10'),1200);}updateHUD();}
+function gainSkillXp(skillId,amount){const def=SKILLS_DEF.find(s=>s.id===skillId);if(!def)return;G.skills[skillId]=(G.skills[skillId]||0)+amount;const curLvl=G.skillLevels[skillId]||1;const maxSkillLvl=def.xpPerLevel.length-1;if(curLvl<maxSkillLvl&&G.skills[skillId]>=def.xpPerLevel[curLvl]){G.skillLevels[skillId]=curLvl+1;document.getElementById('luTitle').textContent=`${def.name.toUpperCase()} ${curLvl+1} !`;document.getElementById('luIcon').textContent=def.icon;document.getElementById('luSub').textContent=`Niveau ${def.name} augmente !`;document.getElementById('luBonuses').innerHTML=`<div class="lu-bonus">Niveau ${curLvl+1}</div>`;document.getElementById('levelupOverlay').classList.add('show');addLog(`${def.icon} <b>${def.name}</b> → Niveau ${curLvl+1} !`,'skill');showToast(`${def.icon} ${def.name} Niv.${curLvl+1} !`,'level');}renderTopSkills();renderSidebarSkills();}
 function closeLevelUp(){document.getElementById('levelupOverlay').classList.remove('show');updateHUD();}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  MODAL
-// ═══════════════════════════════════════════
-function showModal(title,desc,extra,actions){
-  document.getElementById('modalTitle').textContent=title;
-  document.getElementById('modalDesc').textContent=desc;
-  document.getElementById('modalExtra').innerHTML=extra||'';
-  const el=document.getElementById('modalActions');el.innerHTML='';
-  (actions||[]).forEach(a=>{
-    const btn=document.createElement('button');
-    btn.innerHTML=a.label;btn.className=a.primary?'btn-modal':'btn-modal secondary';
-    btn.setAttribute('onclick',a.action);el.appendChild(btn);
-  });
-  document.getElementById('modalOverlay').classList.add('open');
-}
+// ══════════════════════════════════
+function showModal(title,desc,extra,actions){document.getElementById('modalTitle').textContent=title;document.getElementById('modalDesc').textContent=desc;document.getElementById('modalExtra').innerHTML=extra||'';const el=document.getElementById('modalActions');el.innerHTML='';(actions||[]).forEach(a=>{const btn=document.createElement('button');btn.innerHTML=a.label;btn.className=a.primary?'btn-modal':'btn-modal secondary';btn.setAttribute('onclick',a.action);el.appendChild(btn);});document.getElementById('modalOverlay').classList.add('open');}
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
 function onModalBgClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 //  FX
-// ═══════════════════════════════════════════
+// ══════════════════════════════════
 let _toastTimer;
-function showToast(msg,type=''){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.className=`toast show ${type}`;
-  clearTimeout(_toastTimer);
-  _toastTimer=setTimeout(()=>el.classList.remove('show'),2600);
-}
-function addLog(msg,type='sys'){
-  const log=document.getElementById('chatLog');if(!log)return;
-  const line=document.createElement('div');
-  line.className=`chat-line ${type}`;line.innerHTML=msg;
-  log.appendChild(line);log.scrollTop=log.scrollHeight;
-  if(log.children.length>60)log.removeChild(log.firstChild);
-}
-function spawnDmgAt(text,relEl,cls){
-  const el=document.createElement('div');
-  el.className=`dmg-float ${cls}`;el.textContent=text;
-  if(relEl){const r=relEl.getBoundingClientRect();el.style.left=(r.left+r.width/2-20)+'px';el.style.top=(r.top-10)+'px';}
-  document.body.appendChild(el);setTimeout(()=>el.remove(),950);
-}
+function showToast(msg,type=''){const el=document.getElementById('toast');el.textContent=msg;el.className=`toast show ${type}`;clearTimeout(_toastTimer);_toastTimer=setTimeout(()=>el.classList.remove('show'),2600);}
+function addLog(msg,type='sys'){const log=document.getElementById('chatLog');if(!log)return;const line=document.createElement('div');line.className=`chat-line ${type}`;line.innerHTML=msg;log.appendChild(line);log.scrollTop=log.scrollHeight;if(log.children.length>60)log.removeChild(log.firstChild);}
+function spawnDmgAt(text,relEl,cls){const el=document.createElement('div');el.className=`dmg-float ${cls}`;el.textContent=text;if(relEl){const r=relEl.getBoundingClientRect();el.style.left=(r.left+r.width/2-20)+'px';el.style.top=(r.top-10)+'px';}document.body.appendChild(el);setTimeout(()=>el.remove(),950);}
 
 // TOUCH
-document.addEventListener('touchmove',e=>{
-  if(document.getElementById('screenGame').classList.contains('active')){
-    const scrollable=e.target.closest('.tab-panel,.seeds-grid,.shop-panel,.inv-panel,.recipes-panel,.quests-panel,.modal-box,.chat-log');
-    if(!scrollable)e.preventDefault();
-  }
-},{passive:false});
-
+document.addEventListener('touchmove',e=>{if(document.getElementById('screenGame').classList.contains('active')){const scrollable=e.target.closest('.tab-panel,.seeds-grid,.shop-panel,.inv-panel,.recipes-panel,.quests-panel,.modal-box,.chat-log,.lootbox-grid');if(!scrollable)e.preventDefault();}},{passive:false});
 document.addEventListener('DOMContentLoaded',()=>{checkQuestNotif();});
 </script>
 </body>

@@ -168,7 +168,7 @@ function applyLootboxRewards(rewards){const p=G.player;rewards.forEach(r=>{if(r.
 let pendingLootboxRewards=null;
 
 // ══════════════════════════════════
-//  LOOTBOX — OVERLAY DYNAMIQUE (CORRIGÉ)
+//  LOOTBOX — OVERLAY DYNAMIQUE
 // ══════════════════════════════════
 function ensureLootboxOverlay(){
   let overlay=document.getElementById('lbOpeningOverlay');
@@ -217,7 +217,6 @@ function openLootbox(lbId){
   const grid=document.getElementById('lbRewardsGrid');
   const collectBtn=document.getElementById('lbCollectBtn');
 
-  // Reset state
   boxAnim.textContent=lb.emoji;
   boxAnim.style.animation='crestFloat 0.8s ease-in-out infinite';
   title.textContent='Ouverture en cours...';
@@ -225,11 +224,9 @@ function openLootbox(lbId){
   grid.innerHTML='';
   collectBtn.style.display='none';
 
-  // Show overlay
   overlay.style.opacity='1';
   overlay.style.pointerEvents='all';
 
-  // Reveal rewards after animation delay
   setTimeout(()=>{
     boxAnim.style.animation='none';
     title.textContent='Tu as obtenu !';
@@ -268,11 +265,9 @@ function openLootbox(lbId){
       </div>`;
     }).join('');
 
-    // Show collect button after all cards are revealed
     setTimeout(()=>{collectBtn.style.display='block';},rewards.length*130+300);
   },1400);
 
-  // Inject keyframe if not already present
   if(!document.getElementById('lbKeyframes')){
     const style=document.createElement('style');
     style.id='lbKeyframes';
@@ -445,18 +440,197 @@ function startFight(monsterId){const m=MONSTERS.find(x=>x.id===monsterId);if(!m)
 
 function renderCombatActive(panel){const m=G.currentMonster;const p=G.player;const enemyPct=Math.max(0,(G.enemyHp/m.hp)*100);const playerPct=Math.max(0,(p.hp/p.maxHp)*100);let statusHtml='';if(G.buffs.rounds>0){if(G.buffs.atk>0)statusHtml+=`<span class="status-pill buff">+${G.buffs.atk}ATK(${G.buffs.rounds})</span>`;if(G.buffs.def>0)statusHtml+=`<span class="status-pill buff">+${G.buffs.def}DEF(${G.buffs.rounds})</span>`;}if(G.buffs.nextCrit)statusHtml+=`<span class="status-pill buff">💥CRIT</span>`;if(G.debuffs.burn>0)statusHtml+=`<span class="status-pill burn">🔥(${G.debuffs.burn})</span>`;if(G.debuffs.poison>0)statusHtml+=`<span class="status-pill poison">☠(${G.debuffs.poison})</span>`;if(G.debuffs.blind>0)statusHtml+=`<span class="status-pill debuff">👁(${G.debuffs.blind})</span>`;if(G.debuffs.stun>0)statusHtml+=`<span class="status-pill stun">⚡(${G.debuffs.stun})</span>`;const logLines=G.combatLog.slice(-2).map(l=>`<div class="chat-line ${l.type}">${l.text}</div>`).join('');let movesHtml=COMBAT_MOVES.map(mv=>{const tooLow=mv.rage>0&&p.rage<mv.rage;const dis=tooLow?' disabled':'';const cost=mv.rage>0?`<span class="cb-cost">${mv.rage}⚡</span>`:(mv.gain>0?`<span class="cb-cost">+${mv.gain}⚡</span>`:'');return`<button class="combat-btn ${mv.cat}" onclick="playerMove('${mv.id}')"${dis}><span class="cb-emoji">${mv.emoji}</span>${mv.label}${cost}</button>`;}).join('');panel.innerHTML=`<div class="combat-screen"><div class="combat-arena"><div class="arena-bg"></div><div class="arena-floor"></div><div class="combatant"><span class="combatant-sprite" id="enemySprite">${m.emoji}</span><div class="combatant-shadow"></div><div class="combatant-name">${m.name}</div></div><div class="combat-vs">VS</div><div class="combatant"><span class="combatant-sprite player" id="playerSprite">🥊</span><div class="combatant-shadow"></div><div class="combatant-name">Toi</div></div></div><div class="combat-bars"><div class="cbar-row"><span class="cbar-label">${m.name.split(' ')[0]}</span><div class="cbar-track"><div class="cbar-fill enemy-hp" id="cb_enemyHp" style="width:${enemyPct}%"></div></div><span class="cbar-val" id="cb_enemyHpVal">${G.enemyHp}/${m.hp}</span></div><div class="cbar-row"><span class="cbar-label">Ton HP</span><div class="cbar-track"><div class="cbar-fill player-hp" id="cb_playerHp" style="width:${playerPct}%"></div></div><span class="cbar-val" id="cb_playerHpVal">${p.hp}/${p.maxHp}</span></div><div class="cbar-row"><span class="cbar-label">⚡ Rage</span><div class="cbar-track"><div class="cbar-fill rage" id="cb_rage" style="width:${(p.rage/p.maxRage)*100}%"></div></div><span class="cbar-val" id="cb_rageVal">${p.rage}/${p.maxRage}</span></div></div><div class="status-row" id="statusRow">${statusHtml}</div><div style="background:rgba(0,0,0,0.5);padding:0.3rem 0.6rem;min-height:2.4rem;flex-shrink:0;border-bottom:1px solid var(--border);" id="combatLogDisplay">${logLines||'<div class="chat-line sys">Le combat commence !</div>'}</div><div class="combat-actions"><div class="combat-action-title">⚔ Actions</div><div class="combat-grid">${movesHtml}</div><div class="combat-actions-row2"><button class="combat-btn eat" onclick="openEatModal()"><span class="cb-emoji">🍖</span>Manger</button><button class="combat-btn flee" onclick="attemptFlee()"><span class="cb-emoji">🏃</span>Fuir</button></div></div></div>`;}
 
+// ══════════════════════════════════
+//  COMBAT — helper to re-enable buttons
+// ══════════════════════════════════
+function enableCombatButtons(){
+  // Re-enable all combat buttons based on current rage
+  const p=G.player;
+  document.querySelectorAll('.combat-btn').forEach(btn=>{
+    btn.disabled=false;
+  });
+  // Re-disable rage-gated buttons if not enough rage
+  COMBAT_MOVES.forEach(mv=>{
+    if(mv.rage>0&&p.rage<mv.rage){
+      // Find the button by its label text content matching
+      document.querySelectorAll('.combat-btn').forEach(btn=>{
+        if(btn.textContent.includes(mv.label)){
+          btn.disabled=true;
+        }
+      });
+    }
+  });
+}
+
+// ══════════════════════════════════
+//  FIGHT RENDERS
+// ══════════════════════════════════
 function renderFightVictory(panel){const m=G.currentMonster;const goldWon=m._goldWon||0;panel.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:2rem 1.5rem;text-align:center;flex:1;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(0,60,20,0.3) 0%,transparent 60%),var(--bg);"><span style="font-size:4rem;filter:drop-shadow(0 0 24px rgba(0,192,48,0.5));animation:crestFloat 3s ease-in-out infinite;">🏆</span><div style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.8rem;color:var(--green);letter-spacing:-0.01em;">VICTOIRE !</div><div style="font-size:0.78rem;color:var(--text2);font-style:italic;">${m.name} est vaincu !</div><div style="display:flex;gap:1.5rem;margin:0.5rem 0;background:var(--panel2);border:1px solid var(--border);padding:0.8rem 1.5rem;"><div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--amberbright)">💰${goldWon}</div><div style="font-size:0.52rem;color:var(--text3);">Or gagné</div></div><div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--green)">⭐${m.xp}</div><div style="font-size:0.52rem;color:var(--text3);">XP</div></div><div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--tealbright)">🔥${G.player.streak}</div><div style="font-size:0.52rem;color:var(--text3);">Série</div></div></div><button style="background:var(--green);border:none;color:#060e08;font-family:'Raleway',sans-serif;font-weight:700;font-size:0.95rem;padding:0.85rem 3rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;" onclick="afterVictory()">▶ Continuer</button><button style="background:transparent;border:1px solid var(--border2);color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.72rem;padding:0.55rem 1.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="switchTab('World')">← Retour à la carte</button></div>`;}
 function renderFightDefeat(panel){panel.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:2rem 1.5rem;text-align:center;flex:1;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(80,10,10,0.3) 0%,transparent 60%),var(--bg);"><span style="font-size:4rem;filter:drop-shadow(0 0 24px rgba(224,48,58,0.4));animation:crestFloat 3s ease-in-out infinite;">💀</span><div style="font-family:'Raleway',sans-serif;font-weight:900;font-size:1.8rem;color:var(--redbright);letter-spacing:-0.01em;">DÉFAITE</div><div style="font-size:0.78rem;color:var(--text2);font-style:italic;max-width:260px;">Tu as été vaincu... Récupère-toi et reviens plus fort.</div><div style="font-size:0.65rem;color:var(--text3);font-style:italic;background:var(--panel2);border:1px solid var(--border);padding:0.6rem 1rem;">Astuce : Cuisine des plats et utilise Défense pour encaisser.</div><button style="background:var(--panel2);border:1px solid var(--border2);color:var(--text2);font-family:'Raleway',sans-serif;font-weight:700;font-size:0.88rem;padding:0.8rem 2.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="afterDefeat()">↩ Réessayer</button><button style="background:transparent;border:1px solid var(--border);color:var(--text3);font-family:'Raleway',sans-serif;font-size:0.72rem;padding:0.55rem 1.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;" onclick="switchTab('World')">← Retour à la carte</button></div>`;}
 
-function playerMove(moveId){const move=COMBAT_MOVES.find(m=>m.id===moveId);const p=G.player;const m=G.currentMonster;if(G.debuffs.stun>0){G.debuffs.stun--;addCombatLog('Tu es étourdi(e) ! Tour perdu.','damage');updateCombatDisplay();setTimeout(()=>enemyTurn(),500);return;}if(move.rage>0&&p.rage<move.rage){showToast('Rage insuffisante !','bad');return;}G.defending=move.cat==='defend';document.querySelectorAll('.combat-btn').forEach(b=>b.disabled=true);if(move.cat==='defend'){addCombatLog('🛡 Position défensive.','sys');p.rage=Math.min(p.maxRage,p.rage+move.gain);updateCombatDisplay();setTimeout(()=>enemyTurn(),350);return;}if(move.cat==='pray'){p.hp=Math.min(p.maxHp,p.hp+15);addCombatLog('✨ Prière : +15 HP.','heal');updateCombatDisplay();updateHUD();setTimeout(()=>enemyTurn(),350);return;}const blindPenalty=G.debuffs.blind>0?0.65:1;if(Math.random()>move.acc*blindPenalty){addCombatLog(`Raté ! ${m.emoji} esquive.`,'sys');if(G.debuffs.blind>0)G.debuffs.blind--;p.rage=Math.min(p.maxRage,p.rage+Math.floor(move.gain*0.4));updateCombatDisplay();animEnemy('dodge');setTimeout(()=>enemyTurn(),500);return;}const buffAtk=G.buffs.rounds>0?G.buffs.atk:0;const debAtk=G.debuffs.rounds>0?G.debuffs.atk:0;const totalAtk=Math.max(1,p.atk+buffAtk-debAtk);const enemyDef=Math.max(0,(m.def||0)-(G.enemyDebuffs.def||0));const baseDmg=totalAtk*move.mult;const variance=0.85+Math.random()*0.3;let dmg=Math.max(1,Math.round(baseDmg*variance)-Math.floor(enemyDef*0.65));const isCrit=G.buffs.nextCrit||Math.random()<(0.05+(p.spd||8)*0.003);if(isCrit){dmg=Math.round(dmg*2.2);G.buffs.nextCrit=false;}if(move.rage>0)p.rage=Math.max(0,p.rage-move.rage);p.rage=Math.min(p.maxRage,p.rage+move.gain);if(G.buffs.rounds>0)G.buffs.rounds--;if(G.debuffs.blind>0)G.debuffs.blind--;G.enemyHp=Math.max(0,G.enemyHp-dmg);gainSkillXp('attack',Math.round(dmg*0.8));gainSkillXp('strength',Math.round(dmg*0.5));animPlayer('attack');setTimeout(()=>animEnemy('hit'),80);const enemyEl=document.getElementById('enemySprite');if(isCrit){spawnDmgAt(`💥${dmg}`,enemyEl,'crit-dmg');addCombatLog(`${move.emoji} CRITIQUE ! <b>${dmg}</b> dégâts !`,'combat');}else{spawnDmgAt(dmg,enemyEl,'enemy-dmg');addCombatLog(`${move.emoji} <b>${dmg}</b> dégâts.`,'combat');}if(G.enemyDebuffs.burn>0){const bd=6;G.enemyHp=Math.max(0,G.enemyHp-bd);G.enemyDebuffs.burn--;addCombatLog(`🔥 ${m.name} brûle : -${bd}HP`,'combat');}updateCombatDisplay();if(G.enemyHp<=0){setTimeout(()=>endFight(true),600);return;}setTimeout(()=>enemyTurn(),600);}
-function enemyTurn(){if(G.fightState!=='active')return;const p=G.player;const m=G.currentMonster;if(G.debuffs.burn>0){const d=5;p.hp=Math.max(0,p.hp-d);G.debuffs.burn--;addCombatLog(`🔥 Brûlure : -${d}HP`,'damage');updateHUD();}if(G.debuffs.poison>0){const d=8;p.hp=Math.max(0,p.hp-d);G.debuffs.poison--;addCombatLog(`☠ Poison : -${d}HP`,'damage');updateHUD();}if(p.hp<=0){endFight(false);return;}let usedSpecial=false;const sp=m.special;if(sp&&!G.enemySpecialUsed[m.id+'_sp']&&Math.random()<sp.chance){usedSpecial=true;G.enemySpecialUsed[m.id+'_sp']=true;if(sp.eff==='blind'){G.debuffs.blind=2;addCombatLog(`💫 <b>${sp.name}</b> ! Aveuglé 2t.`,'damage');}else if(sp.eff==='stun'){if(Math.random()<0.5){G.debuffs.stun=1;addCombatLog(`⚡ <b>${sp.name}</b> ! Étourdi !`,'damage');}else usedSpecial=false;}else if(sp.eff==='doubleHit'){const d1=calcEDmg(m),d2=calcEDmg(m);p.hp=Math.max(0,p.hp-d1-d2);dealPlayerDmg(d1+d2);addCombatLog(`⚡ <b>${sp.name}</b> ! -${d1} et -${d2}HP !`,'damage');}else if(sp.eff==='poison'){G.debuffs.poison=4;addCombatLog(`☠ <b>${sp.name}</b> ! Poison 4t.`,'damage');}else if(sp.eff==='burn'){G.debuffs.burn=3;addCombatLog(`🔥 <b>${sp.name}</b> ! Brûlure 3t.`,'damage');}else if(sp.eff==='burnHeavy'){G.debuffs.burn=5;addCombatLog(`🔥 <b>${sp.name}</b> ! Brûlure intense !`,'damage');}else if(sp.eff==='blindBurn'){G.debuffs.blind=2;G.debuffs.burn=3;addCombatLog(`🌶 <b>${sp.name}</b> ! Aveuglé+Brûlure !`,'damage');}else if(sp.eff==='armorPierce'){const d=Math.round(calcEDmg(m)*1.5);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🧀 <b>${sp.name}</b> ! Perce armure -${d}HP !`,'damage');}else if(sp.eff==='selfHeal'){G.enemyHp=Math.min(m.hp,G.enemyHp+30);addCombatLog(`💚 <b>${sp.name}</b> ! +30HP ennemi.`,'sys');}else if(sp.eff==='burnDebuff'){G.debuffs.burn=4;G.debuffs.atk=8;G.debuffs.rounds=4;addCombatLog(`🍜 <b>${sp.name}</b> ! Brûlure+ATK-8.`,'damage');}else if(sp.eff==='pierceHeavy'){const d=Math.round(calcEDmg(m)*2.2);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🌮 <b>${sp.name}</b> ! -${d}HP !`,'damage');}else if(sp.eff==='poisonStun'){G.debuffs.poison=4;if(Math.random()<0.4)G.debuffs.stun=1;addCombatLog(`🍩 <b>${sp.name}</b> ! Poison+(étourdi?)`,'damage');}else if(sp.eff==='statsNuke'){G.debuffs.atk=Math.round(p.atk*0.1);G.debuffs.def=Math.round(p.def*0.1);G.debuffs.rounds=4;addCombatLog(`🍱 <b>${sp.name}</b> ! Stats réduits 4t.`,'damage');}else usedSpecial=false;}if(!usedSpecial){let dmg=calcEDmg(m);const defMult=G.defending?0.38:1;const buffDef=G.buffs.rounds>0?G.buffs.def:0;const netDef=Math.max(0,p.def+buffDef-(G.debuffs.def||0));const finalDmg=Math.max(1,Math.round((dmg-Math.floor(netDef*0.55))*defMult));p.hp=Math.max(0,p.hp-finalDmg);dealPlayerDmg(finalDmg);if(G.defending)addCombatLog(`🛡 Attaque bloquée : -${finalDmg}HP`,'damage');else addCombatLog(`${m.emoji} ${m.name} frappe : -<b>${finalDmg}</b>HP`,'damage');gainSkillXp('defence',Math.round(finalDmg*0.6));gainSkillXp('hitpoints',Math.round(finalDmg*0.3));}
-G.defending=false;updateHUD();if(p.hp<=0){p.hp=0;endFight(false);return;}updateCombatDisplay();renderFightPanel();}
+// ══════════════════════════════════
+//  COMBAT LOGIC — BUG FIX APPLIED
+// ══════════════════════════════════
+function playerMove(moveId){
+  const move=COMBAT_MOVES.find(m=>m.id===moveId);
+  const p=G.player;
+  const m=G.currentMonster;
+
+  // If stunned, lose turn then let enemy attack
+  if(G.debuffs.stun>0){
+    G.debuffs.stun--;
+    addCombatLog('Tu es étourdi(e) ! Tour perdu.','damage');
+    updateCombatDisplay();
+    // FIX: disable buttons during enemy turn, re-enable after
+    document.querySelectorAll('.combat-btn').forEach(b=>b.disabled=true);
+    setTimeout(()=>{
+      enemyTurn();
+    },500);
+    return;
+  }
+
+  if(move.rage>0&&p.rage<move.rage){showToast('Rage insuffisante !','bad');return;}
+
+  G.defending=move.cat==='defend';
+  // FIX: disable buttons during player + enemy turn sequence
+  document.querySelectorAll('.combat-btn').forEach(b=>b.disabled=true);
+
+  if(move.cat==='defend'){
+    addCombatLog('🛡 Position défensive.','sys');
+    p.rage=Math.min(p.maxRage,p.rage+move.gain);
+    updateCombatDisplay();
+    setTimeout(()=>{ enemyTurn(); },350);
+    return;
+  }
+
+  if(move.cat==='pray'){
+    p.hp=Math.min(p.maxHp,p.hp+15);
+    addCombatLog('✨ Prière : +15 HP.','heal');
+    updateCombatDisplay();
+    updateHUD();
+    setTimeout(()=>{ enemyTurn(); },350);
+    return;
+  }
+
+  const blindPenalty=G.debuffs.blind>0?0.65:1;
+  if(Math.random()>move.acc*blindPenalty){
+    addCombatLog(`Raté ! ${m.emoji} esquive.`,'sys');
+    if(G.debuffs.blind>0)G.debuffs.blind--;
+    p.rage=Math.min(p.maxRage,p.rage+Math.floor(move.gain*0.4));
+    updateCombatDisplay();
+    animEnemy('dodge');
+    setTimeout(()=>{ enemyTurn(); },500);
+    return;
+  }
+
+  const buffAtk=G.buffs.rounds>0?G.buffs.atk:0;
+  const debAtk=G.debuffs.rounds>0?G.debuffs.atk:0;
+  const totalAtk=Math.max(1,p.atk+buffAtk-debAtk);
+  const enemyDef=Math.max(0,(m.def||0)-(G.enemyDebuffs.def||0));
+  const baseDmg=totalAtk*move.mult;
+  const variance=0.85+Math.random()*0.3;
+  let dmg=Math.max(1,Math.round(baseDmg*variance)-Math.floor(enemyDef*0.65));
+  const isCrit=G.buffs.nextCrit||Math.random()<(0.05+(p.spd||8)*0.003);
+  if(isCrit){dmg=Math.round(dmg*2.2);G.buffs.nextCrit=false;}
+  if(move.rage>0)p.rage=Math.max(0,p.rage-move.rage);
+  p.rage=Math.min(p.maxRage,p.rage+move.gain);
+  if(G.buffs.rounds>0)G.buffs.rounds--;
+  if(G.debuffs.blind>0)G.debuffs.blind--;
+  G.enemyHp=Math.max(0,G.enemyHp-dmg);
+  gainSkillXp('attack',Math.round(dmg*0.8));
+  gainSkillXp('strength',Math.round(dmg*0.5));
+  animPlayer('attack');
+  setTimeout(()=>animEnemy('hit'),80);
+  const enemyEl=document.getElementById('enemySprite');
+  if(isCrit){
+    spawnDmgAt(`💥${dmg}`,enemyEl,'crit-dmg');
+    addCombatLog(`${move.emoji} CRITIQUE ! <b>${dmg}</b> dégâts !`,'combat');
+  }else{
+    spawnDmgAt(dmg,enemyEl,'enemy-dmg');
+    addCombatLog(`${move.emoji} <b>${dmg}</b> dégâts.`,'combat');
+  }
+  if(G.enemyDebuffs.burn>0){
+    const bd=6;
+    G.enemyHp=Math.max(0,G.enemyHp-bd);
+    G.enemyDebuffs.burn--;
+    addCombatLog(`🔥 ${m.name} brûle : -${bd}HP`,'combat');
+  }
+  updateCombatDisplay();
+  if(G.enemyHp<=0){
+    setTimeout(()=>endFight(true),600);
+    return;
+  }
+  setTimeout(()=>{ enemyTurn(); },600);
+}
+
+function enemyTurn(){
+  if(G.fightState!=='active')return;
+  const p=G.player;
+  const m=G.currentMonster;
+
+  if(G.debuffs.burn>0){const d=5;p.hp=Math.max(0,p.hp-d);G.debuffs.burn--;addCombatLog(`🔥 Brûlure : -${d}HP`,'damage');updateHUD();}
+  if(G.debuffs.poison>0){const d=8;p.hp=Math.max(0,p.hp-d);G.debuffs.poison--;addCombatLog(`☠ Poison : -${d}HP`,'damage');updateHUD();}
+  if(p.hp<=0){endFight(false);return;}
+
+  let usedSpecial=false;
+  const sp=m.special;
+  if(sp&&!G.enemySpecialUsed[m.id+'_sp']&&Math.random()<sp.chance){
+    usedSpecial=true;
+    G.enemySpecialUsed[m.id+'_sp']=true;
+    if(sp.eff==='blind'){G.debuffs.blind=2;addCombatLog(`💫 <b>${sp.name}</b> ! Aveuglé 2t.`,'damage');}
+    else if(sp.eff==='stun'){if(Math.random()<0.5){G.debuffs.stun=1;addCombatLog(`⚡ <b>${sp.name}</b> ! Étourdi !`,'damage');}else usedSpecial=false;}
+    else if(sp.eff==='doubleHit'){const d1=calcEDmg(m),d2=calcEDmg(m);p.hp=Math.max(0,p.hp-d1-d2);dealPlayerDmg(d1+d2);addCombatLog(`⚡ <b>${sp.name}</b> ! -${d1} et -${d2}HP !`,'damage');}
+    else if(sp.eff==='poison'){G.debuffs.poison=4;addCombatLog(`☠ <b>${sp.name}</b> ! Poison 4t.`,'damage');}
+    else if(sp.eff==='burn'){G.debuffs.burn=3;addCombatLog(`🔥 <b>${sp.name}</b> ! Brûlure 3t.`,'damage');}
+    else if(sp.eff==='burnHeavy'){G.debuffs.burn=5;addCombatLog(`🔥 <b>${sp.name}</b> ! Brûlure intense !`,'damage');}
+    else if(sp.eff==='blindBurn'){G.debuffs.blind=2;G.debuffs.burn=3;addCombatLog(`🌶 <b>${sp.name}</b> ! Aveuglé+Brûlure !`,'damage');}
+    else if(sp.eff==='armorPierce'){const d=Math.round(calcEDmg(m)*1.5);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🧀 <b>${sp.name}</b> ! Perce armure -${d}HP !`,'damage');}
+    else if(sp.eff==='selfHeal'){G.enemyHp=Math.min(m.hp,G.enemyHp+30);addCombatLog(`💚 <b>${sp.name}</b> ! +30HP ennemi.`,'sys');}
+    else if(sp.eff==='burnDebuff'){G.debuffs.burn=4;G.debuffs.atk=8;G.debuffs.rounds=4;addCombatLog(`🍜 <b>${sp.name}</b> ! Brûlure+ATK-8.`,'damage');}
+    else if(sp.eff==='pierceHeavy'){const d=Math.round(calcEDmg(m)*2.2);p.hp=Math.max(0,p.hp-d);dealPlayerDmg(d);addCombatLog(`🌮 <b>${sp.name}</b> ! -${d}HP !`,'damage');}
+    else if(sp.eff==='poisonStun'){G.debuffs.poison=4;if(Math.random()<0.4)G.debuffs.stun=1;addCombatLog(`🍩 <b>${sp.name}</b> ! Poison+(étourdi?)`,'damage');}
+    else if(sp.eff==='statsNuke'){G.debuffs.atk=Math.round(p.atk*0.1);G.debuffs.def=Math.round(p.def*0.1);G.debuffs.rounds=4;addCombatLog(`🍱 <b>${sp.name}</b> ! Stats réduits 4t.`,'damage');}
+    else usedSpecial=false;
+  }
+
+  if(!usedSpecial){
+    let dmg=calcEDmg(m);
+    const defMult=G.defending?0.38:1;
+    const buffDef=G.buffs.rounds>0?G.buffs.def:0;
+    const netDef=Math.max(0,p.def+buffDef-(G.debuffs.def||0));
+    const finalDmg=Math.max(1,Math.round((dmg-Math.floor(netDef*0.55))*defMult));
+    p.hp=Math.max(0,p.hp-finalDmg);
+    dealPlayerDmg(finalDmg);
+    if(G.defending)addCombatLog(`🛡 Attaque bloquée : -${finalDmg}HP`,'damage');
+    else addCombatLog(`${m.emoji} ${m.name} frappe : -<b>${finalDmg}</b>HP`,'damage');
+    gainSkillXp('defence',Math.round(finalDmg*0.6));
+    gainSkillXp('hitpoints',Math.round(finalDmg*0.3));
+  }
+
+  G.defending=false;
+  updateHUD();
+
+  if(p.hp<=0){
+    p.hp=0;
+    endFight(false);
+    return;
+  }
+
+  // FIX: instead of calling renderFightPanel() (which rebuilds the DOM and
+  // inadvertently re-creates buttons in a disabled state from the previous
+  // playerMove call), we call updateCombatDisplay() to refresh bars/log,
+  // then explicitly re-enable buttons so the player can act again.
+  updateCombatDisplay();
+  enableCombatButtons();
+}
+
 function calcEDmg(m){return m.atk[0]+Math.floor(Math.random()*(m.atk[1]-m.atk[0]+1));}
 function dealPlayerDmg(dmg){const el=document.getElementById('playerSprite');if(el){el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit');}spawnDmgAt(`-${dmg}`,el,'player-dmg');}
 function endFight(won){const m=G.currentMonster;G.buffs={atk:0,def:0,rounds:0,nextCrit:false};G.debuffs={atk:0,def:0,rounds:0,blind:0,burn:0,poison:0,stun:0};G.enemyDebuffs={def:0,rounds:0,burn:0,poison:0};G.defending=false;if(won){const goldWon=m.gold[0]+Math.floor(Math.random()*(m.gold[1]-m.gold[0]+1));G.currentMonster._goldWon=goldWon;G.gold+=goldWon;G.player.streak++;G.wins++;G.monstersKilled++;gainXP(m.xp);gainSkillXp('attack',m.xp);gainSkillXp('hitpoints',Math.round(m.xp*0.5));if(m.loot){Object.entries(m.loot).forEach(([id,chance])=>{if(Math.random()<chance){G.inventory[id]=(G.inventory[id]||0)+1;const seed=SEEDS.find(s=>s.id===id);addLog(`💎 Loot : ${seed?.emoji||'?'} <b>${seed?.name||id}</b> !`,'loot');}});}G.fightState='victory';addLog(`🏆 <b>${m.name}</b> vaincu ! +${goldWon}💰 +${m.xp}XP`,'combat');checkQuestProgress('kill',1);if(G.monstersKilled===1)setTimeout(()=>triggerStory('firstVictory'),800);}else{G.player.streak=0;G.fightState='defeat';addLog(`💀 Défaite contre ${m.name}...`,'damage');setTimeout(()=>triggerStory('firstDefeat'),800);}updateHUD();renderFightPanel();saveGame();}
 function afterVictory(){G.player.hp=Math.min(G.player.maxHp,G.player.hp+15);G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();}
 function afterDefeat(){G.player.hp=Math.min(G.player.maxHp,Math.round(G.player.maxHp*0.35));G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();}
 function attemptFlee(){const penalty=Math.round(G.player.maxHp*0.1);G.player.hp=Math.max(1,G.player.hp-penalty);G.player.streak=0;G.player.rage=0;G.fightState='select';G.currentMonster=null;updateHUD();renderFightPanel();addLog(`🏃 Fuite ! (-${penalty}HP)`,'damage');showToast(`Fuite ! -${penalty} HP`,'bad');}
+
 function updateCombatDisplay(){const m=G.currentMonster;const p=G.player;if(!m)return;const ePct=Math.max(0,(G.enemyHp/m.hp)*100);const pPct=Math.max(0,(p.hp/p.maxHp)*100);const eH=document.getElementById('cb_enemyHp'),eHV=document.getElementById('cb_enemyHpVal'),pH=document.getElementById('cb_playerHp'),pHV=document.getElementById('cb_playerHpVal'),rEl=document.getElementById('cb_rage'),rV=document.getElementById('cb_rageVal');if(eH)eH.style.width=ePct+'%';if(eHV)eHV.textContent=`${Math.max(0,G.enemyHp)}/${m.hp}`;if(pH)pH.style.width=pPct+'%';if(pHV)pHV.textContent=`${p.hp}/${p.maxHp}`;if(rEl)rEl.style.width=(p.rage/p.maxRage*100)+'%';if(rV)rV.textContent=`${p.rage}/${p.maxRage}`;const ld=document.getElementById('combatLogDisplay');if(ld)ld.innerHTML=G.combatLog.slice(-2).map(l=>`<div class="chat-line ${l.type}">${l.text}</div>`).join('')||'';let sh='';if(G.buffs.rounds>0){if(G.buffs.atk>0)sh+=`<span class="status-pill buff">+${G.buffs.atk}ATK(${G.buffs.rounds})</span>`;if(G.buffs.def>0)sh+=`<span class="status-pill buff">+${G.buffs.def}DEF(${G.buffs.rounds})</span>`;}if(G.buffs.nextCrit)sh+=`<span class="status-pill buff">💥CRIT</span>`;if(G.debuffs.burn>0)sh+=`<span class="status-pill burn">🔥(${G.debuffs.burn})</span>`;if(G.debuffs.poison>0)sh+=`<span class="status-pill poison">☠(${G.debuffs.poison})</span>`;if(G.debuffs.blind>0)sh+=`<span class="status-pill debuff">👁(${G.debuffs.blind})</span>`;if(G.debuffs.stun>0)sh+=`<span class="status-pill stun">⚡(${G.debuffs.stun})</span>`;const sr=document.getElementById('statusRow');if(sr)sr.innerHTML=sh;}
 function addCombatLog(text,type){G.combatLog.push({text,type});addLog(text,type);}
 function animEnemy(type){const el=document.getElementById('enemySprite');if(!el)return;el.classList.remove('hit','dodge');void el.offsetWidth;el.classList.add(type);}

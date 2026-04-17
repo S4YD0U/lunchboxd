@@ -192,8 +192,6 @@
     .fight-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
     /* ============ SHOP ============ */
-    #screen-shop { display: none; }
-    #screen-shop.active { display: block; }
     .shop-layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
     .shop-section-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
     .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; margin-bottom: 1.5rem; }
@@ -245,8 +243,6 @@
     .equipped-slot .slot-stat { font-size: 0.58rem; color: var(--hp-green); }
 
     /* BATTLE SCREEN */
-    #screen-battle { display: none; animation: fadeIn 0.4s ease; }
-    #screen-battle.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
     @keyframes floatAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
@@ -315,7 +311,6 @@
     .action-btn.item-btn { border-color: rgba(74,222,128,0.2); }
     .action-btn.item-btn:hover:not(:disabled) { border-color: var(--hp-green); box-shadow: 0 0 12px rgba(74,222,128,0.15); }
     .action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    /* Unlocked attack highlight */
     .action-btn.unlocked-atk { border-color: rgba(167,139,250,0.3); }
     .action-btn.unlocked-atk:hover:not(:disabled) { border-color: var(--purple); box-shadow: 0 0 12px rgba(167,139,250,0.2); }
 
@@ -333,8 +328,6 @@
     .status-effects { display: flex; gap: 0.4rem; margin-top: 0.3rem; flex-wrap: wrap; justify-content: center; }
 
     /* VICTORY */
-    #screen-victory { display: none; text-align: center; padding: 3rem 1rem; }
-    #screen-victory.active { display: block; }
     .victory-icon { font-size: 5rem; display: block; margin-bottom: 1rem; animation: floatAnim 2s ease-in-out infinite; }
     .victory-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
     .victory-title.win { color: var(--accent); }
@@ -471,7 +464,7 @@
 
   <!-- PLAYER PROFILE -->
   <div class="player-profile" id="playerProfile">
-    <div class="profile-avatar" id="profileAvatar">🍓</div>
+    <div class="profile-avatar" id="profileAvatar">⚔</div>
     <div class="profile-info">
       <div class="profile-name-row">
         <span class="profile-name" id="profileName">Aventurier</span>
@@ -499,13 +492,13 @@
   </div>
 
   <!-- TABS -->
-  <div class="screen-tabs">
+  <div class="screen-tabs" id="screenTabs">
     <button class="tab-btn active" id="tab-select" onclick="switchTab('select')">⚔ Combat</button>
     <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🛒 Boutique</button>
   </div>
 
   <!-- SELECT SCREEN -->
-  <div id="screen-select" class="active">
+  <div id="screen-select">
     <div class="progress-stages" id="stagesDisplay"></div>
     <p class="select-title">Choisis ton champion</p>
     <p class="select-subtitle">// SÉLECTION DU PERSONNAGE</p>
@@ -517,7 +510,7 @@
   </div>
 
   <!-- SHOP SCREEN -->
-  <div id="screen-shop">
+  <div id="screen-shop" style="display:none;">
     <div class="shop-layout">
       <div>
         <div class="shop-section-title">🗡️ Armes</div>
@@ -554,7 +547,7 @@
   </div>
 
   <!-- BATTLE SCREEN -->
-  <div id="screen-battle">
+  <div id="screen-battle" style="display:none;">
     <div class="battle-stage-bar" id="battleStageBar">
       <span id="battleStageText">ÉTAPE 1/2</span>
       <div style="display:flex;gap:6px;margin-left:8px;" id="battlePips"></div>
@@ -609,18 +602,14 @@
     </div>
 
     <div class="action-panel">
-      <div class="action-row" id="actionRow">
-        <!-- dynamiquement généré selon le niveau -->
-      </div>
-      <div class="action-row" id="itemRow" style="margin-bottom:0;">
-        <!-- items consommables en combat -->
-      </div>
+      <div class="action-row" id="actionRow"></div>
+      <div class="action-row" id="itemRow" style="margin-bottom:0;"></div>
       <div class="battle-log" id="battleLog"></div>
     </div>
   </div>
 
   <!-- VICTORY SCREEN -->
-  <div id="screen-victory">
+  <div id="screen-victory" style="display:none;text-align:center;padding:3rem 1rem;">
     <span class="victory-icon" id="victoryIcon">🏆</span>
     <h2 class="victory-title" id="victoryTitle">Victoire !</h2>
     <p class="victory-sub" id="victorySub"></p>
@@ -646,7 +635,6 @@
 // PROGRESSION SYSTEM
 // ============================================
 const XP_CURVE = [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500, 3200, 4000];
-// XP needed to reach each level (index = level)
 
 const LEVEL_UNLOCKS = {
   2: { attack: 'combo_plus', msg: '🔥 Nouvelle attaque débloquée : Combo+ !' },
@@ -677,7 +665,7 @@ const SHOP_CATALOG = {
     { id: 'c1', name: 'Petite Potion Verte',    icon: '🧃', type: 'consumable', price: 15, stat: 'Soin +80 HP',  healAmt: 80,  atkMult: 0, desc: 'Un petit jus de légumes réconfortant.', reqLv: 1, stackable: true },
     { id: 'c2', name: 'Potion de Force',        icon: '🥤', type: 'consumable', price: 40, stat: '+30% ATK (2 tours)', healAmt: 0, atkMult: 0.3, duration: 2, desc: 'De la caféine pure. Dangereux.', reqLv: 2, stackable: true },
     { id: 'c3', name: 'Elixir du Champion',     icon: '🍵', type: 'consumable', price: 90, stat: 'Soin +200 HP + +20% ATK', healAmt: 200, atkMult: 0.2, duration: 2, desc: 'Une recette secrète de la cantine.', reqLv: 3, stackable: true },
-    { id: 'c4', name: 'Soupe Magique',          icon: '🍲', type: 'consumable', price: 200, stat: 'HP MAX restauré',        healAmt: 9999, atkMult: 0, desc: 'La mère de toutes les soupes.', reqLv: 5, stackable: false },
+    { id: 'c4', name: 'Soupe Magique',          icon: '🍲', type: 'consumable', price: 200, stat: 'HP MAX restauré', healAmt: 9999, atkMult: 0, desc: 'La mère de toutes les soupes.', reqLv: 5, stackable: false },
   ]
 };
 
@@ -685,21 +673,13 @@ const SHOP_CATALOG = {
 // PLAYER SAVE STATE
 // ============================================
 const DEFAULT_PLAYER = {
-  level: 1,
-  xp: 0,
-  totalXp: 0,
-  gold: 0,
+  level: 1, xp: 0, totalXp: 0, gold: 0,
   unlockedAttacks: ['punch', 'combo', 'defend', 'special'],
-  owned: [],       // item ids
-  equipped: { weapon: null, armor: null },
-  inventory: [],   // consumable instances: { id, qty }
+  owned: [], equipped: { weapon: null, armor: null }, inventory: [],
 };
 
 function loadPlayer() {
-  try {
-    const raw = localStorage.getItem('lunchboxe_player');
-    if (raw) return Object.assign({}, DEFAULT_PLAYER, JSON.parse(raw));
-  } catch(e) {}
+  try { const raw = localStorage.getItem('lunchboxe_player'); if (raw) return Object.assign({}, DEFAULT_PLAYER, JSON.parse(raw)); } catch(e) {}
   return Object.assign({}, DEFAULT_PLAYER);
 }
 function savePlayer() { localStorage.setItem('lunchboxe_player', JSON.stringify(player)); }
@@ -707,7 +687,6 @@ function savePlayer() { localStorage.setItem('lunchboxe_player', JSON.stringify(
 let player = loadPlayer();
 
 function getXpForLevel(lv) { return XP_CURVE[Math.min(lv, XP_CURVE.length - 1)] || XP_CURVE[XP_CURVE.length-1]; }
-function getXpToNextLevel() { return getXpForLevel(player.level) - player.xp; }
 function getXpProgress() {
   const prev = player.level > 1 ? getXpForLevel(player.level - 1) : 0;
   const next = getXpForLevel(player.level);
@@ -715,7 +694,6 @@ function getXpProgress() {
 }
 
 function getLevelStats(baseChar) {
-  // Apply level bonus on top of base stats
   const bonus = player.level - 1;
   const weaponItem = player.equipped.weapon ? SHOP_CATALOG.weapons.find(w => w.id === player.equipped.weapon) : null;
   const armorItem  = player.equipped.armor  ? SHOP_CATALOG.armors.find(a => a.id === player.equipped.armor)  : null;
@@ -728,20 +706,15 @@ function getLevelStats(baseChar) {
 }
 
 function addXpGold(xpAmt, goldAmt) {
-  player.xp += xpAmt;
-  player.totalXp += xpAmt;
-  player.gold += goldAmt;
+  player.xp += xpAmt; player.totalXp += xpAmt; player.gold += goldAmt;
   let leveled = false;
   while (player.level < XP_CURVE.length && player.xp >= getXpForLevel(player.level)) {
     player.level++;
     leveled = true;
     const unlock = LEVEL_UNLOCKS[player.level];
-    if (unlock && !player.unlockedAttacks.includes(unlock.attack)) {
-      player.unlockedAttacks.push(unlock.attack);
-    }
+    if (unlock && !player.unlockedAttacks.includes(unlock.attack)) player.unlockedAttacks.push(unlock.attack);
   }
-  savePlayer();
-  updateProfileUI();
+  savePlayer(); updateProfileUI();
   return leveled;
 }
 
@@ -750,64 +723,22 @@ function addXpGold(xpAmt, goldAmt) {
 // ============================================
 function getAttacks(heroChar) {
   const allAttacks = [
-    {
-      id: 'punch', name: 'Punch', icon: '👊', desc: 'Coup direct', reqLv: 1, cls: '',
-      fn: (hero, villain) => {
-        if (isMiss()) return { miss: true };
-        const crit = isCrit();
-        const dmg = crit ? Math.floor(calcDmg(hero.atk, villain.def) * 1.8) : calcDmg(hero.atk, villain.def);
-        return { dmg, crit, spBonus: 15, log: (crit ? '💥 CRITIQUE ! ' : '👊 ') + hero.name + ' frappe pour ' + dmg + ' dégâts !' };
-      }
-    },
-    {
-      id: 'combo', name: 'Combo', icon: '🔥', desc: '2 coups rapides', reqLv: 1, cls: '',
-      fn: (hero, villain) => {
-        const d1 = calcDmg(hero.atk, villain.def, 0.65);
-        const d2 = calcDmg(hero.atk, villain.def, 0.65);
-        return { dmg: d1 + d2, spBonus: 20, log: '🔥 Combo — ' + (d1+d2) + ' dégâts !' };
-      }
-    },
-    {
-      id: 'defend', name: 'Garde', icon: '🛡️', desc: 'Réduit les dégâts', reqLv: 1, cls: '',
-      fn: (hero) => { return { defend: true, spBonus: 8, log: '🛡️ ' + hero.name + ' se met en garde…' }; }
-    },
-    {
-      id: 'special', name: 'SPÉCIAL', icon: '⚡', desc: 'Charge 0%', reqLv: 1, cls: 'special',
-      fn: (hero, villain) => {
-        if (state.heroSpecial < 100) return null;
-        state.heroSpecial = 0;
-        return heroChar.special.fn(hero, villain);
-      }
-    },
-    {
-      id: 'combo_plus', name: 'Combo+', icon: '🌀', desc: '3 coups + stun', reqLv: 2, cls: 'unlocked-atk',
-      fn: (hero, villain) => {
-        const hits = [calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.7)];
-        const total = hits.reduce((a,b)=>a+b,0);
-        return { dmg: total, spBonus: 25, log: '🌀 Combo+ — ' + hits.join('+') + ' = ' + total + ' dégâts !' };
-      }
-    },
-    {
-      id: 'piercing', name: 'Perforant', icon: '🗡️', desc: 'Ignore 50% DEF', reqLv: 3, cls: 'unlocked-atk',
-      fn: (hero, villain) => {
-        const dmg = calcDmg(hero.atk, villain.def * 0.5, 1.2);
-        return { dmg, spBonus: 20, log: '🗡️ Frappe Perforante — ' + dmg + ' dégâts (DEF ignorée) !' };
-      }
-    },
-    {
-      id: 'counter', name: 'Contre', icon: '↩️', desc: 'Parade + riposte', reqLv: 4, cls: 'unlocked-atk',
-      fn: (hero, villain) => {
-        const dmg = calcDmg(hero.atk, villain.def, 1.5);
-        return { dmg, defend: true, spBonus: 30, log: '↩️ Contre-attaque — ' + dmg + ' dégâts + garde activée !' };
-      }
-    },
-    {
-      id: 'ultimate', name: 'DÉVASTA.', icon: '💥', desc: 'Dégâts massifs', reqLv: 5, cls: 'unlocked-atk',
-      fn: (hero, villain) => {
-        const dmg = calcDmg(hero.atk, villain.def, 2.8);
-        return { dmg, spBonus: 0, log: '💥 DÉVASTATION — ' + dmg + ' dégâts cataclysmiques !' };
-      }
-    },
+    { id: 'punch', name: 'Punch', icon: '👊', desc: 'Coup direct', reqLv: 1, cls: '',
+      fn: (hero, villain) => { if (isMiss()) return { miss: true }; const crit = isCrit(); const dmg = crit ? Math.floor(calcDmg(hero.atk, villain.def) * 1.8) : calcDmg(hero.atk, villain.def); return { dmg, crit, spBonus: 15, log: (crit ? '💥 CRITIQUE ! ' : '👊 ') + hero.name + ' frappe pour ' + dmg + ' dégâts !' }; } },
+    { id: 'combo', name: 'Combo', icon: '🔥', desc: '2 coups rapides', reqLv: 1, cls: '',
+      fn: (hero, villain) => { const d1 = calcDmg(hero.atk, villain.def, 0.65); const d2 = calcDmg(hero.atk, villain.def, 0.65); return { dmg: d1 + d2, spBonus: 20, log: '🔥 Combo — ' + (d1+d2) + ' dégâts !' }; } },
+    { id: 'defend', name: 'Garde', icon: '🛡️', desc: 'Réduit les dégâts', reqLv: 1, cls: '',
+      fn: (hero) => { return { defend: true, spBonus: 8, log: '🛡️ ' + hero.name + ' se met en garde…' }; } },
+    { id: 'special', name: 'SPÉCIAL', icon: '⚡', desc: 'Charge 0%', reqLv: 1, cls: 'special',
+      fn: (hero, villain) => { if (state.heroSpecial < 100) return null; state.heroSpecial = 0; return heroChar.special.fn(hero, villain); } },
+    { id: 'combo_plus', name: 'Combo+', icon: '🌀', desc: '3 coups + stun', reqLv: 2, cls: 'unlocked-atk',
+      fn: (hero, villain) => { const hits = [calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.7)]; const total = hits.reduce((a,b)=>a+b,0); return { dmg: total, spBonus: 25, log: '🌀 Combo+ — ' + hits.join('+') + ' = ' + total + ' dégâts !' }; } },
+    { id: 'piercing', name: 'Perforant', icon: '🗡️', desc: 'Ignore 50% DEF', reqLv: 3, cls: 'unlocked-atk',
+      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def * 0.5, 1.2); return { dmg, spBonus: 20, log: '🗡️ Frappe Perforante — ' + dmg + ' dégâts (DEF ignorée) !' }; } },
+    { id: 'counter', name: 'Contre', icon: '↩️', desc: 'Parade + riposte', reqLv: 4, cls: 'unlocked-atk',
+      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def, 1.5); return { dmg, defend: true, spBonus: 30, log: '↩️ Contre-attaque — ' + dmg + ' dégâts + garde activée !' }; } },
+    { id: 'ultimate', name: 'DÉVASTA.', icon: '💥', desc: 'Dégâts massifs', reqLv: 5, cls: 'unlocked-atk',
+      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def, 2.8); return { dmg, spBonus: 0, log: '💥 DÉVASTATION — ' + dmg + ' dégâts cataclysmiques !' }; } },
   ];
   return allAttacks.filter(a => player.unlockedAttacks.includes(a.id));
 }
@@ -815,7 +746,7 @@ function getAttacks(heroChar) {
 // ============================================
 // HEROES & ENEMIES
 // ============================================
-const CHARACTERS = {
+const HEROES = {
   fraise: {
     id: 'fraise', name: 'Fraise', type: 'hero', class: 'Guerrière Fruitée', sprite: 'fraise',
     hp: 11, atk: 75, def: 55, spd: 90,
@@ -829,13 +760,6 @@ const CHARACTERS = {
     quote: '"La patience, c\'est ma plus grande arme."',
     special: { name: '🍐 Onde Juteuse', fn: (hero) => { const heal = Math.floor(18+Math.random()*12); const dmg = Math.max(1,Math.floor(hero.atk*0.9+Math.random()*25)); return { dmg, heal, log: '🍐 ONDE JUTEUSE — +'+heal+' PV soignés, '+dmg+' dégâts !', type: 'heal' }; } },
     narratorLines: { win: ["La Poire, calme jusqu'au bout.","Patience et ténacité — les vrais champions attendent leur heure.","Un combat maîtrisé de bout en bout."], lose: ["La Poire s'incline avec dignité.","Défaite, mais la tête haute."], attack: ["La Poire frappe avec une précision chirurgicale !","Coup stratégique ! La Poire ne laisse rien au hasard.","Attaque calculée de la Mage de la Fraîcheur."] }
-  },
-  cornichon: {
-    id: 'cornichon', name: 'Cornichon', type: 'hero', class: 'Apprenti Mariné', sprite: 'cornichon',
-    hp: 85, atk: 60, def: 45, spd: 95,
-    quote: '"Je suis petit, mais je pique !"',
-    special: { name: '🥒 Saumure Acide', fn: (hero) => { const dmg = Math.max(1,Math.floor(hero.atk*1.3+Math.random()*25)); return { dmg, log: '🥒 SAUMURE ACIDE — '+dmg+' dégâts corrosifs !', type: 'crit' }; } },
-    narratorLines: { win: ["Qui aurait cru que le Cornichon sortirait victorieux ?","Petit mais acide — le Cornichon a tout déchiré.","La victoire appartient à celui qui pique le plus fort !"], lose: ["Le Cornichon finit en rondelles. Il reviendra plus aigre.","Défaite amère pour notre petit mariné…"], attack: ["Le Cornichon bondit avec une agilité surprenante !","Attaque acide du petit mariné !","La cantine tremble sous les coups du Cornichon !"] }
   }
 };
 
@@ -854,8 +778,8 @@ let state = {
   heroSpecial: 0, villainSpecial: 0,
   turn: 1, heroDefending: false, villainDefending: false,
   battleRunning: false, playerTurn: true,
-  heroStats: null, // computed with level + equipment
-  atkBuff: 0, atkBuffTurns: 0, // temporary ATK buff from consumables
+  heroStats: null,
+  atkBuff: 0, atkBuffTurns: 0,
   pendingLevelUp: null,
 };
 
@@ -863,7 +787,6 @@ let state = {
 // PROFILE UI
 // ============================================
 function updateProfileUI() {
-  document.getElementById('profileName').textContent = 'Aventurier';
   document.getElementById('profileLevelBadge').textContent = 'LV.' + player.level;
   document.getElementById('profileGold').textContent = player.gold;
   document.getElementById('profileTotalXp').textContent = player.totalXp;
@@ -872,13 +795,55 @@ function updateProfileUI() {
   const prev = player.level > 1 ? getXpForLevel(player.level-1) : 0;
   const next  = getXpForLevel(player.level);
   document.getElementById('profileXpLabel').textContent = (player.xp - prev) + ' / ' + (next - prev) + ' XP';
-  // Set hero avatar if selected
-  if (selectedHero && CHARACTERS[selectedHero]) {
-    const icons = { fraise: '🍓', poire: '🍐', cornichon: '🥒' };
-    document.getElementById('profileAvatar').textContent = icons[selectedHero] || '⚔';
-  }
 }
 updateProfileUI();
+
+// ============================================
+// SHOW / HIDE SCREENS  ← CORRIGÉ
+// ============================================
+function showScreen(name) {
+  const selectEl  = document.getElementById('screen-select');
+  const shopEl    = document.getElementById('screen-shop');
+  const battleEl  = document.getElementById('screen-battle');
+  const victoryEl = document.getElementById('screen-victory');
+  const tabs      = document.getElementById('screenTabs');
+  const profile   = document.getElementById('playerProfile');
+  const lvBanner  = document.getElementById('levelupBanner');
+
+  selectEl.style.display  = 'none';
+  shopEl.style.display    = 'none';
+  battleEl.style.display  = 'none';
+  victoryEl.style.display = 'none';
+
+  if (name === 'select') {
+    selectEl.style.display  = 'block';
+    tabs.style.display      = '';
+    profile.style.display   = '';
+    lvBanner.style.display  = '';
+    document.getElementById('tab-select').classList.add('active');
+    document.getElementById('tab-shop').classList.remove('active');
+  } else if (name === 'shop') {
+    shopEl.style.display    = 'block';
+    tabs.style.display      = '';
+    profile.style.display   = '';
+    lvBanner.style.display  = '';
+    document.getElementById('tab-select').classList.remove('active');
+    document.getElementById('tab-shop').classList.add('active');
+  } else if (name === 'battle') {
+    battleEl.style.display  = 'block';
+    tabs.style.display      = 'none';
+    profile.style.display   = 'none';
+  } else if (name === 'victory') {
+    victoryEl.style.display = 'block';
+    tabs.style.display      = 'none';
+    profile.style.display   = 'none';
+  }
+}
+
+function switchTab(name) {
+  showScreen(name);
+  if (name === 'shop') renderShop();
+}
 
 // ============================================
 // SHOP
@@ -938,39 +903,20 @@ function renderShopSection(containerId, items) {
 }
 
 function renderInventory() {
-  // Equipped slots
   const weaponSlot = document.getElementById('equippedWeapon');
   const armorSlot  = document.getElementById('equippedArmor');
   const w = player.equipped.weapon ? SHOP_CATALOG.weapons.find(x => x.id === player.equipped.weapon) : null;
   const a = player.equipped.armor  ? SHOP_CATALOG.armors.find(x => x.id === player.equipped.armor)   : null;
-
-  if (w) {
-    weaponSlot.className = 'equipped-slot filled';
-    weaponSlot.innerHTML = `<span class="slot-icon">${w.icon}</span><div class="slot-name">${w.name}</div><div class="slot-stat">${w.stat}</div>`;
-  } else {
-    weaponSlot.className = 'equipped-slot';
-    weaponSlot.innerHTML = `<span class="slot-icon">🗡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`;
-  }
-  if (a) {
-    armorSlot.className = 'equipped-slot filled';
-    armorSlot.innerHTML = `<span class="slot-icon">${a.icon}</span><div class="slot-name">${a.name}</div><div class="slot-stat">${a.stat}</div>`;
-  } else {
-    armorSlot.className = 'equipped-slot';
-    armorSlot.innerHTML = `<span class="slot-icon">🛡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`;
-  }
-
-  // Consumable slots
+  if (w) { weaponSlot.className = 'equipped-slot filled'; weaponSlot.innerHTML = `<span class="slot-icon">${w.icon}</span><div class="slot-name">${w.name}</div><div class="slot-stat">${w.stat}</div>`; }
+  else   { weaponSlot.className = 'equipped-slot'; weaponSlot.innerHTML = `<span class="slot-icon">🗡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`; }
+  if (a) { armorSlot.className = 'equipped-slot filled'; armorSlot.innerHTML = `<span class="slot-icon">${a.icon}</span><div class="slot-name">${a.name}</div><div class="slot-stat">${a.stat}</div>`; }
+  else   { armorSlot.className = 'equipped-slot'; armorSlot.innerHTML = `<span class="slot-icon">🛡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`; }
   const invEl = document.getElementById('invSlots');
   invEl.innerHTML = '';
-  const totalSlots = 8;
-  for (let i = 0; i < totalSlots; i++) {
+  for (let i = 0; i < 8; i++) {
     const item = player.inventory[i];
-    if (item) {
-      const cat = SHOP_CATALOG.consumables.find(c => c.id === item.id);
-      invEl.innerHTML += `<div class="inv-slot" title="${cat ? cat.name : ''}">${cat ? cat.icon : '?'}<span class="slot-count">${item.qty > 1 ? item.qty : ''}</span></div>`;
-    } else {
-      invEl.innerHTML += `<div class="inv-slot empty">·</div>`;
-    }
+    if (item) { const cat = SHOP_CATALOG.consumables.find(c => c.id === item.id); invEl.innerHTML += `<div class="inv-slot" title="${cat ? cat.name : ''}">${cat ? cat.icon : '?'}<span class="slot-count">${item.qty > 1 ? item.qty : ''}</span></div>`; }
+    else invEl.innerHTML += `<div class="inv-slot empty">·</div>`;
   }
 }
 
@@ -996,8 +942,8 @@ function buyConsumable(id) {
   if (totalItems >= 8) { showToast('🎒 Inventaire plein (8 max) !', 'error'); return; }
   player.gold -= item.price;
   const existing = player.inventory.find(i => i.id === id);
-  if (existing && item.stackable) { existing.qty++; }
-  else { player.inventory.push({ id, qty: 1 }); }
+  if (existing && item.stackable) existing.qty++;
+  else player.inventory.push({ id, qty: 1 });
   savePlayer(); renderShop(); updateProfileUI();
   showToast(item.icon + ' ' + item.name + ' ajouté à l\'inventaire !', 'success');
 }
@@ -1017,7 +963,7 @@ function unequip(id, type) {
 }
 
 // ============================================
-// BUILD DYNAMIC UI
+// BUILD STAGE DOTS & PIPS
 // ============================================
 function buildSelectStageDots() {
   const container = document.getElementById('stagesDisplay');
@@ -1066,7 +1012,7 @@ function updateStageIndicators() {
 buildSelectStageDots(); buildBattlePips(); updateStageIndicators();
 
 // ============================================
-// CHARACTER SELECT
+// CHARACTER SELECT  ← CORRIGÉ : utilise HEROES
 // ============================================
 function buildCharCard(char, onclickStr, isSelected) {
   const clickAttr = onclickStr ? `onclick="${onclickStr}"` : '';
@@ -1093,14 +1039,14 @@ function buildCharCard(char, onclickStr, isSelected) {
 let selectedHero = null;
 
 function renderSelect() {
-  const heroes = Object.values(CHARACTERS);
-  const empties = heroes.length % 3 !== 0 ? (3 - heroes.length % 3) : 0;
+  // ← Utilise HEROES (sans le cornichon qui est maintenant uniquement un ennemi)
+  const heroes = Object.values(HEROES);
   document.getElementById('heroGrid').innerHTML =
-    heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('') + '<div></div>'.repeat(empties);
+    heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
 
-  const firstEnemy = ENEMIES[0];
+  const firstEnemy = ENEMIES[state.currentEnemyIndex];
   const lbl = document.getElementById('enemyLabel');
-  lbl.textContent = firstEnemy.isBoss ? '⚠ BOSS FINAL' : `⚠ ENNEMI 1/${ENEMIES.length} — ${firstEnemy.name}`;
+  lbl.textContent = firstEnemy.isBoss ? '⚠ BOSS FINAL' : `⚠ ENNEMI ${state.currentEnemyIndex+1}/${ENEMIES.length} — ${firstEnemy.name}`;
   lbl.className = 'villain-label' + (firstEnemy.isBoss ? '' : ' intermediate');
   document.getElementById('villainGrid').innerHTML = '<div></div>' + buildCharCard(firstEnemy, '', false) + '<div></div>';
   document.getElementById('fightBtn').disabled = !selectedHero;
@@ -1108,14 +1054,13 @@ function renderSelect() {
 
 function selectHero(id) {
   selectedHero = id;
-  const icons = { fraise: '🍓', poire: '🍐', cornichon: '🥒' };
+  const icons = { fraise: '🍓', poire: '🍐' };
   document.getElementById('profileAvatar').textContent = icons[id] || '⚔';
   renderSelect();
 }
-renderSelect();
 
 // ============================================
-// ACTION BUTTONS (DYNAMIC)
+// ACTION BUTTONS
 // ============================================
 function buildActionRow() {
   const hero = state.heroChar;
@@ -1123,7 +1068,6 @@ function buildActionRow() {
   const attacks = getAttacks(hero);
   const row = document.getElementById('actionRow');
   row.innerHTML = '';
-
   attacks.forEach(atk => {
     const btn = document.createElement('button');
     btn.className = 'action-btn ' + atk.cls;
@@ -1133,8 +1077,6 @@ function buildActionRow() {
     btn.onclick = () => playerAction(atk.id);
     row.appendChild(btn);
   });
-
-  // Item row
   buildItemRow();
 }
 
@@ -1159,7 +1101,7 @@ function buildItemRow() {
 // ============================================
 function startBattle(newGame = false) {
   if (!selectedHero) return;
-  state.heroChar = CHARACTERS[selectedHero];
+  state.heroChar = HEROES[selectedHero];
   state.villainChar = ENEMIES[state.currentEnemyIndex];
   state.heroStats = getLevelStats(state.heroChar);
   state.atkBuff = 0; state.atkBuffTurns = 0;
@@ -1190,7 +1132,8 @@ function startBattle(newGame = false) {
   document.getElementById('villainSprite').innerHTML = `<img src="${state.villainChar.sprite}.svg" alt="${state.villainChar.name}" />`;
 
   updateStageIndicators();
-  clearLog(); showScreen('battle');
+  clearLog();
+  showScreen('battle');
   buildActionRow();
   updateBattleUI();
 
@@ -1211,41 +1154,6 @@ function startBattle(newGame = false) {
 // ============================================
 // UI HELPERS
 // ============================================
-function switchTab(name) {
-  document.getElementById('tab-select').classList.toggle('active', name === 'select');
-  document.getElementById('tab-shop').classList.toggle('active', name === 'shop');
-  document.getElementById('screen-select').classList.toggle('active', name === 'select');
-  document.getElementById('screen-shop').classList.toggle('active', name === 'shop');
-  if (name === 'shop') renderShop();
-}
-
-function showScreen(name) {
-  ['select','shop','battle','victory'].forEach(s => {
-    const el = document.getElementById('screen-' + s);
-    if (!el) return;
-    if (s === name) { el.style.display = ''; el.classList.add('active'); }
-    else { el.classList.remove('active'); if (s === 'battle' || s === 'victory') el.style.display = 'none'; }
-  });
-  document.getElementById('screen-tabs') && (document.querySelector('.screen-tabs').style.display = (name === 'battle' || name === 'victory') ? 'none' : '');
-  const tabs = document.querySelector('.screen-tabs');
-  if (tabs) tabs.style.display = (name === 'battle' || name === 'victory') ? 'none' : '';
-  if (name === 'battle') {
-    document.getElementById('screen-battle').style.display = 'block';
-  }
-  if (name === 'victory') {
-    document.getElementById('screen-victory').style.display = 'block';
-  }
-  if (name === 'select' || name === 'shop') {
-    document.getElementById('screen-battle').style.display = 'none';
-    document.getElementById('screen-victory').style.display = 'none';
-    document.getElementById('playerProfile').style.display = '';
-    document.getElementById('levelupBanner').style.display = '';
-  }
-  if (name === 'battle' || name === 'victory') {
-    document.getElementById('playerProfile').style.display = 'none';
-  }
-}
-
 function clearLog() { document.getElementById('battleLog').innerHTML = ''; }
 function addLog(msg, cls = '') {
   const log = document.getElementById('battleLog');
@@ -1274,9 +1182,7 @@ function updateBattleUI() {
     if (desc) desc.textContent = state.heroSpecial >= 100 ? 'PRÊT !' : 'Charge ' + state.heroSpecial + '%';
   }
   document.getElementById('turnLabel').textContent = 'Tour ' + state.turn;
-  if (state.atkBuffTurns > 0) {
-    addStatusBadge('heroStatus', '⚡ ATK+', state.atkBuffTurns);
-  }
+  if (state.atkBuffTurns > 0) addStatusBadge('heroStatus', '⚡ ATK+', state.atkBuffTurns);
 }
 function addStatusBadge(containerId, label, turns) {
   const el = document.getElementById(containerId);
@@ -1317,7 +1223,7 @@ function showToast(msg, type = 'info') {
 // LEVEL UP OVERLAY
 // ============================================
 function showLevelUpOverlay(newLevel, unlockMsg) {
-  state.battleRunning = false; // pause
+  state.battleRunning = false;
   setPlayerTurn(false);
   document.getElementById('lvOverlayNum').textContent = 'Niveau ' + newLevel;
   const grid = document.getElementById('statGainsGrid');
@@ -1334,7 +1240,6 @@ function showLevelUpOverlay(newLevel, unlockMsg) {
 
 function closeLevelUp() {
   document.getElementById('levelupOverlay').classList.remove('show');
-  // Refresh max HP and rebuild actions
   state.heroStats = getLevelStats(state.heroChar);
   state.heroMaxHp = state.heroStats.hp;
   if (state.heroHp > state.heroMaxHp) state.heroHp = state.heroMaxHp;
@@ -1355,11 +1260,9 @@ function useItem(id) {
   if (!cat) return;
   const invItem = player.inventory.find(i => i.id === id);
   if (!invItem || invItem.qty <= 0) return;
-
   invItem.qty--;
   if (invItem.qty <= 0) player.inventory = player.inventory.filter(i => i.id !== id);
   savePlayer();
-
   if (cat.healAmt > 0) {
     const healed = Math.min(cat.healAmt, state.heroMaxHp - state.heroHp);
     state.heroHp = Math.min(state.heroMaxHp, state.heroHp + cat.healAmt);
@@ -1371,9 +1274,7 @@ function useItem(id) {
     state.atkBuffTurns = cat.duration || 2;
     addLog(`${cat.icon} ATK augmentée de +${state.atkBuff} pendant ${state.atkBuffTurns} tours !`, 'hero-action');
   }
-
-  updateBattleUI();
-  buildItemRow();
+  updateBattleUI(); buildItemRow();
   setPlayerTurn(false);
   setTimeout(() => villainTurn(), 600);
 }
@@ -1400,14 +1301,10 @@ function playerAction(id) {
   const attacks = getAttacks(hero);
   const atk = attacks.find(a => a.id === id);
   if (!atk) { setPlayerTurn(true); return; }
-
   if (id === 'special' && state.heroSpecial < 100) { setPlayerTurn(true); return; }
-
   const result = atk.fn(heroEffective, villain);
   if (!result) { setPlayerTurn(true); return; }
-
   state.heroDefending = false;
-
   if (result.miss) {
     anim('heroSprite','punch-right');
     setTimeout(() => spawnDmg('villainSprite',0,'miss'), 300);
@@ -1415,19 +1312,11 @@ function playerAction(id) {
     setTimeout(() => villainTurn(), 900);
     return;
   }
-
   anim('heroSprite','punch-right');
   setTimeout(() => {
-    if (result.heal) {
-      state.heroHp = Math.min(state.heroMaxHp, state.heroHp + result.heal);
-      spawnDmg('heroSprite', result.heal, 'heal');
-    }
-    if (result.dmg) {
-      anim('villainSprite','hit-shake');
-      spawnDmg('villainSprite', result.dmg, result.crit ? 'crit' : 'dmg');
-      state.villainHp -= result.dmg;
-    }
-    if (result.defend) { state.heroDefending = true; }
+    if (result.heal) { state.heroHp = Math.min(state.heroMaxHp, state.heroHp + result.heal); spawnDmg('heroSprite', result.heal, 'heal'); }
+    if (result.dmg) { anim('villainSprite','hit-shake'); spawnDmg('villainSprite', result.dmg, result.crit ? 'crit' : 'dmg'); state.villainHp -= result.dmg; }
+    if (result.defend) state.heroDefending = true;
     if (result.spBonus) state.heroSpecial = Math.min(100, state.heroSpecial + result.spBonus);
     addLog(result.log, result.crit ? 'crit-line' : 'hero-action');
     if (result.crit) addLog('🎙 "'+pick(hero.narratorLines.attack)+'"','system');
@@ -1440,64 +1329,34 @@ function villainTurn() {
   if (!state.battleRunning) return;
   const villain = state.villainChar, hero = state.heroChar;
   state.turn++;
-
-  // Tick ATK buff
   if (state.atkBuffTurns > 0) {
     state.atkBuffTurns--;
-    if (state.atkBuffTurns === 0) {
-      state.atkBuff = 0;
-      clearStatus('heroStatus');
-      addLog('⚡ Boost ATK terminé.', 'system');
-    }
+    if (state.atkBuffTurns === 0) { state.atkBuff = 0; clearStatus('heroStatus'); addLog('⚡ Boost ATK terminé.', 'system'); }
   }
-
   state.villainSpecial = Math.min(100, state.villainSpecial + 18);
-
   const hpRatio = state.villainHp / state.villainMaxHp;
   if (villain.phases) {
     const phase = villain.phases.slice().reverse().find(p => hpRatio <= p.threshold && !p.taunted);
     if (phase) { phase.taunted = true; addLog('😈 '+villain.name+' : "'+phase.taunt+'"', villain.isBoss ? 'villain-action' : 'intermediate-action'); }
   }
-
   let action;
   if (state.villainSpecial >= 100 && Math.random()<0.7) action='special';
   else if (hpRatio < 0.35) action = Math.random()<0.6?'special':'punch';
   else if (hpRatio < 0.6)  action = Math.random()<0.4?'combo':'punch';
   else { const r=Math.random(); action = r<0.5?'punch':r<0.75?'combo':'defend'; }
-
   anim('villainSprite','punch-left');
   const logCls = villain.isBoss ? 'villain-action' : 'intermediate-action';
-
   setTimeout(() => {
     const block = 0.5;
     if (action === 'punch') {
       if (isMiss()) { addLog('💨 '+villain.name+' rate son coup !', logCls); spawnDmg('heroSprite',0,'miss'); }
-      else {
-        const crit = isCrit();
-        let dmg = crit ? Math.floor(calcDmg(villain.atk,state.heroStats.def)*1.7) : calcDmg(villain.atk,state.heroStats.def);
-        if (state.heroDefending) dmg = Math.floor(dmg*(1-block));
-        anim('heroSprite','hit-shake');
-        spawnDmg('heroSprite',dmg,crit?'crit':'dmg');
-        state.heroHp -= dmg;
-        addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':'')+' !', crit?'crit-line':logCls);
-      }
+      else { const crit = isCrit(); let dmg = crit ? Math.floor(calcDmg(villain.atk,state.heroStats.def)*1.7) : calcDmg(villain.atk,state.heroStats.def); if (state.heroDefending) dmg = Math.floor(dmg*(1-block)); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,crit?'crit':'dmg'); state.heroHp -= dmg; addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':'')+' !', crit?'crit-line':logCls); }
     } else if (action === 'combo') {
-      let dmg = calcDmg(villain.atk,state.heroStats.def,1.2);
-      if (state.heroDefending) dmg = Math.floor(dmg*0.5);
-      anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'dmg');
-      state.heroHp -= dmg;
-      addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !', logCls);
+      let dmg = calcDmg(villain.atk,state.heroStats.def,1.2); if (state.heroDefending) dmg = Math.floor(dmg*0.5); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'dmg'); state.heroHp -= dmg; addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !', logCls);
     } else if (action === 'defend') {
-      state.villainDefending = true;
-      addLog('🛡️ '+villain.name+' se barricade…', logCls);
+      state.villainDefending = true; addLog('🛡️ '+villain.name+' se barricade…', logCls);
     } else if (action === 'special') {
-      state.villainSpecial = 0;
-      const result = villain.special.fn(villain, hero);
-      let dmg = result.dmg;
-      if (state.heroDefending) dmg = Math.floor(dmg*0.55);
-      anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'crit');
-      state.heroHp -= dmg;
-      addLog('⚡ '+result.log,'crit-line');
+      state.villainSpecial = 0; const result = villain.special.fn(villain, hero); let dmg = result.dmg; if (state.heroDefending) dmg = Math.floor(dmg*0.55); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'crit'); state.heroHp -= dmg; addLog('⚡ '+result.log,'crit-line');
     }
     state.heroDefending = false; state.villainDefending = false;
     updateBattleUI();
@@ -1512,65 +1371,51 @@ function checkBattleEnd() {
 }
 
 // ============================================
-// END BATTLE — XP + GOLD
+// END BATTLE
 // ============================================
 function endBattle(won) {
   const hero = state.heroChar, villain = state.villainChar;
   const isLastEnemy = state.currentEnemyIndex >= ENEMIES.length - 1;
-
-  // Compute rewards
   const baseXp   = won ? (villain.isBoss ? 200 : 80) : 20;
   const earnedXp = Math.floor(baseXp + state.turn * (won ? 8 : 3) + Math.random() * 40);
   const baseGold = won ? (villain.isBoss ? 60 : 20) : 5;
   const earnedGold = Math.floor(baseGold + Math.random() * (won ? 30 : 8));
-
-  const prevLevel = player.level;
   const didLevelUp = addXpGold(earnedXp, earnedGold);
   const newLevel = player.level;
-
-  // Show level-up banner on select screen (after combat)
   if (didLevelUp) {
     const unlock = LEVEL_UNLOCKS[newLevel];
     document.getElementById('levelupBannerTitle').textContent = `🎉 Niveau ${newLevel} atteint !`;
     document.getElementById('levelupBannerSub').textContent = unlock ? unlock.msg : `Tes stats ont augmenté ! HP+${STAT_GROWTH.hp} ATK+${STAT_GROWTH.atk} DEF+${STAT_GROWTH.def}`;
     document.getElementById('levelupBanner').classList.add('show');
   }
-
   if (won && !isLastEnemy) {
     state.heroHpPersist = state.heroHp;
     state.currentEnemyIndex++;
     updateStageIndicators();
-
     document.getElementById('victoryIcon').textContent = '⚔';
     const t = document.getElementById('victoryTitle');
     t.textContent = villain.name + ' vaincu !';
     t.className = 'victory-title intermediate';
     document.getElementById('victorySub').textContent = `Bien joué ! Le prochain adversaire t'attend : ${ENEMIES[state.currentEnemyIndex].name}.`;
-
     const banner = document.getElementById('hpCarryBanner');
     banner.classList.remove('hidden');
     document.getElementById('hpCarryVal').textContent = `${state.heroHp}/${state.heroMaxHp} HP`;
-
     document.getElementById('xpGained').textContent = '+' + earnedXp;
     document.getElementById('goldGained').textContent = '+' + earnedGold;
     document.getElementById('turnsUsed').textContent = state.turn;
     const q = pick(hero.narratorLines.win);
     document.getElementById('victoryQuote').innerHTML = `"${q}"<cite>— Narrateur</cite>`;
-
     const nextEnemy = ENEMIES[state.currentEnemyIndex];
     const btnR = document.getElementById('btnRematch');
     btnR.textContent = nextEnemy.isBoss ? '💀 Affronter le Boss !' : `⚔ Combat suivant : ${nextEnemy.name}`;
     btnR.className = 'btn-rematch next-stage';
     btnR.onclick = () => startBattle(false);
-
     const btnB = document.getElementById('btnBackSelect');
     btnB.textContent = '← Recommencer depuis le début';
     btnB.onclick = () => { state.currentEnemyIndex=0; state.heroHpPersist=0; updateStageIndicators(); backToSelect(); };
-
     showScreen('victory');
     return;
   }
-
   document.getElementById('hpCarryBanner').classList.add('hidden');
   document.getElementById('victoryIcon').textContent = won ? '🏆' : '💀';
   const t = document.getElementById('victoryTitle');
@@ -1584,16 +1429,13 @@ function endBattle(won) {
   document.getElementById('turnsUsed').textContent = state.turn;
   const q = pick(won ? hero.narratorLines.win : hero.narratorLines.lose);
   document.getElementById('victoryQuote').innerHTML = `"${q}"<cite>— Narrateur</cite>`;
-
   const btnR = document.getElementById('btnRematch');
   btnR.textContent = won ? '🔄 Rejouer' : '🔄 Revanche';
   btnR.className = 'btn-rematch';
   btnR.onclick = () => { state.currentEnemyIndex=0; state.heroHpPersist=0; updateStageIndicators(); startBattle(true); };
-
   const btnB = document.getElementById('btnBackSelect');
   btnB.textContent = '← Changer de perso';
   btnB.onclick = () => { state.currentEnemyIndex=0; state.heroHpPersist=0; updateStageIndicators(); backToSelect(); };
-
   showScreen('victory');
 }
 
@@ -1601,7 +1443,10 @@ function backToSelect() { showScreen('select'); renderSelect(); updateProfileUI(
 function openMobileMenu()  { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow=''; }
 
-// Init screen state
+// ============================================
+// INIT
+// ============================================
+renderSelect();
 showScreen('select');
 </script>
 </body>

@@ -114,6 +114,51 @@
     #screen-select, #screen-battle, #screen-victory { display: none; }
     #screen-select.active, #screen-battle.active, #screen-victory.active { display: block; }
 
+    /* PROGRESS STAGES */
+    .progress-stages {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 2rem;
+    }
+    .stage-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .stage-dot {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: all 0.4s;
+      position: relative;
+      z-index: 1;
+    }
+    .stage-dot.done { border-color: var(--accent); background: rgba(200,245,66,0.15); }
+    .stage-dot.active { border-color: var(--accent3); background: rgba(232,69,69,0.15); box-shadow: 0 0 12px rgba(232,69,69,0.3); }
+    .stage-dot.locked { opacity: 0.35; }
+    .stage-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .stage-connector {
+      width: 60px; height: 2px;
+      background: var(--border);
+      margin-bottom: 1.2rem;
+      transition: background 0.4s;
+      flex-shrink: 0;
+    }
+    .stage-connector.done { background: var(--accent); }
+
     /* CHARACTER SELECT */
     .select-title {
       text-align: center;
@@ -142,6 +187,8 @@
     .char-card.selected { border-color: var(--accent); box-shadow: 0 0 20px rgba(200,245,66,0.15); }
     .char-card.villain { border-color: var(--border); cursor: default; }
     .char-card.villain:hover { border-color: rgba(232,69,69,0.4); transform: none; }
+    .char-card.intermediate-villain { border-color: var(--border); cursor: default; }
+    .char-card.intermediate-villain:hover { border-color: rgba(74,222,128,0.4); transform: none; }
     .char-sprite {
       width: 90px; height: 90px;
       margin: 0 auto 0.8rem;
@@ -167,6 +214,7 @@
     }
     .badge-hero { background: rgba(200,245,66,0.1); color: var(--accent); border: 1px solid rgba(200,245,66,0.2); }
     .badge-villain { background: rgba(232,69,69,0.1); color: var(--accent3); border: 1px solid rgba(232,69,69,0.2); }
+    .badge-intermediate { background: rgba(74,222,128,0.1); color: var(--hp-green); border: 1px solid rgba(74,222,128,0.2); }
 
     .vs-divider {
       text-align: center;
@@ -186,6 +234,7 @@
       letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--accent3); margin-bottom: 1rem;
     }
+    .villain-label.intermediate { color: var(--hp-green); }
     .fight-btn {
       display: block; width: 100%; max-width: 340px; margin: 0 auto;
       background: var(--accent3); color: #fff; border: none;
@@ -205,10 +254,33 @@
     @keyframes floatAnimFlip { 0%,100%{transform:translateY(0) scaleX(-1)} 50%{transform:translateY(-8px) scaleX(-1)} }
     @keyframes punchRight { 0%{transform:translateX(0)} 30%{transform:translateX(30px) scaleX(1.1)} 60%{transform:translateX(-5px)} 100%{transform:translateX(0)} }
     @keyframes punchLeft { 0%{transform:translateX(0) scaleX(-1)} 30%{transform:translateX(-30px) scaleX(-1.1)} 60%{transform:translateX(5px) scaleX(-0.95)} 100%{transform:translateX(0) scaleX(-1)} }
-    @keyframes hitFlash { 0%,100%{filter:brightness(1)} 50%{filter:brightness(2.5) saturate(0)} }
     @keyframes dmgFloat { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-60px) scale(1.4)} }
     @keyframes barPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
     @keyframes slideInRight { from{transform:translateX(40px);opacity:0} to{transform:translateX(0);opacity:1} }
+
+    .battle-stage-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+    }
+    .stage-pip {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border);
+      transition: all 0.4s;
+      flex-shrink: 0;
+    }
+    .stage-pip.done { background: var(--accent); }
+    .stage-pip.active { background: var(--accent3); box-shadow: 0 0 8px rgba(232,69,69,0.5); animation: barPulse 1s infinite; }
+    .stage-pip.locked { background: var(--surface2); }
 
     .arena {
       background: linear-gradient(180deg, #0a0a08 0%, #12130e 40%, #1a1b14 100%);
@@ -276,7 +348,6 @@
     }
     .fighter-level-badge { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--accent); margin-top: 0.15rem; }
 
-    /* HP BARS */
     .hp-bars { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin-bottom: 1rem; }
     .hp-bar-side { display: flex; flex-direction: column; gap: 0.3rem; }
     .hp-bar-side.right { text-align: right; align-items: flex-end; }
@@ -295,7 +366,6 @@
     .special-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent2), #fbbf24); transition: width 0.4s ease; }
     .special-label { font-size: 0.58rem; font-family: 'DM Mono', monospace; color: var(--accent2); white-space: nowrap; }
 
-    /* ACTIONS */
     .action-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin-bottom: 1.2rem; }
     .action-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin-bottom: 0.8rem; }
     .action-btn {
@@ -323,6 +393,7 @@
     .log-line { animation: slideInRight 0.2s ease; }
     .log-line.hero-action { color: var(--accent); }
     .log-line.villain-action { color: var(--accent3); }
+    .log-line.intermediate-action { color: var(--hp-green); }
     .log-line.system { color: var(--muted); }
     .log-line.crit-line { color: var(--accent2); font-weight: bold; }
     .log-line.heal-line { color: var(--hp-green); }
@@ -334,6 +405,7 @@
     .victory-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
     .victory-title.win { color: var(--accent); }
     .victory-title.lose { color: var(--accent3); }
+    .victory-title.intermediate { color: var(--hp-green); }
     .victory-sub { color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem; }
     .victory-quote {
       background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
@@ -349,6 +421,8 @@
       cursor: pointer; transition: all 0.2s;
     }
     .btn-rematch:hover { background: #ff5555; transform: translateY(-1px); }
+    .btn-rematch.next-stage { background: var(--hp-green); color: #0e0f0c; }
+    .btn-rematch.next-stage:hover { background: #6ee7a0; }
     .btn-back-select {
       background: none; border: 1px solid var(--border); color: var(--text);
       padding: 0.75rem 2rem; border-radius: 4px;
@@ -361,7 +435,22 @@
     .xp-item .xp-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--accent); }
     .xp-item .xp-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
 
-    /* MOBILE */
+    .hp-carry-banner {
+      background: rgba(74,222,128,0.08);
+      border: 1px solid rgba(74,222,128,0.25);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+      margin-bottom: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--hp-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .hp-carry-banner.hidden { display: none; }
+
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.6rem; cursor: pointer; }
     .hamburger span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; }
     .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(14,15,12,0.97); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
@@ -383,6 +472,7 @@
       .fighter-sprite-wrap { width: 80px; height: 96px; }
       .fighter-side { width: 100px; }
       .xp-rewards { gap: 1rem; }
+      .stage-connector { width: 30px; }
     }
   </style>
 </head>
@@ -425,17 +515,23 @@
 
   <!-- SELECT SCREEN -->
   <div id="screen-select" class="active">
+    <div class="progress-stages" id="stagesDisplay"></div>
     <p class="select-title">Choisis ton champion</p>
     <p class="select-subtitle">// SÉLECTION DU PERSONNAGE</p>
     <div class="characters-grid" id="heroGrid"></div>
     <div class="vs-divider">contre</div>
-    <div class="villain-label">⚠ BOSS — Grand Méchant</div>
+    <div class="villain-label intermediate" id="enemyLabel">⚠ ENNEMI 1/2 — Cornichon Raté</div>
     <div class="characters-grid" id="villainGrid"></div>
-    <button class="fight-btn" id="fightBtn" onclick="startBattle()" disabled>⚔ COMBAT !</button>
+    <button class="fight-btn" id="fightBtn" onclick="startBattle(true)" disabled>⚔ COMBAT !</button>
   </div>
 
   <!-- BATTLE SCREEN -->
   <div id="screen-battle">
+    <div class="battle-stage-bar" id="battleStageBar">
+      <span id="battleStageText">ÉTAPE 1/2</span>
+      <div style="display:flex;gap:6px;margin-left:8px;" id="battlePips"></div>
+    </div>
+
     <div class="hp-bars">
       <div class="hp-bar-side">
         <div class="hp-bar-header">
@@ -478,8 +574,8 @@
         <div class="vs-label">VS</div>
         <div class="fighter-side">
           <div class="fighter-sprite-wrap villain-idle" id="villainSprite"></div>
-          <div class="fighter-name-badge" id="villainNameBadge">BANANE</div>
-          <div class="fighter-level-badge" id="villainLvlBadge">LV.MAX</div>
+          <div class="fighter-name-badge" id="villainNameBadge">CORNICHON</div>
+          <div class="fighter-level-badge" id="villainLvlBadge">LV.5</div>
         </div>
       </div>
     </div>
@@ -515,19 +611,19 @@
   <div id="screen-victory">
     <span class="victory-icon" id="victoryIcon">🏆</span>
     <h2 class="victory-title" id="victoryTitle">Victoire !</h2>
-    <p class="victory-sub" id="victorySub">Tu as vaincu le grand méchant Banane !</p>
+    <p class="victory-sub" id="victorySub"></p>
+    <div class="hp-carry-banner hidden" id="hpCarryBanner">
+      ❤️ HP conservés pour le prochain combat : <strong id="hpCarryVal">—</strong>
+    </div>
     <div class="xp-rewards">
       <div class="xp-item"><div class="xp-val" id="xpGained">+250</div><div class="xp-label">XP gagnés</div></div>
       <div class="xp-item"><div class="xp-val" id="goldGained">+50</div><div class="xp-label">Pièces</div></div>
       <div class="xp-item"><div class="xp-val" id="turnsUsed">12</div><div class="xp-label">Tours</div></div>
     </div>
-    <div class="victory-quote" id="victoryQuote">
-      "Certains combats se gagnent avec les poings, d'autres avec le ventre."
-      <cite>— Narrateur</cite>
-    </div>
+    <div class="victory-quote" id="victoryQuote"></div>
     <div class="victory-btns">
-      <button class="btn-rematch" onclick="rematch()">🔄 Revanche</button>
-      <button class="btn-back-select" onclick="backToSelect()">← Changer de perso</button>
+      <button class="btn-rematch" id="btnRematch">🔄 Revanche</button>
+      <button class="btn-back-select" id="btnBackSelect">← Changer de perso</button>
     </div>
   </div>
 
@@ -535,19 +631,18 @@
 
 <script>
 // =============================================
-// CHARACTER DATA
+// HÉROS
 // =============================================
 const CHARACTERS = {
   fraise: {
     id: 'fraise', name: 'Fraise', type: 'hero',
     class: 'Guerrière Fruitée',
-    sprite: 'fraise',   // loads fraise.svg
+    sprite: 'fraise',
     hp: 110, atk: 75, def: 55, spd: 90,
     quote: '"Je suis douce… jusqu\'à ce que ça crame."',
-    color: '#e84545',
     special: {
       name: '🍓 Rafale Rouge',
-      fn: (hero, villain) => {
+      fn: (hero) => {
         const hits = [
           Math.max(1, Math.floor(hero.atk * 0.5 + Math.random() * 15)),
           Math.max(1, Math.floor(hero.atk * 0.5 + Math.random() * 15)),
@@ -558,32 +653,20 @@ const CHARACTERS = {
     },
     actions: { defend: { block: 0.5 } },
     narratorLines: {
-      win: [
-        "Et voilà, la cantine appartient aux petits fruits rouges !",
-        "Fraise prouve ce soir que le plus fort n'est pas toujours le plus grand.",
-        "La victoire a un goût sucré… exactement comme elle.",
-      ],
-      lose: [
-        "Fraise tombe. Mais elle se relèvera. Elle est de saison toute l'année.",
-        "Même les meilleurs fruits tombent parfois. Bonne chance la prochaine fois.",
-      ],
-      attack: [
-        "Fraise bondit comme une balle de flipper !",
-        "La guerrière fruitée frappe sans pitié.",
-        "Coup direct ! La cantine tremble.",
-      ]
+      win: ["La cantine appartient aux petits fruits rouges !", "Fraise prouve que le plus fort n'est pas toujours le plus grand.", "La victoire a un goût sucré… exactement comme elle."],
+      lose: ["Fraise tombe. Mais elle se relèvera.", "Même les meilleurs fruits tombent parfois."],
+      attack: ["Fraise bondit comme une balle de flipper !", "La guerrière fruitée frappe sans pitié.", "Coup direct ! La cantine tremble."]
     }
   },
   poire: {
     id: 'poire', name: 'Poire', type: 'hero',
     class: 'Mage de la Fraîcheur',
-    sprite: 'poire',    // loads poire.svg
+    sprite: 'poire',
     hp: 95, atk: 65, def: 70, spd: 75,
     quote: '"La patience, c\'est ma plus grande arme."',
-    color: '#d4e842',
     special: {
       name: '🍐 Onde Juteuse',
-      fn: (hero, villain) => {
+      fn: (hero) => {
         const heal = Math.floor(18 + Math.random() * 12);
         const dmg = Math.max(1, Math.floor(hero.atk * 0.9 + Math.random() * 25));
         return { dmg, heal, log: `🍐 ONDE JUTEUSE — +${heal} PV soignés, ${dmg} dégâts !`, type: 'heal' };
@@ -591,58 +674,90 @@ const CHARACTERS = {
     },
     actions: { defend: { block: 0.6 } },
     narratorLines: {
-      win: [
-        "La Poire, calme jusqu'au bout. La victoire lui revient de droit.",
-        "Patience et ténacité — la Poire démontre que les vrais champions attendent leur heure.",
-        "Un combat maîtrisé de bout en bout. La cantine a un nouveau maître.",
-      ],
-      lose: [
-        "La Poire s'incline avec dignité. Il en faudra plus pour l'abattre définitivement.",
-        "Défaite, mais la tête haute. La Poire reviendra plus forte.",
-      ],
-      attack: [
-        "La Poire frappe avec une précision chirurgicale !",
-        "Coup stratégique ! La Poire ne laisse rien au hasard.",
-        "Attaque calculée de la Mage de la Fraîcheur.",
-      ]
+      win: ["La Poire, calme jusqu'au bout.", "Patience et ténacité — les vrais champions attendent leur heure.", "Un combat maîtrisé de bout en bout."],
+      lose: ["La Poire s'incline avec dignité.", "Défaite, mais la tête haute."],
+      attack: ["La Poire frappe avec une précision chirurgicale !", "Coup stratégique ! La Poire ne laisse rien au hasard.", "Attaque calculée de la Mage de la Fraîcheur."]
+    }
+  },
+  cornichon: {
+    id: 'cornichon', name: 'Cornichon', type: 'hero',
+    class: 'Apprenti Mariné',
+    sprite: 'cornichon',
+    hp: 85, atk: 60, def: 45, spd: 95,
+    quote: '"Je suis petit, mais je pique !"',
+    special: {
+      name: '🥒 Saumure Acide',
+      fn: (hero) => {
+        const dmg = Math.max(1, Math.floor(hero.atk * 1.3 + Math.random() * 25));
+        return { dmg, log: `🥒 SAUMURE ACIDE — ${dmg} dégâts corrosifs !`, type: 'crit' };
+      }
+    },
+    actions: { defend: { block: 0.45 } },
+    narratorLines: {
+      win: ["Qui aurait cru que le Cornichon sortirait victorieux ?", "Petit mais acide — le Cornichon a tout déchiré.", "La victoire appartient à celui qui pique le plus fort !"],
+      lose: ["Le Cornichon finit en rondelles. Il reviendra plus aigre.", "Défaite amère pour notre petit mariné…"],
+      attack: ["Le Cornichon bondit avec une agilité surprenante !", "Attaque acide du petit mariné !", "La cantine tremble sous les coups du Cornichon !"]
     }
   }
 };
 
-const VILLAIN = {
-  id: 'banane', name: 'Banane', type: 'villain',
-  class: 'Seigneur Malveillant de la Cantine',
-  sprite: 'banane',   // loads banane.svg
-  hp: 140, atk: 80, def: 60, spd: 65,
-  quote: '"Personne ne résiste à ma peau de banane."',
-  color: '#f5c842',
-  special: {
-    name: '🍌 Potassium Furie',
-    fn: (villain, hero) => {
-      const dmg = Math.floor(villain.atk * 1.6 + Math.random() * 30);
-      return { dmg, log: `🍌 POTASSIUM FURIE — ${dmg} dégâts cataclysmiques !`, type: 'crit' };
-    }
+// =============================================
+// ENNEMIS — tableau ordonné
+// =============================================
+const ENEMIES = [
+  {
+    id: 'cornichon_ennemi', name: 'Cornichon Raté', type: 'villain',
+    class: 'Cornichon Avancé de la Cantine',
+    sprite: 'cornichon',
+    isBoss: false,
+    hp: 90, atk: 62, def: 48, spd: 88,
+    quote: '"Tu croyais que j\'étais de ton côté ?"',
+    special: {
+      name: '🥒 Spray Acide',
+      fn: (villain) => {
+        const dmg = Math.floor(villain.atk * 1.3 + Math.random() * 22);
+        return { dmg, log: `🥒 SPRAY ACIDE — ${dmg} dégâts corrosifs !`, type: 'crit' };
+      }
+    },
+    phases: [
+      { threshold: 1.0, taunt: "On se retrouve, cousin…", taunted: false },
+      { threshold: 0.55, taunt: "Tu pensais vraiment gagner ? Pathétique.", taunted: false },
+      { threshold: 0.2, taunt: "IMPOSSIBLE. Je suis FERMENTÉ. Je suis ÉTERNEL !", taunted: false },
+    ],
+    narratorLines: { taunt: ["Le Cornichon Raté révèle sa vraie nature acide.", "Une trahison marinée dans la cantine.", "L'air sent le vinaigre…"] }
   },
-  phases: [
-    { threshold: 1.0, taunt: "Venez donc, petites friandises…", taunted: false },
-    { threshold: 0.6, taunt: "Bien. Vous méritez de voir ma vraie puissance !", taunted: false },
-    { threshold: 0.3, taunt: "IMPOSSIBLE. Je suis BANANE ! Je suis ÉTERNEL !", taunted: false },
-  ],
-  narratorLines: {
-    taunt: [
-      "Banane ricane depuis son trône de peau glissante.",
-      "Le Seigneur de la Cantine n'a pas encore sorti ses vraies armes.",
-      "Banane observe ses adversaires avec un mépris royal.",
-    ]
+  {
+    id: 'banane', name: 'Banane', type: 'villain',
+    class: 'Seigneur Malveillant de la Cantine',
+    sprite: 'banane',
+    isBoss: true,
+    hp: 140, atk: 80, def: 60, spd: 65,
+    quote: '"Personne ne résiste à ma peau de banane."',
+    special: {
+      name: '🍌 Potassium Furie',
+      fn: (villain) => {
+        const dmg = Math.floor(villain.atk * 1.6 + Math.random() * 30);
+        return { dmg, log: `🍌 POTASSIUM FURIE — ${dmg} dégâts cataclysmiques !`, type: 'crit' };
+      }
+    },
+    phases: [
+      { threshold: 1.0, taunt: "Venez donc, petites friandises…", taunted: false },
+      { threshold: 0.6, taunt: "Bien. Vous méritez de voir ma vraie puissance !", taunted: false },
+      { threshold: 0.3, taunt: "IMPOSSIBLE. Je suis BANANE ! Je suis ÉTERNEL !", taunted: false },
+    ],
+    narratorLines: { taunt: ["Banane ricane depuis son trône de peau glissante.", "Le Seigneur de la Cantine n'a pas encore sorti ses vraies armes.", "Banane observe avec un mépris royal."] }
   }
-};
+];
 
 // =============================================
 // GAME STATE
 // =============================================
 let state = {
-  heroChar: null, villainChar: null,
+  heroChar: null,
+  currentEnemyIndex: 0,
+  villainChar: null,
   heroHp: 0, heroMaxHp: 0,
+  heroHpPersist: 0,
   villainHp: 0, villainMaxHp: 0,
   heroSpecial: 0, villainSpecial: 0,
   turn: 1,
@@ -651,13 +766,71 @@ let state = {
 };
 
 // =============================================
+// BUILD DYNAMIC UI (dots + pips)
+// =============================================
+function buildSelectStageDots() {
+  const container = document.getElementById('stagesDisplay');
+  container.innerHTML = '';
+  ENEMIES.forEach((e, i) => {
+    const step = document.createElement('div');
+    step.className = 'stage-step';
+    step.innerHTML = `<div class="stage-dot locked" id="stage-dot-${i}">${e.isBoss ? '🍌' : '🥒'}</div><div class="stage-label">${e.name}</div>`;
+    container.appendChild(step);
+    if (i < ENEMIES.length - 1) {
+      const conn = document.createElement('div');
+      conn.className = 'stage-connector'; conn.id = `stage-conn-${i}`;
+      container.appendChild(conn);
+    }
+  });
+}
+
+function buildBattlePips() {
+  const container = document.getElementById('battlePips');
+  container.innerHTML = '';
+  ENEMIES.forEach((e, i) => {
+    const pip = document.createElement('div');
+    pip.className = 'stage-pip locked'; pip.id = `pip-${i}`;
+    container.appendChild(pip);
+  });
+}
+
+function updateStageIndicators() {
+  const cur = state.currentEnemyIndex;
+  ENEMIES.forEach((e, i) => {
+    const dot = document.getElementById(`stage-dot-${i}`);
+    const conn = document.getElementById(`stage-conn-${i}`);
+    const pip = document.getElementById(`pip-${i}`);
+    const cls = i < cur ? 'done' : i === cur ? 'active' : 'locked';
+    if (dot) dot.className = 'stage-dot ' + cls;
+    if (conn) conn.className = 'stage-connector' + (i < cur ? ' done' : '');
+    if (pip) pip.className = 'stage-pip ' + cls;
+  });
+  const stageText = document.getElementById('battleStageText');
+  if (stageText) {
+    const e = ENEMIES[cur];
+    stageText.textContent = e.isBoss
+      ? `💀 BOSS FINAL — ${e.name}`
+      : `⚔ ÉTAPE ${cur + 1}/${ENEMIES.length} — ${e.name}`;
+  }
+}
+
+buildSelectStageDots();
+buildBattlePips();
+updateStageIndicators();
+
+// =============================================
 // CHARACTER SELECT
 // =============================================
 function buildCharCard(char, onclickStr, isSelected) {
   const clickAttr = onclickStr ? `onclick="${onclickStr}"` : '';
+  const isVillain = char.type === 'villain';
+  const isIntermediate = isVillain && !char.isBoss;
+  const cardClass = isIntermediate ? 'intermediate-villain' : (isVillain ? 'villain' : '');
+  const badgeClass = isIntermediate ? 'badge-intermediate' : (isVillain ? 'badge-villain' : 'badge-hero');
+  const badgeLabel = isIntermediate ? '⚔ ENNEMI' : (isVillain ? '👿 BOSS' : '⚔ HÉROS');
   return `
-    <div class="char-card ${char.type === 'villain' ? 'villain' : ''} ${isSelected ? 'selected' : ''}" ${clickAttr}>
-      <span class="char-type-badge ${char.type === 'villain' ? 'badge-villain' : 'badge-hero'}">${char.type === 'villain' ? '👿 BOSS' : '⚔ HÉROS'}</span>
+    <div class="char-card ${cardClass} ${isSelected ? 'selected' : ''}" ${clickAttr}>
+      <span class="char-type-badge ${badgeClass}">${badgeLabel}</span>
       <div class="char-sprite"><img src="${char.sprite}.svg" alt="${char.name}" /></div>
       <div class="char-name">${char.name}</div>
       <div class="char-class">${char.class}</div>
@@ -674,66 +847,66 @@ function buildCharCard(char, onclickStr, isSelected) {
 let selectedHero = null;
 
 function renderSelect() {
-  // Heroes grid (2 heroes, 3-col grid → add empty placeholder to keep layout)
-  const heroes = Object.values(CHARACTERS).filter(c => c.type === 'hero');
+  const heroes = Object.values(CHARACTERS);
+  const empties = heroes.length % 3 !== 0 ? (3 - heroes.length % 3) : 0;
   document.getElementById('heroGrid').innerHTML =
     heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('') +
-    '<div></div>'; // empty 3rd cell
+    '<div></div>'.repeat(empties);
 
-  // Villain centred in 3-col grid
+  const firstEnemy = ENEMIES[0];
+  const lbl = document.getElementById('enemyLabel');
+  lbl.textContent = firstEnemy.isBoss ? '⚠ BOSS FINAL' : `⚠ ENNEMI 1/${ENEMIES.length} — ${firstEnemy.name}`;
+  lbl.className = 'villain-label' + (firstEnemy.isBoss ? '' : ' intermediate');
+
   document.getElementById('villainGrid').innerHTML =
-    '<div></div>' + buildCharCard(VILLAIN, '', false) + '<div></div>';
-
+    '<div></div>' + buildCharCard(firstEnemy, '', false) + '<div></div>';
   document.getElementById('fightBtn').disabled = !selectedHero;
 }
 
-function selectHero(id) {
-  selectedHero = id;
-  renderSelect();
-}
-
+function selectHero(id) { selectedHero = id; renderSelect(); }
 renderSelect();
 
 // =============================================
 // BATTLE INIT
 // =============================================
-function startBattle() {
+function startBattle(newGame = false) {
   if (!selectedHero) return;
   state.heroChar = CHARACTERS[selectedHero];
-  state.villainChar = VILLAIN;
-  state.heroHp = state.heroMaxHp = state.heroChar.hp * 10;
+  state.villainChar = ENEMIES[state.currentEnemyIndex];
+
+  if (newGame || state.heroHpPersist === 0) {
+    state.heroHp = state.heroMaxHp = state.heroChar.hp * 10;
+    state.heroHpPersist = 0;
+  } else {
+    state.heroMaxHp = state.heroChar.hp * 10;
+    state.heroHp = state.heroHpPersist;
+  }
+
   state.villainHp = state.villainMaxHp = state.villainChar.hp * 10;
-  state.heroSpecial = 0;
-  state.villainSpecial = 0;
-  state.turn = 1;
-  state.heroDefending = false;
-  state.villainDefending = false;
-  state.battleRunning = true;
-  state.playerTurn = true;
+  state.heroSpecial = 0; state.villainSpecial = 0;
+  state.turn = 1; state.heroDefending = false; state.villainDefending = false;
+  state.battleRunning = true; state.playerTurn = true;
 
-  // Reset villain phase taunts
-  state.villainChar.phases.forEach(p => p.taunted = false);
+  if (state.villainChar.phases) state.villainChar.phases.forEach(p => p.taunted = false);
 
-  // Names
   document.getElementById('heroHpName').textContent = state.heroChar.name;
   document.getElementById('villainHpName').textContent = state.villainChar.name;
   document.getElementById('heroNameBadge').textContent = state.heroChar.name.toUpperCase();
   document.getElementById('villainNameBadge').textContent = state.villainChar.name.toUpperCase();
+  document.getElementById('villainLvlBadge').textContent = state.villainChar.isBoss ? 'LV.MAX' : 'LV.' + (state.currentEnemyIndex * 5 + 5);
+  document.getElementById('heroSprite').innerHTML = `<img src="${state.heroChar.sprite}.svg" alt="${state.heroChar.name}" />`;
+  document.getElementById('villainSprite').innerHTML = `<img src="${state.villainChar.sprite}.svg" alt="${state.villainChar.name}" />`;
 
-  // ── Sprites via <img> pointing to external .svg files ──
-  document.getElementById('heroSprite').innerHTML =
-    `<img src="${state.heroChar.sprite}.svg" alt="${state.heroChar.name}" />`;
-  document.getElementById('villainSprite').innerHTML =
-    `<img src="${state.villainChar.sprite}.svg" alt="${state.villainChar.name}" />`;
+  updateStageIndicators();
+  clearLog(); showScreen('battle'); updateBattleUI();
 
-  clearLog();
-  showScreen('battle');
-  updateBattleUI();
-  addLog(`⚔ Le combat commence ! ${state.heroChar.name} vs ${state.villainChar.name}`, 'system');
-  addLog(`🎙 Narrateur : "${pick(state.villainChar.narratorLines.taunt)}"`, 'villain-action');
+  const tag = state.villainChar.isBoss ? '💀 BOSS FINAL' : `⚔ COMBAT ${state.currentEnemyIndex + 1}/${ENEMIES.length}`;
+  addLog(`${tag} : ${state.heroChar.name} vs ${state.villainChar.name}`, 'system');
+  if (state.heroHpPersist > 0 && !newGame) addLog(`❤️ HP conservés : ${state.heroHp}/${state.heroMaxHp}`, 'heal-line');
+  addLog(`🎙 "${pick(state.villainChar.narratorLines.taunt)}"`, state.villainChar.isBoss ? 'villain-action' : 'intermediate-action');
 
   if (state.villainChar.spd > state.heroChar.spd) {
-    addLog('⚡ ' + state.villainChar.name + ' est plus rapide et attaque en premier !', 'system');
+    addLog('⚡ ' + state.villainChar.name + ' attaque en premier !', 'system');
     setPlayerTurn(false);
     setTimeout(() => villainTurn(), 800);
   } else {
@@ -753,28 +926,22 @@ function clearLog() { document.getElementById('battleLog').innerHTML = ''; }
 function addLog(msg, cls = '') {
   const log = document.getElementById('battleLog');
   const d = document.createElement('div');
-  d.className = 'log-line ' + cls;
-  d.textContent = msg;
-  log.appendChild(d);
-  log.scrollTop = log.scrollHeight;
+  d.className = 'log-line ' + cls; d.textContent = msg;
+  log.appendChild(d); log.scrollTop = log.scrollHeight;
 }
 function updateBattleUI() {
   const pct = (v, m) => Math.max(0, v / m * 100) + '%';
   const cls = (v, m) => { const r = v/m; return 'hp-fill' + (r < 0.2 ? ' critical' : r < 0.4 ? ' low' : ''); };
-
   document.getElementById('heroHpFill').style.width = pct(state.heroHp, state.heroMaxHp);
   document.getElementById('heroHpFill').className = cls(state.heroHp, state.heroMaxHp);
   document.getElementById('heroHpVal').textContent = Math.max(0,state.heroHp) + '/' + state.heroMaxHp;
-
   document.getElementById('villainHpFill').style.width = pct(state.villainHp, state.villainMaxHp);
   document.getElementById('villainHpFill').className = cls(state.villainHp, state.villainMaxHp);
   document.getElementById('villainHpVal').textContent = Math.max(0,state.villainHp) + '/' + state.villainMaxHp;
-
   document.getElementById('heroSpecialFill').style.width = state.heroSpecial + '%';
   document.getElementById('heroSpecialLabel').textContent = 'SPÉCIAL ' + state.heroSpecial + '%';
   document.getElementById('villainSpecialFill').style.width = state.villainSpecial + '%';
   document.getElementById('villainSpecialLabel').textContent = 'SPÉCIAL ' + state.villainSpecial + '%';
-
   const sb = document.getElementById('specialBtn');
   sb.disabled = state.heroSpecial < 100 || !state.playerTurn;
   sb.style.borderColor = state.heroSpecial >= 100 ? 'var(--accent2)' : '';
@@ -783,9 +950,7 @@ function updateBattleUI() {
 }
 function setPlayerTurn(val) {
   state.playerTurn = val;
-  document.querySelectorAll('.action-btn').forEach(b => {
-    if (b.id !== 'specialBtn') b.disabled = !val;
-  });
+  document.querySelectorAll('.action-btn').forEach(b => { if (b.id !== 'specialBtn') b.disabled = !val; });
   document.getElementById('specialBtn').disabled = !val || state.heroSpecial < 100;
 }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -794,13 +959,11 @@ function spawnDmg(id, val, type) {
   const el = document.createElement('div');
   el.className = 'dmg-float' + (type==='crit'?' crit':type==='heal'?' heal':type==='miss'?' miss':'');
   el.textContent = type==='miss' ? 'ESQUIVÉ' : type==='heal' ? '+'+val : '-'+val;
-  wrap.appendChild(el);
-  setTimeout(() => el.remove(), 900);
+  wrap.appendChild(el); setTimeout(() => el.remove(), 900);
 }
 function anim(id, cls, ms=450) {
   const el = document.getElementById(id);
-  el.classList.add(cls);
-  setTimeout(() => el.classList.remove(cls), ms);
+  el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms);
 }
 
 // =============================================
@@ -840,7 +1003,6 @@ function playerAction(type) {
       }, 350);
       state.heroDefending = false;
     }
-
   } else if (type === 'combo') {
     const dmg = calcDmg(hero.atk,villain.def,0.65) + calcDmg(hero.atk,villain.def,0.65);
     anim('heroSprite','punch-right');
@@ -854,14 +1016,12 @@ function playerAction(type) {
       checkBattleEnd() || setTimeout(() => villainTurn(), 900);
     }, 350);
     state.heroDefending = false;
-
   } else if (type === 'defend') {
     state.heroDefending = true;
     addLog('🛡️ '+hero.name+' se met en garde…','hero-action');
     state.heroSpecial = Math.min(100, state.heroSpecial+8);
     updateBattleUI();
     setTimeout(() => villainTurn(), 600);
-
   } else if (type === 'special') {
     if (state.heroSpecial < 100) { setPlayerTurn(true); return; }
     state.heroSpecial = 0;
@@ -889,12 +1049,12 @@ function villainTurn() {
   state.turn++;
   state.villainSpecial = Math.min(100, state.villainSpecial+18);
 
-  // Phase taunts
   const hpRatio = state.villainHp / state.villainMaxHp;
-  const phase = villain.phases.slice().reverse().find(p => hpRatio <= p.threshold && !p.taunted);
-  if (phase) { phase.taunted = true; addLog('😈 '+villain.name+' : "'+phase.taunt+'"','villain-action'); }
+  if (villain.phases) {
+    const phase = villain.phases.slice().reverse().find(p => hpRatio <= p.threshold && !p.taunted);
+    if (phase) { phase.taunted = true; addLog('😈 '+villain.name+' : "'+phase.taunt+'"', villain.isBoss ? 'villain-action' : 'intermediate-action'); }
+  }
 
-  // AI
   let action;
   if (state.villainSpecial >= 100 && Math.random()<0.7) action='special';
   else if (hpRatio < 0.35) action = Math.random()<0.6 ? 'special':'punch';
@@ -902,13 +1062,13 @@ function villainTurn() {
   else { const r=Math.random(); action = r<0.5?'punch':r<0.75?'combo':'defend'; }
 
   anim('villainSprite','punch-left');
+  const logCls = villain.isBoss ? 'villain-action' : 'intermediate-action';
 
   setTimeout(() => {
     const block = hero.actions.defend.block || 0.5;
-
     if (action === 'punch') {
       if (isMiss()) {
-        addLog('💨 '+villain.name+' rate son coup !','villain-action');
+        addLog('💨 '+villain.name+' rate son coup !', logCls);
         spawnDmg('heroSprite',0,'miss');
       } else {
         const crit = isCrit();
@@ -917,7 +1077,7 @@ function villainTurn() {
         anim('heroSprite','hit-shake');
         spawnDmg('heroSprite',dmg,crit?'crit':'dmg');
         state.heroHp -= dmg;
-        addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':'')+' !', crit?'crit-line':'villain-action');
+        addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':'')+' !', crit?'crit-line':logCls);
       }
     } else if (action === 'combo') {
       let dmg = calcDmg(villain.atk,hero.def,1.2);
@@ -925,10 +1085,10 @@ function villainTurn() {
       anim('heroSprite','hit-shake');
       spawnDmg('heroSprite',dmg,'dmg');
       state.heroHp -= dmg;
-      addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !','villain-action');
+      addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !', logCls);
     } else if (action === 'defend') {
       state.villainDefending = true;
-      addLog('🛡️ '+villain.name+' se barricade…','villain-action');
+      addLog('🛡️ '+villain.name+' se barricade…', logCls);
     } else if (action === 'special') {
       state.villainSpecial = 0;
       const result = villain.special.fn(villain, hero);
@@ -939,9 +1099,7 @@ function villainTurn() {
       state.heroHp -= dmg;
       addLog('⚡ '+result.log,'crit-line');
     }
-
-    state.heroDefending = false;
-    state.villainDefending = false;
+    state.heroDefending = false; state.villainDefending = false;
     updateBattleUI();
     if (!checkBattleEnd()) setPlayerTurn(true);
   }, 400);
@@ -953,26 +1111,78 @@ function checkBattleEnd() {
   return false;
 }
 
+// =============================================
+// END BATTLE
+// =============================================
 function endBattle(won) {
   const hero = state.heroChar, villain = state.villainChar;
+  const isLastEnemy = state.currentEnemyIndex >= ENEMIES.length - 1;
+
+  if (won && !isLastEnemy) {
+    // Victoire intermédiaire
+    state.heroHpPersist = state.heroHp;
+    state.currentEnemyIndex++;
+    updateStageIndicators();
+
+    document.getElementById('victoryIcon').textContent = '⚔';
+    const t = document.getElementById('victoryTitle');
+    t.textContent = villain.name + ' vaincu !';
+    t.className = 'victory-title intermediate';
+    document.getElementById('victorySub').textContent =
+      `Bien joué ! Le prochain adversaire t'attend : ${ENEMIES[state.currentEnemyIndex].name}.`;
+
+    const banner = document.getElementById('hpCarryBanner');
+    banner.classList.remove('hidden');
+    document.getElementById('hpCarryVal').textContent = `${state.heroHp}/${state.heroMaxHp} HP`;
+
+    document.getElementById('xpGained').textContent = '+' + Math.floor(80 + state.turn * 5 + Math.random() * 40);
+    document.getElementById('goldGained').textContent = '+' + Math.floor(15 + Math.random() * 20);
+    document.getElementById('turnsUsed').textContent = state.turn;
+    const q = pick(hero.narratorLines.win);
+    document.getElementById('victoryQuote').innerHTML = `"${q}"<cite>— Narrateur</cite>`;
+
+    const nextEnemy = ENEMIES[state.currentEnemyIndex];
+    const btnR = document.getElementById('btnRematch');
+    btnR.textContent = nextEnemy.isBoss ? '💀 Affronter le Boss !' : `⚔ Combat suivant : ${nextEnemy.name}`;
+    btnR.className = 'btn-rematch next-stage';
+    btnR.onclick = () => startBattle(false);
+
+    const btnB = document.getElementById('btnBackSelect');
+    btnB.textContent = '← Recommencer depuis le début';
+    btnB.onclick = () => { state.currentEnemyIndex = 0; state.heroHpPersist = 0; updateStageIndicators(); backToSelect(); };
+
+    showScreen('victory');
+    return;
+  }
+
+  // Victoire finale ou défaite
+  document.getElementById('hpCarryBanner').classList.add('hidden');
   document.getElementById('victoryIcon').textContent = won ? '🏆' : '💀';
   const t = document.getElementById('victoryTitle');
-  t.textContent = won ? 'Victoire !' : 'Défaite…';
-  t.className = 'victory-title ' + (won?'win':'lose');
+  t.textContent = won ? 'Champion de la Cantine !' : 'Défaite…';
+  t.className = 'victory-title ' + (won ? 'win' : 'lose');
   document.getElementById('victorySub').textContent = won
-    ? `Tu as vaincu ${villain.name} en ${state.turn} tours !`
+    ? `Incroyable ! Tu as traversé ${ENEMIES.length} combats et vaincu ${villain.name} en ${state.turn} tours !`
     : `${villain.name} t'a eu cette fois… Revanche ?`;
-  document.getElementById('xpGained').textContent = (won?'+':'') + Math.floor(won ? 150+state.turn*10+Math.random()*50 : 40+Math.random()*20);
-  document.getElementById('goldGained').textContent = (won?'+':'') + Math.floor(won ? 30+Math.random()*40 : 5+Math.random()*10);
+  document.getElementById('xpGained').textContent = (won?'+':'') + Math.floor(won ? 200 + state.turn * 10 + Math.random() * 60 : 40 + Math.random() * 20);
+  document.getElementById('goldGained').textContent = (won?'+':'') + Math.floor(won ? 50 + Math.random() * 60 : 5 + Math.random() * 10);
   document.getElementById('turnsUsed').textContent = state.turn;
   const q = pick(won ? hero.narratorLines.win : hero.narratorLines.lose);
   document.getElementById('victoryQuote').innerHTML = `"${q}"<cite>— Narrateur</cite>`;
+
+  const btnR = document.getElementById('btnRematch');
+  btnR.textContent = won ? '🔄 Rejouer' : '🔄 Revanche';
+  btnR.className = 'btn-rematch';
+  btnR.onclick = () => { state.currentEnemyIndex = 0; state.heroHpPersist = 0; updateStageIndicators(); startBattle(true); };
+
+  const btnB = document.getElementById('btnBackSelect');
+  btnB.textContent = '← Changer de perso';
+  btnB.onclick = () => { state.currentEnemyIndex = 0; state.heroHpPersist = 0; updateStageIndicators(); backToSelect(); };
+
   showScreen('victory');
 }
 
-function rematch() { startBattle(); }
-function backToSelect() { showScreen('select'); }
-
+function backToSelect() { showScreen('select'); renderSelect(); }
 function openMobileMenu() { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow=''; }
 </script>

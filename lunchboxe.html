@@ -77,16 +77,11 @@
     }
     .btn-primary:hover { background: #d9ff55; }
 
-    /* =====================
-       GAME LAYOUT
-    ===================== */
     .game-wrapper {
       max-width: 1100px;
       margin: 0 auto;
       padding: 2rem 1.5rem 4rem;
     }
-
-    /* GAME HEADER */
     .game-header {
       text-align: center;
       padding: 2rem 0 1.5rem;
@@ -116,13 +111,10 @@
     .game-title em { font-style: italic; color: var(--accent3); }
     .game-subtitle { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
 
-    /* MAIN GAME SCREEN */
     #screen-select, #screen-battle, #screen-victory { display: none; }
     #screen-select.active, #screen-battle.active, #screen-victory.active { display: block; }
 
-    /* =====================
-       CHARACTER SELECT
-    ===================== */
+    /* CHARACTER SELECT */
     .select-title {
       text-align: center;
       font-family: 'Playfair Display', serif;
@@ -148,14 +140,14 @@
     }
     .char-card:hover { transform: translateY(-4px); border-color: rgba(200,245,66,0.4); }
     .char-card.selected { border-color: var(--accent); box-shadow: 0 0 20px rgba(200,245,66,0.15); }
-    .char-card.villain { border-color: var(--border); }
-    .char-card.villain:hover { border-color: rgba(232,69,69,0.4); }
+    .char-card.villain { border-color: var(--border); cursor: default; }
+    .char-card.villain:hover { border-color: rgba(232,69,69,0.4); transform: none; }
     .char-sprite {
       width: 90px; height: 90px;
       margin: 0 auto 0.8rem;
       display: flex; align-items: center; justify-content: center;
     }
-    .char-sprite svg { width: 100%; height: 100%; }
+    .char-sprite img { width: 100%; height: 100%; object-fit: contain; }
     .char-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
     .char-class { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
     .char-stats { display: flex; flex-direction: column; gap: 0.35rem; }
@@ -188,14 +180,12 @@
       height: 1px; background: var(--border);
     }
     .vs-divider::before { left: 0; } .vs-divider::after { right: 0; }
-
     .villain-label {
       text-align: center;
       font-family: 'DM Mono', monospace; font-size: 0.68rem;
       letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--accent3); margin-bottom: 1rem;
     }
-
     .fight-btn {
       display: block; width: 100%; max-width: 340px; margin: 0 auto;
       background: var(--accent3); color: #fff; border: none;
@@ -204,18 +194,16 @@
       cursor: pointer; transition: all 0.2s;
       letter-spacing: -0.01em;
     }
-    .fight-btn:hover { background: #ff5555; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,69,69,0.3); }
+    .fight-btn:hover:not(:disabled) { background: #ff5555; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,69,69,0.3); }
     .fight-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-    /* =====================
-       BATTLE SCREEN
-    ===================== */
+    /* BATTLE SCREEN */
     #screen-battle { animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
     @keyframes floatAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-    @keyframes punchRight { 0%{transform:translateX(0) scaleX(1)} 30%{transform:translateX(30px) scaleX(1.1)} 60%{transform:translateX(-5px) scaleX(0.95)} 100%{transform:translateX(0) scaleX(1)} }
+    @keyframes floatAnimFlip { 0%,100%{transform:translateY(0) scaleX(-1)} 50%{transform:translateY(-8px) scaleX(-1)} }
+    @keyframes punchRight { 0%{transform:translateX(0)} 30%{transform:translateX(30px) scaleX(1.1)} 60%{transform:translateX(-5px)} 100%{transform:translateX(0)} }
     @keyframes punchLeft { 0%{transform:translateX(0) scaleX(-1)} 30%{transform:translateX(-30px) scaleX(-1.1)} 60%{transform:translateX(5px) scaleX(-0.95)} 100%{transform:translateX(0) scaleX(-1)} }
     @keyframes hitFlash { 0%,100%{filter:brightness(1)} 50%{filter:brightness(2.5) saturate(0)} }
     @keyframes dmgFloat { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-60px) scale(1.4)} }
@@ -244,30 +232,27 @@
       background: linear-gradient(180deg, transparent, rgba(200,245,66,0.03));
       border-top: 1px solid rgba(200,245,66,0.08);
     }
-
     .fighters-row {
       display: flex; align-items: flex-end; justify-content: space-between;
       position: relative; z-index: 2;
       min-height: 180px;
     }
-
     .fighter-side { display: flex; flex-direction: column; align-items: center; width: 140px; }
     .fighter-sprite-wrap {
       position: relative;
       width: 100px; height: 120px;
       display: flex; align-items: center; justify-content: center;
     }
-    .fighter-sprite-wrap svg { width: 100%; height: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+    .fighter-sprite-wrap img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+    }
     .fighter-sprite-wrap.hero-idle { animation: floatAnim 3s ease-in-out infinite; }
-    .fighter-sprite-wrap.villain-idle { animation: floatAnim 3s 1.5s ease-in-out infinite; transform: scaleX(-1); }
-    .fighter-sprite-wrap.hero-idle.flip { transform: scaleX(1); }
-    .fighter-sprite-wrap.villain-idle { transform: scaleX(-1); }
-
-    .fighter-sprite-wrap.punch-right { animation: punchRight 0.4s ease !important; }
-    .fighter-sprite-wrap.punch-left { animation: punchLeft 0.4s ease !important; transform: scaleX(-1); }
-    .fighter-sprite-wrap.hit-shake { animation: shake 0.4s ease !important; }
-    .fighter-sprite-wrap.hit-flash { animation: hitFlash 0.3s ease !important; }
-
+    .fighter-sprite-wrap.villain-idle { animation: floatAnimFlip 3s 1.5s ease-in-out infinite; transform: scaleX(-1); }
+    .fighter-sprite-wrap.punch-right { animation: punchRight 0.4s ease forwards !important; }
+    .fighter-sprite-wrap.punch-left { animation: punchLeft 0.4s ease forwards !important; }
+    .fighter-sprite-wrap.hit-shake { animation: shake 0.4s ease forwards !important; }
     .dmg-float {
       position: absolute; top: 0; left: 50%; transform: translateX(-50%);
       font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700;
@@ -278,30 +263,21 @@
     .dmg-float.crit { color: var(--accent2); font-size: 2.2rem; }
     .dmg-float.heal { color: var(--hp-green); }
     .dmg-float.miss { color: var(--muted); font-size: 1.1rem; font-style: italic; }
-
     .vs-label {
       font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700;
       color: var(--accent3); opacity: 0.15; user-select: none; flex: 1; text-align: center;
       align-self: center;
     }
-
     .fighter-name-badge {
       font-family: 'DM Mono', monospace; font-size: 0.62rem;
       letter-spacing: 0.1em; text-transform: uppercase;
       color: var(--muted); margin-top: 0.4rem;
       background: rgba(14,15,12,0.7); padding: 0.2rem 0.6rem; border-radius: 2px;
     }
-    .fighter-level-badge {
-      font-family: 'DM Mono', monospace; font-size: 0.6rem;
-      color: var(--accent); margin-top: 0.15rem;
-    }
+    .fighter-level-badge { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--accent); margin-top: 0.15rem; }
 
     /* HP BARS */
-    .hp-bars {
-      display: grid; grid-template-columns: 1fr auto 1fr;
-      gap: 1rem; align-items: center;
-      margin-bottom: 1rem;
-    }
+    .hp-bars { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin-bottom: 1rem; }
     .hp-bar-side { display: flex; flex-direction: column; gap: 0.3rem; }
     .hp-bar-side.right { text-align: right; align-items: flex-end; }
     .hp-bar-header { display: flex; align-items: center; justify-content: space-between; font-size: 0.7rem; }
@@ -309,35 +285,19 @@
     .hp-fighter-name { font-weight: 500; font-size: 0.82rem; }
     .hp-value { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); }
     .hp-track { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; width: 100%; }
-    .hp-fill {
-      height: 100%; border-radius: 4px;
-      background: linear-gradient(90deg, #4ade80, #86efac);
-      transition: width 0.5s ease;
-    }
+    .hp-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #4ade80, #86efac); transition: width 0.5s ease; }
     .hp-fill.low { background: linear-gradient(90deg, #f59e0b, #fbbf24); animation: barPulse 1s infinite; }
     .hp-fill.critical { background: linear-gradient(90deg, #e84545, #f87171); animation: barPulse 0.6s infinite; }
-    .hp-fill.right-fill { margin-left: auto; }
     .turn-indicator { text-align: center; }
     .turn-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-
-    /* SPECIAL MOVE BAR */
     .special-bar-row { display: flex; align-items: center; gap: 0.5rem; }
     .special-track { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
     .special-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent2), #fbbf24); transition: width 0.4s ease; }
     .special-label { font-size: 0.58rem; font-family: 'DM Mono', monospace; color: var(--accent2); white-space: nowrap; }
 
     /* ACTIONS */
-    .action-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.2rem;
-      margin-bottom: 1.2rem;
-    }
-    .action-row {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 0.6rem; margin-bottom: 0.8rem;
-    }
+    .action-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin-bottom: 1.2rem; }
+    .action-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; margin-bottom: 0.8rem; }
     .action-btn {
       background: var(--card-bg); border: 1px solid var(--border);
       color: var(--text); padding: 0.7rem 0.5rem; border-radius: 5px;
@@ -353,22 +313,12 @@
     .action-btn.special { border-color: rgba(245,166,35,0.3); }
     .action-btn.special:hover:not(:disabled) { border-color: var(--accent2); box-shadow: 0 0 12px rgba(245,166,35,0.2); }
     .action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-
-    /* BATTLE LOG */
     .battle-log {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.8rem 1rem;
-      height: 120px;
-      overflow-y: auto;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      line-height: 1.7;
-      scroll-behavior: smooth;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.8rem 1rem; height: 120px; overflow-y: auto;
+      font-family: 'DM Mono', monospace; font-size: 0.72rem; line-height: 1.7; scroll-behavior: smooth;
     }
     .battle-log::-webkit-scrollbar { width: 4px; }
-    .battle-log::-webkit-scrollbar-track { background: transparent; }
     .battle-log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
     .log-line { animation: slideInRight 0.2s ease; }
     .log-line.hero-action { color: var(--accent); }
@@ -376,42 +326,19 @@
     .log-line.system { color: var(--muted); }
     .log-line.crit-line { color: var(--accent2); font-weight: bold; }
     .log-line.heal-line { color: var(--hp-green); }
-
-    /* STATUS EFFECTS */
     .status-effects { display: flex; gap: 0.4rem; margin-top: 0.3rem; flex-wrap: wrap; justify-content: center; }
-    .status-chip {
-      font-size: 0.58rem; font-family: 'DM Mono', monospace; letter-spacing: 0.06em;
-      padding: 0.15rem 0.45rem; border-radius: 20px;
-      background: rgba(200,245,66,0.1); color: var(--accent); border: 1px solid rgba(200,245,66,0.2);
-    }
-    .status-chip.debuff { background: rgba(232,69,69,0.1); color: var(--accent3); border-color: rgba(232,69,69,0.2); }
-    .status-chip.heal-over { background: rgba(74,222,128,0.1); color: var(--hp-green); border-color: rgba(74,222,128,0.2); }
 
     /* VICTORY */
-    #screen-victory {
-      text-align: center;
-      padding: 3rem 1rem;
-    }
+    #screen-victory { text-align: center; padding: 3rem 1rem; }
     .victory-icon { font-size: 5rem; display: block; margin-bottom: 1rem; animation: floatAnim 2s ease-in-out infinite; }
-    .victory-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem; font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
+    .victory-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
     .victory-title.win { color: var(--accent); }
     .victory-title.lose { color: var(--accent3); }
     .victory-sub { color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem; }
     .victory-quote {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1rem 1.5rem;
-      max-width: 480px;
-      margin: 0 auto 2rem;
-      font-style: italic;
-      color: var(--text);
-      font-size: 0.9rem;
-      line-height: 1.65;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+      padding: 1rem 1.5rem; max-width: 480px; margin: 0 auto 2rem;
+      font-style: italic; color: var(--text); font-size: 0.9rem; line-height: 1.65;
     }
     .victory-quote cite { display: block; margin-top: 0.5rem; font-style: normal; font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); }
     .victory-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
@@ -429,42 +356,23 @@
       cursor: pointer; transition: all 0.2s;
     }
     .btn-back-select:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* XP rewards */
-    .xp-rewards {
-      display: flex; justify-content: center; gap: 2rem;
-      margin-bottom: 1.5rem;
-    }
+    .xp-rewards { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
     .xp-item { text-align: center; }
     .xp-item .xp-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--accent); }
     .xp-item .xp-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
 
     /* MOBILE */
-    .hamburger {
-      display: none; flex-direction: column; gap: 5px;
-      background: none; border: 1px solid var(--border);
-      border-radius: 4px; padding: 0.5rem 0.6rem; cursor: pointer;
-    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.6rem; cursor: pointer; }
     .hamburger span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; }
-    .mobile-menu {
-      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(14,15,12,0.97); z-index: 999;
-      flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
-    }
+    .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(14,15,12,0.97); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
     .mobile-menu.open { display: flex; }
-    .mobile-menu a, .mobile-menu button {
-      color: var(--text); text-decoration: none; font-size: 1.4rem;
-      font-family: 'Playfair Display', serif; font-weight: 700;
-      letter-spacing: -0.02em; transition: color 0.2s;
-      background: none; border: none; cursor: pointer;
-    }
+    .mobile-menu a, .mobile-menu button { color: var(--text); text-decoration: none; font-size: 1.4rem; font-family: 'Playfair Display', serif; font-weight: 700; letter-spacing: -0.02em; transition: color 0.2s; background: none; border: none; cursor: pointer; }
     .mobile-menu a:hover, .mobile-menu button:hover { color: var(--accent); }
     .mobile-menu-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
 
     @media (max-width: 768px) {
       nav { padding: 0.9rem 1rem; }
-      .nav-links { display: none; }
-      .nav-actions { display: none; }
+      .nav-links, .nav-actions { display: none; }
       .hamburger { display: flex !important; }
       .game-wrapper { padding: 1rem 0.8rem 3rem; }
       .characters-grid { grid-template-columns: 1fr; gap: 0.8rem; }
@@ -515,32 +423,21 @@
     <p class="game-subtitle">Combats épiques dans la cantine. Choisis ton champion, défie le grand méchant.</p>
   </div>
 
-  <!-- ===== SELECT SCREEN ===== -->
+  <!-- SELECT SCREEN -->
   <div id="screen-select" class="active">
     <p class="select-title">Choisis ton champion</p>
     <p class="select-subtitle">// SÉLECTION DU PERSONNAGE</p>
-
-    <div class="characters-grid" id="heroGrid">
-      <!-- heroes injected by JS -->
-    </div>
-
+    <div class="characters-grid" id="heroGrid"></div>
     <div class="vs-divider">contre</div>
     <div class="villain-label">⚠ BOSS — Grand Méchant</div>
-
-    <div class="characters-grid" style="grid-template-columns:1fr;" id="villainGrid">
-      <!-- villain injected -->
-    </div>
-
-    <button class="fight-btn" id="fightBtn" onclick="startBattle()" disabled>
-      ⚔ COMBAT !
-    </button>
+    <div class="characters-grid" id="villainGrid"></div>
+    <button class="fight-btn" id="fightBtn" onclick="startBattle()" disabled>⚔ COMBAT !</button>
   </div>
 
-  <!-- ===== BATTLE SCREEN ===== -->
+  <!-- BATTLE SCREEN -->
   <div id="screen-battle">
-    <!-- HP bars -->
-    <div class="hp-bars" id="hpBars">
-      <div class="hp-bar-side" id="heroHpSide">
+    <div class="hp-bars">
+      <div class="hp-bar-side">
         <div class="hp-bar-header">
           <span class="hp-fighter-name" id="heroHpName">Fraise</span>
           <span class="hp-value" id="heroHpVal">100/100</span>
@@ -555,7 +452,7 @@
       <div class="turn-indicator">
         <div class="turn-label" id="turnLabel">Tour 1</div>
       </div>
-      <div class="hp-bar-side right" id="villainHpSide">
+      <div class="hp-bar-side right">
         <div class="hp-bar-header">
           <span class="hp-fighter-name" id="villainHpName">Banane</span>
           <span class="hp-value" id="villainHpVal">120/120</span>
@@ -569,7 +466,6 @@
       </div>
     </div>
 
-    <!-- Arena -->
     <div class="arena">
       <div class="arena-bg"></div>
       <div class="arena-floor"></div>
@@ -588,9 +484,8 @@
       </div>
     </div>
 
-    <!-- Actions -->
     <div class="action-panel">
-      <div class="action-row" id="actionRow">
+      <div class="action-row">
         <button class="action-btn" onclick="playerAction('punch')">
           <span class="action-icon">👊</span>
           <span class="action-name">Punch</span>
@@ -612,24 +507,23 @@
           <span class="action-desc" id="specialBtnDesc">Charge 0%</span>
         </button>
       </div>
-      <!-- Battle log -->
       <div class="battle-log" id="battleLog"></div>
     </div>
   </div>
 
-  <!-- ===== VICTORY SCREEN ===== -->
+  <!-- VICTORY SCREEN -->
   <div id="screen-victory">
     <span class="victory-icon" id="victoryIcon">🏆</span>
     <h2 class="victory-title" id="victoryTitle">Victoire !</h2>
     <p class="victory-sub" id="victorySub">Tu as vaincu le grand méchant Banane !</p>
-    <div class="xp-rewards" id="xpRewards">
+    <div class="xp-rewards">
       <div class="xp-item"><div class="xp-val" id="xpGained">+250</div><div class="xp-label">XP gagnés</div></div>
       <div class="xp-item"><div class="xp-val" id="goldGained">+50</div><div class="xp-label">Pièces</div></div>
       <div class="xp-item"><div class="xp-val" id="turnsUsed">12</div><div class="xp-label">Tours</div></div>
     </div>
     <div class="victory-quote" id="victoryQuote">
       "Certains combats se gagnent avec les poings, d'autres avec le ventre."
-      <cite>— Fraise, championne de la cantine</cite>
+      <cite>— Narrateur</cite>
     </div>
     <div class="victory-btns">
       <button class="btn-rematch" onclick="rematch()">🔄 Revanche</button>
@@ -637,115 +531,7 @@
     </div>
   </div>
 
-</div><!-- /game-wrapper -->
-
-<!-- ===================== SVG CHARACTERS ===================== -->
-<svg style="display:none">
-  <defs>
-    <!-- FRAISE (hero 1) -->
-    <g id="char-fraise">
-      <!-- Body -->
-      <ellipse cx="50" cy="75" rx="22" ry="28" fill="#e84545"/>
-      <!-- Seeds -->
-      <ellipse cx="42" cy="70" rx="2.5" ry="3" fill="#fff" opacity="0.7" transform="rotate(-10 42 70)"/>
-      <ellipse cx="52" cy="65" rx="2.5" ry="3" fill="#fff" opacity="0.7" transform="rotate(5 52 65)"/>
-      <ellipse cx="58" cy="73" rx="2.5" ry="3" fill="#fff" opacity="0.7" transform="rotate(-5 58 73)"/>
-      <ellipse cx="44" cy="82" rx="2.5" ry="3" fill="#fff" opacity="0.7" transform="rotate(8 44 82)"/>
-      <ellipse cx="56" cy="82" rx="2.5" ry="3" fill="#fff" opacity="0.7" transform="rotate(-8 56 82)"/>
-      <!-- Leaves top -->
-      <ellipse cx="44" cy="48" rx="7" ry="5" fill="#4ade80" transform="rotate(-30 44 48)"/>
-      <ellipse cx="50" cy="45" rx="7" ry="5" fill="#22c55e" transform="rotate(0 50 45)"/>
-      <ellipse cx="57" cy="48" rx="7" ry="5" fill="#4ade80" transform="rotate(30 57 48)"/>
-      <!-- Face -->
-      <circle cx="44" cy="73" r="3.5" fill="#fff"/>
-      <circle cx="57" cy="73" r="3.5" fill="#fff"/>
-      <circle cx="45" cy="74" r="2" fill="#1a1b16"/>
-      <circle cx="58" cy="74" r="2" fill="#1a1b16"/>
-      <!-- Gloves -->
-      <circle cx="28" cy="75" r="9" fill="#c8f542"/>
-      <circle cx="72" cy="75" r="9" fill="#c8f542"/>
-      <!-- Glove lines -->
-      <line x1="25" y1="72" x2="31" y2="78" stroke="#a8d520" stroke-width="1.5"/>
-      <line x1="69" y1="72" x2="75" y2="78" stroke="#a8d520" stroke-width="1.5"/>
-      <!-- Shorts -->
-      <rect x="36" y="96" width="28" height="14" rx="4" fill="#c8f542"/>
-      <!-- Legs -->
-      <rect x="37" y="108" width="9" height="10" rx="3" fill="#e84545"/>
-      <rect x="54" y="108" width="9" height="10" rx="3" fill="#e84545"/>
-      <!-- Shoes -->
-      <ellipse cx="41" cy="119" rx="8" ry="5" fill="#1a1b16"/>
-      <ellipse cx="59" cy="119" rx="8" ry="5" fill="#1a1b16"/>
-    </g>
-
-    <!-- POIRE (hero 2) -->
-    <g id="char-poire">
-      <!-- Pear body -->
-      <ellipse cx="50" cy="80" rx="24" ry="26" fill="#d4e842"/>
-      <ellipse cx="50" cy="62" rx="14" ry="18" fill="#c8d93a"/>
-      <!-- Stem -->
-      <rect x="48" y="40" width="4" height="12" rx="2" fill="#a0522d"/>
-      <ellipse cx="50" cy="38" rx="6" ry="4" fill="#4ade80" transform="rotate(-20 50 38)"/>
-      <!-- Face -->
-      <circle cx="44" cy="70" r="4" fill="#fff"/>
-      <circle cx="57" cy="70" r="4" fill="#fff"/>
-      <circle cx="45" cy="71" r="2.5" fill="#1a1b16"/>
-      <circle cx="58" cy="71" r="2.5" fill="#1a1b16"/>
-      <!-- Gloves -->
-      <circle cx="26" cy="78" r="10" fill="#f5a623"/>
-      <circle cx="74" cy="78" r="10" fill="#f5a623"/>
-      <line x1="22" y1="75" x2="30" y2="81" stroke="#d4891c" stroke-width="1.5"/>
-      <line x1="70" y1="75" x2="78" y2="81" stroke="#d4891c" stroke-width="1.5"/>
-      <!-- Belt -->
-      <rect x="34" y="97" width="32" height="7" rx="3" fill="#f5a623"/>
-      <rect x="47" y="97" width="6" height="7" fill="#c8f542"/>
-      <!-- Shorts -->
-      <rect x="34" y="102" width="32" height="12" rx="4" fill="#1a2e1a"/>
-      <!-- Legs -->
-      <rect x="36" y="112" width="10" height="10" rx="3" fill="#d4e842"/>
-      <rect x="54" y="112" width="10" height="10" rx="3" fill="#d4e842"/>
-      <!-- Shoes -->
-      <ellipse cx="41" cy="123" rx="9" ry="5" fill="#1a1b16"/>
-      <ellipse cx="59" cy="123" rx="9" ry="5" fill="#1a1b16"/>
-    </g>
-
-    <!-- BANANE (villain) -->
-    <g id="char-banane">
-      <!-- Cape -->
-      <path d="M 25 60 Q 15 90 20 120 Q 35 130 50 128 Q 65 130 80 120 Q 85 90 75 60 Z" fill="#1a1b16" opacity="0.8"/>
-      <!-- Body banana shape -->
-      <path d="M 35 45 Q 28 70 30 95 Q 40 110 50 110 Q 60 110 70 95 Q 72 70 65 45 Q 58 30 50 28 Q 42 30 35 45 Z" fill="#f5c842"/>
-      <!-- Dark stripes villain -->
-      <path d="M 38 50 Q 36 70 38 88" stroke="#c8a020" stroke-width="2" fill="none" opacity="0.6"/>
-      <path d="M 50 46 Q 50 70 50 90" stroke="#c8a020" stroke-width="2" fill="none" opacity="0.6"/>
-      <path d="M 62 50 Q 64 70 62 88" stroke="#c8a020" stroke-width="2" fill="none" opacity="0.6"/>
-      <!-- Evil face -->
-      <circle cx="43" cy="68" r="5" fill="#fff"/>
-      <circle cx="57" cy="68" r="5" fill="#fff"/>
-      <circle cx="44.5" cy="69.5" r="3" fill="#e84545"/>
-      <circle cx="58.5" cy="69.5" r="3" fill="#e84545"/>
-      <!-- Evil eyebrows -->
-      <line x1="39" y1="62" x2="48" y2="65" stroke="#1a1b16" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="52" y1="65" x2="61" y2="62" stroke="#1a1b16" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- Evil grin -->
-      <path d="M 40 80 Q 50 90 60 80" stroke="#1a1b16" stroke-width="2" fill="#1a1b16" stroke-linecap="round"/>
-      <!-- Crown -->
-      <path d="M 32 40 L 36 28 L 43 38 L 50 24 L 57 38 L 64 28 L 68 40 Z" fill="#f5a623"/>
-      <circle cx="50" cy="24" r="3" fill="#e84545"/>
-      <circle cx="36" cy="28" r="2" fill="#e84545"/>
-      <circle cx="64" cy="28" r="2" fill="#e84545"/>
-      <!-- Evil gloves -->
-      <circle cx="22" cy="82" r="11" fill="#e84545"/>
-      <circle cx="78" cy="82" r="11" fill="#e84545"/>
-      <line x1="17" y1="78" x2="27" y2="86" stroke="#c8282a" stroke-width="2"/>
-      <line x1="73" y1="78" x2="83" y2="86" stroke="#c8282a" stroke-width="2"/>
-      <!-- Boots -->
-      <rect x="34" y="108" width="14" height="14" rx="3" fill="#1a1b16"/>
-      <rect x="52" y="108" width="14" height="14" rx="3" fill="#1a1b16"/>
-      <ellipse cx="41" cy="122" rx="10" ry="6" fill="#0a0a08"/>
-      <ellipse cx="59" cy="122" rx="10" ry="6" fill="#0a0a08"/>
-    </g>
-  </defs>
-</svg>
+</div>
 
 <script>
 // =============================================
@@ -755,13 +541,12 @@ const CHARACTERS = {
   fraise: {
     id: 'fraise', name: 'Fraise', type: 'hero',
     class: 'Guerrière Fruitée',
-    sprite: 'char-fraise',
+    sprite: 'fraise',   // loads fraise.svg
     hp: 110, atk: 75, def: 55, spd: 90,
-    quote: '"Je suis douce… jusqu'à ce que ça crame."',
+    quote: '"Je suis douce… jusqu\'à ce que ça crame."',
     color: '#e84545',
     special: {
       name: '🍓 Rafale Rouge',
-      desc: 'Triple coup frénétique',
       fn: (hero, villain) => {
         const hits = [
           Math.max(1, Math.floor(hero.atk * 0.5 + Math.random() * 15)),
@@ -771,14 +556,10 @@ const CHARACTERS = {
         return { dmg: hits.reduce((a,b)=>a+b,0), log: `🍓 RAFALE ROUGE — ${hits.join(' + ')} dégâts !`, type: 'multi' };
       }
     },
-    actions: {
-      punch: { name: 'Punch', dmgMult: 1.0, desc: 'Coup standard' },
-      combo: { name: 'Combo', dmgMult: 0.65, hits: 2, desc: '2× 65%' },
-      defend: { name: 'Garde', block: 0.5, desc: 'Bloque 50%' },
-    },
+    actions: { defend: { block: 0.5 } },
     narratorLines: {
       win: [
-        "Et voilà, la cantine appartient aux petits fruits rouges. Ça sent la confiture ici !",
+        "Et voilà, la cantine appartient aux petits fruits rouges !",
         "Fraise prouve ce soir que le plus fort n'est pas toujours le plus grand.",
         "La victoire a un goût sucré… exactement comme elle.",
       ],
@@ -796,24 +577,19 @@ const CHARACTERS = {
   poire: {
     id: 'poire', name: 'Poire', type: 'hero',
     class: 'Mage de la Fraîcheur',
-    sprite: 'char-poire',
+    sprite: 'poire',    // loads poire.svg
     hp: 95, atk: 65, def: 70, spd: 75,
-    quote: '"La patience, c'est ma plus grande arme."',
+    quote: '"La patience, c\'est ma plus grande arme."',
     color: '#d4e842',
     special: {
       name: '🍐 Onde Juteuse',
-      desc: 'Soin + contre-attaque',
       fn: (hero, villain) => {
         const heal = Math.floor(18 + Math.random() * 12);
         const dmg = Math.max(1, Math.floor(hero.atk * 0.9 + Math.random() * 25));
         return { dmg, heal, log: `🍐 ONDE JUTEUSE — +${heal} PV soignés, ${dmg} dégâts !`, type: 'heal' };
       }
     },
-    actions: {
-      punch: { name: 'Punch', dmgMult: 1.0, desc: 'Coup standard' },
-      combo: { name: 'Combo', dmgMult: 0.65, hits: 2, desc: '2× 65%' },
-      defend: { name: 'Garde', block: 0.6, desc: 'Bloque 60%' },
-    },
+    actions: { defend: { block: 0.6 } },
     narratorLines: {
       win: [
         "La Poire, calme jusqu'au bout. La victoire lui revient de droit.",
@@ -836,22 +612,21 @@ const CHARACTERS = {
 const VILLAIN = {
   id: 'banane', name: 'Banane', type: 'villain',
   class: 'Seigneur Malveillant de la Cantine',
-  sprite: 'char-banane',
+  sprite: 'banane',   // loads banane.svg
   hp: 140, atk: 80, def: 60, spd: 65,
   quote: '"Personne ne résiste à ma peau de banane."',
   color: '#f5c842',
   special: {
     name: '🍌 Potassium Furie',
-    desc: 'Attaque dévastatrice',
     fn: (villain, hero) => {
       const dmg = Math.floor(villain.atk * 1.6 + Math.random() * 30);
       return { dmg, log: `🍌 POTASSIUM FURIE — ${dmg} dégâts cataclysmiques !`, type: 'crit' };
     }
   },
   phases: [
-    { threshold: 1.0, taunt: "Venez donc, petites friandises…" },
-    { threshold: 0.6, taunt: "Bien. Vous méritez de voir ma vraie puissance !" },
-    { threshold: 0.3, taunt: "IMPOSSIBLE. Je suis BANANE ! Je suis ÉTERNEL !" },
+    { threshold: 1.0, taunt: "Venez donc, petites friandises…", taunted: false },
+    { threshold: 0.6, taunt: "Bien. Vous méritez de voir ma vraie puissance !", taunted: false },
+    { threshold: 0.3, taunt: "IMPOSSIBLE. Je suis BANANE ! Je suis ÉTERNEL !", taunted: false },
   ],
   narratorLines: {
     taunt: [
@@ -866,71 +641,49 @@ const VILLAIN = {
 // GAME STATE
 // =============================================
 let state = {
-  heroChar: null,
-  villainChar: null,
+  heroChar: null, villainChar: null,
   heroHp: 0, heroMaxHp: 0,
   villainHp: 0, villainMaxHp: 0,
-  heroSpecial: 0,
-  villainSpecial: 0,
+  heroSpecial: 0, villainSpecial: 0,
   turn: 1,
-  heroDefending: false,
-  villainDefending: false,
-  heroStatuses: [],
-  villainStatuses: [],
-  battleRunning: false,
-  playerTurn: true,
+  heroDefending: false, villainDefending: false,
+  battleRunning: false, playerTurn: true,
 };
 
 // =============================================
 // CHARACTER SELECT
 // =============================================
-function buildCharCard(char, onClick, isSelected = false) {
-  const maxStat = 100;
+function buildCharCard(char, onclickStr, isSelected) {
+  const clickAttr = onclickStr ? `onclick="${onclickStr}"` : '';
   return `
-    <div class="char-card ${char.type === 'villain' ? 'villain' : ''} ${isSelected ? 'selected' : ''}" onclick="${onClick}">
+    <div class="char-card ${char.type === 'villain' ? 'villain' : ''} ${isSelected ? 'selected' : ''}" ${clickAttr}>
       <span class="char-type-badge ${char.type === 'villain' ? 'badge-villain' : 'badge-hero'}">${char.type === 'villain' ? '👿 BOSS' : '⚔ HÉROS'}</span>
-      <div class="char-sprite">
-        <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
-          <use href="#${char.sprite}"/>
-        </svg>
-      </div>
+      <div class="char-sprite"><img src="${char.sprite}.svg" alt="${char.name}" /></div>
       <div class="char-name">${char.name}</div>
       <div class="char-class">${char.class}</div>
       <div class="char-stats">
-        <div class="stat-bar-row">
-          <span class="stat-bar-label">ATK</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill fill-atk" style="width:${char.atk}%"></div></div>
-        </div>
-        <div class="stat-bar-row">
-          <span class="stat-bar-label">DEF</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill fill-def" style="width:${char.def}%"></div></div>
-        </div>
-        <div class="stat-bar-row">
-          <span class="stat-bar-label">VIT</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill fill-spd" style="width:${char.spd}%"></div></div>
-        </div>
-        <div class="stat-bar-row">
-          <span class="stat-bar-label">HP</span>
-          <div class="stat-bar-track"><div class="stat-bar-fill fill-hp" style="width:${char.hp}%"></div></div>
-        </div>
+        <div class="stat-bar-row"><span class="stat-bar-label">ATK</span><div class="stat-bar-track"><div class="stat-bar-fill fill-atk" style="width:${char.atk}%"></div></div></div>
+        <div class="stat-bar-row"><span class="stat-bar-label">DEF</span><div class="stat-bar-track"><div class="stat-bar-fill fill-def" style="width:${char.def}%"></div></div></div>
+        <div class="stat-bar-row"><span class="stat-bar-label">VIT</span><div class="stat-bar-track"><div class="stat-bar-fill fill-spd" style="width:${char.spd}%"></div></div></div>
+        <div class="stat-bar-row"><span class="stat-bar-label">HP</span><div class="stat-bar-track"><div class="stat-bar-fill fill-hp" style="width:${char.hp}%"></div></div></div>
       </div>
       <div class="char-quote">${char.quote}</div>
-    </div>
-  `;
+    </div>`;
 }
 
 let selectedHero = null;
 
 function renderSelect() {
-  const hg = document.getElementById('heroGrid');
-  const vg = document.getElementById('villainGrid');
+  // Heroes grid (2 heroes, 3-col grid → add empty placeholder to keep layout)
+  const heroes = Object.values(CHARACTERS).filter(c => c.type === 'hero');
+  document.getElementById('heroGrid').innerHTML =
+    heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('') +
+    '<div></div>'; // empty 3rd cell
 
-  hg.innerHTML = Object.values(CHARACTERS)
-    .filter(c => c.type === 'hero')
-    .map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id))
-    .join('');
+  // Villain centred in 3-col grid
+  document.getElementById('villainGrid').innerHTML =
+    '<div></div>' + buildCharCard(VILLAIN, '', false) + '<div></div>';
 
-  vg.innerHTML = buildCharCard(VILLAIN, '');
   document.getElementById('fightBtn').disabled = !selectedHero;
 }
 
@@ -955,28 +708,30 @@ function startBattle() {
   state.turn = 1;
   state.heroDefending = false;
   state.villainDefending = false;
-  state.heroStatuses = [];
-  state.villainStatuses = [];
   state.battleRunning = true;
   state.playerTurn = true;
 
-  // Setup UI
+  // Reset villain phase taunts
+  state.villainChar.phases.forEach(p => p.taunted = false);
+
+  // Names
   document.getElementById('heroHpName').textContent = state.heroChar.name;
   document.getElementById('villainHpName').textContent = state.villainChar.name;
   document.getElementById('heroNameBadge').textContent = state.heroChar.name.toUpperCase();
   document.getElementById('villainNameBadge').textContent = state.villainChar.name.toUpperCase();
 
-  // Sprites
-  document.getElementById('heroSprite').innerHTML = `<svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><use href="#${state.heroChar.sprite}"/></svg>`;
-  document.getElementById('villainSprite').innerHTML = `<svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><use href="#${state.villainChar.sprite}"/></svg>`;
+  // ── Sprites via <img> pointing to external .svg files ──
+  document.getElementById('heroSprite').innerHTML =
+    `<img src="${state.heroChar.sprite}.svg" alt="${state.heroChar.name}" />`;
+  document.getElementById('villainSprite').innerHTML =
+    `<img src="${state.villainChar.sprite}.svg" alt="${state.villainChar.name}" />`;
 
   clearLog();
   showScreen('battle');
   updateBattleUI();
   addLog(`⚔ Le combat commence ! ${state.heroChar.name} vs ${state.villainChar.name}`, 'system');
-  addLog(`🎙 Narrateur : "${randomLine(state.villainChar.phases[0], 'taunt')}"`, 'villain-action');
+  addLog(`🎙 Narrateur : "${pick(state.villainChar.narratorLines.taunt)}"`, 'villain-action');
 
-  // Check villain first (speed)
   if (state.villainChar.spd > state.heroChar.spd) {
     addLog('⚡ ' + state.villainChar.name + ' est plus rapide et attaque en premier !', 'system');
     setPlayerTurn(false);
@@ -990,148 +745,111 @@ function startBattle() {
 // UI HELPERS
 // =============================================
 function showScreen(name) {
-  ['select', 'battle', 'victory'].forEach(s => {
-    const el = document.getElementById('screen-' + s);
-    el.classList.toggle('active', s === name);
-  });
+  ['select','battle','victory'].forEach(s =>
+    document.getElementById('screen-' + s).classList.toggle('active', s === name)
+  );
 }
-
-function clearLog() {
-  document.getElementById('battleLog').innerHTML = '';
-}
-
+function clearLog() { document.getElementById('battleLog').innerHTML = ''; }
 function addLog(msg, cls = '') {
   const log = document.getElementById('battleLog');
-  const line = document.createElement('div');
-  line.className = 'log-line ' + cls;
-  line.textContent = msg;
-  log.appendChild(line);
+  const d = document.createElement('div');
+  d.className = 'log-line ' + cls;
+  d.textContent = msg;
+  log.appendChild(d);
   log.scrollTop = log.scrollHeight;
 }
-
 function updateBattleUI() {
-  const hs = state;
-  // Hero HP
-  const heroRatio = Math.max(0, hs.heroHp / hs.heroMaxHp);
-  document.getElementById('heroHpFill').style.width = (heroRatio * 100) + '%';
-  document.getElementById('heroHpFill').className = 'hp-fill' + (heroRatio < 0.2 ? ' critical' : heroRatio < 0.4 ? ' low' : '');
-  document.getElementById('heroHpVal').textContent = Math.max(0, hs.heroHp) + '/' + hs.heroMaxHp;
+  const pct = (v, m) => Math.max(0, v / m * 100) + '%';
+  const cls = (v, m) => { const r = v/m; return 'hp-fill' + (r < 0.2 ? ' critical' : r < 0.4 ? ' low' : ''); };
 
-  // Villain HP
-  const villainRatio = Math.max(0, hs.villainHp / hs.villainMaxHp);
-  document.getElementById('villainHpFill').style.width = (villainRatio * 100) + '%';
-  document.getElementById('villainHpFill').className = 'hp-fill' + (villainRatio < 0.2 ? ' critical' : villainRatio < 0.4 ? ' low' : '');
-  document.getElementById('villainHpVal').textContent = Math.max(0, hs.villainHp) + '/' + hs.villainMaxHp;
+  document.getElementById('heroHpFill').style.width = pct(state.heroHp, state.heroMaxHp);
+  document.getElementById('heroHpFill').className = cls(state.heroHp, state.heroMaxHp);
+  document.getElementById('heroHpVal').textContent = Math.max(0,state.heroHp) + '/' + state.heroMaxHp;
 
-  // Special
-  document.getElementById('heroSpecialFill').style.width = hs.heroSpecial + '%';
-  document.getElementById('heroSpecialLabel').textContent = 'SPÉCIAL ' + hs.heroSpecial + '%';
-  document.getElementById('villainSpecialFill').style.width = hs.villainSpecial + '%';
-  document.getElementById('villainSpecialLabel').textContent = 'SPÉCIAL ' + hs.villainSpecial + '%';
+  document.getElementById('villainHpFill').style.width = pct(state.villainHp, state.villainMaxHp);
+  document.getElementById('villainHpFill').className = cls(state.villainHp, state.villainMaxHp);
+  document.getElementById('villainHpVal').textContent = Math.max(0,state.villainHp) + '/' + state.villainMaxHp;
 
-  // Special btn
-  const specialBtn = document.getElementById('specialBtn');
-  specialBtn.disabled = hs.heroSpecial < 100 || !hs.playerTurn;
-  document.getElementById('specialBtnDesc').textContent = hs.heroSpecial >= 100 ? 'PRÊT !' : 'Charge ' + hs.heroSpecial + '%';
-  if (hs.heroSpecial >= 100) specialBtn.style.borderColor = 'var(--accent2)';
+  document.getElementById('heroSpecialFill').style.width = state.heroSpecial + '%';
+  document.getElementById('heroSpecialLabel').textContent = 'SPÉCIAL ' + state.heroSpecial + '%';
+  document.getElementById('villainSpecialFill').style.width = state.villainSpecial + '%';
+  document.getElementById('villainSpecialLabel').textContent = 'SPÉCIAL ' + state.villainSpecial + '%';
 
-  // Turn
-  document.getElementById('turnLabel').textContent = 'Tour ' + hs.turn;
-
-  // Villain phase taunts
-  const ratio = hs.villainHp / hs.villainMaxHp;
-  const phase = hs.villainChar.phases.slice().reverse().find(p => ratio <= p.threshold);
+  const sb = document.getElementById('specialBtn');
+  sb.disabled = state.heroSpecial < 100 || !state.playerTurn;
+  sb.style.borderColor = state.heroSpecial >= 100 ? 'var(--accent2)' : '';
+  document.getElementById('specialBtnDesc').textContent = state.heroSpecial >= 100 ? 'PRÊT !' : 'Charge ' + state.heroSpecial + '%';
+  document.getElementById('turnLabel').textContent = 'Tour ' + state.turn;
 }
-
 function setPlayerTurn(val) {
   state.playerTurn = val;
-  const btns = document.querySelectorAll('.action-btn');
-  btns.forEach(b => {
+  document.querySelectorAll('.action-btn').forEach(b => {
     if (b.id !== 'specialBtn') b.disabled = !val;
   });
-  const specialBtn = document.getElementById('specialBtn');
-  specialBtn.disabled = !val || state.heroSpecial < 100;
+  document.getElementById('specialBtn').disabled = !val || state.heroSpecial < 100;
 }
-
-function randomLine(obj, key) {
-  if (!obj || !obj[key]) return '';
-  const arr = Array.isArray(obj) ? obj : obj[key];
-  if (!arr) return '';
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function spawnDmg(targetId, val, type = 'dmg') {
-  const wrap = document.getElementById(targetId);
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function spawnDmg(id, val, type) {
+  const wrap = document.getElementById(id);
   const el = document.createElement('div');
-  el.className = 'dmg-float' + (type === 'crit' ? ' crit' : type === 'heal' ? ' heal' : type === 'miss' ? ' miss' : '');
-  el.textContent = type === 'miss' ? 'ESQUIVÉ' : type === 'heal' ? '+' + val : '-' + val;
-  wrap.style.position = 'relative';
+  el.className = 'dmg-float' + (type==='crit'?' crit':type==='heal'?' heal':type==='miss'?' miss':'');
+  el.textContent = type==='miss' ? 'ESQUIVÉ' : type==='heal' ? '+'+val : '-'+val;
   wrap.appendChild(el);
   setTimeout(() => el.remove(), 900);
 }
-
-function animateSprite(id, cls, duration = 450) {
+function anim(id, cls, ms=450) {
   const el = document.getElementById(id);
   el.classList.add(cls);
-  setTimeout(() => el.classList.remove(cls), duration);
+  setTimeout(() => el.classList.remove(cls), ms);
 }
 
 // =============================================
 // BATTLE LOGIC
 // =============================================
-function calcDmg(atk, def, mult = 1.0) {
-  const base = atk * mult;
-  const rand = 0.85 + Math.random() * 0.3;
-  const defFactor = Math.max(0.3, 1 - (def * 0.003));
-  return Math.max(1, Math.floor(base * rand * defFactor));
+function calcDmg(atk, def, mult=1) {
+  return Math.max(1, Math.floor(atk * mult * (0.85+Math.random()*0.3) * Math.max(0.3, 1-def*0.003)));
 }
-
-function isCrit() { return Math.random() < 0.15; }
-function isMiss() { return Math.random() < 0.08; }
+const isCrit = () => Math.random() < 0.15;
+const isMiss = () => Math.random() < 0.08;
 
 function playerAction(type) {
   if (!state.playerTurn || !state.battleRunning) return;
   setPlayerTurn(false);
-
-  const hero = state.heroChar;
-  const villain = state.villainChar;
+  const hero = state.heroChar, villain = state.villainChar;
 
   if (type === 'punch') {
-    const miss = isMiss();
-    if (miss) {
-      animateSprite('heroSprite', 'punch-right');
-      setTimeout(() => spawnDmg('villainSprite', 0, 'miss'), 300);
+    if (isMiss()) {
+      anim('heroSprite','punch-right');
+      setTimeout(() => spawnDmg('villainSprite',0,'miss'), 300);
       addLog(`💨 ${hero.name} rate son coup !`, 'hero-action');
+      state.heroDefending = false;
+      setTimeout(() => villainTurn(), 900);
     } else {
       const crit = isCrit();
-      const dmg = crit ? Math.floor(calcDmg(hero.atk, villain.def) * 1.8) : calcDmg(hero.atk, villain.def);
-      animateSprite('heroSprite', 'punch-right');
+      const dmg = crit ? Math.floor(calcDmg(hero.atk,villain.def)*1.8) : calcDmg(hero.atk,villain.def);
+      anim('heroSprite','punch-right');
       setTimeout(() => {
-        animateSprite('villainSprite', 'hit-shake');
-        spawnDmg('villainSprite', dmg, crit ? 'crit' : 'dmg');
+        anim('villainSprite','hit-shake');
+        spawnDmg('villainSprite', dmg, crit?'crit':'dmg');
         state.villainHp -= dmg;
-        state.heroSpecial = Math.min(100, state.heroSpecial + 15);
-        addLog((crit ? '💥 CRITIQUE ! ' : '👊 ') + hero.name + ' frappe pour ' + dmg + ' dégâts !', crit ? 'crit-line' : 'hero-action');
-        if (crit) addLog('🎙 Narrateur : "' + randomLine(hero.narratorLines, 'attack') + '"', 'system');
+        state.heroSpecial = Math.min(100, state.heroSpecial+15);
+        addLog((crit?'💥 CRITIQUE ! ':'👊 ')+hero.name+' frappe pour '+dmg+' dégâts !', crit?'crit-line':'hero-action');
+        if (crit) addLog('🎙 "'+pick(hero.narratorLines.attack)+'"','system');
         updateBattleUI();
         checkBattleEnd() || setTimeout(() => villainTurn(), 900);
       }, 350);
+      state.heroDefending = false;
     }
-    state.heroDefending = false;
 
   } else if (type === 'combo') {
-    let totalDmg = 0;
-    animateSprite('heroSprite', 'punch-right');
-    for (let i = 0; i < 2; i++) {
-      const dmg = calcDmg(hero.atk, villain.def, 0.65);
-      totalDmg += dmg;
-    }
+    const dmg = calcDmg(hero.atk,villain.def,0.65) + calcDmg(hero.atk,villain.def,0.65);
+    anim('heroSprite','punch-right');
     setTimeout(() => {
-      animateSprite('villainSprite', 'hit-shake');
-      spawnDmg('villainSprite', totalDmg, 'dmg');
-      state.villainHp -= totalDmg;
-      state.heroSpecial = Math.min(100, state.heroSpecial + 20);
-      addLog('🔥 Combo de ' + hero.name + ' — ' + totalDmg + ' dégâts !', 'hero-action');
+      anim('villainSprite','hit-shake');
+      spawnDmg('villainSprite',dmg,'dmg');
+      state.villainHp -= dmg;
+      state.heroSpecial = Math.min(100, state.heroSpecial+20);
+      addLog('🔥 Combo de '+hero.name+' — '+dmg+' dégâts !','hero-action');
       updateBattleUI();
       checkBattleEnd() || setTimeout(() => villainTurn(), 900);
     }, 350);
@@ -1139,8 +857,8 @@ function playerAction(type) {
 
   } else if (type === 'defend') {
     state.heroDefending = true;
-    addLog('🛡️ ' + hero.name + ' se met en garde…', 'hero-action');
-    state.heroSpecial = Math.min(100, state.heroSpecial + 8);
+    addLog('🛡️ '+hero.name+' se met en garde…','hero-action');
+    state.heroSpecial = Math.min(100, state.heroSpecial+8);
     updateBattleUI();
     setTimeout(() => villainTurn(), 600);
 
@@ -1148,16 +866,16 @@ function playerAction(type) {
     if (state.heroSpecial < 100) { setPlayerTurn(true); return; }
     state.heroSpecial = 0;
     const result = hero.special.fn(hero, villain);
-    animateSprite('heroSprite', 'punch-right');
+    anim('heroSprite','punch-right');
     setTimeout(() => {
       if (result.heal) {
-        state.heroHp = Math.min(state.heroMaxHp, state.heroHp + result.heal);
-        spawnDmg('heroSprite', result.heal, 'heal');
+        state.heroHp = Math.min(state.heroMaxHp, state.heroHp+result.heal);
+        spawnDmg('heroSprite',result.heal,'heal');
       }
-      animateSprite('villainSprite', 'hit-shake');
-      spawnDmg('villainSprite', result.dmg, result.type === 'crit' ? 'crit' : 'dmg');
+      anim('villainSprite','hit-shake');
+      spawnDmg('villainSprite',result.dmg,result.type==='crit'?'crit':'dmg');
       state.villainHp -= result.dmg;
-      addLog('⚡ ' + result.log, 'crit-line');
+      addLog('⚡ '+result.log,'crit-line');
       updateBattleUI();
       checkBattleEnd() || setTimeout(() => villainTurn(), 1000);
     }, 400);
@@ -1167,72 +885,59 @@ function playerAction(type) {
 
 function villainTurn() {
   if (!state.battleRunning) return;
-  const villain = state.villainChar;
-  const hero = state.heroChar;
+  const villain = state.villainChar, hero = state.heroChar;
   state.turn++;
+  state.villainSpecial = Math.min(100, state.villainSpecial+18);
 
-  // Villain AI
+  // Phase taunts
   const hpRatio = state.villainHp / state.villainMaxHp;
-  state.villainSpecial = Math.min(100, state.villainSpecial + 18);
+  const phase = villain.phases.slice().reverse().find(p => hpRatio <= p.threshold && !p.taunted);
+  if (phase) { phase.taunted = true; addLog('😈 '+villain.name+' : "'+phase.taunt+'"','villain-action'); }
 
-  // Check phase taunt
-  const phase = villain.phases.slice().reverse().find(p => (state.villainHp / state.villainMaxHp) <= p.threshold && p.taunted !== true);
-  if (phase && !phase.taunted) {
-    phase.taunted = true;
-    addLog('😈 ' + villain.name + ' : "' + phase.taunt + '"', 'villain-action');
-  }
-
+  // AI
   let action;
-  if (state.villainSpecial >= 100 && Math.random() < 0.7) {
-    action = 'special';
-  } else if (hpRatio < 0.35) {
-    action = Math.random() < 0.6 ? 'special' : 'punch';
-  } else if (hpRatio < 0.6) {
-    action = Math.random() < 0.4 ? 'combo' : 'punch';
-  } else {
-    const r = Math.random();
-    action = r < 0.5 ? 'punch' : r < 0.75 ? 'combo' : 'defend';
-  }
+  if (state.villainSpecial >= 100 && Math.random()<0.7) action='special';
+  else if (hpRatio < 0.35) action = Math.random()<0.6 ? 'special':'punch';
+  else if (hpRatio < 0.6)  action = Math.random()<0.4 ? 'combo':'punch';
+  else { const r=Math.random(); action = r<0.5?'punch':r<0.75?'combo':'defend'; }
 
-  animateSprite('villainSprite', 'punch-left');
+  anim('villainSprite','punch-left');
 
   setTimeout(() => {
+    const block = hero.actions.defend.block || 0.5;
+
     if (action === 'punch') {
-      const crit = isCrit();
-      const miss = isMiss();
-      if (miss) {
-        addLog('💨 ' + villain.name + ' rate son coup !', 'villain-action');
-        spawnDmg('heroSprite', 0, 'miss');
+      if (isMiss()) {
+        addLog('💨 '+villain.name+' rate son coup !','villain-action');
+        spawnDmg('heroSprite',0,'miss');
       } else {
-        let dmg = crit ? Math.floor(calcDmg(villain.atk, hero.def) * 1.7) : calcDmg(villain.atk, hero.def);
-        if (state.heroDefending) dmg = Math.floor(dmg * (1 - hero.actions.defend.block));
-        animateSprite('heroSprite', 'hit-shake');
-        spawnDmg('heroSprite', dmg, crit ? 'crit' : 'dmg');
+        const crit = isCrit();
+        let dmg = crit ? Math.floor(calcDmg(villain.atk,hero.def)*1.7) : calcDmg(villain.atk,hero.def);
+        if (state.heroDefending) dmg = Math.floor(dmg*(1-block));
+        anim('heroSprite','hit-shake');
+        spawnDmg('heroSprite',dmg,crit?'crit':'dmg');
         state.heroHp -= dmg;
-        addLog((crit ? '💥 CRITIQUE ! ' : '😈 ') + villain.name + ' frappe ' + hero.name + ' pour ' + dmg + (state.heroDefending ? ' (garde !)' : '') + ' !', crit ? 'crit-line' : 'villain-action');
+        addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':'')+' !', crit?'crit-line':'villain-action');
       }
-
     } else if (action === 'combo') {
-      let dmg = calcDmg(villain.atk, hero.def, 1.2);
-      if (state.heroDefending) dmg = Math.floor(dmg * 0.5);
-      animateSprite('heroSprite', 'hit-shake');
-      spawnDmg('heroSprite', dmg, 'dmg');
+      let dmg = calcDmg(villain.atk,hero.def,1.2);
+      if (state.heroDefending) dmg = Math.floor(dmg*0.5);
+      anim('heroSprite','hit-shake');
+      spawnDmg('heroSprite',dmg,'dmg');
       state.heroHp -= dmg;
-      addLog('🔥 ' + villain.name + ' combo furieux — ' + dmg + ' dégâts !', 'villain-action');
-
+      addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !','villain-action');
     } else if (action === 'defend') {
       state.villainDefending = true;
-      addLog('🛡️ ' + villain.name + ' se barricade…', 'villain-action');
-
+      addLog('🛡️ '+villain.name+' se barricade…','villain-action');
     } else if (action === 'special') {
       state.villainSpecial = 0;
       const result = villain.special.fn(villain, hero);
       let dmg = result.dmg;
-      if (state.heroDefending) dmg = Math.floor(dmg * 0.55);
-      animateSprite('heroSprite', 'hit-shake');
-      spawnDmg('heroSprite', dmg, 'crit');
+      if (state.heroDefending) dmg = Math.floor(dmg*0.55);
+      anim('heroSprite','hit-shake');
+      spawnDmg('heroSprite',dmg,'crit');
       state.heroHp -= dmg;
-      addLog('⚡ ' + result.log, 'crit-line');
+      addLog('⚡ '+result.log,'crit-line');
     }
 
     state.heroDefending = false;
@@ -1243,63 +948,33 @@ function villainTurn() {
 }
 
 function checkBattleEnd() {
-  if (state.heroHp <= 0) {
-    state.battleRunning = false;
-    setTimeout(() => endBattle(false), 500);
-    return true;
-  }
-  if (state.villainHp <= 0) {
-    state.battleRunning = false;
-    setTimeout(() => endBattle(true), 500);
-    return true;
-  }
+  if (state.heroHp <= 0) { state.battleRunning=false; setTimeout(()=>endBattle(false),500); return true; }
+  if (state.villainHp <= 0) { state.battleRunning=false; setTimeout(()=>endBattle(true),500); return true; }
   return false;
 }
 
 function endBattle(won) {
-  const hero = state.heroChar;
-  const villain = state.villainChar;
-
+  const hero = state.heroChar, villain = state.villainChar;
   document.getElementById('victoryIcon').textContent = won ? '🏆' : '💀';
-  const titleEl = document.getElementById('victoryTitle');
-  titleEl.textContent = won ? 'Victoire !' : 'Défaite…';
-  titleEl.className = 'victory-title ' + (won ? 'win' : 'lose');
+  const t = document.getElementById('victoryTitle');
+  t.textContent = won ? 'Victoire !' : 'Défaite…';
+  t.className = 'victory-title ' + (won?'win':'lose');
   document.getElementById('victorySub').textContent = won
     ? `Tu as vaincu ${villain.name} en ${state.turn} tours !`
     : `${villain.name} t'a eu cette fois… Revanche ?`;
-
-  const xp = won ? Math.floor(150 + state.turn * 10 + Math.random() * 50) : Math.floor(40 + Math.random() * 20);
-  const gold = won ? Math.floor(30 + Math.random() * 40) : Math.floor(5 + Math.random() * 10);
-  document.getElementById('xpGained').textContent = (won ? '+' : '') + xp;
-  document.getElementById('goldGained').textContent = (won ? '+' : '') + gold;
+  document.getElementById('xpGained').textContent = (won?'+':'') + Math.floor(won ? 150+state.turn*10+Math.random()*50 : 40+Math.random()*20);
+  document.getElementById('goldGained').textContent = (won?'+':'') + Math.floor(won ? 30+Math.random()*40 : 5+Math.random()*10);
   document.getElementById('turnsUsed').textContent = state.turn;
-
-  const quotes = won ? hero.narratorLines.win : hero.narratorLines.lose;
-  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  const q = pick(won ? hero.narratorLines.win : hero.narratorLines.lose);
   document.getElementById('victoryQuote').innerHTML = `"${q}"<cite>— Narrateur</cite>`;
-
   showScreen('victory');
 }
 
-function rematch() {
-  startBattle();
-}
+function rematch() { startBattle(); }
+function backToSelect() { showScreen('select'); }
 
-function backToSelect() {
-  showScreen('select');
-}
-
-// =============================================
-// NAV HELPERS
-// =============================================
-function openMobileMenu() {
-  document.getElementById('mobileMenu').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeMobileMenu() {
-  document.getElementById('mobileMenu').classList.remove('open');
-  document.body.style.overflow = '';
-}
+function openMobileMenu() { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow=''; }
 </script>
 </body>
 </html>

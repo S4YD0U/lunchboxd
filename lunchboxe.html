@@ -1163,7 +1163,7 @@ function updateProfileUI() {
     document.getElementById('profileAvatar').textContent = '⚔';
   }
 }
-updateProfileUI();
+// updateProfileUI() appelé après l'init complète (voir bas du fichier)
 
 function getLevelStats(baseChar) {
   const bonus = player.level - 1;
@@ -1450,57 +1450,68 @@ updateStageIndicators();
 // CHARACTER SELECT
 // ============================================
 function buildCharCard(char, onclickStr, isSelected) {
-  const clickAttr = onclickStr ? `onclick="${onclickStr}"` : '';
+  const clickAttr = onclickStr ? 'onclick="' + onclickStr + '"' : '';
   const isVillain = char.type === 'villain';
   const isInterm  = isVillain && !char.isBoss;
   const cardCls = isInterm ? 'intermediate-villain' : (isVillain ? 'villain' : '');
   const badgeCls = isInterm ? 'badge-intermediate' : (isVillain ? 'badge-villain' : 'badge-hero');
   const badgeLbl = isInterm ? '⚔ ENNEMI' : (isVillain ? '👿 BOSS' : '⚔ HÉROS');
 
-  // Badge de progression pour les héros
+  // Badge de progression pour les héros (construit sans template literal imbriqué)
   let progressBadge = '';
   if (!isVillain && char.id) {
     const save = loadCharSave(char.id);
-    const xpPct = (() => {
-      const prev = save.level > 1 ? XP_CURVE[save.level - 1] : 0;
-      const next = XP_CURVE[Math.min(save.level, XP_CURVE.length - 1)];
-      return Math.max(0, Math.min(100, ((save.xp - prev) / (next - prev)) * 100));
-    })();
-    progressBadge = `
-      <div style="margin-top:0.8rem;border-top:1px solid var(--border);padding-top:0.7rem;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">
-          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.08em">LV.${save.level}</span>
-          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--gold);">🪙 ${save.gold}</span>
-          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--purple);">✨ ${save.skillPoints} pts</span>
-        </div>
-        <div style="height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">
-          <div style="width:${xpPct}%;height:100%;background:linear-gradient(90deg,var(--xp-blue),#93c5fd);border-radius:2px;transition:width 0.5s"></div>
-        </div>
-      </div>`;
+    const prev = save.level > 1 ? (XP_CURVE[save.level - 1] || 0) : 0;
+    const next = XP_CURVE[Math.min(save.level, XP_CURVE.length - 1)] || 1;
+    const range = next - prev;
+    const xpPct = range <= 0 ? 100 : Math.max(0, Math.min(100, ((save.xp - prev) / range) * 100));
+    progressBadge = '<div style="margin-top:0.8rem;border-top:1px solid var(--border);padding-top:0.7rem;">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">'
+      + '<span style="font-family:monospace;font-size:0.6rem;color:var(--muted)">LV.' + save.level + '</span>'
+      + '<span style="font-family:monospace;font-size:0.6rem;color:var(--gold)">🪙 ' + save.gold + '</span>'
+      + '<span style="font-family:monospace;font-size:0.6rem;color:var(--purple)">✨ ' + save.skillPoints + ' pts</span>'
+      + '</div>'
+      + '<div style="height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">'
+      + '<div style="width:' + xpPct + '%;height:100%;background:linear-gradient(90deg,var(--xp-blue),#93c5fd);border-radius:2px"></div>'
+      + '</div></div>';
   }
 
-  return `<div class="char-card ${cardCls} ${isSelected ? 'selected' : ''}" ${clickAttr}>
-    <span class="char-type-badge ${badgeCls}">${badgeLbl}</span>
-    <div class="char-sprite"><img src="${char.sprite}.svg" alt="${char.name}" /></div>
-    <div class="char-name">${char.name}</div>
-    <div class="char-class">${char.class}</div>
-    <div class="char-stats">
-      <div class="stat-bar-row"><span class="stat-bar-label">ATK</span><div class="stat-bar-track"><div class="stat-bar-fill fill-atk" style="width:${char.atk}%"></div></div></div>
-      <div class="stat-bar-row"><span class="stat-bar-label">DEF</span><div class="stat-bar-track"><div class="stat-bar-fill fill-def" style="width:${char.def}%"></div></div></div>
-      <div class="stat-bar-row"><span class="stat-bar-label">VIT</span><div class="stat-bar-track"><div class="stat-bar-fill fill-spd" style="width:${char.spd}%"></div></div></div>
-      <div class="stat-bar-row"><span class="stat-bar-label">HP</span><div class="stat-bar-track"><div class="stat-bar-fill fill-hp" style="width:${char.hp}%"></div></div></div>
-    </div>
-    <div class="char-quote">${char.quote}</div>
-    ${progressBadge}
-  </div>`;
+  const selectedCls = isSelected ? ' selected' : '';
+  return '<div class="char-card ' + cardCls + selectedCls + '" ' + clickAttr + '>'
+    + '<span class="char-type-badge ' + badgeCls + '">' + badgeLbl + '</span>'
+    + '<div class="char-sprite"><img src="' + char.sprite + '.svg" alt="' + char.name + '" /></div>'
+    + '<div class="char-name">' + char.name + '</div>'
+    + '<div class="char-class">' + char.class + '</div>'
+    + '<div class="char-stats">'
+    + '<div class="stat-bar-row"><span class="stat-bar-label">ATK</span><div class="stat-bar-track"><div class="stat-bar-fill fill-atk" style="width:' + char.atk + '%"></div></div></div>'
+    + '<div class="stat-bar-row"><span class="stat-bar-label">DEF</span><div class="stat-bar-track"><div class="stat-bar-fill fill-def" style="width:' + char.def + '%"></div></div></div>'
+    + '<div class="stat-bar-row"><span class="stat-bar-label">VIT</span><div class="stat-bar-track"><div class="stat-bar-fill fill-spd" style="width:' + char.spd + '%"></div></div></div>'
+    + '<div class="stat-bar-row"><span class="stat-bar-label">HP</span><div class="stat-bar-track"><div class="stat-bar-fill fill-hp" style="width:' + char.hp + '%"></div></div></div>'
+    + '</div>'
+    + '<div class="char-quote">' + char.quote + '</div>'
+    + progressBadge
+    + '</div>';
 }
+
+// Fallback simple (sans badge progression)
+function buildCharCardSimple(char, onclickStr, isSelected) {
+  return buildCharCard(char, onclickStr, isSelected);
+}
+
 
 let selectedHero = null;
 
 function renderSelect() {
   const heroes = Object.values(HEROES);
-  document.getElementById('heroGrid').innerHTML =
-    heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
+  try {
+    document.getElementById('heroGrid').innerHTML =
+      heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
+  } catch(e) {
+    console.error('renderSelect hero error:', e);
+    // Fallback sans badge de progression
+    document.getElementById('heroGrid').innerHTML =
+      heroes.map(c => buildCharCardSimple(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
+  }
   const firstEnemy = ENEMIES[state.currentEnemyIndex];
   const lbl = document.getElementById('enemyLabel');
   lbl.textContent = firstEnemy.isBoss ? '⚠ BOSS FINAL' : `⚠ ENNEMI ${state.currentEnemyIndex+1}/${ENEMIES.length} — ${firstEnemy.name}`;
@@ -2023,6 +2034,7 @@ function closeMobileMenu() { document.getElementById('mobileMenu').classList.rem
 // ============================================
 // INIT
 // ============================================
+updateProfileUI();
 renderSelect();
 showScreen('select');
 </script>

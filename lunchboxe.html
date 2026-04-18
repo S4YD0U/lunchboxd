@@ -43,7 +43,6 @@
       pointer-events: none; z-index: 1000; opacity: 0.5;
     }
 
-    /* NAV */
     nav {
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.2rem 2.5rem;
@@ -72,7 +71,6 @@
     .game-title em { font-style: italic; color: var(--accent3); }
     .game-subtitle { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
 
-    /* TABS */
     .screen-tabs {
       display: flex; gap: 0; margin-bottom: 1.5rem;
       border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
@@ -87,7 +85,6 @@
     .tab-btn:hover { color: var(--text); background: var(--surface2); }
     .tab-btn.active { background: var(--card-bg); color: var(--accent); }
 
-    /* PLAYER PROFILE CARD */
     .player-profile {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -129,7 +126,6 @@
     .currency-pill.xp { border-color: rgba(96,165,250,0.3); color: var(--xp-blue); }
     .currency-pill.sp { border-color: rgba(167,139,250,0.3); color: var(--purple); }
 
-    /* LEVEL UP BANNER */
     .levelup-banner {
       background: linear-gradient(135deg, rgba(200,245,66,0.12), rgba(96,165,250,0.08));
       border: 1px solid rgba(200,245,66,0.4);
@@ -145,7 +141,6 @@
     .levelup-sub { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-top: 0.2rem; }
     .levelup-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; }
 
-    /* PROGRESS STAGES */
     .progress-stages { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 2rem; }
     .stage-step { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
     .stage-dot { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.4s; position: relative; z-index: 1; }
@@ -156,7 +151,6 @@
     .stage-connector { width: 60px; height: 2px; background: var(--border); margin-bottom: 1.2rem; transition: background 0.4s; flex-shrink: 0; }
     .stage-connector.done { background: var(--accent); }
 
-    /* CHARACTER SELECT */
     .select-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 0.4rem; }
     .select-subtitle { text-align: center; color: var(--muted); font-size: 0.82rem; margin-bottom: 2rem; font-family: 'DM Mono', monospace; }
     .characters-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 2rem; }
@@ -219,85 +213,379 @@
     .badge-locked { background: rgba(167,139,250,0.1); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
     .shop-item-stat { font-size: 0.65rem; color: var(--hp-green); font-family: 'DM Mono', monospace; margin-bottom: 0.2rem; }
 
-    /* INVENTORY PANEL */
+    /* INVENTORY */
     .inventory-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; }
     .inv-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
-    .inv-slot {
-      aspect-ratio: 1; background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: 4px; display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; cursor: pointer; transition: all 0.2s; position: relative;
-    }
+    .inv-slot { aspect-ratio: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; transition: all 0.2s; position: relative; }
     .inv-slot:hover { border-color: rgba(200,245,66,0.3); }
     .inv-slot.empty { color: var(--border); }
     .inv-slot.equipped { border-color: var(--accent); box-shadow: 0 0 8px rgba(200,245,66,0.2); }
-    .inv-slot .slot-count {
-      position: absolute; bottom: 1px; right: 3px;
-      font-family: 'DM Mono', monospace; font-size: 0.55rem; color: var(--muted);
-    }
+    .inv-slot .slot-count { position: absolute; bottom: 1px; right: 3px; font-family: 'DM Mono', monospace; font-size: 0.55rem; color: var(--muted); }
     .equipped-section { margin-bottom: 1rem; }
     .equipped-row { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
-    .equipped-slot {
-      flex: 1; background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: 4px; padding: 0.5rem; text-align: center; font-size: 0.62rem;
-      color: var(--muted); font-family: 'DM Mono', monospace;
-    }
+    .equipped-slot { flex: 1; background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem; text-align: center; font-size: 0.62rem; color: var(--muted); font-family: 'DM Mono', monospace; }
     .equipped-slot.filled { border-color: rgba(200,245,66,0.3); color: var(--text); }
     .equipped-slot .slot-icon { font-size: 1.2rem; display: block; margin-bottom: 0.15rem; }
     .equipped-slot .slot-name { font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .equipped-slot .slot-stat { font-size: 0.58rem; color: var(--hp-green); }
 
-    /* ============ SKILL TREE ============ */
-    .skilltree-header {
-      display: flex; align-items: center; justify-content: space-between;
+    /* ============ LOOTBOX SECTION ============ */
+    .lootbox-section {
       margin-bottom: 1.5rem;
     }
-    .sp-display {
-      display: flex; align-items: center; gap: 0.6rem;
-      background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.3);
-      border-radius: 6px; padding: 0.6rem 1.2rem;
+
+    .lootbox-hero-banner {
+      background: linear-gradient(135deg, rgba(167,139,250,0.08), rgba(245,166,35,0.06), rgba(232,69,69,0.05));
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      overflow: hidden;
     }
+    .lootbox-hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      right: -10%;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .lootbox-banner-inner {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .lootbox-banner-icon {
+      font-size: 3.5rem;
+      flex-shrink: 0;
+      animation: lbFloat 3s ease-in-out infinite;
+    }
+    .lootbox-banner-text { flex: 1; }
+    .lootbox-banner-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+    .lootbox-banner-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .lootbox-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .lootbox-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .lootbox-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .lootbox-card.tier-common::before { background: radial-gradient(ellipse at 50% 0%, rgba(96,165,250,0.08), transparent 60%); }
+    .lootbox-card.tier-rare::before   { background: radial-gradient(ellipse at 50% 0%, rgba(167,139,250,0.1), transparent 60%); }
+    .lootbox-card.tier-epic::before   { background: radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.12), transparent 60%); }
+
+    .lootbox-card:hover:not(.cant-afford-lb) {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .lootbox-card:hover:not(.cant-afford-lb)::before { opacity: 1; }
+    .lootbox-card.tier-common:hover:not(.cant-afford-lb) { border-color: rgba(96,165,250,0.5); }
+    .lootbox-card.tier-rare:hover:not(.cant-afford-lb)   { border-color: rgba(167,139,250,0.5); }
+    .lootbox-card.tier-epic:hover:not(.cant-afford-lb)   { border-color: rgba(245,166,35,0.5); }
+    .lootbox-card.cant-afford-lb { opacity: 0.4; cursor: not-allowed; }
+
+    .lootbox-card-chest {
+      font-size: 3rem;
+      margin-bottom: 0.6rem;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .lootbox-card:hover:not(.cant-afford-lb) .lootbox-card-chest {
+      transform: scale(1.15) rotate(-5deg);
+    }
+
+    .lootbox-tier-badge {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      margin-bottom: 0.6rem;
+    }
+    .tier-common .lootbox-tier-badge { background: rgba(96,165,250,0.12); color: var(--xp-blue); border: 1px solid rgba(96,165,250,0.3); }
+    .tier-rare .lootbox-tier-badge   { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+    .tier-epic .lootbox-tier-badge   { background: rgba(245,166,35,0.12); color: var(--gold); border: 1px solid rgba(245,166,35,0.3); }
+
+    .lootbox-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .lootbox-card-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 0.8rem;
+    }
+    .lootbox-card-drops {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      justify-content: center;
+      margin-bottom: 0.8rem;
+    }
+    .drop-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      letter-spacing: 0.06em;
+    }
+    .drop-pill.rarity-c { background: rgba(96,165,250,0.1); color: var(--xp-blue); border: 1px solid rgba(96,165,250,0.2); }
+    .drop-pill.rarity-r { background: rgba(167,139,250,0.1); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+    .drop-pill.rarity-e { background: rgba(245,166,35,0.1); color: var(--gold); border: 1px solid rgba(245,166,35,0.2); }
+    .drop-pill.rarity-l { background: rgba(232,69,69,0.1); color: var(--accent3); border: 1px solid rgba(232,69,69,0.2); }
+
+    .lootbox-card-price {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gold);
+    }
+    .lootbox-card-price span {
+      font-size: 0.62rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 0.1rem;
+    }
+
+    /* ============ LOOTBOX OPENING OVERLAY ============ */
+    .lb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,5,4,0.96);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 700;
+      flex-direction: column;
+    }
+    .lb-overlay.show { display: flex; }
+
+    .lb-stage {
+      text-align: center;
+      max-width: 520px;
+      width: 90%;
+    }
+
+    /* Stage 1: shaking chest */
+    .lb-chest-wrap {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 1.5rem;
+    }
+    .lb-chest-emoji {
+      font-size: 7rem;
+      display: block;
+      line-height: 1;
+      transition: transform 0.1s;
+    }
+    .lb-chest-glow {
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .glow-common { background: radial-gradient(circle, rgba(96,165,250,0.3) 0%, transparent 60%); }
+    .glow-rare   { background: radial-gradient(circle, rgba(167,139,250,0.35) 0%, transparent 60%); }
+    .glow-epic   { background: radial-gradient(circle, rgba(245,166,35,0.4) 0%, transparent 60%); }
+
+    .lb-loading-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 0.8rem;
+    }
+    .lb-loading-bar {
+      height: 100%;
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+    .lb-loading-bar.common { background: linear-gradient(90deg, var(--xp-blue), #93c5fd); }
+    .lb-loading-bar.rare   { background: linear-gradient(90deg, var(--purple), #c4b5fd); }
+    .lb-loading-bar.epic   { background: linear-gradient(90deg, var(--gold), #fbbf24); }
+
+    .lb-opening-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Stage 2: reveal cards */
+    .lb-reveal-stage { display: none; }
+    .lb-reveal-stage.show { display: block; }
+
+    .lb-reveal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+    .lb-reveal-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .lb-cards-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .lb-item-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      width: 130px;
+      opacity: 0;
+      transform: translateY(30px) scale(0.85);
+      transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+      position: relative;
+    }
+    .lb-item-card.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .lb-item-card.rarity-common { border-color: rgba(96,165,250,0.4); box-shadow: 0 0 20px rgba(96,165,250,0.1); }
+    .lb-item-card.rarity-rare   { border-color: rgba(167,139,250,0.5); box-shadow: 0 0 24px rgba(167,139,250,0.15); }
+    .lb-item-card.rarity-epic   { border-color: rgba(245,166,35,0.6); box-shadow: 0 0 30px rgba(245,166,35,0.2); }
+    .lb-item-card.rarity-legendary { border-color: rgba(232,69,69,0.7); box-shadow: 0 0 40px rgba(232,69,69,0.25); animation: legendaryPulse 1.5s ease-in-out infinite; }
+
+    .lb-item-icon { font-size: 2.2rem; display: block; margin-bottom: 0.5rem; }
+    .lb-item-name { font-family: 'Playfair Display', serif; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .lb-item-rarity {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      margin-bottom: 0.4rem;
+      display: inline-block;
+    }
+    .lb-item-rarity.rarity-common { background: rgba(96,165,250,0.12); color: var(--xp-blue); }
+    .lb-item-rarity.rarity-rare   { background: rgba(167,139,250,0.12); color: var(--purple); }
+    .lb-item-rarity.rarity-epic   { background: rgba(245,166,35,0.12); color: var(--gold); }
+    .lb-item-rarity.rarity-legendary { background: rgba(232,69,69,0.12); color: var(--accent3); }
+    .lb-item-stat { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--hp-green); }
+
+    .lb-new-badge {
+      position: absolute;
+      top: -8px; right: -8px;
+      background: var(--accent3);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.52rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.45rem;
+      border-radius: 2px;
+      font-weight: 700;
+    }
+
+    .lb-close-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.8rem 2.5rem;
+      border-radius: 4px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lb-close-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Particles */
+    .lb-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 710;
+      overflow: hidden;
+      display: none;
+    }
+    .lb-particles.show { display: block; }
+    .lb-particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: particleFly 1.2s ease forwards;
+    }
+
+    /* ============ SKILL TREE ============ */
+    .skilltree-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .sp-display { display: flex; align-items: center; gap: 0.6rem; background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.3); border-radius: 6px; padding: 0.6rem 1.2rem; }
     .sp-icon { font-size: 1.4rem; }
     .sp-info { display: flex; flex-direction: column; }
     .sp-val { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--purple); line-height: 1; }
     .sp-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
     .sp-total { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); }
-
     .skill-branches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-
-    .skill-branch {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-      padding: 1.2rem; display: flex; flex-direction: column; gap: 0;
-    }
-    .branch-header {
-      text-align: center; padding-bottom: 1rem; margin-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-    }
+    .skill-branch { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0; }
+    .branch-header { text-align: center; padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); }
     .branch-icon { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
     .branch-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; }
     .branch-desc { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-top: 0.2rem; }
-
-    /* skill node */
-    .skill-node {
-      position: relative; margin-bottom: 0;
-    }
-    .skill-node + .skill-node::before {
-      content: '';
-      display: block; width: 2px; height: 18px;
-      background: var(--border); margin: 0 auto;
-      transition: background 0.4s;
-    }
+    .skill-node { position: relative; margin-bottom: 0; }
+    .skill-node + .skill-node::before { content: ''; display: block; width: 2px; height: 18px; background: var(--border); margin: 0 auto; transition: background 0.4s; }
     .skill-node.prev-unlocked + .skill-node::before { background: var(--purple); }
-
-    .skill-card {
-      background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: 8px; padding: 0.9rem 1rem;
-      cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden;
-    }
-    .skill-card::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, transparent, rgba(167,139,250,0.04));
-      opacity: 0; transition: opacity 0.25s;
-    }
+    .skill-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
+    .skill-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(167,139,250,0.04)); opacity: 0; transition: opacity 0.25s; }
     .skill-card:hover:not(.locked-skill):not(.maxed) { border-color: rgba(167,139,250,0.5); transform: translateY(-2px); }
     .skill-card:hover:not(.locked-skill):not(.maxed)::before { opacity: 1; }
     .skill-card.unlocked { border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.06); }
@@ -305,49 +593,31 @@
     .skill-card.active-skill { border-color: rgba(245,166,35,0.4); background: rgba(245,166,35,0.05); }
     .skill-card.active-skill.maxed { border-color: rgba(245,166,35,0.6); background: rgba(245,166,35,0.08); }
     .skill-card.locked-skill { opacity: 0.4; cursor: not-allowed; }
-
     .skill-card-top { display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 0.5rem; }
     .skill-emoji { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
     .skill-info { flex: 1; min-width: 0; }
     .skill-name { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .skill-type-tag {
-      display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.52rem;
-      letter-spacing: 0.08em; text-transform: uppercase; padding: 0.1rem 0.4rem;
-      border-radius: 2px; margin-top: 0.15rem;
-    }
+    .skill-type-tag { display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.1rem 0.4rem; border-radius: 2px; margin-top: 0.15rem; }
     .type-passive { background: rgba(96,165,250,0.1); color: var(--xp-blue); border: 1px solid rgba(96,165,250,0.2); }
     .type-active  { background: rgba(245,166,35,0.1); color: var(--accent2); border: 1px solid rgba(245,166,35,0.2); }
-
     .skill-desc { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.6rem; }
     .skill-effect { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--hp-green); margin-bottom: 0.5rem; }
-
     .skill-footer { display: flex; align-items: center; justify-content: space-between; }
     .skill-dots { display: flex; gap: 4px; }
-    .skill-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--surface2); border: 1px solid var(--border);
-      transition: all 0.3s;
-    }
+    .skill-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); transition: all 0.3s; }
     .skill-dot.filled { background: var(--purple); border-color: var(--purple); box-shadow: 0 0 6px rgba(167,139,250,0.4); }
     .skill-dot.filled-active { background: var(--accent2); border-color: var(--accent2); box-shadow: 0 0 6px rgba(245,166,35,0.4); }
     .skill-cost { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--purple); }
     .skill-cost.maxed-label { color: var(--accent); }
     .skill-cost.locked-label { color: var(--muted); }
-
-    .skill-badge {
-      position: absolute; top: 0.5rem; right: 0.5rem;
-      font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.06em;
-      text-transform: uppercase; padding: 0.12rem 0.4rem; border-radius: 2px;
-    }
+    .skill-badge { position: absolute; top: 0.5rem; right: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.12rem 0.4rem; border-radius: 2px; }
     .sb-new { background: rgba(232,69,69,0.15); color: var(--accent3); border: 1px solid rgba(232,69,69,0.3); }
     .sb-maxed { background: rgba(200,245,66,0.1); color: var(--accent); border: 1px solid rgba(200,245,66,0.2); }
     .sb-active { background: rgba(245,166,35,0.1); color: var(--accent2); border: 1px solid rgba(245,166,35,0.2); }
-
-    /* Active skills in battle */
     .action-btn.tree-skill { border-color: rgba(167,139,250,0.3); }
     .action-btn.tree-skill:hover:not(:disabled) { border-color: var(--purple); box-shadow: 0 0 12px rgba(167,139,250,0.2); }
 
-    /* BATTLE SCREEN */
+    /* BATTLE */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
     @keyframes floatAnim { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
@@ -358,7 +628,12 @@
     @keyframes barPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
     @keyframes slideInRight { from{transform:translateX(40px);opacity:0} to{transform:translateX(0);opacity:1} }
     @keyframes levelUpPop { 0%{transform:scale(0.5);opacity:0} 60%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
-    @keyframes skillUnlock { 0%{transform:scale(0.8);opacity:0} 60%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
+    @keyframes lbFloat { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
+    @keyframes chestShake { 0%,100%{transform:rotate(0)} 15%{transform:rotate(-8deg) scale(1.05)} 30%{transform:rotate(8deg) scale(1.07)} 45%{transform:rotate(-6deg) scale(1.05)} 60%{transform:rotate(6deg) scale(1.05)} 75%{transform:rotate(-3deg)} }
+    @keyframes chestPop { 0%{transform:scale(1)} 50%{transform:scale(1.4) rotate(-5deg)} 70%{transform:scale(0.9) rotate(5deg)} 100%{transform:scale(1.15)} }
+    @keyframes particleFly { 0%{opacity:1;transform:translate(0,0) scale(1)} 100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)} }
+    @keyframes legendaryPulse { 0%,100%{box-shadow:0 0 40px rgba(232,69,69,0.25)} 50%{box-shadow:0 0 60px rgba(232,69,69,0.5)} }
+    @keyframes cardRevealBounce { 0%{transform:translateY(30px) scale(0.7) rotateX(20deg);opacity:0} 70%{transform:translateY(-5px) scale(1.04) rotateX(-2deg)} 100%{transform:translateY(0) scale(1) rotateX(0);opacity:1} }
 
     .battle-stage-bar { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; padding: 0.5rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em; }
     .stage-pip { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: all 0.4s; flex-shrink: 0; }
@@ -459,20 +734,9 @@
     .hp-carry-banner { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25); border-radius: 6px; padding: 0.6rem 1rem; margin-bottom: 1.5rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--hp-green); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
     .hp-carry-banner.hidden { display: none; }
 
-    /* LEVEL UP OVERLAY IN BATTLE */
-    .levelup-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-      display: none; align-items: center; justify-content: center;
-      z-index: 500;
-    }
+    .levelup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 500; }
     .levelup-overlay.show { display: flex; }
-    .levelup-card {
-      background: var(--surface); border: 2px solid var(--accent);
-      border-radius: 12px; padding: 2rem 2.5rem; text-align: center;
-      max-width: 380px; width: 90%;
-      box-shadow: 0 0 60px rgba(200,245,66,0.2);
-      animation: levelUpPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
-    }
+    .levelup-card { background: var(--surface); border: 2px solid var(--accent); border-radius: 12px; padding: 2rem 2.5rem; text-align: center; max-width: 380px; width: 90%; box-shadow: 0 0 60px rgba(200,245,66,0.2); animation: levelUpPop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
     .levelup-card h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--accent); margin-bottom: 0.3rem; }
     .levelup-card .lv-num { font-family: 'DM Mono', monospace; font-size: 1rem; color: var(--muted); margin-bottom: 1.2rem; }
     .stat-gains { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
@@ -483,13 +747,13 @@
     .btn-continue { background: var(--accent); color: #0e0f0c; border: none; padding: 0.75rem 2rem; border-radius: 4px; font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s; }
     .btn-continue:hover { background: #d9ff55; }
 
-    /* TOAST */
-    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1.2rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; z-index: 600; transform: translateX(200%); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 280px; }
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.8rem 1.2rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; z-index: 800; transform: translateX(200%); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 280px; }
     .toast.show { transform: translateX(0); }
     .toast.success { border-color: rgba(200,245,66,0.4); color: var(--accent); }
     .toast.error { border-color: rgba(232,69,69,0.4); color: var(--accent3); }
     .toast.info { border-color: rgba(96,165,250,0.4); color: var(--xp-blue); }
     .toast.skill { border-color: rgba(167,139,250,0.4); color: var(--purple); }
+    .toast.lootbox { border-color: rgba(245,166,35,0.4); color: var(--gold); }
 
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.6rem; cursor: pointer; }
     .hamburger span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; }
@@ -518,6 +782,9 @@
       .profile-currencies { flex-direction: row; align-items: center; grid-column: 1/-1; justify-content: flex-start; }
       .skill-branches { grid-template-columns: 1fr; }
       .skilltree-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .lootbox-grid { grid-template-columns: 1fr; }
+      .lb-cards-row { gap: 0.6rem; }
+      .lb-item-card { width: 110px; }
     }
   </style>
 </head>
@@ -575,6 +842,31 @@
     </div>
   </div>
 </div>
+
+<!-- ==================== LOOTBOX OPENING OVERLAY ==================== -->
+<div class="lb-overlay" id="lbOverlay">
+  <div class="lb-stage" id="lbOpeningStage">
+    <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;" id="lbOpeningTierLabel">Ouverture de la boîte...</div>
+    <div class="lb-chest-wrap">
+      <div class="lb-chest-glow" id="lbChestGlow"></div>
+      <span class="lb-chest-emoji" id="lbChestEmoji">📦</span>
+    </div>
+    <div class="lb-opening-label" id="lbOpeningLabel">Analyse du contenu...</div>
+    <div class="lb-loading-bar-wrap">
+      <div class="lb-loading-bar" id="lbLoadingBar"></div>
+    </div>
+  </div>
+
+  <div class="lb-reveal-stage" id="lbRevealStage">
+    <div class="lb-reveal-title" id="lbRevealTitle">🎁 Contenu révélé !</div>
+    <div class="lb-reveal-sub" id="lbRevealSub">Tu as obtenu ces objets :</div>
+    <div class="lb-cards-row" id="lbCardsRow"></div>
+    <button class="lb-close-btn" onclick="closeLbOverlay()">Fermer et récupérer les objets</button>
+  </div>
+</div>
+
+<!-- PARTICLES CONTAINER -->
+<div class="lb-particles" id="lbParticles"></div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -640,7 +932,22 @@
   <div id="screen-shop" style="display:none;">
     <div class="shop-layout">
       <div>
-        <div class="shop-section-title">🗡️ Armes</div>
+        <!-- ===== LOOTBOX SECTION ===== -->
+        <div class="lootbox-section">
+          <div class="shop-section-title">🎁 Loot Boxes</div>
+          <div class="lootbox-hero-banner">
+            <div class="lootbox-banner-inner">
+              <span class="lootbox-banner-icon">🎁</span>
+              <div class="lootbox-banner-text">
+                <div class="lootbox-banner-title">Les Boîtes Mystères de la Cantine</div>
+                <div class="lootbox-banner-sub">Ouvre une boîte pour recevoir des équipements aléatoires, des consommables rares et des surprises épiques. Chaque tier garantit des drops de meilleure qualité.</div>
+              </div>
+            </div>
+          </div>
+          <div class="lootbox-grid" id="lootboxGrid"></div>
+        </div>
+
+        <div class="shop-section-title" style="margin-top:0.5rem;">🗡️ Armes</div>
         <div class="shop-grid" id="shopWeapons"></div>
         <div class="shop-section-title">🛡️ Armures</div>
         <div class="shop-grid" id="shopArmors"></div>
@@ -787,140 +1094,403 @@
 
 <script>
 // ============================================
-// SKILL TREE DEFINITION
+// LOOTBOX CATALOG
 // ============================================
-const SKILL_BRANCHES = [
+const LOOTBOX_TIERS = [
   {
-    id: 'force',
-    name: 'Voie de la Force',
-    icon: '⚔️',
-    desc: 'Augmente ta puissance offensive',
-    skills: [
-      {
-        id: 'sk_atk1', name: 'Muscles de Spaghetti', type: 'passive', emoji: '💪',
-        maxLevel: 3, costPerLevel: 1, reqSkill: null,
-        desc: 'Tes bras sont comme des pâtes al dente — décoratifs mais surprenants.',
-        effectLabel: (lv) => `+${lv * 10} ATK permanente`,
-        effect: (stats, lv) => { stats.atk += lv * 10; return stats; },
-        battleDesc: null,
-      },
-      {
-        id: 'sk_atk2', name: 'Fureur du Gruyère', type: 'passive', emoji: '🧀',
-        maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_atk1',
-        desc: 'Tu frappes avec la densité d\'un fromage vieux de 3 ans.',
-        effectLabel: (lv) => `+${lv * 8}% dégâts critiques`,
-        effect: null,
-        critDmgBonus: (lv) => lv * 0.08,
-        battleDesc: null,
-      },
-      {
-        id: 'sk_atk3', name: 'Tornade de Nouilles', type: 'active', emoji: '🍜',
-        maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_atk2',
-        desc: '6 coups frénétiques qui percent les défenses. Charge la spéciale de +40%.',
-        effectLabel: () => 'Actif — 6 frappes, DEF -40%, +40% spéciale',
-        effect: null,
-        battleDesc: 'Tornade',
-      },
-    ]
+    id: 'lb_common',
+    name: 'Boîte Ordinaire',
+    tier: 'common',
+    chest: '📦',
+    price: 50,
+    desc: 'Une boîte récupérée à la cantine. Contenu mystérieux mais prometteur.',
+    dropCount: 2,
+    drops: [
+      { label: 'Arme commune', rarity: 'c', chance: 0.40 },
+      { label: 'Consommable', rarity: 'c', chance: 0.35 },
+      { label: 'Armure commune', rarity: 'c', chance: 0.20 },
+      { label: 'Arme rare', rarity: 'r', chance: 0.04 },
+      { label: 'Bonus XP', rarity: 'c', chance: 0.01 },
+    ],
+    guarantees: ['Au moins 2 objets', 'Chance de rare'],
+    lootTable: [
+      { type: 'weapon', id: 'w1', rarity: 'common', weight: 30 },
+      { type: 'armor',  id: 'a1', rarity: 'common', weight: 30 },
+      { type: 'consumable', id: 'c1', rarity: 'common', weight: 30 },
+      { type: 'consumable', id: 'c1', rarity: 'common', weight: 20 },
+      { type: 'weapon', id: 'w2', rarity: 'rare',   weight: 10 },
+      { type: 'armor',  id: 'a2', rarity: 'rare',   weight: 10 },
+      { type: 'consumable', id: 'c2', rarity: 'rare', weight: 8 },
+      { type: 'gold',   amount: 20, rarity: 'common', weight: 12 },
+      { type: 'gold',   amount: 35, rarity: 'rare',   weight: 5 },
+    ],
   },
   {
-    id: 'survie',
-    name: 'Voie de la Survie',
-    icon: '🛡️',
-    desc: 'Renforce ta résistance et ta longévité',
-    skills: [
-      {
-        id: 'sk_def1', name: 'Peau de Patate', type: 'passive', emoji: '🥔',
-        maxLevel: 3, costPerLevel: 1, reqSkill: null,
-        desc: 'Ta peau épaissit. Les attaques glissent sur toi comme de la purée.',
-        effectLabel: (lv) => `+${lv * 12} DEF permanente`,
-        effect: (stats, lv) => { stats.def += lv * 12; return stats; },
-        battleDesc: null,
-      },
-      {
-        id: 'sk_def2', name: 'Régénération Kombucha', type: 'passive', emoji: '🫙',
-        maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_def1',
-        desc: 'Tu te régénères grâce à des bactéries bénéfiques inconnues.',
-        effectLabel: (lv) => `+${lv * 6} HP régénérés/tour`,
-        effect: null,
-        regenPerTurn: (lv) => lv * 6,
-        battleDesc: null,
-      },
-      {
-        id: 'sk_def3', name: 'Mur de Baguette', type: 'active', emoji: '🥖',
-        maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_def2',
-        desc: 'Frappe + bouclier 85% pendant 3 tours. Chaque coup ennemi déclenche une riposte.',
-        effectLabel: () => 'Actif — bouclier 3t + riposte automatique',
-        effect: null,
-        battleDesc: 'Forteresse',
-      },
-    ]
+    id: 'lb_rare',
+    name: 'Boîte Mystique',
+    tier: 'rare',
+    chest: '🎁',
+    price: 120,
+    desc: 'Enveloppée d\'une aura étrange. Les professeurs de SVT sont formellement déconseillés.',
+    dropCount: 3,
+    drops: [
+      { label: 'Arme rare', rarity: 'r', chance: 0.40 },
+      { label: 'Armure rare', rarity: 'r', chance: 0.35 },
+      { label: 'Consommable épique', rarity: 'e', chance: 0.15 },
+      { label: 'Arme épique', rarity: 'e', chance: 0.08 },
+      { label: 'Item légendaire', rarity: 'l', chance: 0.02 },
+    ],
+    guarantees: ['Au moins 3 objets', 'Un rare garanti', 'Chance épique'],
+    lootTable: [
+      { type: 'weapon', id: 'w2', rarity: 'rare',   weight: 25 },
+      { type: 'armor',  id: 'a2', rarity: 'rare',   weight: 25 },
+      { type: 'weapon', id: 'w3', rarity: 'rare',   weight: 20 },
+      { type: 'armor',  id: 'a3', rarity: 'rare',   weight: 20 },
+      { type: 'consumable', id: 'c2', rarity: 'rare', weight: 20 },
+      { type: 'consumable', id: 'c3', rarity: 'epic', weight: 15 },
+      { type: 'weapon', id: 'w4', rarity: 'epic',   weight: 8 },
+      { type: 'armor',  id: 'a4', rarity: 'epic',   weight: 8 },
+      { type: 'gold',   amount: 60, rarity: 'rare',  weight: 15 },
+      { type: 'gold',   amount: 100, rarity: 'epic', weight: 5 },
+      { type: 'xp',     amount: 80, rarity: 'rare',  weight: 12 },
+      { type: 'sp',     amount: 1,  rarity: 'legendary', weight: 2 },
+    ],
   },
   {
-    id: 'ruse',
-    name: 'Voie de la Ruse',
-    icon: '🎯',
-    desc: 'Maîtrise la vitesse et les techniques secrètes',
-    skills: [
-      {
-        id: 'sk_spd1', name: 'Réflexes Wasabi', type: 'passive', emoji: '🌿',
-        maxLevel: 3, costPerLevel: 1, reqSkill: null,
-        desc: 'Ça pique les yeux, donc tu esquives tout par réflexe.',
-        effectLabel: (lv) => `+${lv * 8} VIT, -${lv * 3}% chance de rater`,
-        effect: (stats, lv) => { stats.spd += lv * 8; return stats; },
-        missReduction: (lv) => lv * 0.03,
-        battleDesc: null,
-      },
-      {
-        id: 'sk_spd2', name: 'Double Expresso', type: 'passive', emoji: '☕',
-        maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_spd1',
-        desc: 'Deux cafés serrés = charge de spéciale 2× plus rapide.',
-        effectLabel: (lv) => `+${lv * 12}% charge spéciale/tour`,
-        effect: null,
-        specialBonus: (lv) => lv * 12,
-        battleDesc: null,
-      },
-      {
-        id: 'sk_spd3', name: 'Coup du Chef', type: 'active', emoji: '👨‍🍳',
-        maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_spd2',
-        desc: 'x2.5 ATK, ignore 80% DEF, vole 35% des dégâts en HP + recharge la spéciale.',
-        effectLabel: () => 'Actif — x2.5 ATK, vol 35% HP, DEF ignorée',
-        effect: null,
-        battleDesc: 'Coup du Chef',
-      },
-    ]
+    id: 'lb_epic',
+    name: 'Boîte Légendaire',
+    tier: 'epic',
+    chest: '🏆',
+    price: 280,
+    desc: 'Un artefact brillant de la cantine. On dit que la cuisinière elle-même l\'a bénie.',
+    dropCount: 4,
+    drops: [
+      { label: 'Arme épique', rarity: 'e', chance: 0.35 },
+      { label: 'Armure épique', rarity: 'e', chance: 0.30 },
+      { label: 'Consommable légendaire', rarity: 'l', chance: 0.15 },
+      { label: 'Gros bonus XP', rarity: 'e', chance: 0.12 },
+      { label: 'Point de skill', rarity: 'l', chance: 0.08 },
+    ],
+    guarantees: ['4 objets garantis', 'Un épique garanti', 'Chance légendaire', 'Bonus XP/Gold'],
+    lootTable: [
+      { type: 'weapon', id: 'w3', rarity: 'epic',   weight: 20 },
+      { type: 'armor',  id: 'a3', rarity: 'epic',   weight: 20 },
+      { type: 'weapon', id: 'w4', rarity: 'epic',   weight: 18 },
+      { type: 'armor',  id: 'a4', rarity: 'epic',   weight: 18 },
+      { type: 'consumable', id: 'c3', rarity: 'epic', weight: 15 },
+      { type: 'consumable', id: 'c4', rarity: 'legendary', weight: 8 },
+      { type: 'gold',   amount: 150, rarity: 'epic', weight: 12 },
+      { type: 'gold',   amount: 250, rarity: 'legendary', weight: 5 },
+      { type: 'xp',     amount: 200, rarity: 'epic', weight: 15 },
+      { type: 'xp',     amount: 400, rarity: 'legendary', weight: 6 },
+      { type: 'sp',     amount: 1, rarity: 'legendary', weight: 6 },
+      { type: 'sp',     amount: 2, rarity: 'legendary', weight: 2 },
+    ],
   }
 ];
 
 // ============================================
-// PROGRESSION SYSTEM
+// LOOTBOX RENDER
 // ============================================
-const XP_CURVE = [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500, 3200, 4000];
+function renderLootboxGrid() {
+  const el = document.getElementById('lootboxGrid');
+  el.innerHTML = '';
+  LOOTBOX_TIERS.forEach(lb => {
+    const cantAfford = player.gold < lb.price;
+    const dropPills = lb.drops.map(d =>
+      `<span class="drop-pill rarity-${d.rarity}">${d.label}</span>`
+    ).join('');
+    const guaranteePills = lb.guarantees.map(g =>
+      `<span class="drop-pill rarity-c">✓ ${g}</span>`
+    ).join('');
 
+    el.innerHTML += `
+      <div class="lootbox-card tier-${lb.tier}${cantAfford ? ' cant-afford-lb' : ''}"
+           onclick="${cantAfford ? '' : `openLootbox('${lb.id}')`}">
+        <span class="lootbox-card-chest">${lb.chest}</span>
+        <span class="lootbox-tier-badge">${lb.tier === 'common' ? '🔵 Commun' : lb.tier === 'rare' ? '🟣 Rare' : '🟡 Épique'}</span>
+        <div class="lootbox-card-name">${lb.name}</div>
+        <div class="lootbox-card-desc">${lb.desc}</div>
+        <div class="lootbox-card-drops" style="margin-bottom:0.4rem;">${dropPills}</div>
+        <div class="lootbox-card-drops">${guaranteePills}</div>
+        <div class="lootbox-card-price">
+          🪙 ${lb.price}
+          <span>${cantAfford ? `Il te manque ${lb.price - player.gold} 🪙` : `${lb.dropCount} objets garantis`}</span>
+        </div>
+      </div>`;
+  });
+}
+
+// ============================================
+// LOOTBOX OPENING ANIMATION
+// ============================================
+let currentLbItems = [];
+
+function openLootbox(lbId) {
+  if (!selectedHero) { showToast('Sélectionne un héros d\'abord !', 'error'); return; }
+  const lb = LOOTBOX_TIERS.find(l => l.id === lbId);
+  if (!lb) return;
+  if (player.gold < lb.price) { showToast('Pas assez de pièces !', 'error'); return; }
+
+  // Deduct gold
+  player.gold -= lb.price;
+  savePlayer();
+  updateProfileUI();
+
+  // Roll the items
+  currentLbItems = rollLootbox(lb);
+
+  // Show overlay
+  const overlay = document.getElementById('lbOverlay');
+  const openStage = document.getElementById('lbOpeningStage');
+  const revealStage = document.getElementById('lbRevealStage');
+  overlay.classList.add('show');
+  openStage.style.display = 'block';
+  revealStage.classList.remove('show');
+
+  // Setup visuals
+  document.getElementById('lbOpeningTierLabel').textContent =
+    `Ouverture — ${lb.name}`;
+  document.getElementById('lbChestEmoji').textContent = lb.chest;
+  document.getElementById('lbChestEmoji').style.animation = '';
+
+  const bar = document.getElementById('lbLoadingBar');
+  bar.className = 'lb-loading-bar ' + lb.tier;
+  bar.style.width = '0%';
+
+  const glow = document.getElementById('lbChestGlow');
+  glow.className = 'lb-chest-glow glow-' + lb.tier;
+
+  // Animation phases
+  const phases = [
+    { pct: 0,   label: 'Déverrouillage des serrures magiques...', delay: 0 },
+    { pct: 25,  label: 'Résistance de la cantine neutralisée...', delay: 600 },
+    { pct: 55,  label: 'Détection des artefacts rares...', delay: 1200 },
+    { pct: 80,  label: 'Dernière protection désactivée...', delay: 1800 },
+    { pct: 100, label: '🎉 La boîte s\'ouvre !', delay: 2400 },
+  ];
+
+  phases.forEach(p => {
+    setTimeout(() => {
+      bar.style.width = p.pct + '%';
+      document.getElementById('lbOpeningLabel').textContent = p.label;
+      if (p.pct > 0) {
+        glow.style.opacity = p.pct / 100 * 0.9;
+      }
+    }, p.delay);
+  });
+
+  // Shake animation at 60%
+  setTimeout(() => {
+    document.getElementById('lbChestEmoji').style.animation = 'chestShake 0.5s ease';
+  }, 1400);
+  setTimeout(() => {
+    document.getElementById('lbChestEmoji').style.animation = 'chestShake 0.4s ease';
+  }, 2000);
+
+  // Pop and explode
+  setTimeout(() => {
+    document.getElementById('lbChestEmoji').style.animation = 'chestPop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards';
+    launchParticles(lb.tier);
+    setTimeout(() => revealItems(lb), 600);
+  }, 2600);
+}
+
+function rollLootbox(lb) {
+  const items = [];
+  const totalWeight = lb.lootTable.reduce((s, e) => s + e.weight, 0);
+  for (let i = 0; i < lb.dropCount; i++) {
+    let r = Math.random() * totalWeight;
+    for (const entry of lb.lootTable) {
+      r -= entry.weight;
+      if (r <= 0) {
+        items.push({ ...entry });
+        break;
+      }
+    }
+  }
+  return items;
+}
+
+function revealItems(lb) {
+  const openStage = document.getElementById('lbOpeningStage');
+  const revealStage = document.getElementById('lbRevealStage');
+  openStage.style.display = 'none';
+  revealStage.classList.add('show');
+
+  // Check if legendary
+  const hasLegendary = currentLbItems.some(i => i.rarity === 'legendary');
+  const hasEpic = currentLbItems.some(i => i.rarity === 'epic');
+  document.getElementById('lbRevealTitle').textContent =
+    hasLegendary ? '🌟 LÉGENDAIRE !' : hasEpic ? '✨ Épique !' : '🎁 Contenu révélé !';
+  document.getElementById('lbRevealSub').textContent =
+    `${lb.name} · ${currentLbItems.length} objets obtenus`;
+
+  const row = document.getElementById('lbCardsRow');
+  row.innerHTML = '';
+
+  currentLbItems.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = `lb-item-card rarity-${item.rarity}`;
+
+    let icon, name, stat, isNew = false;
+    if (item.type === 'gold') {
+      icon = '🪙'; name = item.amount + ' Pièces'; stat = '+' + item.amount + ' 🪙';
+    } else if (item.type === 'xp') {
+      icon = '⭐'; name = item.amount + ' XP'; stat = '+' + item.amount + ' XP';
+    } else if (item.type === 'sp') {
+      icon = '✨'; name = item.amount + ' Pt(s) Skill'; stat = '+' + item.amount + ' pts compétence';
+    } else {
+      const catalog = item.type === 'weapon' ? SHOP_CATALOG.weapons
+                    : item.type === 'armor'  ? SHOP_CATALOG.armors
+                    : SHOP_CATALOG.consumables;
+      const def = catalog.find(c => c.id === item.id);
+      if (def) {
+        icon = def.icon; name = def.name; stat = def.stat;
+        isNew = !player.owned.includes(item.id) &&
+                !player.inventory.find(i => i.id === item.id);
+      } else {
+        icon = '❓'; name = '???'; stat = '';
+      }
+    }
+
+    const rarityLabels = { common: 'Commun', rare: 'Rare', epic: 'Épique', legendary: 'Légendaire' };
+    card.innerHTML = `
+      ${isNew ? '<div class="lb-new-badge">NOUVEAU</div>' : ''}
+      <span class="lb-item-icon">${icon}</span>
+      <div class="lb-item-name">${name}</div>
+      <span class="lb-item-rarity rarity-${item.rarity}">${rarityLabels[item.rarity] || item.rarity}</span>
+      <div class="lb-item-stat">${stat}</div>
+    `;
+    row.appendChild(card);
+
+    // Staggered reveal animation
+    setTimeout(() => {
+      card.classList.add('revealed');
+      if (item.rarity === 'legendary' || item.rarity === 'epic') {
+        launchParticles(item.rarity === 'legendary' ? 'legendary' : 'epic', 6);
+      }
+    }, idx * 220 + 100);
+  });
+}
+
+function launchParticles(tier, count = 18) {
+  const container = document.getElementById('lbParticles');
+  container.classList.add('show');
+  const colors = {
+    common: ['#60a5fa','#93c5fd','#bfdbfe'],
+    rare: ['#a78bfa','#c4b5fd','#7c3aed'],
+    epic: ['#f5a623','#fbbf24','#fef08a'],
+    legendary: ['#e84545','#f87171','#fca5a5','#fff'],
+  };
+  const cls = colors[tier] || colors.common;
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'lb-particle';
+      const size = 6 + Math.random() * 8;
+      const startX = 35 + Math.random() * 30;
+      const startY = 30 + Math.random() * 20;
+      const tx = (Math.random() - 0.5) * 400;
+      const ty = -(100 + Math.random() * 200);
+      p.style.cssText = `
+        left:${startX}%;top:${startY}%;
+        width:${size}px;height:${size}px;
+        background:${cls[Math.floor(Math.random()*cls.length)]};
+        --tx:${tx}px;--ty:${ty}px;
+        animation-duration:${0.8 + Math.random()*0.6}s;
+        animation-delay:${Math.random()*0.2}s;
+      `;
+      container.appendChild(p);
+      setTimeout(() => p.remove(), 1500);
+    }, i * 40);
+  }
+  setTimeout(() => container.classList.remove('show'), 3000);
+}
+
+function closeLbOverlay() {
+  // Apply loot to player
+  currentLbItems.forEach(item => {
+    if (item.type === 'gold') {
+      player.gold += item.amount;
+    } else if (item.type === 'xp') {
+      addXpGold(item.amount, 0);
+    } else if (item.type === 'sp') {
+      player.skillPoints += item.amount;
+    } else if (item.type === 'weapon' || item.type === 'armor') {
+      if (!player.owned.includes(item.id)) {
+        player.owned.push(item.id);
+      }
+    } else if (item.type === 'consumable') {
+      const totalItems = player.inventory.reduce((s, i) => s + i.qty, 0);
+      if (totalItems < 8) {
+        const cat = SHOP_CATALOG.consumables.find(c => c.id === item.id);
+        const existing = player.inventory.find(i => i.id === item.id);
+        if (existing && cat && cat.stackable) existing.qty++;
+        else player.inventory.push({ id: item.id, qty: 1 });
+      }
+    }
+  });
+  savePlayer();
+  updateProfileUI();
+  renderShop();
+
+  document.getElementById('lbOverlay').classList.remove('show');
+  currentLbItems = [];
+  showToast('🎁 Objets ajoutés à ton inventaire !', 'lootbox');
+}
+
+// ============================================
+// SKILL TREE DEFINITION
+// ============================================
+const SKILL_BRANCHES = [
+  {
+    id: 'force', name: 'Voie de la Force', icon: '⚔️', desc: 'Augmente ta puissance offensive',
+    skills: [
+      { id: 'sk_atk1', name: 'Muscles de Spaghetti', type: 'passive', emoji: '💪', maxLevel: 3, costPerLevel: 1, reqSkill: null, desc: 'Tes bras sont comme des pâtes al dente — décoratifs mais surprenants.', effectLabel: (lv) => `+${lv * 10} ATK permanente`, effect: (stats, lv) => { stats.atk += lv * 10; return stats; }, battleDesc: null },
+      { id: 'sk_atk2', name: 'Fureur du Gruyère', type: 'passive', emoji: '🧀', maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_atk1', desc: 'Tu frappes avec la densité d\'un fromage vieux de 3 ans.', effectLabel: (lv) => `+${lv * 8}% dégâts critiques`, effect: null, critDmgBonus: (lv) => lv * 0.08, battleDesc: null },
+      { id: 'sk_atk3', name: 'Tornade de Nouilles', type: 'active', emoji: '🍜', maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_atk2', desc: '6 coups frénétiques qui percent les défenses. Charge la spéciale de +40%.', effectLabel: () => 'Actif — 6 frappes, DEF -40%, +40% spéciale', effect: null, battleDesc: 'Tornade' }
+    ]
+  },
+  {
+    id: 'survie', name: 'Voie de la Survie', icon: '🛡️', desc: 'Renforce ta résistance et ta longévité',
+    skills: [
+      { id: 'sk_def1', name: 'Peau de Patate', type: 'passive', emoji: '🥔', maxLevel: 3, costPerLevel: 1, reqSkill: null, desc: 'Ta peau épaissit. Les attaques glissent sur toi comme de la purée.', effectLabel: (lv) => `+${lv * 12} DEF permanente`, effect: (stats, lv) => { stats.def += lv * 12; return stats; }, battleDesc: null },
+      { id: 'sk_def2', name: 'Régénération Kombucha', type: 'passive', emoji: '🫙', maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_def1', desc: 'Tu te régénères grâce à des bactéries bénéfiques inconnues.', effectLabel: (lv) => `+${lv * 6} HP régénérés/tour`, effect: null, regenPerTurn: (lv) => lv * 6, battleDesc: null },
+      { id: 'sk_def3', name: 'Mur de Baguette', type: 'active', emoji: '🥖', maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_def2', desc: 'Frappe + bouclier 85% pendant 3 tours. Chaque coup ennemi déclenche une riposte.', effectLabel: () => 'Actif — bouclier 3t + riposte automatique', effect: null, battleDesc: 'Forteresse' }
+    ]
+  },
+  {
+    id: 'ruse', name: 'Voie de la Ruse', icon: '🎯', desc: 'Maîtrise la vitesse et les techniques secrètes',
+    skills: [
+      { id: 'sk_spd1', name: 'Réflexes Wasabi', type: 'passive', emoji: '🌿', maxLevel: 3, costPerLevel: 1, reqSkill: null, desc: 'Ça pique les yeux, donc tu esquives tout par réflexe.', effectLabel: (lv) => `+${lv * 8} VIT, -${lv * 3}% chance de rater`, effect: (stats, lv) => { stats.spd += lv * 8; return stats; }, missReduction: (lv) => lv * 0.03, battleDesc: null },
+      { id: 'sk_spd2', name: 'Double Expresso', type: 'passive', emoji: '☕', maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_spd1', desc: 'Deux cafés serrés = charge de spéciale 2× plus rapide.', effectLabel: (lv) => `+${lv * 12}% charge spéciale/tour`, effect: null, specialBonus: (lv) => lv * 12, battleDesc: null },
+      { id: 'sk_spd3', name: 'Coup du Chef', type: 'active', emoji: '👨‍🍳', maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_spd2', desc: 'x2.5 ATK, ignore 80% DEF, vole 35% des dégâts en HP + recharge la spéciale.', effectLabel: () => 'Actif — x2.5 ATK, vol 35% HP, DEF ignorée', effect: null, battleDesc: 'Coup du Chef' }
+    ]
+  }
+];
+
+const XP_CURVE = [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500, 3200, 4000];
 const LEVEL_UNLOCKS = {
   2: { attack: 'combo_plus', msg: '🔥 Nouvelle attaque débloquée : Combo+ !' },
   3: { attack: 'piercing',   msg: '🗡️ Nouvelle attaque débloquée : Frappe Perforante !' },
   4: { attack: 'counter',    msg: '⚡ Nouvelle attaque débloquée : Contre-attaque !' },
   5: { attack: 'ultimate',   msg: '💥 Attaque ultime débloquée : DEVASTATION !' },
 };
-
 const STAT_GROWTH = { hp: 12, atk: 4, def: 3, spd: 2 };
 
-// ============================================
-// SHOP CATALOG
-// ============================================
 const SHOP_CATALOG = {
   weapons: [
-    { id: 'w1', name: 'Fourchette Rouillée',    icon: '🍴', type: 'weapon', price: 30,  stat: '+8 ATK',   atkBonus: 8,  defBonus: 0,  desc: 'Vieille mais efficace.',          reqLv: 1 },
+    { id: 'w1', name: 'Fourchette Rouillée',    icon: '🍴', type: 'weapon', price: 30,  stat: '+8 ATK',   atkBonus: 8,  defBonus: 0,  desc: 'Vieille mais efficace.', reqLv: 1 },
     { id: 'w2', name: 'Couteau à Beurre',       icon: '🔪', type: 'weapon', price: 70,  stat: '+18 ATK',  atkBonus: 18, defBonus: 0,  desc: 'Plus tranchant qu\'il n\'y paraît.', reqLv: 2 },
-    { id: 'w3', name: 'Spatule Légendaire',     icon: '🥄', type: 'weapon', price: 150, stat: '+35 ATK',  atkBonus: 35, defBonus: 0,  desc: 'Forgée dans les flammes du four.',  reqLv: 3 },
-    { id: 'w4', name: 'Rouleau de Sushi Épique',icon: '🍣', type: 'weapon', price: 280, stat: '+55 ATK',  atkBonus: 55, defBonus: 5,  desc: 'Une arme digne des grands maîtres.',reqLv: 5 },
+    { id: 'w3', name: 'Spatule Légendaire',     icon: '🥄', type: 'weapon', price: 150, stat: '+35 ATK',  atkBonus: 35, defBonus: 0,  desc: 'Forgée dans les flammes du four.', reqLv: 3 },
+    { id: 'w4', name: 'Rouleau de Sushi Épique',icon: '🍣', type: 'weapon', price: 280, stat: '+55 ATK',  atkBonus: 55, defBonus: 5,  desc: 'Une arme digne des grands maîtres.', reqLv: 5 },
   ],
   armors: [
-    { id: 'a1', name: 'Tablier Troué',          icon: '🥼', type: 'armor',  price: 25,  stat: '+10 DEF',  atkBonus: 0,  defBonus: 10, desc: 'Une protection basique.',           reqLv: 1 },
-    { id: 'a2', name: 'Casque de Casserole',    icon: '🪖', type: 'armor',  price: 60,  stat: '+22 DEF',  atkBonus: 0,  defBonus: 22, desc: 'Certifié anti-éclaboussures.',       reqLv: 2 },
+    { id: 'a1', name: 'Tablier Troué',          icon: '🥼', type: 'armor',  price: 25,  stat: '+10 DEF',  atkBonus: 0,  defBonus: 10, desc: 'Une protection basique.', reqLv: 1 },
+    { id: 'a2', name: 'Casque de Casserole',    icon: '🪖', type: 'armor',  price: 60,  stat: '+22 DEF',  atkBonus: 0,  defBonus: 22, desc: 'Certifié anti-éclaboussures.', reqLv: 2 },
     { id: 'a3', name: 'Armure de Parmesan',     icon: '🧀', type: 'armor',  price: 130, stat: '+40 DEF',  atkBonus: 0,  defBonus: 40, desc: 'Dur comme de la pierre. Et ça sent.', reqLv: 3 },
-    { id: 'a4', name: 'Bouclier de Baguette',   icon: '🥖', type: 'armor',  price: 250, stat: '+62 DEF',  atkBonus: 5,  defBonus: 62, desc: 'Béni par le boulanger du village.',  reqLv: 4 },
+    { id: 'a4', name: 'Bouclier de Baguette',   icon: '🥖', type: 'armor',  price: 250, stat: '+62 DEF',  atkBonus: 5,  defBonus: 62, desc: 'Béni par le boulanger du village.', reqLv: 4 },
   ],
   consumables: [
     { id: 'c1', name: 'Petite Potion Verte',    icon: '🧃', type: 'consumable', price: 15, stat: 'Soin +80 HP',  healAmt: 80,  atkMult: 0, desc: 'Un petit jus de légumes réconfortant.', reqLv: 1, stackable: true },
@@ -930,9 +1500,6 @@ const SHOP_CATALOG = {
   ]
 };
 
-// ============================================
-// PLAYER SAVE STATE — par personnage
-// ============================================
 const DEFAULT_CHAR_SAVE = () => ({
   level: 1, xp: 0, totalXp: 0, gold: 0,
   skillPoints: 0, skillPointsSpent: 0,
@@ -941,7 +1508,6 @@ const DEFAULT_CHAR_SAVE = () => ({
   owned: [], equipped: { weapon: null, armor: null }, inventory: [],
 });
 
-// Charge la save d'un personnage précis
 function loadCharSave(charId) {
   try {
     const raw = localStorage.getItem('lunchboxe_char_' + charId);
@@ -950,18 +1516,12 @@ function loadCharSave(charId) {
   return DEFAULT_CHAR_SAVE();
 }
 
-// Sauvegarde le personnage actif
 function savePlayer() {
   if (!selectedHero) return;
   localStorage.setItem('lunchboxe_char_' + selectedHero, JSON.stringify(player));
 }
 
-// Charge la save du personnage sélectionné dans `player`
-function switchCharSave(charId) {
-  player = loadCharSave(charId);
-}
-
-// player est la save active — initialisée vide, chargée à selectHero()
+function switchCharSave(charId) { player = loadCharSave(charId); }
 let player = DEFAULT_CHAR_SAVE();
 
 function getXpForLevel(lv) { return XP_CURVE[Math.min(lv, XP_CURVE.length - 1)] || XP_CURVE[XP_CURVE.length-1]; }
@@ -971,29 +1531,17 @@ function getXpProgress() {
   return Math.max(0, Math.min(100, ((player.xp - prev) / (next - prev)) * 100));
 }
 
-// ============================================
-// SKILL HELPERS
-// ============================================
+// Skill helpers
 function getSkillLevel(id) { return player.unlockedSkills[id] || 0; }
-
 function getSkillDef(id) {
-  for (const branch of SKILL_BRANCHES) {
-    const sk = branch.skills.find(s => s.id === id);
-    if (sk) return sk;
-  }
+  for (const branch of SKILL_BRANCHES) { const sk = branch.skills.find(s => s.id === id); if (sk) return sk; }
   return null;
 }
-
 function isSkillUnlocked(id) { return getSkillLevel(id) > 0; }
-
-function isSkillPrereqMet(skill) {
-  if (!skill.reqSkill) return true;
-  return isSkillUnlocked(skill.reqSkill);
-}
+function isSkillPrereqMet(skill) { if (!skill.reqSkill) return true; return isSkillUnlocked(skill.reqSkill); }
 
 function buySkill(id) {
-  const sk = getSkillDef(id);
-  if (!sk) return;
+  const sk = getSkillDef(id); if (!sk) return;
   if (!isSkillPrereqMet(sk)) { showToast('🔒 Prérequis non rempli !', 'error'); return; }
   const currentLv = getSkillLevel(id);
   if (currentLv >= sk.maxLevel) { showToast('✅ Compétence déjà au niveau max !', 'info'); return; }
@@ -1001,165 +1549,62 @@ function buySkill(id) {
   player.skillPoints -= sk.costPerLevel;
   player.skillPointsSpent += sk.costPerLevel;
   player.unlockedSkills[id] = currentLv + 1;
-  savePlayer();
-  renderSkillTree();
-  updateProfileUI();
+  savePlayer(); renderSkillTree(); updateProfileUI();
   showToast(`${sk.emoji} ${sk.name} — niveau ${currentLv + 1} !`, 'skill');
 }
 
-// Apply all passive skill bonuses on top of base stats
 function applyPassiveSkills(stats) {
-  for (const branch of SKILL_BRANCHES) {
-    for (const sk of branch.skills) {
-      const lv = getSkillLevel(sk.id);
-      if (lv > 0 && sk.effect) {
-        sk.effect(stats, lv);
-      }
-    }
-  }
+  for (const branch of SKILL_BRANCHES) { for (const sk of branch.skills) { const lv = getSkillLevel(sk.id); if (lv > 0 && sk.effect) sk.effect(stats, lv); } }
   return stats;
 }
+function getPassiveMissReduction() { let r=0; for(const b of SKILL_BRANCHES) for(const sk of b.skills){const lv=getSkillLevel(sk.id);if(lv>0&&sk.missReduction)r+=sk.missReduction(lv);} return r; }
+function getPassiveCritBonus() { let r=0; for(const b of SKILL_BRANCHES) for(const sk of b.skills){const lv=getSkillLevel(sk.id);if(lv>0&&sk.critDmgBonus)r+=sk.critDmgBonus(lv);} return r; }
+function getPassiveRegenPerTurn() { let r=0; for(const b of SKILL_BRANCHES) for(const sk of b.skills){const lv=getSkillLevel(sk.id);if(lv>0&&sk.regenPerTurn)r+=sk.regenPerTurn(lv);} return r; }
+function getPassiveSpecialBonus() { let r=0; for(const b of SKILL_BRANCHES) for(const sk of b.skills){const lv=getSkillLevel(sk.id);if(lv>0&&sk.specialBonus)r+=sk.specialBonus(lv);} return r; }
+function getActiveTreeSkills() { const res=[]; for(const b of SKILL_BRANCHES) for(const sk of b.skills) if(sk.type==='active'&&getSkillLevel(sk.id)>0) res.push(sk); return res; }
 
-function getPassiveMissReduction() {
-  let r = 0;
-  for (const branch of SKILL_BRANCHES) {
-    for (const sk of branch.skills) {
-      const lv = getSkillLevel(sk.id);
-      if (lv > 0 && sk.missReduction) r += sk.missReduction(lv);
-    }
-  }
-  return r;
-}
-
-function getPassiveCritBonus() {
-  let r = 0;
-  for (const branch of SKILL_BRANCHES) {
-    for (const sk of branch.skills) {
-      const lv = getSkillLevel(sk.id);
-      if (lv > 0 && sk.critDmgBonus) r += sk.critDmgBonus(lv);
-    }
-  }
-  return r;
-}
-
-function getPassiveRegenPerTurn() {
-  let r = 0;
-  for (const branch of SKILL_BRANCHES) {
-    for (const sk of branch.skills) {
-      const lv = getSkillLevel(sk.id);
-      if (lv > 0 && sk.regenPerTurn) r += sk.regenPerTurn(lv);
-    }
-  }
-  return r;
-}
-
-function getPassiveSpecialBonus() {
-  let r = 0;
-  for (const branch of SKILL_BRANCHES) {
-    for (const sk of branch.skills) {
-      const lv = getSkillLevel(sk.id);
-      if (lv > 0 && sk.specialBonus) r += sk.specialBonus(lv);
-    }
-  }
-  return r;
-}
-
-function getActiveTreeSkills() {
-  const result = [];
-  for (const branch of SKILL_BRANCHES) {
-    for (const sk of branch.skills) {
-      if (sk.type === 'active' && getSkillLevel(sk.id) > 0) result.push(sk);
-    }
-  }
-  return result;
-}
-
-// ============================================
-// RENDER SKILL TREE
-// ============================================
 function renderSkillTree() {
   document.getElementById('spAvailDisplay').textContent = player.skillPoints;
   document.getElementById('spTotalDisplay').textContent = player.skillPointsSpent + ' dépensés au total';
-
   const container = document.getElementById('skillBranches');
   container.innerHTML = '';
-
   for (const branch of SKILL_BRANCHES) {
     const branchEl = document.createElement('div');
     branchEl.className = 'skill-branch';
-    branchEl.innerHTML = `
-      <div class="branch-header">
-        <span class="branch-icon">${branch.icon}</span>
-        <div class="branch-name">${branch.name}</div>
-        <div class="branch-desc">${branch.desc}</div>
-      </div>`;
-
+    branchEl.innerHTML = `<div class="branch-header"><span class="branch-icon">${branch.icon}</span><div class="branch-name">${branch.name}</div><div class="branch-desc">${branch.desc}</div></div>`;
     branch.skills.forEach((sk, idx) => {
       const currentLv = getSkillLevel(sk.id);
       const maxed = currentLv >= sk.maxLevel;
       const prereqMet = isSkillPrereqMet(sk);
       const canAfford = player.skillPoints >= sk.costPerLevel;
       const prevSkUnlocked = idx === 0 ? true : getSkillLevel(branch.skills[idx-1].id) > 0;
-
       const nodeEl = document.createElement('div');
       nodeEl.className = 'skill-node' + (prevSkUnlocked && idx > 0 ? ' prev-unlocked' : '');
-
       let cardCls = 'skill-card';
       if (maxed) cardCls += ' maxed' + (sk.type === 'active' ? ' active-skill' : '');
       else if (currentLv > 0) cardCls += ' unlocked' + (sk.type === 'active' ? ' active-skill' : '');
       else if (!prereqMet) cardCls += ' locked-skill';
-
       let badge = '';
       if (maxed) badge = `<span class="skill-badge sb-maxed">MAX</span>`;
       else if (currentLv > 0 && sk.type === 'active') badge = `<span class="skill-badge sb-active">ACTIF</span>`;
       else if (!prereqMet) badge = `<span class="skill-badge" style="background:rgba(122,122,110,0.1);color:var(--muted);border:1px solid var(--border)">🔒</span>`;
       else if (canAfford && !maxed) badge = `<span class="skill-badge sb-new">NOUVEAU</span>`;
-
-      // dots
-      const dots = Array.from({length: sk.maxLevel}, (_, i) => {
+      const dots = Array.from({length: sk.maxLevel}, (_,i) => {
         const filled = i < currentLv;
-        const cls = filled ? (sk.type === 'active' ? 'skill-dot filled-active' : 'skill-dot filled') : 'skill-dot';
+        const cls = filled ? (sk.type==='active'?'skill-dot filled-active':'skill-dot filled') : 'skill-dot';
         return `<div class="${cls}"></div>`;
       }).join('');
-
-      const costLabel = maxed
-        ? `<span class="skill-cost maxed-label">✅ Max</span>`
-        : !prereqMet
-          ? `<span class="skill-cost locked-label">🔒 Bloqué</span>`
-          : `<span class="skill-cost">✨ ${sk.costPerLevel} pt${sk.costPerLevel > 1 ? 's' : ''}</span>`;
-
+      const costLabel = maxed ? `<span class="skill-cost maxed-label">✅ Max</span>` : !prereqMet ? `<span class="skill-cost locked-label">🔒 Bloqué</span>` : `<span class="skill-cost">✨ ${sk.costPerLevel} pt${sk.costPerLevel>1?'s':''}</span>`;
       const typeCls = sk.type === 'active' ? 'type-active' : 'type-passive';
       const typeLabel = sk.type === 'active' ? '⚡ Actif' : '📊 Passif';
       const clickAttr = (!maxed && prereqMet) ? `onclick="buySkill('${sk.id}')"` : '';
-
-      nodeEl.innerHTML = `
-        <div class="${cardCls}" ${clickAttr}>
-          ${badge}
-          <div class="skill-card-top">
-            <span class="skill-emoji">${sk.emoji}</span>
-            <div class="skill-info">
-              <div class="skill-name">${sk.name}</div>
-              <span class="skill-type-tag ${typeCls}">${typeLabel}</span>
-            </div>
-          </div>
-          <div class="skill-desc">${sk.desc}</div>
-          <div class="skill-effect">${sk.effectLabel(Math.max(currentLv, 1))}</div>
-          <div class="skill-footer">
-            <div class="skill-dots">${dots}</div>
-            ${costLabel}
-          </div>
-        </div>`;
-
+      nodeEl.innerHTML = `<div class="${cardCls}" ${clickAttr}>${badge}<div class="skill-card-top"><span class="skill-emoji">${sk.emoji}</span><div class="skill-info"><div class="skill-name">${sk.name}</div><span class="skill-type-tag ${typeCls}">${typeLabel}</span></div></div><div class="skill-desc">${sk.desc}</div><div class="skill-effect">${sk.effectLabel(Math.max(currentLv,1))}</div><div class="skill-footer"><div class="skill-dots">${dots}</div>${costLabel}</div></div>`;
       branchEl.appendChild(nodeEl);
     });
-
     container.appendChild(branchEl);
   }
 }
 
-// ============================================
-// PROFILE UI
-// ============================================
 function updateProfileUI() {
   document.getElementById('profileLevelBadge').textContent = 'LV.' + player.level;
   document.getElementById('profileGold').textContent = player.gold;
@@ -1170,7 +1615,6 @@ function updateProfileUI() {
   const prev = player.level > 1 ? getXpForLevel(player.level-1) : 0;
   const next  = getXpForLevel(player.level);
   document.getElementById('profileXpLabel').textContent = (player.xp - prev) + ' / ' + (next - prev) + ' XP';
-  // Nom et avatar du perso actif
   const heroNames = { fraise: 'Fraise', poire: 'Poire', patate: 'Patate Hongroise' };
   const heroIcons = { fraise: '🍓', poire: '🍐', patate: '🥔' };
   if (selectedHero) {
@@ -1181,7 +1625,6 @@ function updateProfileUI() {
     document.getElementById('profileAvatar').textContent = '⚔';
   }
 }
-// updateProfileUI() appelé après l'init complète (voir bas du fichier)
 
 function getLevelStats(baseChar) {
   const bonus = player.level - 1;
@@ -1201,7 +1644,7 @@ function addXpGold(xpAmt, goldAmt) {
   let leveled = false;
   while (player.level < XP_CURVE.length && player.xp >= getXpForLevel(player.level)) {
     player.level++;
-    player.skillPoints += 1; // +1 skill point per level
+    player.skillPoints += 1;
     leveled = true;
     const unlock = LEVEL_UNLOCKS[player.level];
     if (unlock && !player.unlockedAttacks.includes(unlock.attack)) player.unlockedAttacks.push(unlock.attack);
@@ -1210,35 +1653,25 @@ function addXpGold(xpAmt, goldAmt) {
   return leveled;
 }
 
-// ============================================
-// SHOW / HIDE SCREENS
-// ============================================
 function showScreen(name) {
-  const screens = ['select','shop','skills','battle','victory'];
-  screens.forEach(s => {
+  ['select','shop','skills','battle','victory'].forEach(s => {
     const el = document.getElementById('screen-' + s);
     if (el) el.style.display = 'none';
   });
-  const tabs     = document.getElementById('screenTabs');
-  const profile  = document.getElementById('playerProfile');
+  const tabs = document.getElementById('screenTabs');
+  const profile = document.getElementById('playerProfile');
   const lvBanner = document.getElementById('levelupBanner');
-
   ['select','shop','skills'].forEach(t => {
     const btn = document.getElementById('tab-' + t);
     if (btn) btn.classList.remove('active');
   });
-
   if (['select','shop','skills'].includes(name)) {
-    tabs.style.display = '';
-    profile.style.display = '';
-    lvBanner.style.display = '';
+    tabs.style.display = ''; profile.style.display = ''; lvBanner.style.display = '';
     const btn = document.getElementById('tab-' + name);
     if (btn) btn.classList.add('active');
   } else {
-    tabs.style.display = 'none';
-    profile.style.display = 'none';
+    tabs.style.display = 'none'; profile.style.display = 'none';
   }
-
   const el = document.getElementById('screen-' + name);
   if (el) el.style.display = 'block';
 }
@@ -1249,10 +1682,8 @@ function switchTab(name) {
   if (name === 'skills') renderSkillTree();
 }
 
-// ============================================
-// SHOP
-// ============================================
 function renderShop() {
+  renderLootboxGrid();
   renderShopSection('shopWeapons', SHOP_CATALOG.weapons);
   renderShopSection('shopArmors', SHOP_CATALOG.armors);
   renderShopSection('shopConsumables', SHOP_CATALOG.consumables);
@@ -1270,39 +1701,23 @@ function renderShopSection(containerId, items) {
     const cantAfford = player.gold < item.price;
     const locked = player.level < item.reqLv;
     const ownedOrInInv = owned || qty > 0;
-
     let cls = 'shop-item';
     if (equipped) cls += ' equipped';
     else if (owned && item.type !== 'consumable') cls += ' owned';
     else if (cantAfford && !ownedOrInInv) cls += ' cant-afford';
-
     let badge = '';
     if (locked) badge = `<span class="shop-item-badge badge-locked">🔒 LV.${item.reqLv}</span>`;
     else if (equipped) badge = `<span class="shop-item-badge badge-equipped-tag">ÉQUIPÉ</span>`;
     else if (owned && item.type !== 'consumable') badge = `<span class="shop-item-badge badge-owned">POSSÉDÉ</span>`;
     else if (qty > 0) badge = `<span class="shop-item-badge badge-owned">×${qty}</span>`;
-
     let btnAction = '';
     if (locked) btnAction = '';
     else if (item.type === 'consumable') btnAction = `onclick="buyConsumable('${item.id}')"`;
     else if (equipped) btnAction = `onclick="unequip('${item.id}','${item.type}')"`;
     else if (owned) btnAction = `onclick="equipItem('${item.id}','${item.type}')"`;
     else btnAction = `onclick="buyItem('${item.id}','${item.type}')"`;
-
     const priceLabel = owned && item.type !== 'consumable' ? (equipped ? 'Déséquiper' : 'Équiper') : `🪙 ${item.price}`;
-
-    el.innerHTML += `
-      <div class="${cls}" ${btnAction}>
-        ${badge}
-        <div class="shop-item-icon">${item.icon}</div>
-        <div class="shop-item-name">${item.name}</div>
-        <div class="shop-item-stat">${item.stat}</div>
-        <div class="shop-item-desc">${item.desc}</div>
-        <div class="shop-item-footer">
-          <span class="shop-item-price">${priceLabel}</span>
-          <span class="shop-item-type">${item.type === 'weapon' ? 'ARME' : item.type === 'armor' ? 'ARMURE' : 'CONSOMMABLE'}</span>
-        </div>
-      </div>`;
+    el.innerHTML += `<div class="${cls}" ${btnAction}>${badge}<div class="shop-item-icon">${item.icon}</div><div class="shop-item-name">${item.name}</div><div class="shop-item-stat">${item.stat}</div><div class="shop-item-desc">${item.desc}</div><div class="shop-item-footer"><span class="shop-item-price">${priceLabel}</span><span class="shop-item-type">${item.type==='weapon'?'ARME':item.type==='armor'?'ARMURE':'CONSOMMABLE'}</span></div></div>`;
   });
 }
 
@@ -1311,67 +1726,64 @@ function renderInventory() {
   const armorSlot  = document.getElementById('equippedArmor');
   const w = player.equipped.weapon ? SHOP_CATALOG.weapons.find(x => x.id === player.equipped.weapon) : null;
   const a = player.equipped.armor  ? SHOP_CATALOG.armors.find(x => x.id === player.equipped.armor)   : null;
-  if (w) { weaponSlot.className = 'equipped-slot filled'; weaponSlot.innerHTML = `<span class="slot-icon">${w.icon}</span><div class="slot-name">${w.name}</div><div class="slot-stat">${w.stat}</div>`; }
-  else   { weaponSlot.className = 'equipped-slot'; weaponSlot.innerHTML = `<span class="slot-icon">🗡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`; }
-  if (a) { armorSlot.className = 'equipped-slot filled'; armorSlot.innerHTML = `<span class="slot-icon">${a.icon}</span><div class="slot-name">${a.name}</div><div class="slot-stat">${a.stat}</div>`; }
-  else   { armorSlot.className = 'equipped-slot'; armorSlot.innerHTML = `<span class="slot-icon">🛡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`; }
+  if (w) { weaponSlot.className='equipped-slot filled'; weaponSlot.innerHTML=`<span class="slot-icon">${w.icon}</span><div class="slot-name">${w.name}</div><div class="slot-stat">${w.stat}</div>`; }
+  else   { weaponSlot.className='equipped-slot'; weaponSlot.innerHTML=`<span class="slot-icon">🗡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`; }
+  if (a) { armorSlot.className='equipped-slot filled'; armorSlot.innerHTML=`<span class="slot-icon">${a.icon}</span><div class="slot-name">${a.name}</div><div class="slot-stat">${a.stat}</div>`; }
+  else   { armorSlot.className='equipped-slot'; armorSlot.innerHTML=`<span class="slot-icon">🛡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`; }
   const invEl = document.getElementById('invSlots');
   invEl.innerHTML = '';
   for (let i = 0; i < 8; i++) {
     const item = player.inventory[i];
-    if (item) { const cat = SHOP_CATALOG.consumables.find(c => c.id === item.id); invEl.innerHTML += `<div class="inv-slot" title="${cat ? cat.name : ''}">${cat ? cat.icon : '?'}<span class="slot-count">${item.qty > 1 ? item.qty : ''}</span></div>`; }
+    if (item) { const cat = SHOP_CATALOG.consumables.find(c => c.id === item.id); invEl.innerHTML += `<div class="inv-slot" title="${cat?cat.name:''}">${cat?cat.icon:'?'}<span class="slot-count">${item.qty>1?item.qty:''}</span></div>`; }
     else invEl.innerHTML += `<div class="inv-slot empty">·</div>`;
   }
 }
 
 function buyItem(id, type) {
-  const cat = type === 'weapon' ? SHOP_CATALOG.weapons : SHOP_CATALOG.armors;
-  const item = cat.find(i => i.id === id);
-  if (!item) return;
-  if (player.level < item.reqLv) { showToast('🔒 Niveau ' + item.reqLv + ' requis !', 'error'); return; }
-  if (player.gold < item.price)  { showToast('🪙 Pas assez de pièces !', 'error'); return; }
-  player.gold -= item.price;
-  player.owned.push(id);
-  player.equipped[type === 'weapon' ? 'weapon' : 'armor'] = id;
+  const cat = type==='weapon'?SHOP_CATALOG.weapons:SHOP_CATALOG.armors;
+  const item = cat.find(i=>i.id===id); if(!item) return;
+  if(player.level<item.reqLv){showToast('🔒 Niveau '+item.reqLv+' requis !','error');return;}
+  if(player.gold<item.price){showToast('🪙 Pas assez de pièces !','error');return;}
+  player.gold-=item.price; player.owned.push(id);
+  player.equipped[type==='weapon'?'weapon':'armor']=id;
   savePlayer(); renderShop(); updateProfileUI();
-  showToast(item.icon + ' ' + item.name + ' acheté & équipé !', 'success');
+  showToast(item.icon+' '+item.name+' acheté & équipé !','success');
 }
 
 function buyConsumable(id) {
-  const item = SHOP_CATALOG.consumables.find(i => i.id === id);
-  if (!item) return;
-  if (player.level < item.reqLv) { showToast('🔒 Niveau ' + item.reqLv + ' requis !', 'error'); return; }
-  if (player.gold < item.price)  { showToast('🪙 Pas assez de pièces !', 'error'); return; }
-  const totalItems = player.inventory.reduce((sum, i) => sum + i.qty, 0);
-  if (totalItems >= 8) { showToast('🎒 Inventaire plein (8 max) !', 'error'); return; }
-  player.gold -= item.price;
-  const existing = player.inventory.find(i => i.id === id);
-  if (existing && item.stackable) existing.qty++;
-  else player.inventory.push({ id, qty: 1 });
+  const item=SHOP_CATALOG.consumables.find(i=>i.id===id); if(!item) return;
+  if(player.level<item.reqLv){showToast('🔒 Niveau '+item.reqLv+' requis !','error');return;}
+  if(player.gold<item.price){showToast('🪙 Pas assez de pièces !','error');return;}
+  const totalItems=player.inventory.reduce((sum,i)=>sum+i.qty,0);
+  if(totalItems>=8){showToast('🎒 Inventaire plein (8 max) !','error');return;}
+  player.gold-=item.price;
+  const existing=player.inventory.find(i=>i.id===id);
+  if(existing&&item.stackable) existing.qty++;
+  else player.inventory.push({id,qty:1});
   savePlayer(); renderShop(); updateProfileUI();
-  showToast(item.icon + ' ' + item.name + ' ajouté à l\'inventaire !', 'success');
+  showToast(item.icon+' '+item.name+' ajouté à l\'inventaire !','success');
 }
 
 function equipItem(id, type) {
-  player.equipped[type === 'weapon' ? 'weapon' : 'armor'] = id;
+  player.equipped[type==='weapon'?'weapon':'armor']=id;
   savePlayer(); renderShop(); updateProfileUI();
-  const cat = type === 'weapon' ? SHOP_CATALOG.weapons : SHOP_CATALOG.armors;
-  const item = cat.find(i => i.id === id);
-  showToast((item ? item.icon : '') + ' Équipé !', 'success');
+  const cat=type==='weapon'?SHOP_CATALOG.weapons:SHOP_CATALOG.armors;
+  const item=cat.find(i=>i.id===id);
+  showToast((item?item.icon:'')+' Équipé !','success');
 }
 
 function unequip(id, type) {
-  player.equipped[type === 'weapon' ? 'weapon' : 'armor'] = null;
+  player.equipped[type==='weapon'?'weapon':'armor']=null;
   savePlayer(); renderShop(); updateProfileUI();
-  showToast('Déséquipé.', 'info');
+  showToast('Déséquipé.','info');
 }
 
 // ============================================
-// BUILD STAGE DOTS & PIPS
+// ENEMIES & HEROES
 // ============================================
 const ENEMIES = [
   { id: 'cornichon_ennemi', name: 'Cornichon Raté', type: 'villain', class: 'Cornichon Avancé de la Cantine', sprite: 'cornichon', isBoss: false, hp: 90, atk: 62, def: 48, spd: 88, quote: '"Tu croyais que j\'étais de ton côté ?"', special: { name: '🥒 Spray Acide', fn: (v) => { const dmg=Math.floor(v.atk*1.3+Math.random()*22); return { dmg, log: '🥒 SPRAY ACIDE — '+dmg+' dégâts corrosifs !', type: 'crit' }; } }, phases: [{ threshold:1.0, taunt:"On se retrouve, cousin…", taunted:false },{ threshold:0.55, taunt:"Tu pensais vraiment gagner ? Pathétique.", taunted:false },{ threshold:0.2, taunt:"IMPOSSIBLE. Je suis FERMENTÉ. Je suis ÉTERNEL !", taunted:false }], narratorLines: { taunt: ["Le Cornichon Raté révèle sa vraie nature acide.","Une trahison marinée dans la cantine.","L'air sent le vinaigre…"] } },
-  { id: 'sushi_ninja', name: 'Sushi Ninja', type: 'villain', class: 'Ombre de la Cantine', sprite: 'sushi', isBoss: false, hp: 115, atk: 72, def: 55, spd: 98, quote: '"Tu ne m\'as pas vu venir… et tu ne le verras jamais."', special: { name: '🍣 Lame de Riz', fn: (v) => { const hits = [Math.floor(v.atk*0.7+Math.random()*15), Math.floor(v.atk*0.7+Math.random()*15), Math.floor(v.atk*0.8+Math.random()*20)]; const dmg = hits.reduce((a,b)=>a+b,0); return { dmg, log: '🍣 LAME DE RIZ — '+hits.join(' + ')+' = '+dmg+' dégâts furtifs !', type: 'multi' }; } }, phases: [{ threshold:1.0, taunt:"Je suis partout. Je suis nulle part.", taunted:false },{ threshold:0.5, taunt:"Impressionnant… Tu mérites de voir ma vraie vitesse !", taunted:false },{ threshold:0.15, taunt:"Impossible. Un ninja ne perd JAMAIS !", taunted:false }], narratorLines: { taunt: ["Le Sushi Ninja disparaît dans l'ombre de la cantine.","Un frisson. Le sushi a bougé… mais où ?","L'odeur du wasabi emplit l'air. Le danger approche."] } },
+  { id: 'sushi_ninja', name: 'Sushi Ninja', type: 'villain', class: 'Ombre de la Cantine', sprite: 'sushi', isBoss: false, hp: 115, atk: 72, def: 55, spd: 98, quote: '"Tu ne m\'as pas vu venir… et tu ne le verras jamais."', special: { name: '🍣 Lame de Riz', fn: (v) => { const hits=[Math.floor(v.atk*0.7+Math.random()*15),Math.floor(v.atk*0.7+Math.random()*15),Math.floor(v.atk*0.8+Math.random()*20)]; const dmg=hits.reduce((a,b)=>a+b,0); return { dmg, log: '🍣 LAME DE RIZ — '+hits.join(' + ')+' = '+dmg+' dégâts furtifs !', type: 'multi' }; } }, phases: [{ threshold:1.0, taunt:"Je suis partout. Je suis nulle part.", taunted:false },{ threshold:0.5, taunt:"Impressionnant… Tu mérites de voir ma vraie vitesse !", taunted:false },{ threshold:0.15, taunt:"Impossible. Un ninja ne perd JAMAIS !", taunted:false }], narratorLines: { taunt: ["Le Sushi Ninja disparaît dans l'ombre de la cantine.","Un frisson. Le sushi a bougé… mais où ?","L'odeur du wasabi emplit l'air. Le danger approche."] } },
   { id: 'banane', name: 'Banane', type: 'villain', class: 'Seigneur Malveillant de la Cantine', sprite: 'banane', isBoss: true, hp: 140, atk: 80, def: 60, spd: 65, quote: '"Personne ne résiste à ma peau de banane."', special: { name: '🍌 Potassium Furie', fn: (v) => { const dmg=Math.floor(v.atk*1.6+Math.random()*30); return { dmg, log: '🍌 POTASSIUM FURIE — '+dmg+' dégâts cataclysmiques !', type: 'crit' }; } }, phases: [{ threshold:1.0, taunt:"Venez donc, petites friandises…", taunted:false },{ threshold:0.6, taunt:"Bien. Vous méritez de voir ma vraie puissance !", taunted:false },{ threshold:0.3, taunt:"IMPOSSIBLE. Je suis BANANE ! Je suis ÉTERNEL !", taunted:false }], narratorLines: { taunt: ["Banane ricane depuis son trône de peau glissante.","Le Seigneur de la Cantine n'a pas encore sorti ses vraies armes.","Banane observe avec un mépris royal."] } }
 ];
 
@@ -1380,21 +1792,21 @@ const HEROES = {
     id: 'fraise', name: 'Fraise', type: 'hero', class: 'Guerrière Fruitée', sprite: 'fraise',
     hp: 11, atk: 75, def: 55, spd: 90,
     quote: '"Je suis douce… jusqu\'à ce que ça crame."',
-    special: { name: '🍓 Rafale Rouge', fn: (hero) => { const hits = [Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.6+Math.random()*20))]; return { dmg: hits.reduce((a,b)=>a+b,0), log: '🍓 RAFALE ROUGE — '+hits.join(' + ')+' dégâts !', type: 'multi' }; } },
+    special: { name: '🍓 Rafale Rouge', fn: (hero) => { const hits=[Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.6+Math.random()*20))]; return { dmg: hits.reduce((a,b)=>a+b,0), log: '🍓 RAFALE ROUGE — '+hits.join(' + ')+' dégâts !', type: 'multi' }; } },
     narratorLines: { win: ["La cantine appartient aux petits fruits rouges !","Fraise prouve que le plus fort n'est pas toujours le plus grand.","La victoire a un goût sucré… exactement comme elle."], lose: ["Fraise tombe. Mais elle se relèvera.","Même les meilleurs fruits tombent parfois."], attack: ["Fraise bondit comme une balle de flipper !","La guerrière fruitée frappe sans pitié.","Coup direct ! La cantine tremble."] }
   },
   poire: {
     id: 'poire', name: 'Poire', type: 'hero', class: 'Mage de la Fraîcheur', sprite: 'poire',
     hp: 95, atk: 65, def: 70, spd: 75,
     quote: '"La patience, c\'est ma plus grande arme."',
-    special: { name: '🍐 Onde Juteuse', fn: (hero) => { const heal = Math.floor(18+Math.random()*12); const dmg = Math.max(1,Math.floor(hero.atk*0.9+Math.random()*25)); return { dmg, heal, log: '🍐 ONDE JUTEUSE — +'+heal+' PV soignés, '+dmg+' dégâts !', type: 'heal' }; } },
+    special: { name: '🍐 Onde Juteuse', fn: (hero) => { const heal=Math.floor(18+Math.random()*12); const dmg=Math.max(1,Math.floor(hero.atk*0.9+Math.random()*25)); return { dmg, heal, log: '🍐 ONDE JUTEUSE — +'+heal+' PV soignés, '+dmg+' dégâts !', type: 'heal' }; } },
     narratorLines: { win: ["La Poire, calme jusqu'au bout.","Patience et ténacité — les vrais champions attendent leur heure.","Un combat maîtrisé de bout en bout."], lose: ["La Poire s'incline avec dignité.","Défaite, mais la tête haute."], attack: ["La Poire frappe avec une précision chirurgicale !","Coup stratégique ! La Poire ne laisse rien au hasard.","Attaque calculée de la Mage de la Fraîcheur."] }
   },
   patate: {
     id: 'patate', name: 'Patate Hongroise', type: 'hero', class: 'Colosse du Goulash', sprite: 'patate',
     hp: 130, atk: 70, def: 85, spd: 55,
     quote: '"Je suis lente… mais quand j\'arrive, tu le regrettes."',
-    special: { name: '🥔 Frappe du Goulash', fn: (hero) => { const dmg = Math.max(1, Math.floor(hero.atk * 2.2 + Math.random() * 30)); return { dmg, log: '🥔 FRAPPE DU GOULASH — ' + dmg + ' dégâts dévastateurs !', type: 'crit' }; } },
+    special: { name: '🥔 Frappe du Goulash', fn: (hero) => { const dmg=Math.max(1,Math.floor(hero.atk*2.2+Math.random()*30)); return { dmg, log: '🥔 FRAPPE DU GOULASH — '+dmg+' dégâts dévastateurs !', type: 'crit' }; } },
     narratorLines: { win: ["La Patate Hongroise prouve que la lenteur est une force !","Solide, implacable, victorieuse — comme un bon goulash.","Personne ne s'attendait à ça. Personne."], lose: ["La Patate retombe. Elle rebondira.","Une défaite épicée. La revanche sera plus épicée encore."], attack: ["La Patate s'élance avec une force tellurique !","Le sol tremble sous les coups de la Colosse du Goulash !","Lente mais imparable — la Patate frappe !"] }
   }
 };
@@ -1405,7 +1817,7 @@ function buildSelectStageDots() {
   ENEMIES.forEach((e, i) => {
     const step = document.createElement('div');
     step.className = 'stage-step';
-    const dotEmoji = e.isBoss ? '🍌' : (e.id === 'sushi_ninja' ? '🍣' : '🥒');
+    const dotEmoji = e.isBoss ? '🍌' : (e.id==='sushi_ninja'?'🍣':'🥒');
     step.innerHTML = `<div class="stage-dot locked" id="stage-dot-${i}">${dotEmoji}</div><div class="stage-label">${e.name}</div>`;
     container.appendChild(step);
     if (i < ENEMIES.length - 1) {
@@ -1446,9 +1858,6 @@ function updateStageIndicators() {
 
 buildSelectStageDots(); buildBattlePips();
 
-// ============================================
-// GAME STATE
-// ============================================
 let state = {
   heroChar: null, currentEnemyIndex: 0, villainChar: null,
   heroHp: 0, heroMaxHp: 0, heroHpPersist: 0,
@@ -1456,17 +1865,13 @@ let state = {
   heroSpecial: 0, villainSpecial: 0,
   turn: 1, heroDefending: false, villainDefending: false,
   battleRunning: false, playerTurn: true,
-  heroStats: null,
-  atkBuff: 0, atkBuffTurns: 0,
+  heroStats: null, atkBuff: 0, atkBuffTurns: 0,
   fortressActive: false, fortressTurns: 0, fortressCounter: false,
   pendingLevelUp: null,
 };
 
 updateStageIndicators();
 
-// ============================================
-// CHARACTER SELECT
-// ============================================
 function buildCharCard(char, onclickStr, isSelected) {
   const clickAttr = onclickStr ? 'onclick="' + onclickStr + '"' : '';
   const isVillain = char.type === 'villain';
@@ -1474,62 +1879,45 @@ function buildCharCard(char, onclickStr, isSelected) {
   const cardCls = isInterm ? 'intermediate-villain' : (isVillain ? 'villain' : '');
   const badgeCls = isInterm ? 'badge-intermediate' : (isVillain ? 'badge-villain' : 'badge-hero');
   const badgeLbl = isInterm ? '⚔ ENNEMI' : (isVillain ? '👿 BOSS' : '⚔ HÉROS');
-
-  // Badge de progression pour les héros (construit sans template literal imbriqué)
   let progressBadge = '';
   if (!isVillain && char.id) {
     const save = loadCharSave(char.id);
-    const prev = save.level > 1 ? (XP_CURVE[save.level - 1] || 0) : 0;
-    const next = XP_CURVE[Math.min(save.level, XP_CURVE.length - 1)] || 1;
+    const prev = save.level > 1 ? (XP_CURVE[save.level-1]||0) : 0;
+    const next = XP_CURVE[Math.min(save.level, XP_CURVE.length-1)]||1;
     const range = next - prev;
-    const xpPct = range <= 0 ? 100 : Math.max(0, Math.min(100, ((save.xp - prev) / range) * 100));
+    const xpPct = range<=0 ? 100 : Math.max(0,Math.min(100,((save.xp-prev)/range)*100));
     progressBadge = '<div style="margin-top:0.8rem;border-top:1px solid var(--border);padding-top:0.7rem;">'
-      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">'
-      + '<span style="font-family:monospace;font-size:0.6rem;color:var(--muted)">LV.' + save.level + '</span>'
-      + '<span style="font-family:monospace;font-size:0.6rem;color:var(--gold)">🪙 ' + save.gold + '</span>'
-      + '<span style="font-family:monospace;font-size:0.6rem;color:var(--purple)">✨ ' + save.skillPoints + ' pts</span>'
-      + '</div>'
-      + '<div style="height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">'
-      + '<div style="width:' + xpPct + '%;height:100%;background:linear-gradient(90deg,var(--xp-blue),#93c5fd);border-radius:2px"></div>'
-      + '</div></div>';
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">'
+      +'<span style="font-family:monospace;font-size:0.6rem;color:var(--muted)">LV.'+save.level+'</span>'
+      +'<span style="font-family:monospace;font-size:0.6rem;color:var(--gold)">🪙 '+save.gold+'</span>'
+      +'<span style="font-family:monospace;font-size:0.6rem;color:var(--purple)">✨ '+save.skillPoints+' pts</span>'
+      +'</div>'
+      +'<div style="height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">'
+      +'<div style="width:'+xpPct+'%;height:100%;background:linear-gradient(90deg,var(--xp-blue),#93c5fd);border-radius:2px"></div>'
+      +'</div></div>';
   }
-
   const selectedCls = isSelected ? ' selected' : '';
-  return '<div class="char-card ' + cardCls + selectedCls + '" ' + clickAttr + '>'
-    + '<span class="char-type-badge ' + badgeCls + '">' + badgeLbl + '</span>'
-    + '<div class="char-sprite"><img src="' + char.sprite + '.svg" alt="' + char.name + '" /></div>'
-    + '<div class="char-name">' + char.name + '</div>'
-    + '<div class="char-class">' + char.class + '</div>'
-    + '<div class="char-stats">'
-    + '<div class="stat-bar-row"><span class="stat-bar-label">ATK</span><div class="stat-bar-track"><div class="stat-bar-fill fill-atk" style="width:' + char.atk + '%"></div></div></div>'
-    + '<div class="stat-bar-row"><span class="stat-bar-label">DEF</span><div class="stat-bar-track"><div class="stat-bar-fill fill-def" style="width:' + char.def + '%"></div></div></div>'
-    + '<div class="stat-bar-row"><span class="stat-bar-label">VIT</span><div class="stat-bar-track"><div class="stat-bar-fill fill-spd" style="width:' + char.spd + '%"></div></div></div>'
-    + '<div class="stat-bar-row"><span class="stat-bar-label">HP</span><div class="stat-bar-track"><div class="stat-bar-fill fill-hp" style="width:' + char.hp + '%"></div></div></div>'
-    + '</div>'
-    + '<div class="char-quote">' + char.quote + '</div>'
-    + progressBadge
-    + '</div>';
+  return '<div class="char-card '+cardCls+selectedCls+'" '+clickAttr+'>'
+    +'<span class="char-type-badge '+badgeCls+'">'+badgeLbl+'</span>'
+    +'<div class="char-sprite"><img src="'+char.sprite+'.svg" alt="'+char.name+'" /></div>'
+    +'<div class="char-name">'+char.name+'</div>'
+    +'<div class="char-class">'+char.class+'</div>'
+    +'<div class="char-stats">'
+    +'<div class="stat-bar-row"><span class="stat-bar-label">ATK</span><div class="stat-bar-track"><div class="stat-bar-fill fill-atk" style="width:'+char.atk+'%"></div></div></div>'
+    +'<div class="stat-bar-row"><span class="stat-bar-label">DEF</span><div class="stat-bar-track"><div class="stat-bar-fill fill-def" style="width:'+char.def+'%"></div></div></div>'
+    +'<div class="stat-bar-row"><span class="stat-bar-label">VIT</span><div class="stat-bar-track"><div class="stat-bar-fill fill-spd" style="width:'+char.spd+'%"></div></div></div>'
+    +'<div class="stat-bar-row"><span class="stat-bar-label">HP</span><div class="stat-bar-track"><div class="stat-bar-fill fill-hp" style="width:'+char.hp+'%"></div></div></div>'
+    +'</div>'
+    +'<div class="char-quote">'+char.quote+'</div>'
+    +progressBadge
+    +'</div>';
 }
-
-// Fallback simple (sans badge progression)
-function buildCharCardSimple(char, onclickStr, isSelected) {
-  return buildCharCard(char, onclickStr, isSelected);
-}
-
 
 let selectedHero = null;
 
 function renderSelect() {
   const heroes = Object.values(HEROES);
-  try {
-    document.getElementById('heroGrid').innerHTML =
-      heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
-  } catch(e) {
-    console.error('renderSelect hero error:', e);
-    // Fallback sans badge de progression
-    document.getElementById('heroGrid').innerHTML =
-      heroes.map(c => buildCharCardSimple(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
-  }
+  document.getElementById('heroGrid').innerHTML = heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
   const firstEnemy = ENEMIES[state.currentEnemyIndex];
   const lbl = document.getElementById('enemyLabel');
   lbl.textContent = firstEnemy.isBoss ? '⚠ BOSS FINAL' : `⚠ ENNEMI ${state.currentEnemyIndex+1}/${ENEMIES.length} — ${firstEnemy.name}`;
@@ -1540,24 +1928,18 @@ function renderSelect() {
 
 function selectHero(id) {
   selectedHero = id;
-  // Charger la save propre à ce personnage
   switchCharSave(id);
-  // Réinitialiser la progression de combat (changement de perso)
   state.currentEnemyIndex = 0;
   state.heroHpPersist = 0;
   updateStageIndicators();
   updateProfileUI();
   renderSelect();
-  // Rafraîchir boutique/arbre si ouverts
   const shopEl = document.getElementById('screen-shop');
   if (shopEl && shopEl.style.display !== 'none') renderShop();
   const skillEl = document.getElementById('screen-skills');
   if (skillEl && skillEl.style.display !== 'none') renderSkillTree();
 }
 
-// ============================================
-// ATTACK DEFINITIONS
-// ============================================
 function getAttacks(heroChar) {
   const allAttacks = [
     { id: 'punch', name: 'Punch', icon: '👊', desc: 'Coup direct', reqLv: 1, cls: '',
@@ -1571,7 +1953,7 @@ function getAttacks(heroChar) {
       }
     },
     { id: 'combo', name: 'Combo', icon: '🔥', desc: '2 coups rapides', reqLv: 1, cls: '',
-      fn: (hero, villain) => { const d1 = calcDmg(hero.atk, villain.def, 0.65); const d2 = calcDmg(hero.atk, villain.def, 0.65); return { dmg: d1 + d2, spBonus: 20, log: '🔥 Combo — ' + (d1+d2) + ' dégâts !' }; }
+      fn: (hero, villain) => { const d1=calcDmg(hero.atk,villain.def,0.65);const d2=calcDmg(hero.atk,villain.def,0.65); return { dmg:d1+d2, spBonus:20, log:'🔥 Combo — '+(d1+d2)+' dégâts !' }; }
     },
     { id: 'defend', name: 'Garde', icon: '🛡️', desc: 'Réduit les dégâts', reqLv: 1, cls: '',
       fn: (hero) => { return { defend: true, spBonus: 8, log: '🛡️ ' + hero.name + ' se met en garde…' }; }
@@ -1580,80 +1962,53 @@ function getAttacks(heroChar) {
       fn: (hero, villain) => { if (state.heroSpecial < 100) return null; state.heroSpecial = 0; return heroChar.special.fn(hero, villain); }
     },
     { id: 'combo_plus', name: 'Combo+', icon: '🌀', desc: '3 coups + stun', reqLv: 2, cls: 'unlocked-atk',
-      fn: (hero, villain) => { const hits = [calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.7)]; const total = hits.reduce((a,b)=>a+b,0); return { dmg: total, spBonus: 25, log: '🌀 Combo+ — ' + hits.join('+') + ' = ' + total + ' dégâts !' }; }
+      fn: (hero, villain) => { const hits=[calcDmg(hero.atk,villain.def,0.6),calcDmg(hero.atk,villain.def,0.6),calcDmg(hero.atk,villain.def,0.7)]; const total=hits.reduce((a,b)=>a+b,0); return { dmg:total, spBonus:25, log:'🌀 Combo+ — '+hits.join('+')+' = '+total+' dégâts !' }; }
     },
     { id: 'piercing', name: 'Perforant', icon: '🗡️', desc: 'Ignore 50% DEF', reqLv: 3, cls: 'unlocked-atk',
-      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def * 0.5, 1.2); return { dmg, spBonus: 20, log: '🗡️ Frappe Perforante — ' + dmg + ' dégâts (DEF ignorée) !' }; }
+      fn: (hero, villain) => { const dmg=calcDmg(hero.atk,villain.def*0.5,1.2); return { dmg, spBonus:20, log:'🗡️ Frappe Perforante — '+dmg+' dégâts (DEF ignorée) !' }; }
     },
     { id: 'counter', name: 'Contre', icon: '↩️', desc: 'Parade + riposte', reqLv: 4, cls: 'unlocked-atk',
-      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def, 1.5); return { dmg, defend: true, spBonus: 30, log: '↩️ Contre-attaque — ' + dmg + ' dégâts + garde activée !' }; }
+      fn: (hero, villain) => { const dmg=calcDmg(hero.atk,villain.def,1.5); return { dmg, defend:true, spBonus:30, log:'↩️ Contre-attaque — '+dmg+' dégâts + garde activée !' }; }
     },
     { id: 'ultimate', name: 'DÉVASTA.', icon: '💥', desc: 'Dégâts massifs', reqLv: 5, cls: 'unlocked-atk',
-      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def, 2.8); return { dmg, spBonus: 0, log: '💥 DÉVASTATION — ' + dmg + ' dégâts cataclysmiques !' }; }
+      fn: (hero, villain) => { const dmg=calcDmg(hero.atk,villain.def,2.8); return { dmg, spBonus:0, log:'💥 DÉVASTATION — '+dmg+' dégâts cataclysmiques !' }; }
     },
   ];
-
-  // Tree active skills
   const treeActives = [
-    {
-      // Tornade : 6 coups rapides ignorant 40% DEF + charge spéciale massive
-      // Total ~3.3x ATK net, surpasse clairement Dévasta (2.8x) sur cibles résistantes
-      id: 'sk_atk3', name: 'Tornade', icon: '🍜', desc: '6 frappes / ignore DEF', reqLv: 1, cls: 'unlocked-atk tree-skill',
+    { id: 'sk_atk3', name: 'Tornade', icon: '🍜', desc: '6 frappes / ignore DEF', reqLv: 1, cls: 'unlocked-atk tree-skill',
       fn: (hero, villain) => {
         const reducedDef = villain.def * 0.6;
-        const hits = [
-          calcDmg(hero.atk, reducedDef, 0.6),
-          calcDmg(hero.atk, reducedDef, 0.6),
-          calcDmg(hero.atk, reducedDef, 0.65),
-          calcDmg(hero.atk, reducedDef, 0.65),
-          calcDmg(hero.atk, reducedDef, 0.7),
-          calcDmg(hero.atk, reducedDef, 0.8),
-        ];
+        const hits = [calcDmg(hero.atk,reducedDef,0.6),calcDmg(hero.atk,reducedDef,0.6),calcDmg(hero.atk,reducedDef,0.65),calcDmg(hero.atk,reducedDef,0.65),calcDmg(hero.atk,reducedDef,0.7),calcDmg(hero.atk,reducedDef,0.8)];
         const total = hits.reduce((a,b)=>a+b,0);
-        // Charge spéciale bonus importante
         state.heroSpecial = Math.min(100, state.heroSpecial + 40);
-        return { dmg: total, spBonus: 0, log: '🍜 TORNADE DE NOUILLES — ' + hits.length + ' coups, ' + total + ' dégâts ! (DEF réduite, +40% spéciale)' };
+        return { dmg:total, spBonus:0, log:'🍜 TORNADE DE NOUILLES — '+hits.length+' coups, '+total+' dégâts ! (DEF réduite, +40% spéciale)' };
       }
     },
-    {
-      // Forteresse : bloque 85% pendant 3 tours ET contre-attaque à chaque coup reçu
-      id: 'sk_def3', name: 'Forteresse', icon: '🥖', desc: 'Bouclier 3t + riposte', reqLv: 1, cls: 'unlocked-atk tree-skill',
+    { id: 'sk_def3', name: 'Forteresse', icon: '🥖', desc: 'Bouclier 3t + riposte', reqLv: 1, cls: 'unlocked-atk tree-skill',
       fn: (hero, villain) => {
-        state.fortressActive = true;
-        state.fortressTurns = 3;
-        state.fortressCounter = true; // active le flag de contre-attaque
-        // Frappe de mise en position
+        state.fortressActive = true; state.fortressTurns = 3; state.fortressCounter = true;
         const dmg = calcDmg(hero.atk, villain.def, 0.7);
-        state.villainHp -= dmg;
-        spawnDmg('villainSprite', dmg, 'dmg');
-        return { defend: true, spBonus: 20, log: '🥖 FORTERESSE DE BAGUETTE — ' + dmg + ' dmg + bouclier 85% pendant 3 tours ! Toute attaque sera ripostée.' };
+        state.villainHp -= dmg; spawnDmg('villainSprite', dmg, 'dmg');
+        return { defend:true, spBonus:20, log:'🥖 FORTERESSE DE BAGUETTE — '+dmg+' dmg + bouclier 85% pendant 3 tours ! Toute attaque sera ripostée.' };
       }
     },
-    {
-      // Coup du Chef : x2.5 ATK, ignore toute DEF, vol 35% HP, charge spéciale à fond
-      id: 'sk_spd3', name: 'Coup du Chef', icon: '👨‍🍳', desc: 'x2.5 ATK, vol 35% HP', reqLv: 1, cls: 'unlocked-atk tree-skill',
+    { id: 'sk_spd3', name: 'Coup du Chef', icon: '👨‍🍳', desc: 'x2.5 ATK, vol 35% HP', reqLv: 1, cls: 'unlocked-atk tree-skill',
       fn: (hero, villain) => {
-        const dmg = Math.floor(calcDmg(hero.atk, villain.def * 0.2, 2.5 + getPassiveCritBonus()));
+        const dmg = Math.floor(calcDmg(hero.atk, villain.def*0.2, 2.5+getPassiveCritBonus()));
         const stolen = Math.floor(dmg * 0.35);
-        state.heroHp = Math.min(state.heroMaxHp, state.heroHp + stolen);
-        spawnDmg('heroSprite', stolen, 'heal');
+        state.heroHp = Math.min(state.heroMaxHp, state.heroHp + stolen); spawnDmg('heroSprite', stolen, 'heal');
         state.heroSpecial = Math.min(100, state.heroSpecial + 35);
-        return { dmg, spBonus: 0, log: '👨‍🍳 COUP DU CHEF — ' + dmg + ' dégâts (DEF ignorée) + ' + stolen + ' HP volés + spéciale chargée !', crit: true };
+        return { dmg, spBonus:0, log:'👨‍🍳 COUP DU CHEF — '+dmg+' dégâts (DEF ignorée) + '+stolen+' HP volés + spéciale chargée !', crit:true };
       }
     }
   ];
-
   const baseList = allAttacks.filter(a => player.unlockedAttacks.includes(a.id));
   const treeList = treeActives.filter(a => isSkillUnlocked(a.id));
   return [...baseList, ...treeList];
 }
 
-// ============================================
-// ACTION BUTTONS
-// ============================================
 function buildActionRow() {
-  const hero = state.heroChar;
-  if (!hero) return;
+  const hero = state.heroChar; if (!hero) return;
   const attacks = getAttacks(hero);
   const row = document.getElementById('actionRow');
   row.innerHTML = '';
@@ -1674,8 +2029,7 @@ function buildItemRow() {
   row.innerHTML = '';
   if (player.inventory.length === 0) return;
   player.inventory.forEach(inv => {
-    const cat = SHOP_CATALOG.consumables.find(c => c.id === inv.id);
-    if (!cat) return;
+    const cat = SHOP_CATALOG.consumables.find(c => c.id === inv.id); if (!cat) return;
     const btn = document.createElement('button');
     btn.className = 'action-btn item-btn';
     btn.id = 'item-btn-' + inv.id;
@@ -1685,9 +2039,6 @@ function buildItemRow() {
   });
 }
 
-// ============================================
-// BATTLE INIT
-// ============================================
 function startBattle(newGame = false) {
   if (!selectedHero) return;
   state.heroChar = HEROES[selectedHero];
@@ -1695,23 +2046,16 @@ function startBattle(newGame = false) {
   state.heroStats = getLevelStats(state.heroChar);
   state.atkBuff = 0; state.atkBuffTurns = 0;
   state.fortressActive = false; state.fortressTurns = 0;
-
   if (newGame || state.heroHpPersist === 0) {
-    state.heroHp = state.heroMaxHp = state.heroStats.hp;
-    state.heroHpPersist = 0;
+    state.heroHp = state.heroMaxHp = state.heroStats.hp; state.heroHpPersist = 0;
   } else {
-    state.heroMaxHp = state.heroStats.hp;
-    state.heroHp = state.heroHpPersist;
+    state.heroMaxHp = state.heroStats.hp; state.heroHp = state.heroHpPersist;
   }
-
   state.villainHp = state.villainMaxHp = state.villainChar.hp * 10;
   state.heroSpecial = 0; state.villainSpecial = 0;
   state.turn = 1; state.heroDefending = false; state.villainDefending = false;
-  state.battleRunning = true; state.playerTurn = true;
-  state.pendingLevelUp = null;
-
+  state.battleRunning = true; state.playerTurn = true; state.pendingLevelUp = null;
   if (state.villainChar.phases) state.villainChar.phases.forEach(p => p.taunted = false);
-
   document.getElementById('heroHpName').textContent = state.heroChar.name;
   document.getElementById('villainHpName').textContent = state.villainChar.name;
   document.getElementById('heroNameBadge').textContent = state.heroChar.name.toUpperCase();
@@ -1720,408 +2064,243 @@ function startBattle(newGame = false) {
   document.getElementById('villainLvlBadge').textContent = state.villainChar.isBoss ? 'LV.MAX' : 'LV.' + (state.currentEnemyIndex * 5 + 5);
   document.getElementById('heroSprite').innerHTML = `<img src="${state.heroChar.sprite}.svg" alt="${state.heroChar.name}" />`;
   document.getElementById('villainSprite').innerHTML = `<img src="${state.villainChar.sprite}.svg" alt="${state.villainChar.name}" />`;
-
   updateStageIndicators();
-  clearLog();
-  showScreen('battle');
-  buildActionRow();
-  updateBattleUI();
-
-  // Show active skills in log
+  clearLog(); showScreen('battle'); buildActionRow(); updateBattleUI();
   const activeTreeSkills = getActiveTreeSkills();
-  if (activeTreeSkills.length > 0) {
-    addLog(`✨ Compétences actives : ${activeTreeSkills.map(s=>s.emoji+' '+s.name).join(', ')}`, 'skill-line');
-  }
+  if (activeTreeSkills.length > 0) addLog(`✨ Compétences actives : ${activeTreeSkills.map(s=>s.emoji+' '+s.name).join(', ')}`, 'skill-line');
   const regen = getPassiveRegenPerTurn();
   if (regen > 0) addLog(`🫙 Régénération active : +${regen} HP/tour`, 'skill-line');
-
   const tag = state.villainChar.isBoss ? '💀 BOSS FINAL' : `⚔ COMBAT ${state.currentEnemyIndex+1}/${ENEMIES.length}`;
   addLog(`${tag} : ${state.heroChar.name} (LV.${player.level}) vs ${state.villainChar.name}`, 'system');
   if (state.heroHpPersist > 0 && !newGame) addLog(`❤️ HP conservés : ${state.heroHp}/${state.heroMaxHp}`, 'heal-line');
   addLog(`🎙 "${pick(state.villainChar.narratorLines.taunt)}"`, state.villainChar.isBoss ? 'villain-action' : 'intermediate-action');
-
   if (state.heroStats.spd < state.villainChar.spd) {
     addLog('⚡ ' + state.villainChar.name + ' attaque en premier !', 'system');
-    setPlayerTurn(false);
-    setTimeout(() => villainTurn(), 800);
-  } else {
-    setPlayerTurn(true);
-  }
+    setPlayerTurn(false); setTimeout(() => villainTurn(), 800);
+  } else { setPlayerTurn(true); }
 }
 
-// ============================================
-// UI HELPERS
-// ============================================
 function clearLog() { document.getElementById('battleLog').innerHTML = ''; }
-function addLog(msg, cls = '') {
-  const log = document.getElementById('battleLog');
-  const d = document.createElement('div');
-  d.className = 'log-line ' + cls; d.textContent = msg;
-  log.appendChild(d); log.scrollTop = log.scrollHeight;
-}
+function addLog(msg, cls='') { const log=document.getElementById('battleLog'); const d=document.createElement('div'); d.className='log-line '+cls; d.textContent=msg; log.appendChild(d); log.scrollTop=log.scrollHeight; }
+
 function updateBattleUI() {
-  const pct = (v, m) => Math.max(0, v / m * 100) + '%';
-  const cls = (v, m) => { const r = v/m; return 'hp-fill'+(r < 0.2 ? ' critical' : r < 0.4 ? ' low' : ''); };
-  document.getElementById('heroHpFill').style.width = pct(state.heroHp, state.heroMaxHp);
-  document.getElementById('heroHpFill').className = cls(state.heroHp, state.heroMaxHp);
-  document.getElementById('heroHpVal').textContent = Math.max(0,state.heroHp)+'/'+state.heroMaxHp;
-  document.getElementById('villainHpFill').style.width = pct(state.villainHp, state.villainMaxHp);
-  document.getElementById('villainHpFill').className = cls(state.villainHp, state.villainMaxHp);
-  document.getElementById('villainHpVal').textContent = Math.max(0,state.villainHp)+'/'+state.villainMaxHp;
-
-  const spBonus = getPassiveSpecialBonus();
-  document.getElementById('heroSpecialFill').style.width = state.heroSpecial + '%';
-  document.getElementById('heroSpecialLabel').textContent = 'SPÉCIAL ' + state.heroSpecial + '%';
-  document.getElementById('villainSpecialFill').style.width = state.villainSpecial + '%';
-  document.getElementById('villainSpecialLabel').textContent = 'SPÉCIAL ' + state.villainSpecial + '%';
-  const sb = document.getElementById('btn-special');
-  if (sb) {
-    sb.disabled = state.heroSpecial < 100 || !state.playerTurn;
-    sb.style.borderColor = state.heroSpecial >= 100 ? 'var(--accent2)' : '';
-    const desc = document.getElementById('desc-special');
-    if (desc) desc.textContent = state.heroSpecial >= 100 ? 'PRÊT !' : 'Charge ' + state.heroSpecial + '%';
-  }
-  document.getElementById('turnLabel').textContent = 'Tour ' + state.turn;
-
-  // status badges
-  const heroStatusEl = document.getElementById('heroStatus');
-  if (heroStatusEl) {
-    let badges = '';
-    if (state.atkBuffTurns > 0) badges += `<span style="background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent2)">⚡ ATK+ (${state.atkBuffTurns}t)</span>`;
-    if (state.fortressActive) badges += `<span style="background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--xp-blue)">🥖 FORTERESSE (${state.fortressTurns}t)</span>`;
-    heroStatusEl.innerHTML = badges;
-  }
+  const pct=(v,m)=>Math.max(0,v/m*100)+'%';
+  const cls=(v,m)=>{ const r=v/m; return 'hp-fill'+(r<0.2?' critical':r<0.4?' low':''); };
+  document.getElementById('heroHpFill').style.width=pct(state.heroHp,state.heroMaxHp);
+  document.getElementById('heroHpFill').className=cls(state.heroHp,state.heroMaxHp);
+  document.getElementById('heroHpVal').textContent=Math.max(0,state.heroHp)+'/'+state.heroMaxHp;
+  document.getElementById('villainHpFill').style.width=pct(state.villainHp,state.villainMaxHp);
+  document.getElementById('villainHpFill').className=cls(state.villainHp,state.villainMaxHp);
+  document.getElementById('villainHpVal').textContent=Math.max(0,state.villainHp)+'/'+state.villainMaxHp;
+  document.getElementById('heroSpecialFill').style.width=state.heroSpecial+'%';
+  document.getElementById('heroSpecialLabel').textContent='SPÉCIAL '+state.heroSpecial+'%';
+  document.getElementById('villainSpecialFill').style.width=state.villainSpecial+'%';
+  document.getElementById('villainSpecialLabel').textContent='SPÉCIAL '+state.villainSpecial+'%';
+  const sb=document.getElementById('btn-special');
+  if(sb){sb.disabled=state.heroSpecial<100||!state.playerTurn;sb.style.borderColor=state.heroSpecial>=100?'var(--accent2)':'';const desc=document.getElementById('desc-special');if(desc)desc.textContent=state.heroSpecial>=100?'PRÊT !':'Charge '+state.heroSpecial+'%';}
+  document.getElementById('turnLabel').textContent='Tour '+state.turn;
+  const heroStatusEl=document.getElementById('heroStatus');
+  if(heroStatusEl){let badges='';if(state.atkBuffTurns>0)badges+=`<span style="background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent2)">⚡ ATK+ (${state.atkBuffTurns}t)</span>`;if(state.fortressActive)badges+=`<span style="background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--xp-blue)">🥖 FORTERESSE (${state.fortressTurns}t)</span>`;heroStatusEl.innerHTML=badges;}
 }
 
 function setPlayerTurn(val) {
-  state.playerTurn = val;
-  document.querySelectorAll('.action-btn').forEach(b => b.disabled = !val);
-  const sb = document.getElementById('btn-special');
-  if (sb) sb.disabled = !val || state.heroSpecial < 100;
+  state.playerTurn=val;
+  document.querySelectorAll('.action-btn').forEach(b=>b.disabled=!val);
+  const sb=document.getElementById('btn-special');
+  if(sb)sb.disabled=!val||state.heroSpecial<100;
 }
-function pick(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
-function spawnDmg(id, val, type) {
-  const wrap = document.getElementById(id);
-  if (!wrap) return;
-  const el = document.createElement('div');
-  el.className = 'dmg-float'+(type==='crit'?' crit':type==='heal'?' heal':type==='miss'?' miss':'');
-  el.textContent = type==='miss'?'ESQUIVÉ':type==='heal'?'+'+val:'-'+val;
-  wrap.appendChild(el); setTimeout(() => el.remove(), 900);
-}
-function anim(id, cls, ms=450) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms);
-}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function spawnDmg(id,val,type){const wrap=document.getElementById(id);if(!wrap)return;const el=document.createElement('div');el.className='dmg-float'+(type==='crit'?' crit':type==='heal'?' heal':type==='miss'?' miss':'');el.textContent=type==='miss'?'ESQUIVÉ':type==='heal'?'+'+val:'-'+val;wrap.appendChild(el);setTimeout(()=>el.remove(),900);}
+function anim(id,cls,ms=450){const el=document.getElementById(id);if(!el)return;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),ms);}
 
-function showToast(msg, type = 'info') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + type;
+function showToast(msg, type='info') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type;
   void t.offsetWidth; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-// ============================================
-// LEVEL UP OVERLAY
-// ============================================
 function showLevelUpOverlay(newLevel, unlockMsg) {
-  state.battleRunning = false;
-  setPlayerTurn(false);
-  document.getElementById('lvOverlayNum').textContent = 'Niveau ' + newLevel;
-  const grid = document.getElementById('statGainsGrid');
-  grid.innerHTML = `
-    <div class="stat-gain-item"><span>HP</span>+${STAT_GROWTH.hp}</div>
-    <div class="stat-gain-item"><span>ATK</span>+${STAT_GROWTH.atk}</div>
-    <div class="stat-gain-item"><span>DEF</span>+${STAT_GROWTH.def}</div>
-    <div class="stat-gain-item"><span>VIT</span>+${STAT_GROWTH.spd}</div>`;
-  const umsg = document.getElementById('unlockMsg');
-  if (unlockMsg) { umsg.textContent = unlockMsg; umsg.classList.remove('hidden'); }
-  else { umsg.classList.add('hidden'); }
+  state.battleRunning=false; setPlayerTurn(false);
+  document.getElementById('lvOverlayNum').textContent='Niveau '+newLevel;
+  const grid=document.getElementById('statGainsGrid');
+  grid.innerHTML=`<div class="stat-gain-item"><span>HP</span>+${STAT_GROWTH.hp}</div><div class="stat-gain-item"><span>ATK</span>+${STAT_GROWTH.atk}</div><div class="stat-gain-item"><span>DEF</span>+${STAT_GROWTH.def}</div><div class="stat-gain-item"><span>VIT</span>+${STAT_GROWTH.spd}</div>`;
+  const umsg=document.getElementById('unlockMsg');
+  if(unlockMsg){umsg.textContent=unlockMsg;umsg.classList.remove('hidden');}else{umsg.classList.add('hidden');}
   document.getElementById('levelupOverlay').classList.add('show');
 }
 
 function closeLevelUp() {
   document.getElementById('levelupOverlay').classList.remove('show');
-  state.heroStats = getLevelStats(state.heroChar);
-  state.heroMaxHp = state.heroStats.hp;
-  if (state.heroHp > state.heroMaxHp) state.heroHp = state.heroMaxHp;
-  document.getElementById('heroLvlBadge').textContent = 'LV.' + player.level;
-  buildActionRow();
-  updateBattleUI();
-  state.battleRunning = true;
-  setPlayerTurn(true);
-  addLog('⭐ Tu es maintenant niveau ' + player.level + ' ! (+1 point de compétence)', 'level-line');
+  state.heroStats=getLevelStats(state.heroChar);
+  state.heroMaxHp=state.heroStats.hp;
+  if(state.heroHp>state.heroMaxHp)state.heroHp=state.heroMaxHp;
+  document.getElementById('heroLvlBadge').textContent='LV.'+player.level;
+  buildActionRow(); updateBattleUI();
+  state.battleRunning=true; setPlayerTurn(true);
+  addLog('⭐ Tu es maintenant niveau '+player.level+' ! (+1 point de compétence)','level-line');
 }
 
-// ============================================
-// USE ITEM IN COMBAT
-// ============================================
 function useItem(id) {
-  if (!state.playerTurn || !state.battleRunning) return;
-  const cat = SHOP_CATALOG.consumables.find(c => c.id === id);
-  if (!cat) return;
-  const invItem = player.inventory.find(i => i.id === id);
-  if (!invItem || invItem.qty <= 0) return;
-  invItem.qty--;
-  if (invItem.qty <= 0) player.inventory = player.inventory.filter(i => i.id !== id);
+  if(!state.playerTurn||!state.battleRunning)return;
+  const cat=SHOP_CATALOG.consumables.find(c=>c.id===id); if(!cat)return;
+  const invItem=player.inventory.find(i=>i.id===id); if(!invItem||invItem.qty<=0)return;
+  invItem.qty--; if(invItem.qty<=0)player.inventory=player.inventory.filter(i=>i.id!==id);
   savePlayer();
-  if (cat.healAmt > 0) {
-    const healed = Math.min(cat.healAmt, state.heroMaxHp - state.heroHp);
-    state.heroHp = Math.min(state.heroMaxHp, state.heroHp + cat.healAmt);
-    spawnDmg('heroSprite', healed, 'heal');
-    addLog(`${cat.icon} ${cat.name} utilisé — +${healed} HP soignés !`, 'heal-line');
-  }
-  if (cat.atkMult > 0) {
-    state.atkBuff = Math.floor(state.heroStats.atk * cat.atkMult);
-    state.atkBuffTurns = cat.duration || 2;
-    addLog(`${cat.icon} ATK augmentée de +${state.atkBuff} pendant ${state.atkBuffTurns} tours !`, 'hero-action');
-  }
+  if(cat.healAmt>0){const healed=Math.min(cat.healAmt,state.heroMaxHp-state.heroHp);state.heroHp=Math.min(state.heroMaxHp,state.heroHp+cat.healAmt);spawnDmg('heroSprite',healed,'heal');addLog(`${cat.icon} ${cat.name} utilisé — +${healed} HP soignés !`,'heal-line');}
+  if(cat.atkMult>0){state.atkBuff=Math.floor(state.heroStats.atk*cat.atkMult);state.atkBuffTurns=cat.duration||2;addLog(`${cat.icon} ATK augmentée de +${state.atkBuff} pendant ${state.atkBuffTurns} tours !`,'hero-action');}
   updateBattleUI(); buildItemRow();
-  setPlayerTurn(false);
-  setTimeout(() => villainTurn(), 600);
+  setPlayerTurn(false); setTimeout(()=>villainTurn(),600);
 }
 
-// ============================================
-// BATTLE LOGIC
-// ============================================
-function calcDmg(atk, def, mult=1) {
-  return Math.max(1, Math.floor(atk * mult * (0.85+Math.random()*0.3) * Math.max(0.3, 1-def*0.003)));
-}
-const isCrit = () => Math.random() < 0.15;
-const isMiss = () => Math.random() < Math.max(0.01, 0.08 - getPassiveMissReduction());
-
-function getEffectiveAtk() {
-  return state.heroStats.atk + (state.atkBuffTurns > 0 ? state.atkBuff : 0);
-}
+function calcDmg(atk,def,mult=1){return Math.max(1,Math.floor(atk*mult*(0.85+Math.random()*0.3)*Math.max(0.3,1-def*0.003)));}
+const isCrit=()=>Math.random()<0.15;
+const isMiss=()=>Math.random()<Math.max(0.01,0.08-getPassiveMissReduction());
+function getEffectiveAtk(){return state.heroStats.atk+(state.atkBuffTurns>0?state.atkBuff:0);}
 
 function playerAction(id) {
-  if (!state.playerTurn || !state.battleRunning) return;
+  if(!state.playerTurn||!state.battleRunning)return;
   setPlayerTurn(false);
-  const hero = state.heroChar;
-  const villain = state.villainChar;
-  const heroEffective = { ...state.heroStats, atk: getEffectiveAtk() };
-  const attacks = getAttacks(hero);
-  const atk = attacks.find(a => a.id === id);
-  if (!atk) { setPlayerTurn(true); return; }
-  if (id === 'special' && state.heroSpecial < 100) { setPlayerTurn(true); return; }
-  const result = atk.fn(heroEffective, villain);
-  if (!result) { setPlayerTurn(true); return; }
-  state.heroDefending = false;
-  if (result.miss) {
-    anim('heroSprite','punch-right');
-    setTimeout(() => spawnDmg('villainSprite',0,'miss'), 300);
-    addLog(`💨 ${hero.name} rate son coup !`, 'hero-action');
-    setTimeout(() => villainTurn(), 900);
-    return;
-  }
+  const hero=state.heroChar; const villain=state.villainChar;
+  const heroEffective={...state.heroStats,atk:getEffectiveAtk()};
+  const attacks=getAttacks(hero);
+  const atk=attacks.find(a=>a.id===id);
+  if(!atk){setPlayerTurn(true);return;}
+  if(id==='special'&&state.heroSpecial<100){setPlayerTurn(true);return;}
+  const result=atk.fn(heroEffective,villain);
+  if(!result){setPlayerTurn(true);return;}
+  state.heroDefending=false;
+  if(result.miss){anim('heroSprite','punch-right');setTimeout(()=>spawnDmg('villainSprite',0,'miss'),300);addLog(`💨 ${hero.name} rate son coup !`,'hero-action');setTimeout(()=>villainTurn(),900);return;}
   anim('heroSprite','punch-right');
-  setTimeout(() => {
-    if (result.heal) { state.heroHp = Math.min(state.heroMaxHp, state.heroHp + result.heal); spawnDmg('heroSprite', result.heal, 'heal'); }
-    if (result.dmg) { anim('villainSprite','hit-shake'); spawnDmg('villainSprite', result.dmg, result.crit ? 'crit' : 'dmg'); state.villainHp -= result.dmg; }
-    if (result.defend) state.heroDefending = true;
-    if (result.spBonus) {
-      const spBonus = getPassiveSpecialBonus();
-      state.heroSpecial = Math.min(100, state.heroSpecial + result.spBonus + (spBonus / 10));
-    }
-    addLog(result.log, result.crit ? 'crit-line' : 'hero-action');
-    if (result.crit) addLog('🎙 "'+pick(hero.narratorLines.attack)+'"','system');
+  setTimeout(()=>{
+    if(result.heal){state.heroHp=Math.min(state.heroMaxHp,state.heroHp+result.heal);spawnDmg('heroSprite',result.heal,'heal');}
+    if(result.dmg){anim('villainSprite','hit-shake');spawnDmg('villainSprite',result.dmg,result.crit?'crit':'dmg');state.villainHp-=result.dmg;}
+    if(result.defend)state.heroDefending=true;
+    if(result.spBonus){const spBonus=getPassiveSpecialBonus();state.heroSpecial=Math.min(100,state.heroSpecial+result.spBonus+(spBonus/10));}
+    addLog(result.log,result.crit?'crit-line':'hero-action');
+    if(result.crit)addLog('🎙 "'+pick(hero.narratorLines.attack)+'"','system');
     updateBattleUI();
-    checkBattleEnd() || setTimeout(() => villainTurn(), 900);
-  }, 350);
+    checkBattleEnd()||setTimeout(()=>villainTurn(),900);
+  },350);
 }
 
 function villainTurn() {
-  if (!state.battleRunning) return;
-  const villain = state.villainChar, hero = state.heroChar;
+  if(!state.battleRunning)return;
+  const villain=state.villainChar; const hero=state.heroChar;
   state.turn++;
-
-  // Regen passive
-  const regen = getPassiveRegenPerTurn();
-  if (regen > 0 && state.heroHp < state.heroMaxHp) {
-    const healed = Math.min(regen, state.heroMaxHp - state.heroHp);
-    state.heroHp += healed;
-    spawnDmg('heroSprite', healed, 'heal');
-    addLog(`🫙 Régénération — +${healed} HP`, 'heal-line');
-  }
-
-  if (state.atkBuffTurns > 0) {
-    state.atkBuffTurns--;
-    if (state.atkBuffTurns === 0) { state.atkBuff = 0; addLog('⚡ Boost ATK terminé.', 'system'); }
-  }
-  if (state.fortressActive) {
-    state.fortressTurns--;
-    if (state.fortressTurns <= 0) { state.fortressActive = false; addLog('🥖 Forteresse de Baguette s\'effondre…', 'system'); }
-  }
-
-  state.villainSpecial = Math.min(100, state.villainSpecial + 18);
-  const hpRatio = state.villainHp / state.villainMaxHp;
-  if (villain.phases) {
-    const phase = villain.phases.slice().reverse().find(p => hpRatio <= p.threshold && !p.taunted);
-    if (phase) { phase.taunted = true; addLog('😈 '+villain.name+' : "'+phase.taunt+'"', villain.isBoss ? 'villain-action' : 'intermediate-action'); }
-  }
+  const regen=getPassiveRegenPerTurn();
+  if(regen>0&&state.heroHp<state.heroMaxHp){const healed=Math.min(regen,state.heroMaxHp-state.heroHp);state.heroHp+=healed;spawnDmg('heroSprite',healed,'heal');addLog(`🫙 Régénération — +${healed} HP`,'heal-line');}
+  if(state.atkBuffTurns>0){state.atkBuffTurns--;if(state.atkBuffTurns===0){state.atkBuff=0;addLog('⚡ Boost ATK terminé.','system');}}
+  if(state.fortressActive){state.fortressTurns--;if(state.fortressTurns<=0){state.fortressActive=false;addLog('🥖 Forteresse de Baguette s\'effondre…','system');}}
+  state.villainSpecial=Math.min(100,state.villainSpecial+18);
+  const hpRatio=state.villainHp/state.villainMaxHp;
+  if(villain.phases){const phase=villain.phases.slice().reverse().find(p=>hpRatio<=p.threshold&&!p.taunted);if(phase){phase.taunted=true;addLog('😈 '+villain.name+' : "'+phase.taunt+'"',villain.isBoss?'villain-action':'intermediate-action');}}
   let action;
-  if (state.villainSpecial >= 100 && Math.random()<0.7) action='special';
-  else if (hpRatio < 0.35) action = Math.random()<0.6?'special':'punch';
-  else if (hpRatio < 0.6)  action = Math.random()<0.4?'combo':'punch';
-  else { const r=Math.random(); action = r<0.5?'punch':r<0.75?'combo':'defend'; }
+  if(state.villainSpecial>=100&&Math.random()<0.7)action='special';
+  else if(hpRatio<0.35)action=Math.random()<0.6?'special':'punch';
+  else if(hpRatio<0.6)action=Math.random()<0.4?'combo':'punch';
+  else{const r=Math.random();action=r<0.5?'punch':r<0.75?'combo':'defend';}
   anim('villainSprite','punch-left');
-  const logCls = villain.isBoss ? 'villain-action' : 'intermediate-action';
-  setTimeout(() => {
-    const blockRate = state.fortressActive ? 0.8 : 0.5;
-    if (action === 'punch') {
-      if (isMiss()) { addLog('💨 '+villain.name+' rate son coup !', logCls); spawnDmg('heroSprite',0,'miss'); }
-      else {
-        const crit = isCrit(); let dmg = crit ? Math.floor(calcDmg(villain.atk,state.heroStats.def)*1.7) : calcDmg(villain.atk,state.heroStats.def);
-        if (state.heroDefending || state.fortressActive) dmg = Math.floor(dmg*(1-blockRate));
-        anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,crit?'crit':'dmg'); state.heroHp -= dmg;
-        addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':state.fortressActive?' (forteresse !)':'')+' !', crit?'crit-line':logCls);
-        // Riposte automatique de la Forteresse
-        if (state.fortressActive && state.fortressCounter) {
-          const riposteDmg = calcDmg(state.heroStats.atk, villain.def, 0.6);
-          state.villainHp -= riposteDmg;
-          spawnDmg('villainSprite', riposteDmg, 'dmg');
-          addLog('🥖 Riposte de la Forteresse — ' + riposteDmg + ' dégâts !', 'hero-action');
-        }
-      }
-    } else if (action === 'combo') {
-      let dmg = calcDmg(villain.atk,state.heroStats.def,1.2); if (state.heroDefending||state.fortressActive) dmg = Math.floor(dmg*(1-blockRate*0.6)); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'dmg'); state.heroHp -= dmg; addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !', logCls);
-    } else if (action === 'defend') {
-      state.villainDefending = true; addLog('🛡️ '+villain.name+' se barricade…', logCls);
-    } else if (action === 'special') {
-      state.villainSpecial = 0; const result = villain.special.fn(villain, hero); let dmg = result.dmg; if (state.heroDefending||state.fortressActive) dmg = Math.floor(dmg*(state.fortressActive?0.25:0.55)); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'crit'); state.heroHp -= dmg; addLog('⚡ '+result.log,'crit-line');
-    }
-    state.heroDefending = false; state.villainDefending = false;
+  const logCls=villain.isBoss?'villain-action':'intermediate-action';
+  setTimeout(()=>{
+    const blockRate=state.fortressActive?0.8:0.5;
+    if(action==='punch'){
+      if(isMiss()){addLog('💨 '+villain.name+' rate son coup !',logCls);spawnDmg('heroSprite',0,'miss');}
+      else{const crit=isCrit();let dmg=crit?Math.floor(calcDmg(villain.atk,state.heroStats.def)*1.7):calcDmg(villain.atk,state.heroStats.def);if(state.heroDefending||state.fortressActive)dmg=Math.floor(dmg*(1-blockRate));anim('heroSprite','hit-shake');spawnDmg('heroSprite',dmg,crit?'crit':'dmg');state.heroHp-=dmg;addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':state.fortressActive?' (forteresse !)':'')+' !',crit?'crit-line':logCls);if(state.fortressActive&&state.fortressCounter){const riposteDmg=calcDmg(state.heroStats.atk,villain.def,0.6);state.villainHp-=riposteDmg;spawnDmg('villainSprite',riposteDmg,'dmg');addLog('🥖 Riposte de la Forteresse — '+riposteDmg+' dégâts !','hero-action');}}
+    }else if(action==='combo'){let dmg=calcDmg(villain.atk,state.heroStats.def,1.2);if(state.heroDefending||state.fortressActive)dmg=Math.floor(dmg*(1-blockRate*0.6));anim('heroSprite','hit-shake');spawnDmg('heroSprite',dmg,'dmg');state.heroHp-=dmg;addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !',logCls);
+    }else if(action==='defend'){state.villainDefending=true;addLog('🛡️ '+villain.name+' se barricade…',logCls);
+    }else if(action==='special'){state.villainSpecial=0;const result=villain.special.fn(villain,hero);let dmg=result.dmg;if(state.heroDefending||state.fortressActive)dmg=Math.floor(dmg*(state.fortressActive?0.25:0.55));anim('heroSprite','hit-shake');spawnDmg('heroSprite',dmg,'crit');state.heroHp-=dmg;addLog('⚡ '+result.log,'crit-line');}
+    state.heroDefending=false;state.villainDefending=false;
     updateBattleUI();
-    if (!checkBattleEnd()) setPlayerTurn(true);
-  }, 400);
+    if(!checkBattleEnd())setPlayerTurn(true);
+  },400);
 }
 
 function checkBattleEnd() {
-  if (state.heroHp <= 0) { state.battleRunning=false; setTimeout(()=>endBattle(false),500); return true; }
-  if (state.villainHp <= 0) { state.battleRunning=false; setTimeout(()=>endBattle(true),500); return true; }
+  if(state.heroHp<=0){state.battleRunning=false;setTimeout(()=>endBattle(false),500);return true;}
+  if(state.villainHp<=0){state.battleRunning=false;setTimeout(()=>endBattle(true),500);return true;}
   return false;
 }
 
-// ============================================
-// END BATTLE
-// ============================================
 function endBattle(won) {
-  const hero = state.heroChar, villain = state.villainChar;
-  const isLastEnemy = state.currentEnemyIndex >= ENEMIES.length - 1;
-  const baseXp   = won ? (villain.isBoss ? 200 : 80) : 20;
-  const earnedXp = Math.floor(baseXp + state.turn * (won ? 8 : 3) + Math.random() * 40);
-  const baseGold = won ? (villain.isBoss ? 60 : 20) : 5;
-  const earnedGold = Math.floor(baseGold + Math.random() * (won ? 30 : 8));
-  const didLevelUp = addXpGold(earnedXp, earnedGold);
-  const newLevel = player.level;
-  if (didLevelUp) {
-    const unlock = LEVEL_UNLOCKS[newLevel];
-    document.getElementById('levelupBannerTitle').textContent = `🎉 Niveau ${newLevel} atteint !`;
-    document.getElementById('levelupBannerSub').textContent = (unlock ? unlock.msg + ' · ' : '') + `✨ +1 point de compétence disponible !`;
-    document.getElementById('levelupBanner').classList.add('show');
-  }
-  if (won && !isLastEnemy) {
-    state.heroHpPersist = state.heroHp;
-    state.currentEnemyIndex++;
-    updateStageIndicators();
-    document.getElementById('victoryIcon').textContent = '⚔';
-    const t = document.getElementById('victoryTitle');
-    t.textContent = villain.name + ' vaincu !';
-    t.className = 'victory-title intermediate';
-    document.getElementById('victorySub').textContent = `Bien joué ! Le prochain adversaire t'attend : ${ENEMIES[state.currentEnemyIndex].name}.`;
-    const banner = document.getElementById('hpCarryBanner');
-    banner.classList.remove('hidden');
-    document.getElementById('hpCarryVal').textContent = `${state.heroHp}/${state.heroMaxHp} HP`;
-    document.getElementById('xpGained').textContent = '+' + earnedXp;
-    document.getElementById('goldGained').textContent = '+' + earnedGold;
-    document.getElementById('turnsUsed').textContent = state.turn;
-    const q = pick(hero.narratorLines.win);
-    document.getElementById('victoryQuote').innerHTML = `"${q}"<cite>— Narrateur</cite>`;
-    const nextEnemy = ENEMIES[state.currentEnemyIndex];
-    const btnR = document.getElementById('btnRematch');
-    btnR.textContent = nextEnemy.isBoss ? '💀 Affronter le Boss !' : `⚔ Combat suivant : ${nextEnemy.name}`;
-    btnR.className = 'btn-rematch next-stage';
-    btnR.onclick = () => startBattle(false);
-    const btnB = document.getElementById('btnBackSelect');
-    btnB.textContent = '← Recommencer depuis le début';
-    btnB.onclick = () => { state.currentEnemyIndex=0; state.heroHpPersist=0; updateStageIndicators(); backToSelect(); };
-    showScreen('victory');
-    return;
+  const hero=state.heroChar; const villain=state.villainChar;
+  const isLastEnemy=state.currentEnemyIndex>=ENEMIES.length-1;
+  const baseXp=won?(villain.isBoss?200:80):20;
+  const earnedXp=Math.floor(baseXp+state.turn*(won?8:3)+Math.random()*40);
+  const baseGold=won?(villain.isBoss?60:20):5;
+  const earnedGold=Math.floor(baseGold+Math.random()*(won?30:8));
+  const didLevelUp=addXpGold(earnedXp,earnedGold);
+  const newLevel=player.level;
+  if(didLevelUp){const unlock=LEVEL_UNLOCKS[newLevel];document.getElementById('levelupBannerTitle').textContent=`🎉 Niveau ${newLevel} atteint !`;document.getElementById('levelupBannerSub').textContent=(unlock?unlock.msg+' · ':'')+`✨ +1 point de compétence disponible !`;document.getElementById('levelupBanner').classList.add('show');}
+  if(won&&!isLastEnemy){
+    state.heroHpPersist=state.heroHp; state.currentEnemyIndex++; updateStageIndicators();
+    document.getElementById('victoryIcon').textContent='⚔';
+    const t=document.getElementById('victoryTitle'); t.textContent=villain.name+' vaincu !'; t.className='victory-title intermediate';
+    document.getElementById('victorySub').textContent=`Bien joué ! Le prochain adversaire t'attend : ${ENEMIES[state.currentEnemyIndex].name}.`;
+    const banner=document.getElementById('hpCarryBanner'); banner.classList.remove('hidden');
+    document.getElementById('hpCarryVal').textContent=`${state.heroHp}/${state.heroMaxHp} HP`;
+    document.getElementById('xpGained').textContent='+'+earnedXp;
+    document.getElementById('goldGained').textContent='+'+earnedGold;
+    document.getElementById('turnsUsed').textContent=state.turn;
+    const q=pick(hero.narratorLines.win);
+    document.getElementById('victoryQuote').innerHTML=`"${q}"<cite>— Narrateur</cite>`;
+    const nextEnemy=ENEMIES[state.currentEnemyIndex];
+    const btnR=document.getElementById('btnRematch');
+    btnR.textContent=nextEnemy.isBoss?'💀 Affronter le Boss !':`⚔ Combat suivant : ${nextEnemy.name}`;
+    btnR.className='btn-rematch next-stage'; btnR.onclick=()=>startBattle(false);
+    const btnB=document.getElementById('btnBackSelect');
+    btnB.textContent='← Recommencer depuis le début';
+    btnB.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();backToSelect();};
+    showScreen('victory'); return;
   }
   document.getElementById('hpCarryBanner').classList.add('hidden');
-  document.getElementById('victoryIcon').textContent = won ? '🏆' : '💀';
-  const t = document.getElementById('victoryTitle');
-  t.textContent = won ? 'Champion de la Cantine !' : 'Défaite…';
-  t.className = 'victory-title '+(won?'win':'lose');
-  document.getElementById('victorySub').textContent = won
-    ? `Incroyable ! ${ENEMIES.length} combats, ${villain.name} vaincu en ${state.turn} tours !`
-    : `${villain.name} t'a eu cette fois… Revanche ?`;
-  document.getElementById('xpGained').textContent = (won?'+':'')+earnedXp;
-  document.getElementById('goldGained').textContent = (won?'+':'')+earnedGold;
-  document.getElementById('turnsUsed').textContent = state.turn;
-  const q = pick(won ? hero.narratorLines.win : hero.narratorLines.lose);
-  document.getElementById('victoryQuote').innerHTML = `"${q}"<cite>— Narrateur</cite>`;
-  const btnR = document.getElementById('btnRematch');
-  btnR.textContent = won ? '🔄 Rejouer' : '🔄 Revanche';
-  btnR.className = 'btn-rematch';
-  btnR.onclick = () => { state.currentEnemyIndex=0; state.heroHpPersist=0; updateStageIndicators(); startBattle(true); };
-  const btnB = document.getElementById('btnBackSelect');
-  btnB.textContent = '← Changer de perso';
-  btnB.onclick = () => { state.currentEnemyIndex=0; state.heroHpPersist=0; updateStageIndicators(); backToSelect(); };
+  document.getElementById('victoryIcon').textContent=won?'🏆':'💀';
+  const t=document.getElementById('victoryTitle'); t.textContent=won?'Champion de la Cantine !':'Défaite…'; t.className='victory-title '+(won?'win':'lose');
+  document.getElementById('victorySub').textContent=won?`Incroyable ! ${ENEMIES.length} combats, ${villain.name} vaincu en ${state.turn} tours !`:`${villain.name} t'a eu cette fois… Revanche ?`;
+  document.getElementById('xpGained').textContent=(won?'+':'')+earnedXp;
+  document.getElementById('goldGained').textContent=(won?'+':'')+earnedGold;
+  document.getElementById('turnsUsed').textContent=state.turn;
+  const q=pick(won?hero.narratorLines.win:hero.narratorLines.lose);
+  document.getElementById('victoryQuote').innerHTML=`"${q}"<cite>— Narrateur</cite>`;
+  const btnR=document.getElementById('btnRematch');
+  btnR.textContent=won?'🔄 Rejouer':'🔄 Revanche'; btnR.className='btn-rematch';
+  btnR.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();startBattle(true);};
+  const btnB=document.getElementById('btnBackSelect');
+  btnB.textContent='← Changer de perso'; btnB.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();backToSelect();};
   showScreen('victory');
 }
 
 function backToSelect() {
-  // Recharger la save du perso actif (stats à jour après le combat)
-  if (selectedHero) switchCharSave(selectedHero);
-  showScreen('select');
-  renderSelect();
-  updateProfileUI();
+  if(selectedHero)switchCharSave(selectedHero);
+  showScreen('select'); renderSelect(); updateProfileUI();
 }
-function openMobileMenu()  { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow=''; }
 
-// ============================================
-// RESET SKILLS
-// ============================================
+function openMobileMenu(){document.getElementById('mobileMenu').classList.add('open');document.body.style.overflow='hidden';}
+function closeMobileMenu(){document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}
 
-// Coût de réinitialisation : 10 pièces × points dépensés (min 20, max 500)
-function getResetCost() {
-  const spent = player.skillPointsSpent || 0;
-  return Math.min(500, Math.max(20, spent * 10));
-}
+function getResetCost(){const spent=player.skillPointsSpent||0;return Math.min(500,Math.max(20,spent*10));}
 
 function confirmResetSkills() {
-  if (!selectedHero) { showToast('Sélectionne un héros dabord !', 'error'); return; }
-  const spent = player.skillPointsSpent || 0;
-  if (spent === 0) { showToast('Aucune compétence à réinitialiser.', 'info'); return; }
-  const cost = getResetCost();
-  document.getElementById('resetCostLabel').textContent = cost + ' 🪙';
-  document.getElementById('resetSkillsModal').style.display = 'flex';
+  if(!selectedHero){showToast('Sélectionne un héros d\'abord !','error');return;}
+  const spent=player.skillPointsSpent||0;
+  if(spent===0){showToast('Aucune compétence à réinitialiser.','info');return;}
+  const cost=getResetCost();
+  document.getElementById('resetCostLabel').textContent=cost+' 🪙';
+  document.getElementById('resetSkillsModal').style.display='flex';
 }
 
 function doResetSkills() {
-  document.getElementById('resetSkillsModal').style.display = 'none';
-  const cost = getResetCost();
-  if (player.gold < cost) {
-    showToast('Pas assez de pièces ! (' + cost + ' 🪙 requis)', 'error');
-    return;
-  }
-  player.gold -= cost;
-  // Rembourser tous les points dépensés
-  player.skillPoints += player.skillPointsSpent;
-  player.skillPointsSpent = 0;
-  player.unlockedSkills = {};
-  savePlayer();
-  renderSkillTree();
-  updateProfileUI();
-  renderSelect(); // Rafraîchir les cartes (badge progression)
-  showToast('✨ Compétences réinitialisées ! Points remboursés.', 'skill');
+  document.getElementById('resetSkillsModal').style.display='none';
+  const cost=getResetCost();
+  if(player.gold<cost){showToast('Pas assez de pièces ! ('+cost+' 🪙 requis)','error');return;}
+  player.gold-=cost;
+  player.skillPoints+=player.skillPointsSpent;
+  player.skillPointsSpent=0; player.unlockedSkills={};
+  savePlayer(); renderSkillTree(); updateProfileUI(); renderSelect();
+  showToast('✨ Compétences réinitialisées ! Points remboursés.','skill');
 }
 
-// ============================================
 // INIT
-// ============================================
 updateProfileUI();
 renderSelect();
 showScreen('select');

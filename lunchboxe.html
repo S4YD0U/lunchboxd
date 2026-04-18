@@ -127,6 +127,7 @@
     }
     .currency-pill.gold { border-color: rgba(245,166,35,0.3); color: var(--gold); }
     .currency-pill.xp { border-color: rgba(96,165,250,0.3); color: var(--xp-blue); }
+    .currency-pill.sp { border-color: rgba(167,139,250,0.3); color: var(--purple); }
 
     /* LEVEL UP BANNER */
     .levelup-banner {
@@ -245,6 +246,107 @@
     .equipped-slot .slot-name { font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .equipped-slot .slot-stat { font-size: 0.58rem; color: var(--hp-green); }
 
+    /* ============ SKILL TREE ============ */
+    .skilltree-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .sp-display {
+      display: flex; align-items: center; gap: 0.6rem;
+      background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 6px; padding: 0.6rem 1.2rem;
+    }
+    .sp-icon { font-size: 1.4rem; }
+    .sp-info { display: flex; flex-direction: column; }
+    .sp-val { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--purple); line-height: 1; }
+    .sp-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .sp-total { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+
+    .skill-branches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+
+    .skill-branch {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.2rem; display: flex; flex-direction: column; gap: 0;
+    }
+    .branch-header {
+      text-align: center; padding-bottom: 1rem; margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .branch-icon { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
+    .branch-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; }
+    .branch-desc { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* skill node */
+    .skill-node {
+      position: relative; margin-bottom: 0;
+    }
+    .skill-node + .skill-node::before {
+      content: '';
+      display: block; width: 2px; height: 18px;
+      background: var(--border); margin: 0 auto;
+      transition: background 0.4s;
+    }
+    .skill-node.prev-unlocked + .skill-node::before { background: var(--purple); }
+
+    .skill-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.9rem 1rem;
+      cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden;
+    }
+    .skill-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(167,139,250,0.04));
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .skill-card:hover:not(.locked-skill):not(.maxed) { border-color: rgba(167,139,250,0.5); transform: translateY(-2px); }
+    .skill-card:hover:not(.locked-skill):not(.maxed)::before { opacity: 1; }
+    .skill-card.unlocked { border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.06); }
+    .skill-card.maxed { border-color: rgba(200,245,66,0.4); background: rgba(200,245,66,0.05); cursor: default; }
+    .skill-card.active-skill { border-color: rgba(245,166,35,0.4); background: rgba(245,166,35,0.05); }
+    .skill-card.active-skill.maxed { border-color: rgba(245,166,35,0.6); background: rgba(245,166,35,0.08); }
+    .skill-card.locked-skill { opacity: 0.4; cursor: not-allowed; }
+
+    .skill-card-top { display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 0.5rem; }
+    .skill-emoji { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+    .skill-info { flex: 1; min-width: 0; }
+    .skill-name { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .skill-type-tag {
+      display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.52rem;
+      letter-spacing: 0.08em; text-transform: uppercase; padding: 0.1rem 0.4rem;
+      border-radius: 2px; margin-top: 0.15rem;
+    }
+    .type-passive { background: rgba(96,165,250,0.1); color: var(--xp-blue); border: 1px solid rgba(96,165,250,0.2); }
+    .type-active  { background: rgba(245,166,35,0.1); color: var(--accent2); border: 1px solid rgba(245,166,35,0.2); }
+
+    .skill-desc { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.6rem; }
+    .skill-effect { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--hp-green); margin-bottom: 0.5rem; }
+
+    .skill-footer { display: flex; align-items: center; justify-content: space-between; }
+    .skill-dots { display: flex; gap: 4px; }
+    .skill-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--surface2); border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+    .skill-dot.filled { background: var(--purple); border-color: var(--purple); box-shadow: 0 0 6px rgba(167,139,250,0.4); }
+    .skill-dot.filled-active { background: var(--accent2); border-color: var(--accent2); box-shadow: 0 0 6px rgba(245,166,35,0.4); }
+    .skill-cost { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--purple); }
+    .skill-cost.maxed-label { color: var(--accent); }
+    .skill-cost.locked-label { color: var(--muted); }
+
+    .skill-badge {
+      position: absolute; top: 0.5rem; right: 0.5rem;
+      font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 0.12rem 0.4rem; border-radius: 2px;
+    }
+    .sb-new { background: rgba(232,69,69,0.15); color: var(--accent3); border: 1px solid rgba(232,69,69,0.3); }
+    .sb-maxed { background: rgba(200,245,66,0.1); color: var(--accent); border: 1px solid rgba(200,245,66,0.2); }
+    .sb-active { background: rgba(245,166,35,0.1); color: var(--accent2); border: 1px solid rgba(245,166,35,0.2); }
+
+    /* Active skills in battle */
+    .action-btn.tree-skill { border-color: rgba(167,139,250,0.3); }
+    .action-btn.tree-skill:hover:not(:disabled) { border-color: var(--purple); box-shadow: 0 0 12px rgba(167,139,250,0.2); }
+
     /* BATTLE SCREEN */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
@@ -256,6 +358,7 @@
     @keyframes barPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
     @keyframes slideInRight { from{transform:translateX(40px);opacity:0} to{transform:translateX(0);opacity:1} }
     @keyframes levelUpPop { 0%{transform:scale(0.5);opacity:0} 60%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
+    @keyframes skillUnlock { 0%{transform:scale(0.8);opacity:0} 60%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
 
     .battle-stage-bar { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; padding: 0.5rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em; }
     .stage-pip { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: all 0.4s; flex-shrink: 0; }
@@ -328,6 +431,7 @@
     .log-line.crit-line { color: var(--accent2); font-weight: bold; }
     .log-line.heal-line { color: var(--hp-green); }
     .log-line.level-line { color: var(--accent); font-weight: bold; }
+    .log-line.skill-line { color: var(--purple); }
     .status-effects { display: flex; gap: 0.4rem; margin-top: 0.3rem; flex-wrap: wrap; justify-content: center; }
 
     /* VICTORY */
@@ -371,10 +475,11 @@
     }
     .levelup-card h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--accent); margin-bottom: 0.3rem; }
     .levelup-card .lv-num { font-family: 'DM Mono', monospace; font-size: 1rem; color: var(--muted); margin-bottom: 1.2rem; }
-    .stat-gains { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1.5rem; }
+    .stat-gains { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
     .stat-gain-item { background: var(--card-bg); border-radius: 4px; padding: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--hp-green); }
     .stat-gain-item span { color: var(--muted); font-size: 0.6rem; display: block; margin-bottom: 0.15rem; }
-    .unlock-msg { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.3); border-radius: 4px; padding: 0.6rem; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--purple); margin-bottom: 1rem; }
+    .unlock-msg { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.3); border-radius: 4px; padding: 0.6rem; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--purple); margin-bottom: 0.6rem; }
+    .sp-gain-msg { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.25); border-radius: 4px; padding: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--purple); margin-bottom: 1rem; }
     .btn-continue { background: var(--accent); color: #0e0f0c; border: none; padding: 0.75rem 2rem; border-radius: 4px; font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s; }
     .btn-continue:hover { background: #d9ff55; }
 
@@ -384,6 +489,7 @@
     .toast.success { border-color: rgba(200,245,66,0.4); color: var(--accent); }
     .toast.error { border-color: rgba(232,69,69,0.4); color: var(--accent3); }
     .toast.info { border-color: rgba(96,165,250,0.4); color: var(--xp-blue); }
+    .toast.skill { border-color: rgba(167,139,250,0.4); color: var(--purple); }
 
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.6rem; cursor: pointer; }
     .hamburger span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; }
@@ -410,6 +516,8 @@
       .shop-layout { grid-template-columns: 1fr; }
       .player-profile { grid-template-columns: auto 1fr; }
       .profile-currencies { flex-direction: row; align-items: center; grid-column: 1/-1; justify-content: flex-start; }
+      .skill-branches { grid-template-columns: 1fr; }
+      .skilltree-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
     }
   </style>
 </head>
@@ -449,6 +557,7 @@
     <h2>Niveau Supérieur !</h2>
     <div class="lv-num" id="lvOverlayNum">Niveau 2</div>
     <div class="stat-gains" id="statGainsGrid"></div>
+    <div class="sp-gain-msg" id="spGainMsg">✨ +1 Point de Compétence disponible !</div>
     <div class="unlock-msg hidden" id="unlockMsg"></div>
     <button class="btn-continue" onclick="closeLevelUp()">Continuer le combat →</button>
   </div>
@@ -481,6 +590,7 @@
     <div class="profile-currencies">
       <div class="currency-pill gold">🪙 <span id="profileGold">0</span></div>
       <div class="currency-pill xp">⭐ <span id="profileTotalXp">0</span> XP total</div>
+      <div class="currency-pill sp">✨ <span id="profileSp">0</span> pts skill</div>
     </div>
   </div>
 
@@ -498,6 +608,7 @@
   <div class="screen-tabs" id="screenTabs">
     <button class="tab-btn active" id="tab-select" onclick="switchTab('select')">⚔ Combat</button>
     <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🛒 Boutique</button>
+    <button class="tab-btn" id="tab-skills" onclick="switchTab('skills')">✨ Compétences</button>
   </div>
 
   <!-- SELECT SCREEN -->
@@ -546,6 +657,29 @@
           <div style="font-size:0.6rem;color:var(--muted);font-family:'DM Mono',monospace;text-align:center;margin-top:0.5rem;">Cliquer sur un item pour l'utiliser en combat</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- SKILL TREE SCREEN -->
+  <div id="screen-skills" style="display:none;">
+    <div class="skilltree-header">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.2rem;">Arbre de Compétences</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);">Investis tes points de skill pour forger ton style de combat</div>
+      </div>
+      <div class="sp-display">
+        <div class="sp-icon">✨</div>
+        <div class="sp-info">
+          <span class="sp-val" id="spAvailDisplay">0</span>
+          <span class="sp-label">points disponibles</span>
+        </div>
+        <div style="width:1px;height:36px;background:var(--border);margin:0 0.8rem;"></div>
+        <span class="sp-total" id="spTotalDisplay">0 dépensés au total</span>
+      </div>
+    </div>
+    <div class="skill-branches" id="skillBranches"></div>
+    <div style="text-align:center;font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);padding:1rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);">
+      ⚡ Les compétences actives apparaissent automatiquement dans tes boutons d'action en combat · Les passifs sont appliqués en permanence
     </div>
   </div>
 
@@ -635,6 +769,112 @@
 
 <script>
 // ============================================
+// SKILL TREE DEFINITION
+// ============================================
+const SKILL_BRANCHES = [
+  {
+    id: 'force',
+    name: 'Voie de la Force',
+    icon: '⚔️',
+    desc: 'Augmente ta puissance offensive',
+    skills: [
+      {
+        id: 'sk_atk1', name: 'Muscles de Spaghetti', type: 'passive', emoji: '💪',
+        maxLevel: 3, costPerLevel: 1, reqSkill: null,
+        desc: 'Tes bras sont comme des pâtes al dente — décoratifs mais surprenants.',
+        effectLabel: (lv) => `+${lv * 10} ATK permanente`,
+        effect: (stats, lv) => { stats.atk += lv * 10; return stats; },
+        battleDesc: null,
+      },
+      {
+        id: 'sk_atk2', name: 'Fureur du Gruyère', type: 'passive', emoji: '🧀',
+        maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_atk1',
+        desc: 'Tu frappes avec la densité d\'un fromage vieux de 3 ans.',
+        effectLabel: (lv) => `+${lv * 8}% dégâts critiques`,
+        effect: null,
+        critDmgBonus: (lv) => lv * 0.08,
+        battleDesc: null,
+      },
+      {
+        id: 'sk_atk3', name: 'Tornade de Nouilles', type: 'active', emoji: '🍜',
+        maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_atk2',
+        desc: 'Tu te transformes en une tornade de pâtes déchaînées. 4 coups rapides.',
+        effectLabel: () => 'Attaque active — 4 frappes',
+        effect: null,
+        battleDesc: 'Tornade',
+      },
+    ]
+  },
+  {
+    id: 'survie',
+    name: 'Voie de la Survie',
+    icon: '🛡️',
+    desc: 'Renforce ta résistance et ta longévité',
+    skills: [
+      {
+        id: 'sk_def1', name: 'Peau de Patate', type: 'passive', emoji: '🥔',
+        maxLevel: 3, costPerLevel: 1, reqSkill: null,
+        desc: 'Ta peau épaissit. Les attaques glissent sur toi comme de la purée.',
+        effectLabel: (lv) => `+${lv * 12} DEF permanente`,
+        effect: (stats, lv) => { stats.def += lv * 12; return stats; },
+        battleDesc: null,
+      },
+      {
+        id: 'sk_def2', name: 'Régénération Kombucha', type: 'passive', emoji: '🫙',
+        maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_def1',
+        desc: 'Tu te régénères grâce à des bactéries bénéfiques inconnues.',
+        effectLabel: (lv) => `+${lv * 6} HP régénérés/tour`,
+        effect: null,
+        regenPerTurn: (lv) => lv * 6,
+        battleDesc: null,
+      },
+      {
+        id: 'sk_def3', name: 'Mur de Baguette', type: 'active', emoji: '🥖',
+        maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_def2',
+        desc: 'Tu érigea une forteresse de pain. Bloque 80% des dégâts pendant 2 tours.',
+        effectLabel: () => 'Attaque active — garde renforcée',
+        effect: null,
+        battleDesc: 'Forteresse',
+      },
+    ]
+  },
+  {
+    id: 'ruse',
+    name: 'Voie de la Ruse',
+    icon: '🎯',
+    desc: 'Maîtrise la vitesse et les techniques secrètes',
+    skills: [
+      {
+        id: 'sk_spd1', name: 'Réflexes Wasabi', type: 'passive', emoji: '🌿',
+        maxLevel: 3, costPerLevel: 1, reqSkill: null,
+        desc: 'Ça pique les yeux, donc tu esquives tout par réflexe.',
+        effectLabel: (lv) => `+${lv * 8} VIT, -${lv * 3}% chance de rater`,
+        effect: (stats, lv) => { stats.spd += lv * 8; return stats; },
+        missReduction: (lv) => lv * 0.03,
+        battleDesc: null,
+      },
+      {
+        id: 'sk_spd2', name: 'Double Expresso', type: 'passive', emoji: '☕',
+        maxLevel: 2, costPerLevel: 1, reqSkill: 'sk_spd1',
+        desc: 'Deux cafés serrés = charge de spéciale 2× plus rapide.',
+        effectLabel: (lv) => `+${lv * 12}% charge spéciale/tour`,
+        effect: null,
+        specialBonus: (lv) => lv * 12,
+        battleDesc: null,
+      },
+      {
+        id: 'sk_spd3', name: 'Coup du Chef', type: 'active', emoji: '👨‍🍳',
+        maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_spd2',
+        desc: 'Frappe critique garantie + vol de 20% des HP ennemis.',
+        effectLabel: () => 'Attaque active — crit garanti + vampirisme',
+        effect: null,
+        battleDesc: 'Coup du Chef',
+      },
+    ]
+  }
+];
+
+// ============================================
 // PROGRESSION SYSTEM
 // ============================================
 const XP_CURVE = [0, 100, 250, 450, 700, 1000, 1400, 1900, 2500, 3200, 4000];
@@ -677,6 +917,8 @@ const SHOP_CATALOG = {
 // ============================================
 const DEFAULT_PLAYER = {
   level: 1, xp: 0, totalXp: 0, gold: 0,
+  skillPoints: 0, skillPointsSpent: 0,
+  unlockedSkills: {}, // { skillId: level }
   unlockedAttacks: ['punch', 'combo', 'defend', 'special'],
   owned: [], equipped: { weapon: null, armor: null }, inventory: [],
 };
@@ -688,6 +930,10 @@ function loadPlayer() {
 function savePlayer() { localStorage.setItem('lunchboxe_player', JSON.stringify(player)); }
 
 let player = loadPlayer();
+// Ensure new fields exist on old saves
+if (player.skillPoints === undefined) player.skillPoints = 0;
+if (player.skillPointsSpent === undefined) player.skillPointsSpent = 0;
+if (!player.unlockedSkills) player.unlockedSkills = {};
 
 function getXpForLevel(lv) { return XP_CURVE[Math.min(lv, XP_CURVE.length - 1)] || XP_CURVE[XP_CURVE.length-1]; }
 function getXpProgress() {
@@ -696,16 +942,219 @@ function getXpProgress() {
   return Math.max(0, Math.min(100, ((player.xp - prev) / (next - prev)) * 100));
 }
 
+// ============================================
+// SKILL HELPERS
+// ============================================
+function getSkillLevel(id) { return player.unlockedSkills[id] || 0; }
+
+function getSkillDef(id) {
+  for (const branch of SKILL_BRANCHES) {
+    const sk = branch.skills.find(s => s.id === id);
+    if (sk) return sk;
+  }
+  return null;
+}
+
+function isSkillUnlocked(id) { return getSkillLevel(id) > 0; }
+
+function isSkillPrereqMet(skill) {
+  if (!skill.reqSkill) return true;
+  return isSkillUnlocked(skill.reqSkill);
+}
+
+function buySkill(id) {
+  const sk = getSkillDef(id);
+  if (!sk) return;
+  if (!isSkillPrereqMet(sk)) { showToast('🔒 Prérequis non rempli !', 'error'); return; }
+  const currentLv = getSkillLevel(id);
+  if (currentLv >= sk.maxLevel) { showToast('✅ Compétence déjà au niveau max !', 'info'); return; }
+  if (player.skillPoints < sk.costPerLevel) { showToast('✨ Pas assez de points de compétence !', 'error'); return; }
+  player.skillPoints -= sk.costPerLevel;
+  player.skillPointsSpent += sk.costPerLevel;
+  player.unlockedSkills[id] = currentLv + 1;
+  savePlayer();
+  renderSkillTree();
+  updateProfileUI();
+  showToast(`${sk.emoji} ${sk.name} — niveau ${currentLv + 1} !`, 'skill');
+}
+
+// Apply all passive skill bonuses on top of base stats
+function applyPassiveSkills(stats) {
+  for (const branch of SKILL_BRANCHES) {
+    for (const sk of branch.skills) {
+      const lv = getSkillLevel(sk.id);
+      if (lv > 0 && sk.effect) {
+        sk.effect(stats, lv);
+      }
+    }
+  }
+  return stats;
+}
+
+function getPassiveMissReduction() {
+  let r = 0;
+  for (const branch of SKILL_BRANCHES) {
+    for (const sk of branch.skills) {
+      const lv = getSkillLevel(sk.id);
+      if (lv > 0 && sk.missReduction) r += sk.missReduction(lv);
+    }
+  }
+  return r;
+}
+
+function getPassiveCritBonus() {
+  let r = 0;
+  for (const branch of SKILL_BRANCHES) {
+    for (const sk of branch.skills) {
+      const lv = getSkillLevel(sk.id);
+      if (lv > 0 && sk.critDmgBonus) r += sk.critDmgBonus(lv);
+    }
+  }
+  return r;
+}
+
+function getPassiveRegenPerTurn() {
+  let r = 0;
+  for (const branch of SKILL_BRANCHES) {
+    for (const sk of branch.skills) {
+      const lv = getSkillLevel(sk.id);
+      if (lv > 0 && sk.regenPerTurn) r += sk.regenPerTurn(lv);
+    }
+  }
+  return r;
+}
+
+function getPassiveSpecialBonus() {
+  let r = 0;
+  for (const branch of SKILL_BRANCHES) {
+    for (const sk of branch.skills) {
+      const lv = getSkillLevel(sk.id);
+      if (lv > 0 && sk.specialBonus) r += sk.specialBonus(lv);
+    }
+  }
+  return r;
+}
+
+function getActiveTreeSkills() {
+  const result = [];
+  for (const branch of SKILL_BRANCHES) {
+    for (const sk of branch.skills) {
+      if (sk.type === 'active' && getSkillLevel(sk.id) > 0) result.push(sk);
+    }
+  }
+  return result;
+}
+
+// ============================================
+// RENDER SKILL TREE
+// ============================================
+function renderSkillTree() {
+  document.getElementById('spAvailDisplay').textContent = player.skillPoints;
+  document.getElementById('spTotalDisplay').textContent = player.skillPointsSpent + ' dépensés au total';
+
+  const container = document.getElementById('skillBranches');
+  container.innerHTML = '';
+
+  for (const branch of SKILL_BRANCHES) {
+    const branchEl = document.createElement('div');
+    branchEl.className = 'skill-branch';
+    branchEl.innerHTML = `
+      <div class="branch-header">
+        <span class="branch-icon">${branch.icon}</span>
+        <div class="branch-name">${branch.name}</div>
+        <div class="branch-desc">${branch.desc}</div>
+      </div>`;
+
+    branch.skills.forEach((sk, idx) => {
+      const currentLv = getSkillLevel(sk.id);
+      const maxed = currentLv >= sk.maxLevel;
+      const prereqMet = isSkillPrereqMet(sk);
+      const canAfford = player.skillPoints >= sk.costPerLevel;
+      const prevSkUnlocked = idx === 0 ? true : getSkillLevel(branch.skills[idx-1].id) > 0;
+
+      const nodeEl = document.createElement('div');
+      nodeEl.className = 'skill-node' + (prevSkUnlocked && idx > 0 ? ' prev-unlocked' : '');
+
+      let cardCls = 'skill-card';
+      if (maxed) cardCls += ' maxed' + (sk.type === 'active' ? ' active-skill' : '');
+      else if (currentLv > 0) cardCls += ' unlocked' + (sk.type === 'active' ? ' active-skill' : '');
+      else if (!prereqMet) cardCls += ' locked-skill';
+
+      let badge = '';
+      if (maxed) badge = `<span class="skill-badge sb-maxed">MAX</span>`;
+      else if (currentLv > 0 && sk.type === 'active') badge = `<span class="skill-badge sb-active">ACTIF</span>`;
+      else if (!prereqMet) badge = `<span class="skill-badge" style="background:rgba(122,122,110,0.1);color:var(--muted);border:1px solid var(--border)">🔒</span>`;
+      else if (canAfford && !maxed) badge = `<span class="skill-badge sb-new">NOUVEAU</span>`;
+
+      // dots
+      const dots = Array.from({length: sk.maxLevel}, (_, i) => {
+        const filled = i < currentLv;
+        const cls = filled ? (sk.type === 'active' ? 'skill-dot filled-active' : 'skill-dot filled') : 'skill-dot';
+        return `<div class="${cls}"></div>`;
+      }).join('');
+
+      const costLabel = maxed
+        ? `<span class="skill-cost maxed-label">✅ Max</span>`
+        : !prereqMet
+          ? `<span class="skill-cost locked-label">🔒 Bloqué</span>`
+          : `<span class="skill-cost">✨ ${sk.costPerLevel} pt${sk.costPerLevel > 1 ? 's' : ''}</span>`;
+
+      const typeCls = sk.type === 'active' ? 'type-active' : 'type-passive';
+      const typeLabel = sk.type === 'active' ? '⚡ Actif' : '📊 Passif';
+      const clickAttr = (!maxed && prereqMet) ? `onclick="buySkill('${sk.id}')"` : '';
+
+      nodeEl.innerHTML = `
+        <div class="${cardCls}" ${clickAttr}>
+          ${badge}
+          <div class="skill-card-top">
+            <span class="skill-emoji">${sk.emoji}</span>
+            <div class="skill-info">
+              <div class="skill-name">${sk.name}</div>
+              <span class="skill-type-tag ${typeCls}">${typeLabel}</span>
+            </div>
+          </div>
+          <div class="skill-desc">${sk.desc}</div>
+          <div class="skill-effect">${sk.effectLabel(Math.max(currentLv, 1))}</div>
+          <div class="skill-footer">
+            <div class="skill-dots">${dots}</div>
+            ${costLabel}
+          </div>
+        </div>`;
+
+      branchEl.appendChild(nodeEl);
+    });
+
+    container.appendChild(branchEl);
+  }
+}
+
+// ============================================
+// PROFILE UI
+// ============================================
+function updateProfileUI() {
+  document.getElementById('profileLevelBadge').textContent = 'LV.' + player.level;
+  document.getElementById('profileGold').textContent = player.gold;
+  document.getElementById('profileTotalXp').textContent = player.totalXp;
+  document.getElementById('profileSp').textContent = player.skillPoints;
+  const pct = getXpProgress();
+  document.getElementById('profileXpFill').style.width = pct + '%';
+  const prev = player.level > 1 ? getXpForLevel(player.level-1) : 0;
+  const next  = getXpForLevel(player.level);
+  document.getElementById('profileXpLabel').textContent = (player.xp - prev) + ' / ' + (next - prev) + ' XP';
+}
+updateProfileUI();
+
 function getLevelStats(baseChar) {
   const bonus = player.level - 1;
   const weaponItem = player.equipped.weapon ? SHOP_CATALOG.weapons.find(w => w.id === player.equipped.weapon) : null;
   const armorItem  = player.equipped.armor  ? SHOP_CATALOG.armors.find(a => a.id === player.equipped.armor)  : null;
-  return {
+  let stats = {
     hp:  baseChar.hp  * 10 + bonus * STAT_GROWTH.hp,
     atk: baseChar.atk + bonus * STAT_GROWTH.atk + (weaponItem ? weaponItem.atkBonus : 0),
     def: baseChar.def + bonus * STAT_GROWTH.def + (armorItem  ? armorItem.defBonus  : 0),
     spd: baseChar.spd + bonus * STAT_GROWTH.spd,
   };
+  return applyPassiveSkills(stats);
 }
 
 function addXpGold(xpAmt, goldAmt) {
@@ -713,6 +1162,7 @@ function addXpGold(xpAmt, goldAmt) {
   let leveled = false;
   while (player.level < XP_CURVE.length && player.xp >= getXpForLevel(player.level)) {
     player.level++;
+    player.skillPoints += 1; // +1 skill point per level
     leveled = true;
     const unlock = LEVEL_UNLOCKS[player.level];
     if (unlock && !player.unlockedAttacks.includes(unlock.attack)) player.unlockedAttacks.push(unlock.attack);
@@ -722,138 +1172,42 @@ function addXpGold(xpAmt, goldAmt) {
 }
 
 // ============================================
-// ATTACK DEFINITIONS
-// ============================================
-function getAttacks(heroChar) {
-  const allAttacks = [
-    { id: 'punch', name: 'Punch', icon: '👊', desc: 'Coup direct', reqLv: 1, cls: '',
-      fn: (hero, villain) => { if (isMiss()) return { miss: true }; const crit = isCrit(); const dmg = crit ? Math.floor(calcDmg(hero.atk, villain.def) * 1.8) : calcDmg(hero.atk, villain.def); return { dmg, crit, spBonus: 15, log: (crit ? '💥 CRITIQUE ! ' : '👊 ') + hero.name + ' frappe pour ' + dmg + ' dégâts !' }; } },
-    { id: 'combo', name: 'Combo', icon: '🔥', desc: '2 coups rapides', reqLv: 1, cls: '',
-      fn: (hero, villain) => { const d1 = calcDmg(hero.atk, villain.def, 0.65); const d2 = calcDmg(hero.atk, villain.def, 0.65); return { dmg: d1 + d2, spBonus: 20, log: '🔥 Combo — ' + (d1+d2) + ' dégâts !' }; } },
-    { id: 'defend', name: 'Garde', icon: '🛡️', desc: 'Réduit les dégâts', reqLv: 1, cls: '',
-      fn: (hero) => { return { defend: true, spBonus: 8, log: '🛡️ ' + hero.name + ' se met en garde…' }; } },
-    { id: 'special', name: 'SPÉCIAL', icon: '⚡', desc: 'Charge 0%', reqLv: 1, cls: 'special',
-      fn: (hero, villain) => { if (state.heroSpecial < 100) return null; state.heroSpecial = 0; return heroChar.special.fn(hero, villain); } },
-    { id: 'combo_plus', name: 'Combo+', icon: '🌀', desc: '3 coups + stun', reqLv: 2, cls: 'unlocked-atk',
-      fn: (hero, villain) => { const hits = [calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.7)]; const total = hits.reduce((a,b)=>a+b,0); return { dmg: total, spBonus: 25, log: '🌀 Combo+ — ' + hits.join('+') + ' = ' + total + ' dégâts !' }; } },
-    { id: 'piercing', name: 'Perforant', icon: '🗡️', desc: 'Ignore 50% DEF', reqLv: 3, cls: 'unlocked-atk',
-      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def * 0.5, 1.2); return { dmg, spBonus: 20, log: '🗡️ Frappe Perforante — ' + dmg + ' dégâts (DEF ignorée) !' }; } },
-    { id: 'counter', name: 'Contre', icon: '↩️', desc: 'Parade + riposte', reqLv: 4, cls: 'unlocked-atk',
-      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def, 1.5); return { dmg, defend: true, spBonus: 30, log: '↩️ Contre-attaque — ' + dmg + ' dégâts + garde activée !' }; } },
-    { id: 'ultimate', name: 'DÉVASTA.', icon: '💥', desc: 'Dégâts massifs', reqLv: 5, cls: 'unlocked-atk',
-      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def, 2.8); return { dmg, spBonus: 0, log: '💥 DÉVASTATION — ' + dmg + ' dégâts cataclysmiques !' }; } },
-  ];
-  return allAttacks.filter(a => player.unlockedAttacks.includes(a.id));
-}
-
-// ============================================
-// HEROES & ENEMIES
-// ============================================
-const HEROES = {
-  fraise: {
-    id: 'fraise', name: 'Fraise', type: 'hero', class: 'Guerrière Fruitée', sprite: 'fraise',
-    hp: 11, atk: 75, def: 55, spd: 90,
-    quote: '"Je suis douce… jusqu\'à ce que ça crame."',
-    special: { name: '🍓 Rafale Rouge', fn: (hero) => { const hits = [Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.6+Math.random()*20))]; return { dmg: hits.reduce((a,b)=>a+b,0), log: '🍓 RAFALE ROUGE — '+hits.join(' + ')+' dégâts !', type: 'multi' }; } },
-    narratorLines: { win: ["La cantine appartient aux petits fruits rouges !","Fraise prouve que le plus fort n'est pas toujours le plus grand.","La victoire a un goût sucré… exactement comme elle."], lose: ["Fraise tombe. Mais elle se relèvera.","Même les meilleurs fruits tombent parfois."], attack: ["Fraise bondit comme une balle de flipper !","La guerrière fruitée frappe sans pitié.","Coup direct ! La cantine tremble."] }
-  },
-  poire: {
-    id: 'poire', name: 'Poire', type: 'hero', class: 'Mage de la Fraîcheur', sprite: 'poire',
-    hp: 95, atk: 65, def: 70, spd: 75,
-    quote: '"La patience, c\'est ma plus grande arme."',
-    special: { name: '🍐 Onde Juteuse', fn: (hero) => { const heal = Math.floor(18+Math.random()*12); const dmg = Math.max(1,Math.floor(hero.atk*0.9+Math.random()*25)); return { dmg, heal, log: '🍐 ONDE JUTEUSE — +'+heal+' PV soignés, '+dmg+' dégâts !', type: 'heal' }; } },
-    narratorLines: { win: ["La Poire, calme jusqu'au bout.","Patience et ténacité — les vrais champions attendent leur heure.","Un combat maîtrisé de bout en bout."], lose: ["La Poire s'incline avec dignité.","Défaite, mais la tête haute."], attack: ["La Poire frappe avec une précision chirurgicale !","Coup stratégique ! La Poire ne laisse rien au hasard.","Attaque calculée de la Mage de la Fraîcheur."] }
-  },
-  patate: {
-    id: 'patate', name: 'Patate Hongroise', type: 'hero', class: 'Colosse du Goulash', sprite: 'patate',
-    hp: 130, atk: 70, def: 85, spd: 55,
-    quote: '"Je suis lente… mais quand j\'arrive, tu le regrettes."',
-    special: { name: '🥔 Frappe du Goulash', fn: (hero) => { const dmg = Math.max(1, Math.floor(hero.atk * 2.2 + Math.random() * 30)); return { dmg, log: '🥔 FRAPPE DU GOULASH — ' + dmg + ' dégâts dévastateurs !', type: 'crit' }; } },
-    narratorLines: { win: ["La Patate Hongroise prouve que la lenteur est une force !","Solide, implacable, victorieuse — comme un bon goulash.","Personne ne s'attendait à ça. Personne."], lose: ["La Patate retombe. Elle rebondira.","Une défaite épicée. La revanche sera plus épicée encore."], attack: ["La Patate s'élance avec une force tellurique !","Le sol tremble sous les coups de la Colosse du Goulash !","Lente mais imparable — la Patate frappe !"] }
-  }
-};
-
-const ENEMIES = [
-  { id: 'cornichon_ennemi', name: 'Cornichon Raté', type: 'villain', class: 'Cornichon Avancé de la Cantine', sprite: 'cornichon', isBoss: false, hp: 90, atk: 62, def: 48, spd: 88, quote: '"Tu croyais que j\'étais de ton côté ?"', special: { name: '🥒 Spray Acide', fn: (v) => { const dmg=Math.floor(v.atk*1.3+Math.random()*22); return { dmg, log: '🥒 SPRAY ACIDE — '+dmg+' dégâts corrosifs !', type: 'crit' }; } }, phases: [{ threshold:1.0, taunt:"On se retrouve, cousin…", taunted:false },{ threshold:0.55, taunt:"Tu pensais vraiment gagner ? Pathétique.", taunted:false },{ threshold:0.2, taunt:"IMPOSSIBLE. Je suis FERMENTÉ. Je suis ÉTERNEL !", taunted:false }], narratorLines: { taunt: ["Le Cornichon Raté révèle sa vraie nature acide.","Une trahison marinée dans la cantine.","L'air sent le vinaigre…"] } },
-  { id: 'sushi_ninja', name: 'Sushi Ninja', type: 'villain', class: 'Ombre de la Cantine', sprite: 'sushi', isBoss: false, hp: 115, atk: 72, def: 55, spd: 98, quote: '"Tu ne m\'as pas vu venir… et tu ne le verras jamais."', special: { name: '🍣 Lame de Riz', fn: (v) => { const hits = [Math.floor(v.atk*0.7+Math.random()*15), Math.floor(v.atk*0.7+Math.random()*15), Math.floor(v.atk*0.8+Math.random()*20)]; const dmg = hits.reduce((a,b)=>a+b,0); return { dmg, log: '🍣 LAME DE RIZ — '+hits.join(' + ')+' = '+dmg+' dégâts furtifs !', type: 'multi' }; } }, phases: [{ threshold:1.0, taunt:"Je suis partout. Je suis nulle part.", taunted:false },{ threshold:0.5, taunt:"Impressionnant… Tu mérites de voir ma vraie vitesse !", taunted:false },{ threshold:0.15, taunt:"Impossible. Un ninja ne perd JAMAIS !", taunted:false }], narratorLines: { taunt: ["Le Sushi Ninja disparaît dans l'ombre de la cantine.","Un frisson. Le sushi a bougé… mais où ?","L'odeur du wasabi emplit l'air. Le danger approche."] } },
-  { id: 'banane', name: 'Banane', type: 'villain', class: 'Seigneur Malveillant de la Cantine', sprite: 'banane', isBoss: true, hp: 140, atk: 80, def: 60, spd: 65, quote: '"Personne ne résiste à ma peau de banane."', special: { name: '🍌 Potassium Furie', fn: (v) => { const dmg=Math.floor(v.atk*1.6+Math.random()*30); return { dmg, log: '🍌 POTASSIUM FURIE — '+dmg+' dégâts cataclysmiques !', type: 'crit' }; } }, phases: [{ threshold:1.0, taunt:"Venez donc, petites friandises…", taunted:false },{ threshold:0.6, taunt:"Bien. Vous méritez de voir ma vraie puissance !", taunted:false },{ threshold:0.3, taunt:"IMPOSSIBLE. Je suis BANANE ! Je suis ÉTERNEL !", taunted:false }], narratorLines: { taunt: ["Banane ricane depuis son trône de peau glissante.","Le Seigneur de la Cantine n'a pas encore sorti ses vraies armes.","Banane observe avec un mépris royal."] } }
-];
-
-// ============================================
-// GAME STATE
-// ============================================
-let state = {
-  heroChar: null, currentEnemyIndex: 0, villainChar: null,
-  heroHp: 0, heroMaxHp: 0, heroHpPersist: 0,
-  villainHp: 0, villainMaxHp: 0,
-  heroSpecial: 0, villainSpecial: 0,
-  turn: 1, heroDefending: false, villainDefending: false,
-  battleRunning: false, playerTurn: true,
-  heroStats: null,
-  atkBuff: 0, atkBuffTurns: 0,
-  pendingLevelUp: null,
-};
-
-// ============================================
-// PROFILE UI
-// ============================================
-function updateProfileUI() {
-  document.getElementById('profileLevelBadge').textContent = 'LV.' + player.level;
-  document.getElementById('profileGold').textContent = player.gold;
-  document.getElementById('profileTotalXp').textContent = player.totalXp;
-  const pct = getXpProgress();
-  document.getElementById('profileXpFill').style.width = pct + '%';
-  const prev = player.level > 1 ? getXpForLevel(player.level-1) : 0;
-  const next  = getXpForLevel(player.level);
-  document.getElementById('profileXpLabel').textContent = (player.xp - prev) + ' / ' + (next - prev) + ' XP';
-}
-updateProfileUI();
-
-// ============================================
-// SHOW / HIDE SCREENS  ← CORRIGÉ
+// SHOW / HIDE SCREENS
 // ============================================
 function showScreen(name) {
-  const selectEl  = document.getElementById('screen-select');
-  const shopEl    = document.getElementById('screen-shop');
-  const battleEl  = document.getElementById('screen-battle');
-  const victoryEl = document.getElementById('screen-victory');
-  const tabs      = document.getElementById('screenTabs');
-  const profile   = document.getElementById('playerProfile');
-  const lvBanner  = document.getElementById('levelupBanner');
+  const screens = ['select','shop','skills','battle','victory'];
+  screens.forEach(s => {
+    const el = document.getElementById('screen-' + s);
+    if (el) el.style.display = 'none';
+  });
+  const tabs     = document.getElementById('screenTabs');
+  const profile  = document.getElementById('playerProfile');
+  const lvBanner = document.getElementById('levelupBanner');
 
-  selectEl.style.display  = 'none';
-  shopEl.style.display    = 'none';
-  battleEl.style.display  = 'none';
-  victoryEl.style.display = 'none';
+  ['select','shop','skills'].forEach(t => {
+    const btn = document.getElementById('tab-' + t);
+    if (btn) btn.classList.remove('active');
+  });
 
-  if (name === 'select') {
-    selectEl.style.display  = 'block';
-    tabs.style.display      = '';
-    profile.style.display   = '';
-    lvBanner.style.display  = '';
-    document.getElementById('tab-select').classList.add('active');
-    document.getElementById('tab-shop').classList.remove('active');
-  } else if (name === 'shop') {
-    shopEl.style.display    = 'block';
-    tabs.style.display      = '';
-    profile.style.display   = '';
-    lvBanner.style.display  = '';
-    document.getElementById('tab-select').classList.remove('active');
-    document.getElementById('tab-shop').classList.add('active');
-  } else if (name === 'battle') {
-    battleEl.style.display  = 'block';
-    tabs.style.display      = 'none';
-    profile.style.display   = 'none';
-  } else if (name === 'victory') {
-    victoryEl.style.display = 'block';
-    tabs.style.display      = 'none';
-    profile.style.display   = 'none';
+  if (['select','shop','skills'].includes(name)) {
+    tabs.style.display = '';
+    profile.style.display = '';
+    lvBanner.style.display = '';
+    const btn = document.getElementById('tab-' + name);
+    if (btn) btn.classList.add('active');
+  } else {
+    tabs.style.display = 'none';
+    profile.style.display = 'none';
   }
+
+  const el = document.getElementById('screen-' + name);
+  if (el) el.style.display = 'block';
 }
 
 function switchTab(name) {
   showScreen(name);
   if (name === 'shop') renderShop();
+  if (name === 'skills') renderSkillTree();
 }
 
 // ============================================
@@ -976,6 +1330,36 @@ function unequip(id, type) {
 // ============================================
 // BUILD STAGE DOTS & PIPS
 // ============================================
+const ENEMIES = [
+  { id: 'cornichon_ennemi', name: 'Cornichon Raté', type: 'villain', class: 'Cornichon Avancé de la Cantine', sprite: 'cornichon', isBoss: false, hp: 90, atk: 62, def: 48, spd: 88, quote: '"Tu croyais que j\'étais de ton côté ?"', special: { name: '🥒 Spray Acide', fn: (v) => { const dmg=Math.floor(v.atk*1.3+Math.random()*22); return { dmg, log: '🥒 SPRAY ACIDE — '+dmg+' dégâts corrosifs !', type: 'crit' }; } }, phases: [{ threshold:1.0, taunt:"On se retrouve, cousin…", taunted:false },{ threshold:0.55, taunt:"Tu pensais vraiment gagner ? Pathétique.", taunted:false },{ threshold:0.2, taunt:"IMPOSSIBLE. Je suis FERMENTÉ. Je suis ÉTERNEL !", taunted:false }], narratorLines: { taunt: ["Le Cornichon Raté révèle sa vraie nature acide.","Une trahison marinée dans la cantine.","L'air sent le vinaigre…"] } },
+  { id: 'sushi_ninja', name: 'Sushi Ninja', type: 'villain', class: 'Ombre de la Cantine', sprite: 'sushi', isBoss: false, hp: 115, atk: 72, def: 55, spd: 98, quote: '"Tu ne m\'as pas vu venir… et tu ne le verras jamais."', special: { name: '🍣 Lame de Riz', fn: (v) => { const hits = [Math.floor(v.atk*0.7+Math.random()*15), Math.floor(v.atk*0.7+Math.random()*15), Math.floor(v.atk*0.8+Math.random()*20)]; const dmg = hits.reduce((a,b)=>a+b,0); return { dmg, log: '🍣 LAME DE RIZ — '+hits.join(' + ')+' = '+dmg+' dégâts furtifs !', type: 'multi' }; } }, phases: [{ threshold:1.0, taunt:"Je suis partout. Je suis nulle part.", taunted:false },{ threshold:0.5, taunt:"Impressionnant… Tu mérites de voir ma vraie vitesse !", taunted:false },{ threshold:0.15, taunt:"Impossible. Un ninja ne perd JAMAIS !", taunted:false }], narratorLines: { taunt: ["Le Sushi Ninja disparaît dans l'ombre de la cantine.","Un frisson. Le sushi a bougé… mais où ?","L'odeur du wasabi emplit l'air. Le danger approche."] } },
+  { id: 'banane', name: 'Banane', type: 'villain', class: 'Seigneur Malveillant de la Cantine', sprite: 'banane', isBoss: true, hp: 140, atk: 80, def: 60, spd: 65, quote: '"Personne ne résiste à ma peau de banane."', special: { name: '🍌 Potassium Furie', fn: (v) => { const dmg=Math.floor(v.atk*1.6+Math.random()*30); return { dmg, log: '🍌 POTASSIUM FURIE — '+dmg+' dégâts cataclysmiques !', type: 'crit' }; } }, phases: [{ threshold:1.0, taunt:"Venez donc, petites friandises…", taunted:false },{ threshold:0.6, taunt:"Bien. Vous méritez de voir ma vraie puissance !", taunted:false },{ threshold:0.3, taunt:"IMPOSSIBLE. Je suis BANANE ! Je suis ÉTERNEL !", taunted:false }], narratorLines: { taunt: ["Banane ricane depuis son trône de peau glissante.","Le Seigneur de la Cantine n'a pas encore sorti ses vraies armes.","Banane observe avec un mépris royal."] } }
+];
+
+const HEROES = {
+  fraise: {
+    id: 'fraise', name: 'Fraise', type: 'hero', class: 'Guerrière Fruitée', sprite: 'fraise',
+    hp: 11, atk: 75, def: 55, spd: 90,
+    quote: '"Je suis douce… jusqu\'à ce que ça crame."',
+    special: { name: '🍓 Rafale Rouge', fn: (hero) => { const hits = [Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.6+Math.random()*20))]; return { dmg: hits.reduce((a,b)=>a+b,0), log: '🍓 RAFALE ROUGE — '+hits.join(' + ')+' dégâts !', type: 'multi' }; } },
+    narratorLines: { win: ["La cantine appartient aux petits fruits rouges !","Fraise prouve que le plus fort n'est pas toujours le plus grand.","La victoire a un goût sucré… exactement comme elle."], lose: ["Fraise tombe. Mais elle se relèvera.","Même les meilleurs fruits tombent parfois."], attack: ["Fraise bondit comme une balle de flipper !","La guerrière fruitée frappe sans pitié.","Coup direct ! La cantine tremble."] }
+  },
+  poire: {
+    id: 'poire', name: 'Poire', type: 'hero', class: 'Mage de la Fraîcheur', sprite: 'poire',
+    hp: 95, atk: 65, def: 70, spd: 75,
+    quote: '"La patience, c\'est ma plus grande arme."',
+    special: { name: '🍐 Onde Juteuse', fn: (hero) => { const heal = Math.floor(18+Math.random()*12); const dmg = Math.max(1,Math.floor(hero.atk*0.9+Math.random()*25)); return { dmg, heal, log: '🍐 ONDE JUTEUSE — +'+heal+' PV soignés, '+dmg+' dégâts !', type: 'heal' }; } },
+    narratorLines: { win: ["La Poire, calme jusqu'au bout.","Patience et ténacité — les vrais champions attendent leur heure.","Un combat maîtrisé de bout en bout."], lose: ["La Poire s'incline avec dignité.","Défaite, mais la tête haute."], attack: ["La Poire frappe avec une précision chirurgicale !","Coup stratégique ! La Poire ne laisse rien au hasard.","Attaque calculée de la Mage de la Fraîcheur."] }
+  },
+  patate: {
+    id: 'patate', name: 'Patate Hongroise', type: 'hero', class: 'Colosse du Goulash', sprite: 'patate',
+    hp: 130, atk: 70, def: 85, spd: 55,
+    quote: '"Je suis lente… mais quand j\'arrive, tu le regrettes."',
+    special: { name: '🥔 Frappe du Goulash', fn: (hero) => { const dmg = Math.max(1, Math.floor(hero.atk * 2.2 + Math.random() * 30)); return { dmg, log: '🥔 FRAPPE DU GOULASH — ' + dmg + ' dégâts dévastateurs !', type: 'crit' }; } },
+    narratorLines: { win: ["La Patate Hongroise prouve que la lenteur est une force !","Solide, implacable, victorieuse — comme un bon goulash.","Personne ne s'attendait à ça. Personne."], lose: ["La Patate retombe. Elle rebondira.","Une défaite épicée. La revanche sera plus épicée encore."], attack: ["La Patate s'élance avec une force tellurique !","Le sol tremble sous les coups de la Colosse du Goulash !","Lente mais imparable — la Patate frappe !"] }
+  }
+};
+
 function buildSelectStageDots() {
   const container = document.getElementById('stagesDisplay');
   container.innerHTML = '';
@@ -1021,10 +1405,28 @@ function updateStageIndicators() {
   }
 }
 
-buildSelectStageDots(); buildBattlePips(); updateStageIndicators();
+buildSelectStageDots(); buildBattlePips();
 
 // ============================================
-// CHARACTER SELECT  ← CORRIGÉ : utilise HEROES
+// GAME STATE
+// ============================================
+let state = {
+  heroChar: null, currentEnemyIndex: 0, villainChar: null,
+  heroHp: 0, heroMaxHp: 0, heroHpPersist: 0,
+  villainHp: 0, villainMaxHp: 0,
+  heroSpecial: 0, villainSpecial: 0,
+  turn: 1, heroDefending: false, villainDefending: false,
+  battleRunning: false, playerTurn: true,
+  heroStats: null,
+  atkBuff: 0, atkBuffTurns: 0,
+  fortressActive: false, fortressTurns: 0,
+  pendingLevelUp: null,
+};
+
+updateStageIndicators();
+
+// ============================================
+// CHARACTER SELECT
 // ============================================
 function buildCharCard(char, onclickStr, isSelected) {
   const clickAttr = onclickStr ? `onclick="${onclickStr}"` : '';
@@ -1051,11 +1453,9 @@ function buildCharCard(char, onclickStr, isSelected) {
 let selectedHero = null;
 
 function renderSelect() {
-  // ← Utilise HEROES (sans le cornichon qui est maintenant uniquement un ennemi)
   const heroes = Object.values(HEROES);
   document.getElementById('heroGrid').innerHTML =
     heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
-
   const firstEnemy = ENEMIES[state.currentEnemyIndex];
   const lbl = document.getElementById('enemyLabel');
   lbl.textContent = firstEnemy.isBoss ? '⚠ BOSS FINAL' : `⚠ ENNEMI ${state.currentEnemyIndex+1}/${ENEMIES.length} — ${firstEnemy.name}`;
@@ -1069,6 +1469,74 @@ function selectHero(id) {
   const icons = { fraise: '🍓', poire: '🍐', patate: '🥔' };
   document.getElementById('profileAvatar').textContent = icons[id] || '⚔';
   renderSelect();
+}
+
+// ============================================
+// ATTACK DEFINITIONS
+// ============================================
+function getAttacks(heroChar) {
+  const allAttacks = [
+    { id: 'punch', name: 'Punch', icon: '👊', desc: 'Coup direct', reqLv: 1, cls: '',
+      fn: (hero, villain) => {
+        const missChance = Math.max(0.01, 0.08 - getPassiveMissReduction());
+        if (Math.random() < missChance) return { miss: true };
+        const crit = isCrit();
+        const critMult = crit ? 1.8 + getPassiveCritBonus() : 1;
+        const dmg = crit ? Math.floor(calcDmg(hero.atk, villain.def) * critMult) : calcDmg(hero.atk, villain.def);
+        return { dmg, crit, spBonus: 15, log: (crit ? '💥 CRITIQUE ! ' : '👊 ') + hero.name + ' frappe pour ' + dmg + ' dégâts !' };
+      }
+    },
+    { id: 'combo', name: 'Combo', icon: '🔥', desc: '2 coups rapides', reqLv: 1, cls: '',
+      fn: (hero, villain) => { const d1 = calcDmg(hero.atk, villain.def, 0.65); const d2 = calcDmg(hero.atk, villain.def, 0.65); return { dmg: d1 + d2, spBonus: 20, log: '🔥 Combo — ' + (d1+d2) + ' dégâts !' }; }
+    },
+    { id: 'defend', name: 'Garde', icon: '🛡️', desc: 'Réduit les dégâts', reqLv: 1, cls: '',
+      fn: (hero) => { return { defend: true, spBonus: 8, log: '🛡️ ' + hero.name + ' se met en garde…' }; }
+    },
+    { id: 'special', name: 'SPÉCIAL', icon: '⚡', desc: 'Charge 0%', reqLv: 1, cls: 'special',
+      fn: (hero, villain) => { if (state.heroSpecial < 100) return null; state.heroSpecial = 0; return heroChar.special.fn(hero, villain); }
+    },
+    { id: 'combo_plus', name: 'Combo+', icon: '🌀', desc: '3 coups + stun', reqLv: 2, cls: 'unlocked-atk',
+      fn: (hero, villain) => { const hits = [calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.6), calcDmg(hero.atk,villain.def,0.7)]; const total = hits.reduce((a,b)=>a+b,0); return { dmg: total, spBonus: 25, log: '🌀 Combo+ — ' + hits.join('+') + ' = ' + total + ' dégâts !' }; }
+    },
+    { id: 'piercing', name: 'Perforant', icon: '🗡️', desc: 'Ignore 50% DEF', reqLv: 3, cls: 'unlocked-atk',
+      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def * 0.5, 1.2); return { dmg, spBonus: 20, log: '🗡️ Frappe Perforante — ' + dmg + ' dégâts (DEF ignorée) !' }; }
+    },
+    { id: 'counter', name: 'Contre', icon: '↩️', desc: 'Parade + riposte', reqLv: 4, cls: 'unlocked-atk',
+      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def, 1.5); return { dmg, defend: true, spBonus: 30, log: '↩️ Contre-attaque — ' + dmg + ' dégâts + garde activée !' }; }
+    },
+    { id: 'ultimate', name: 'DÉVASTA.', icon: '💥', desc: 'Dégâts massifs', reqLv: 5, cls: 'unlocked-atk',
+      fn: (hero, villain) => { const dmg = calcDmg(hero.atk, villain.def, 2.8); return { dmg, spBonus: 0, log: '💥 DÉVASTATION — ' + dmg + ' dégâts cataclysmiques !' }; }
+    },
+  ];
+
+  // Tree active skills
+  const treeActives = [
+    {
+      id: 'sk_atk3', name: 'Tornade', icon: '🍜', desc: '4 frappes', reqLv: 1, cls: 'unlocked-atk tree-skill',
+      fn: (hero, villain) => {
+        const hits = [calcDmg(hero.atk,villain.def,0.55),calcDmg(hero.atk,villain.def,0.55),calcDmg(hero.atk,villain.def,0.6),calcDmg(hero.atk,villain.def,0.65)];
+        const total = hits.reduce((a,b)=>a+b,0);
+        return { dmg: total, spBonus: 30, log: '🍜 TORNADE DE NOUILLES — ' + hits.join('+') + ' = ' + total + ' dégâts !' };
+      }
+    },
+    {
+      id: 'sk_def3', name: 'Forteresse', icon: '🥖', desc: 'Bloque 80% (2t)', reqLv: 1, cls: 'unlocked-atk tree-skill',
+      fn: (hero) => { state.fortressActive = true; state.fortressTurns = 2; return { defend: true, spBonus: 10, log: '🥖 FORTERESSE DE BAGUETTE — Bloque 80% des dégâts pendant 2 tours !' }; }
+    },
+    {
+      id: 'sk_spd3', name: 'Coup du Chef', icon: '👨‍🍳', desc: 'Crit garanti+vamp', reqLv: 1, cls: 'unlocked-atk tree-skill',
+      fn: (hero, villain) => {
+        const dmg = Math.floor(calcDmg(hero.atk, villain.def, 1.6 + getPassiveCritBonus()));
+        const stolen = Math.floor(dmg * 0.2);
+        state.heroHp = Math.min(state.heroMaxHp, state.heroHp + stolen);
+        return { dmg, spBonus: 25, log: '👨‍🍳 COUP DU CHEF — ' + dmg + ' dégâts critiques + ' + stolen + ' HP volés !', crit: true };
+      }
+    }
+  ];
+
+  const baseList = allAttacks.filter(a => player.unlockedAttacks.includes(a.id));
+  const treeList = treeActives.filter(a => isSkillUnlocked(a.id));
+  return [...baseList, ...treeList];
 }
 
 // ============================================
@@ -1117,6 +1585,7 @@ function startBattle(newGame = false) {
   state.villainChar = ENEMIES[state.currentEnemyIndex];
   state.heroStats = getLevelStats(state.heroChar);
   state.atkBuff = 0; state.atkBuffTurns = 0;
+  state.fortressActive = false; state.fortressTurns = 0;
 
   if (newGame || state.heroHpPersist === 0) {
     state.heroHp = state.heroMaxHp = state.heroStats.hp;
@@ -1148,6 +1617,14 @@ function startBattle(newGame = false) {
   showScreen('battle');
   buildActionRow();
   updateBattleUI();
+
+  // Show active skills in log
+  const activeTreeSkills = getActiveTreeSkills();
+  if (activeTreeSkills.length > 0) {
+    addLog(`✨ Compétences actives : ${activeTreeSkills.map(s=>s.emoji+' '+s.name).join(', ')}`, 'skill-line');
+  }
+  const regen = getPassiveRegenPerTurn();
+  if (regen > 0) addLog(`🫙 Régénération active : +${regen} HP/tour`, 'skill-line');
 
   const tag = state.villainChar.isBoss ? '💀 BOSS FINAL' : `⚔ COMBAT ${state.currentEnemyIndex+1}/${ENEMIES.length}`;
   addLog(`${tag} : ${state.heroChar.name} (LV.${player.level}) vs ${state.villainChar.name}`, 'system');
@@ -1182,6 +1659,8 @@ function updateBattleUI() {
   document.getElementById('villainHpFill').style.width = pct(state.villainHp, state.villainMaxHp);
   document.getElementById('villainHpFill').className = cls(state.villainHp, state.villainMaxHp);
   document.getElementById('villainHpVal').textContent = Math.max(0,state.villainHp)+'/'+state.villainMaxHp;
+
+  const spBonus = getPassiveSpecialBonus();
   document.getElementById('heroSpecialFill').style.width = state.heroSpecial + '%';
   document.getElementById('heroSpecialLabel').textContent = 'SPÉCIAL ' + state.heroSpecial + '%';
   document.getElementById('villainSpecialFill').style.width = state.villainSpecial + '%';
@@ -1194,14 +1673,16 @@ function updateBattleUI() {
     if (desc) desc.textContent = state.heroSpecial >= 100 ? 'PRÊT !' : 'Charge ' + state.heroSpecial + '%';
   }
   document.getElementById('turnLabel').textContent = 'Tour ' + state.turn;
-  if (state.atkBuffTurns > 0) addStatusBadge('heroStatus', '⚡ ATK+', state.atkBuffTurns);
+
+  // status badges
+  const heroStatusEl = document.getElementById('heroStatus');
+  if (heroStatusEl) {
+    let badges = '';
+    if (state.atkBuffTurns > 0) badges += `<span style="background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent2)">⚡ ATK+ (${state.atkBuffTurns}t)</span>`;
+    if (state.fortressActive) badges += `<span style="background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--xp-blue)">🥖 FORTERESSE (${state.fortressTurns}t)</span>`;
+    heroStatusEl.innerHTML = badges;
+  }
 }
-function addStatusBadge(containerId, label, turns) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  el.innerHTML = `<span style="background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent2)">${label} (${turns}t)</span>`;
-}
-function clearStatus(id) { const el=document.getElementById(id); if(el) el.innerHTML=''; }
 
 function setPlayerTurn(val) {
   state.playerTurn = val;
@@ -1260,7 +1741,7 @@ function closeLevelUp() {
   updateBattleUI();
   state.battleRunning = true;
   setPlayerTurn(true);
-  addLog('⭐ Tu es maintenant niveau ' + player.level + ' !', 'level-line');
+  addLog('⭐ Tu es maintenant niveau ' + player.level + ' ! (+1 point de compétence)', 'level-line');
 }
 
 // ============================================
@@ -1298,7 +1779,7 @@ function calcDmg(atk, def, mult=1) {
   return Math.max(1, Math.floor(atk * mult * (0.85+Math.random()*0.3) * Math.max(0.3, 1-def*0.003)));
 }
 const isCrit = () => Math.random() < 0.15;
-const isMiss = () => Math.random() < 0.08;
+const isMiss = () => Math.random() < Math.max(0.01, 0.08 - getPassiveMissReduction());
 
 function getEffectiveAtk() {
   return state.heroStats.atk + (state.atkBuffTurns > 0 ? state.atkBuff : 0);
@@ -1329,7 +1810,10 @@ function playerAction(id) {
     if (result.heal) { state.heroHp = Math.min(state.heroMaxHp, state.heroHp + result.heal); spawnDmg('heroSprite', result.heal, 'heal'); }
     if (result.dmg) { anim('villainSprite','hit-shake'); spawnDmg('villainSprite', result.dmg, result.crit ? 'crit' : 'dmg'); state.villainHp -= result.dmg; }
     if (result.defend) state.heroDefending = true;
-    if (result.spBonus) state.heroSpecial = Math.min(100, state.heroSpecial + result.spBonus);
+    if (result.spBonus) {
+      const spBonus = getPassiveSpecialBonus();
+      state.heroSpecial = Math.min(100, state.heroSpecial + result.spBonus + (spBonus / 10));
+    }
     addLog(result.log, result.crit ? 'crit-line' : 'hero-action');
     if (result.crit) addLog('🎙 "'+pick(hero.narratorLines.attack)+'"','system');
     updateBattleUI();
@@ -1341,10 +1825,25 @@ function villainTurn() {
   if (!state.battleRunning) return;
   const villain = state.villainChar, hero = state.heroChar;
   state.turn++;
+
+  // Regen passive
+  const regen = getPassiveRegenPerTurn();
+  if (regen > 0 && state.heroHp < state.heroMaxHp) {
+    const healed = Math.min(regen, state.heroMaxHp - state.heroHp);
+    state.heroHp += healed;
+    spawnDmg('heroSprite', healed, 'heal');
+    addLog(`🫙 Régénération — +${healed} HP`, 'heal-line');
+  }
+
   if (state.atkBuffTurns > 0) {
     state.atkBuffTurns--;
-    if (state.atkBuffTurns === 0) { state.atkBuff = 0; clearStatus('heroStatus'); addLog('⚡ Boost ATK terminé.', 'system'); }
+    if (state.atkBuffTurns === 0) { state.atkBuff = 0; addLog('⚡ Boost ATK terminé.', 'system'); }
   }
+  if (state.fortressActive) {
+    state.fortressTurns--;
+    if (state.fortressTurns <= 0) { state.fortressActive = false; addLog('🥖 Forteresse de Baguette s\'effondre…', 'system'); }
+  }
+
   state.villainSpecial = Math.min(100, state.villainSpecial + 18);
   const hpRatio = state.villainHp / state.villainMaxHp;
   if (villain.phases) {
@@ -1359,16 +1858,21 @@ function villainTurn() {
   anim('villainSprite','punch-left');
   const logCls = villain.isBoss ? 'villain-action' : 'intermediate-action';
   setTimeout(() => {
-    const block = 0.5;
+    const blockRate = state.fortressActive ? 0.8 : 0.5;
     if (action === 'punch') {
       if (isMiss()) { addLog('💨 '+villain.name+' rate son coup !', logCls); spawnDmg('heroSprite',0,'miss'); }
-      else { const crit = isCrit(); let dmg = crit ? Math.floor(calcDmg(villain.atk,state.heroStats.def)*1.7) : calcDmg(villain.atk,state.heroStats.def); if (state.heroDefending) dmg = Math.floor(dmg*(1-block)); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,crit?'crit':'dmg'); state.heroHp -= dmg; addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':'')+' !', crit?'crit-line':logCls); }
+      else {
+        const crit = isCrit(); let dmg = crit ? Math.floor(calcDmg(villain.atk,state.heroStats.def)*1.7) : calcDmg(villain.atk,state.heroStats.def);
+        if (state.heroDefending || state.fortressActive) dmg = Math.floor(dmg*(1-blockRate));
+        anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,crit?'crit':'dmg'); state.heroHp -= dmg;
+        addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':state.fortressActive?' (forteresse !)':'')+' !', crit?'crit-line':logCls);
+      }
     } else if (action === 'combo') {
-      let dmg = calcDmg(villain.atk,state.heroStats.def,1.2); if (state.heroDefending) dmg = Math.floor(dmg*0.5); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'dmg'); state.heroHp -= dmg; addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !', logCls);
+      let dmg = calcDmg(villain.atk,state.heroStats.def,1.2); if (state.heroDefending||state.fortressActive) dmg = Math.floor(dmg*(1-blockRate*0.6)); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'dmg'); state.heroHp -= dmg; addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !', logCls);
     } else if (action === 'defend') {
       state.villainDefending = true; addLog('🛡️ '+villain.name+' se barricade…', logCls);
     } else if (action === 'special') {
-      state.villainSpecial = 0; const result = villain.special.fn(villain, hero); let dmg = result.dmg; if (state.heroDefending) dmg = Math.floor(dmg*0.55); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'crit'); state.heroHp -= dmg; addLog('⚡ '+result.log,'crit-line');
+      state.villainSpecial = 0; const result = villain.special.fn(villain, hero); let dmg = result.dmg; if (state.heroDefending||state.fortressActive) dmg = Math.floor(dmg*(state.fortressActive?0.25:0.55)); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'crit'); state.heroHp -= dmg; addLog('⚡ '+result.log,'crit-line');
     }
     state.heroDefending = false; state.villainDefending = false;
     updateBattleUI();
@@ -1397,7 +1901,7 @@ function endBattle(won) {
   if (didLevelUp) {
     const unlock = LEVEL_UNLOCKS[newLevel];
     document.getElementById('levelupBannerTitle').textContent = `🎉 Niveau ${newLevel} atteint !`;
-    document.getElementById('levelupBannerSub').textContent = unlock ? unlock.msg : `Tes stats ont augmenté ! HP+${STAT_GROWTH.hp} ATK+${STAT_GROWTH.atk} DEF+${STAT_GROWTH.def}`;
+    document.getElementById('levelupBannerSub').textContent = (unlock ? unlock.msg + ' · ' : '') + `✨ +1 point de compétence disponible !`;
     document.getElementById('levelupBanner').classList.add('show');
   }
   if (won && !isLastEnemy) {

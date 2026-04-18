@@ -913,27 +913,38 @@ const SHOP_CATALOG = {
 };
 
 // ============================================
-// PLAYER SAVE STATE
+// PLAYER SAVE STATE — par personnage
 // ============================================
-const DEFAULT_PLAYER = {
+const DEFAULT_CHAR_SAVE = () => ({
   level: 1, xp: 0, totalXp: 0, gold: 0,
   skillPoints: 0, skillPointsSpent: 0,
-  unlockedSkills: {}, // { skillId: level }
+  unlockedSkills: {},
   unlockedAttacks: ['punch', 'combo', 'defend', 'special'],
   owned: [], equipped: { weapon: null, armor: null }, inventory: [],
-};
+});
 
-function loadPlayer() {
-  try { const raw = localStorage.getItem('lunchboxe_player'); if (raw) return Object.assign({}, DEFAULT_PLAYER, JSON.parse(raw)); } catch(e) {}
-  return Object.assign({}, DEFAULT_PLAYER);
+// Charge la save d'un personnage précis
+function loadCharSave(charId) {
+  try {
+    const raw = localStorage.getItem('lunchboxe_char_' + charId);
+    if (raw) return Object.assign(DEFAULT_CHAR_SAVE(), JSON.parse(raw));
+  } catch(e) {}
+  return DEFAULT_CHAR_SAVE();
 }
-function savePlayer() { localStorage.setItem('lunchboxe_player', JSON.stringify(player)); }
 
-let player = loadPlayer();
-// Ensure new fields exist on old saves
-if (player.skillPoints === undefined) player.skillPoints = 0;
-if (player.skillPointsSpent === undefined) player.skillPointsSpent = 0;
-if (!player.unlockedSkills) player.unlockedSkills = {};
+// Sauvegarde le personnage actif
+function savePlayer() {
+  if (!selectedHero) return;
+  localStorage.setItem('lunchboxe_char_' + selectedHero, JSON.stringify(player));
+}
+
+// Charge la save du personnage sélectionné dans `player`
+function switchCharSave(charId) {
+  player = loadCharSave(charId);
+}
+
+// player est la save active — initialisée vide, chargée à selectHero()
+let player = DEFAULT_CHAR_SAVE();
 
 function getXpForLevel(lv) { return XP_CURVE[Math.min(lv, XP_CURVE.length - 1)] || XP_CURVE[XP_CURVE.length-1]; }
 function getXpProgress() {
@@ -1141,6 +1152,16 @@ function updateProfileUI() {
   const prev = player.level > 1 ? getXpForLevel(player.level-1) : 0;
   const next  = getXpForLevel(player.level);
   document.getElementById('profileXpLabel').textContent = (player.xp - prev) + ' / ' + (next - prev) + ' XP';
+  // Nom et avatar du perso actif
+  const heroNames = { fraise: 'Fraise', poire: 'Poire', patate: 'Patate Hongroise' };
+  const heroIcons = { fraise: '🍓', poire: '🍐', patate: '🥔' };
+  if (selectedHero) {
+    document.getElementById('profileName').textContent = heroNames[selectedHero] || 'Aventurier';
+    document.getElementById('profileAvatar').textContent = heroIcons[selectedHero] || '⚔';
+  } else {
+    document.getElementById('profileName').textContent = 'Sélectionne un héros';
+    document.getElementById('profileAvatar').textContent = '⚔';
+  }
 }
 updateProfileUI();
 
@@ -1435,6 +1456,29 @@ function buildCharCard(char, onclickStr, isSelected) {
   const cardCls = isInterm ? 'intermediate-villain' : (isVillain ? 'villain' : '');
   const badgeCls = isInterm ? 'badge-intermediate' : (isVillain ? 'badge-villain' : 'badge-hero');
   const badgeLbl = isInterm ? '⚔ ENNEMI' : (isVillain ? '👿 BOSS' : '⚔ HÉROS');
+
+  // Badge de progression pour les héros
+  let progressBadge = '';
+  if (!isVillain && char.id) {
+    const save = loadCharSave(char.id);
+    const xpPct = (() => {
+      const prev = save.level > 1 ? XP_CURVE[save.level - 1] : 0;
+      const next = XP_CURVE[Math.min(save.level, XP_CURVE.length - 1)];
+      return Math.max(0, Math.min(100, ((save.xp - prev) / (next - prev)) * 100));
+    })();
+    progressBadge = `
+      <div style="margin-top:0.8rem;border-top:1px solid var(--border);padding-top:0.7rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">
+          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.08em">LV.${save.level}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--gold);">🪙 ${save.gold}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--purple);">✨ ${save.skillPoints} pts</span>
+        </div>
+        <div style="height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">
+          <div style="width:${xpPct}%;height:100%;background:linear-gradient(90deg,var(--xp-blue),#93c5fd);border-radius:2px;transition:width 0.5s"></div>
+        </div>
+      </div>`;
+  }
+
   return `<div class="char-card ${cardCls} ${isSelected ? 'selected' : ''}" ${clickAttr}>
     <span class="char-type-badge ${badgeCls}">${badgeLbl}</span>
     <div class="char-sprite"><img src="${char.sprite}.svg" alt="${char.name}" /></div>
@@ -1447,6 +1491,7 @@ function buildCharCard(char, onclickStr, isSelected) {
       <div class="stat-bar-row"><span class="stat-bar-label">HP</span><div class="stat-bar-track"><div class="stat-bar-fill fill-hp" style="width:${char.hp}%"></div></div></div>
     </div>
     <div class="char-quote">${char.quote}</div>
+    ${progressBadge}
   </div>`;
 }
 
@@ -1466,9 +1511,19 @@ function renderSelect() {
 
 function selectHero(id) {
   selectedHero = id;
-  const icons = { fraise: '🍓', poire: '🍐', patate: '🥔' };
-  document.getElementById('profileAvatar').textContent = icons[id] || '⚔';
+  // Charger la save propre à ce personnage
+  switchCharSave(id);
+  // Réinitialiser la progression de combat (changement de perso)
+  state.currentEnemyIndex = 0;
+  state.heroHpPersist = 0;
+  updateStageIndicators();
+  updateProfileUI();
   renderSelect();
+  // Rafraîchir boutique/arbre si ouverts
+  const shopEl = document.getElementById('screen-shop');
+  if (shopEl && shopEl.style.display !== 'none') renderShop();
+  const skillEl = document.getElementById('screen-skills');
+  if (skillEl && skillEl.style.display !== 'none') renderSkillTree();
 }
 
 // ============================================
@@ -1955,7 +2010,13 @@ function endBattle(won) {
   showScreen('victory');
 }
 
-function backToSelect() { showScreen('select'); renderSelect(); updateProfileUI(); }
+function backToSelect() {
+  // Recharger la save du perso actif (stats à jour après le combat)
+  if (selectedHero) switchCharSave(selectedHero);
+  showScreen('select');
+  renderSelect();
+  updateProfileUI();
+}
 function openMobileMenu()  { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow=''; }
 

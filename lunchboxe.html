@@ -563,6 +563,19 @@
   </div>
 </div>
 
+<!-- RESET SKILLS MODAL -->
+<div id="resetSkillsModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:550;">
+  <div style="background:var(--surface);border:1px solid rgba(232,69,69,0.4);border-radius:12px;padding:2rem 2.5rem;text-align:center;max-width:360px;width:90%;box-shadow:0 0 40px rgba(232,69,69,0.15);">
+    <div style="font-size:2.5rem;margin-bottom:0.8rem;">🔄</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.4rem;">Réinitialiser l'arbre ?</div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.6;">Tous tes points de compétence seront remboursés.<br>Coût : <span id="resetCostLabel" style="color:var(--gold);font-weight:700;">—</span></div>
+    <div style="display:flex;gap:0.75rem;justify-content:center;">
+      <button onclick="doResetSkills()" style="background:var(--accent3);color:#fff;border:none;padding:0.65rem 1.5rem;border-radius:4px;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#ff5555'" onmouseout="this.style.background='var(--accent3)'">Confirmer</button>
+      <button onclick="document.getElementById('resetSkillsModal').style.display='none'" style="background:none;border:1px solid var(--border);color:var(--text);padding:0.65rem 1.5rem;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--muted)'" onmouseout="this.style.borderColor='var(--border)'">Annuler</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -667,14 +680,19 @@
         <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.2rem;">Arbre de Compétences</div>
         <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);">Investis tes points de skill pour forger ton style de combat</div>
       </div>
-      <div class="sp-display">
-        <div class="sp-icon">✨</div>
-        <div class="sp-info">
-          <span class="sp-val" id="spAvailDisplay">0</span>
-          <span class="sp-label">points disponibles</span>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <div class="sp-display">
+          <div class="sp-icon">✨</div>
+          <div class="sp-info">
+            <span class="sp-val" id="spAvailDisplay">0</span>
+            <span class="sp-label">points disponibles</span>
+          </div>
+          <div style="width:1px;height:36px;background:var(--border);margin:0 0.8rem;"></div>
+          <span class="sp-total" id="spTotalDisplay">0 dépensés au total</span>
         </div>
-        <div style="width:1px;height:36px;background:var(--border);margin:0 0.8rem;"></div>
-        <span class="sp-total" id="spTotalDisplay">0 dépensés au total</span>
+        <button onclick="confirmResetSkills()" id="resetSkillsBtn" style="background:none;border:1px solid rgba(232,69,69,0.4);color:var(--accent3);padding:0.55rem 1rem;border-radius:4px;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s;white-space:nowrap;" onmouseover="this.style.background='rgba(232,69,69,0.1)'" onmouseout="this.style.background='none'">
+          🔄 Réinitialiser
+        </button>
       </div>
     </div>
     <div class="skill-branches" id="skillBranches"></div>
@@ -798,8 +816,8 @@ const SKILL_BRANCHES = [
       {
         id: 'sk_atk3', name: 'Tornade de Nouilles', type: 'active', emoji: '🍜',
         maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_atk2',
-        desc: 'Tu te transformes en une tornade de pâtes déchaînées. 4 coups rapides.',
-        effectLabel: () => 'Attaque active — 4 frappes',
+        desc: '6 coups frénétiques qui percent les défenses. Charge la spéciale de +40%.',
+        effectLabel: () => 'Actif — 6 frappes, DEF -40%, +40% spéciale',
         effect: null,
         battleDesc: 'Tornade',
       },
@@ -831,8 +849,8 @@ const SKILL_BRANCHES = [
       {
         id: 'sk_def3', name: 'Mur de Baguette', type: 'active', emoji: '🥖',
         maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_def2',
-        desc: 'Tu érigea une forteresse de pain. Bloque 80% des dégâts pendant 2 tours.',
-        effectLabel: () => 'Attaque active — garde renforcée',
+        desc: 'Frappe + bouclier 85% pendant 3 tours. Chaque coup ennemi déclenche une riposte.',
+        effectLabel: () => 'Actif — bouclier 3t + riposte automatique',
         effect: null,
         battleDesc: 'Forteresse',
       },
@@ -865,8 +883,8 @@ const SKILL_BRANCHES = [
       {
         id: 'sk_spd3', name: 'Coup du Chef', type: 'active', emoji: '👨‍🍳',
         maxLevel: 1, costPerLevel: 2, reqSkill: 'sk_spd2',
-        desc: 'Frappe critique garantie + vol de 20% des HP ennemis.',
-        effectLabel: () => 'Attaque active — crit garanti + vampirisme',
+        desc: 'x2.5 ATK, ignore 80% DEF, vole 35% des dégâts en HP + recharge la spéciale.',
+        effectLabel: () => 'Actif — x2.5 ATK, vol 35% HP, DEF ignorée',
         effect: null,
         battleDesc: 'Coup du Chef',
       },
@@ -1440,7 +1458,7 @@ let state = {
   battleRunning: false, playerTurn: true,
   heroStats: null,
   atkBuff: 0, atkBuffTurns: 0,
-  fortressActive: false, fortressTurns: 0,
+  fortressActive: false, fortressTurns: 0, fortressCounter: false,
   pendingLevelUp: null,
 };
 
@@ -1578,24 +1596,49 @@ function getAttacks(heroChar) {
   // Tree active skills
   const treeActives = [
     {
-      id: 'sk_atk3', name: 'Tornade', icon: '🍜', desc: '4 frappes', reqLv: 1, cls: 'unlocked-atk tree-skill',
+      // Tornade : 6 coups rapides ignorant 40% DEF + charge spéciale massive
+      // Total ~3.3x ATK net, surpasse clairement Dévasta (2.8x) sur cibles résistantes
+      id: 'sk_atk3', name: 'Tornade', icon: '🍜', desc: '6 frappes / ignore DEF', reqLv: 1, cls: 'unlocked-atk tree-skill',
       fn: (hero, villain) => {
-        const hits = [calcDmg(hero.atk,villain.def,0.55),calcDmg(hero.atk,villain.def,0.55),calcDmg(hero.atk,villain.def,0.6),calcDmg(hero.atk,villain.def,0.65)];
+        const reducedDef = villain.def * 0.6;
+        const hits = [
+          calcDmg(hero.atk, reducedDef, 0.6),
+          calcDmg(hero.atk, reducedDef, 0.6),
+          calcDmg(hero.atk, reducedDef, 0.65),
+          calcDmg(hero.atk, reducedDef, 0.65),
+          calcDmg(hero.atk, reducedDef, 0.7),
+          calcDmg(hero.atk, reducedDef, 0.8),
+        ];
         const total = hits.reduce((a,b)=>a+b,0);
-        return { dmg: total, spBonus: 30, log: '🍜 TORNADE DE NOUILLES — ' + hits.join('+') + ' = ' + total + ' dégâts !' };
+        // Charge spéciale bonus importante
+        state.heroSpecial = Math.min(100, state.heroSpecial + 40);
+        return { dmg: total, spBonus: 0, log: '🍜 TORNADE DE NOUILLES — ' + hits.length + ' coups, ' + total + ' dégâts ! (DEF réduite, +40% spéciale)' };
       }
     },
     {
-      id: 'sk_def3', name: 'Forteresse', icon: '🥖', desc: 'Bloque 80% (2t)', reqLv: 1, cls: 'unlocked-atk tree-skill',
-      fn: (hero) => { state.fortressActive = true; state.fortressTurns = 2; return { defend: true, spBonus: 10, log: '🥖 FORTERESSE DE BAGUETTE — Bloque 80% des dégâts pendant 2 tours !' }; }
+      // Forteresse : bloque 85% pendant 3 tours ET contre-attaque à chaque coup reçu
+      id: 'sk_def3', name: 'Forteresse', icon: '🥖', desc: 'Bouclier 3t + riposte', reqLv: 1, cls: 'unlocked-atk tree-skill',
+      fn: (hero, villain) => {
+        state.fortressActive = true;
+        state.fortressTurns = 3;
+        state.fortressCounter = true; // active le flag de contre-attaque
+        // Frappe de mise en position
+        const dmg = calcDmg(hero.atk, villain.def, 0.7);
+        state.villainHp -= dmg;
+        spawnDmg('villainSprite', dmg, 'dmg');
+        return { defend: true, spBonus: 20, log: '🥖 FORTERESSE DE BAGUETTE — ' + dmg + ' dmg + bouclier 85% pendant 3 tours ! Toute attaque sera ripostée.' };
+      }
     },
     {
-      id: 'sk_spd3', name: 'Coup du Chef', icon: '👨‍🍳', desc: 'Crit garanti+vamp', reqLv: 1, cls: 'unlocked-atk tree-skill',
+      // Coup du Chef : x2.5 ATK, ignore toute DEF, vol 35% HP, charge spéciale à fond
+      id: 'sk_spd3', name: 'Coup du Chef', icon: '👨‍🍳', desc: 'x2.5 ATK, vol 35% HP', reqLv: 1, cls: 'unlocked-atk tree-skill',
       fn: (hero, villain) => {
-        const dmg = Math.floor(calcDmg(hero.atk, villain.def, 1.6 + getPassiveCritBonus()));
-        const stolen = Math.floor(dmg * 0.2);
+        const dmg = Math.floor(calcDmg(hero.atk, villain.def * 0.2, 2.5 + getPassiveCritBonus()));
+        const stolen = Math.floor(dmg * 0.35);
         state.heroHp = Math.min(state.heroMaxHp, state.heroHp + stolen);
-        return { dmg, spBonus: 25, log: '👨‍🍳 COUP DU CHEF — ' + dmg + ' dégâts critiques + ' + stolen + ' HP volés !', crit: true };
+        spawnDmg('heroSprite', stolen, 'heal');
+        state.heroSpecial = Math.min(100, state.heroSpecial + 35);
+        return { dmg, spBonus: 0, log: '👨‍🍳 COUP DU CHEF — ' + dmg + ' dégâts (DEF ignorée) + ' + stolen + ' HP volés + spéciale chargée !', crit: true };
       }
     }
   ];
@@ -1932,6 +1975,13 @@ function villainTurn() {
         if (state.heroDefending || state.fortressActive) dmg = Math.floor(dmg*(1-blockRate));
         anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,crit?'crit':'dmg'); state.heroHp -= dmg;
         addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':state.fortressActive?' (forteresse !)':'')+' !', crit?'crit-line':logCls);
+        // Riposte automatique de la Forteresse
+        if (state.fortressActive && state.fortressCounter) {
+          const riposteDmg = calcDmg(state.heroStats.atk, villain.def, 0.6);
+          state.villainHp -= riposteDmg;
+          spawnDmg('villainSprite', riposteDmg, 'dmg');
+          addLog('🥖 Riposte de la Forteresse — ' + riposteDmg + ' dégâts !', 'hero-action');
+        }
       }
     } else if (action === 'combo') {
       let dmg = calcDmg(villain.atk,state.heroStats.def,1.2); if (state.heroDefending||state.fortressActive) dmg = Math.floor(dmg*(1-blockRate*0.6)); anim('heroSprite','hit-shake'); spawnDmg('heroSprite',dmg,'dmg'); state.heroHp -= dmg; addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !', logCls);
@@ -2030,6 +2080,44 @@ function backToSelect() {
 }
 function openMobileMenu()  { document.getElementById('mobileMenu').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeMobileMenu() { document.getElementById('mobileMenu').classList.remove('open'); document.body.style.overflow=''; }
+
+// ============================================
+// RESET SKILLS
+// ============================================
+
+// Coût de réinitialisation : 10 pièces × points dépensés (min 20, max 500)
+function getResetCost() {
+  const spent = player.skillPointsSpent || 0;
+  return Math.min(500, Math.max(20, spent * 10));
+}
+
+function confirmResetSkills() {
+  if (!selectedHero) { showToast('Sélectionne un héros dabord !', 'error'); return; }
+  const spent = player.skillPointsSpent || 0;
+  if (spent === 0) { showToast('Aucune compétence à réinitialiser.', 'info'); return; }
+  const cost = getResetCost();
+  document.getElementById('resetCostLabel').textContent = cost + ' 🪙';
+  document.getElementById('resetSkillsModal').style.display = 'flex';
+}
+
+function doResetSkills() {
+  document.getElementById('resetSkillsModal').style.display = 'none';
+  const cost = getResetCost();
+  if (player.gold < cost) {
+    showToast('Pas assez de pièces ! (' + cost + ' 🪙 requis)', 'error');
+    return;
+  }
+  player.gold -= cost;
+  // Rembourser tous les points dépensés
+  player.skillPoints += player.skillPointsSpent;
+  player.skillPointsSpent = 0;
+  player.unlockedSkills = {};
+  savePlayer();
+  renderSkillTree();
+  updateProfileUI();
+  renderSelect(); // Rafraîchir les cartes (badge progression)
+  showToast('✨ Compétences réinitialisées ! Points remboursés.', 'skill');
+}
 
 // ============================================
 // INIT

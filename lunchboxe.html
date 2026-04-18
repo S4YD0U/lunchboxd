@@ -781,7 +781,6 @@
 // WEATHER / CONDITIONS DE CANTINE
 // ============================================
 const WEATHER_POOL = [
-  // BLESSINGS
   { id: 'w_sunny',    icon: '☀️', name: 'Journée Ensoleillée',      type: 'blessing', typeLabel:'BÉNÉDICTION',
     effect: 'Tes critiques infligent +25% de dégâts',
     apply: (s) => { s.critDmgBonus = (s.critDmgBonus||0) + 0.25; } },
@@ -794,7 +793,6 @@ const WEATHER_POOL = [
   { id: 'w_sauce',    icon: '🥫', name: 'Sauce Secrète du Chef',      type: 'blessing', typeLabel:'BÉNÉDICTION',
     effect: '+20% ATK sur toute la durée du combat',
     apply: (s) => { s.atkMult = (s.atkMult||1) * 1.2; } },
-  // CURSES
   { id: 'w_smoke',    icon: '💨', name: 'Fumée dans les Cuisines',    type: 'curse', typeLabel:'MALÉDICTION',
     effect: 'Ton adversaire régénère 8 HP par tour',
     apply: (s) => { s.enemyRegen = (s.enemyRegen||0) + 8; } },
@@ -807,7 +805,6 @@ const WEATHER_POOL = [
   { id: 'w_chaos',    icon: '🌪️', name: 'Chaos du Buffet',           type: 'curse', typeLabel:'MALÉDICTION',
     effect: "L'ennemi gagne +10% ATK",
     apply: (s) => { s.enemyAtkMult = (s.enemyAtkMult||1) * 1.1; } },
-  // NEUTRAL
   { id: 'w_normal',   icon: '☁️', name: 'Journée Banale',            type: 'neutral', typeLabel:'CONDITIONS NORMALES',
     effect: 'Aucun effet particulier. Bonne chance.',
     apply: () => {} },
@@ -816,18 +813,11 @@ const WEATHER_POOL = [
     apply: (s) => { s.reflect = (s.reflect||0) + 0.05; } },
 ];
 
-let currentWeather = WEATHER_POOL[8]; // default: normal
+let currentWeather = WEATHER_POOL[8];
 let weatherState = {};
 
-function pickWeather() {
-  return WEATHER_POOL[Math.floor(Math.random() * WEATHER_POOL.length)];
-}
-
-function rerollWeather() {
-  currentWeather = pickWeather();
-  renderWeather();
-}
-
+function pickWeather() { return WEATHER_POOL[Math.floor(Math.random() * WEATHER_POOL.length)]; }
+function rerollWeather() { currentWeather = pickWeather(); renderWeather(); }
 function renderWeather() {
   const b = document.getElementById('weatherBanner');
   b.style.display = 'flex';
@@ -837,11 +827,7 @@ function renderWeather() {
   document.getElementById('weatherName').textContent = currentWeather.name;
   document.getElementById('weatherEffect').textContent = currentWeather.effect;
 }
-
-function applyWeatherToState() {
-  weatherState = {};
-  currentWeather.apply(weatherState);
-}
+function applyWeatherToState() { weatherState = {}; currentWeather.apply(weatherState); }
 
 // ============================================
 // SKILL TREE
@@ -1085,7 +1071,7 @@ function addXpGold(xpAmt, goldAmt) {
 }
 
 // ============================================
-// BOSS ENEMY DEFINITIONS — Enhanced with 3 true phases
+// BOSS ENEMY DEFINITIONS
 // ============================================
 const ENEMIES = [
   {
@@ -1112,7 +1098,6 @@ const ENEMIES = [
     ],
     narratorLines: { taunt: ["Le Sushi Ninja disparaît dans l'ombre de la cantine.","Un frisson. Le sushi a bougé… mais où ?"] }
   },
-  // ======= BOSS AVEC 3 VRAIES PHASES =======
   {
     id: 'banane', name: 'La Grande Banane', type: 'villain', class: 'Seigneur Absolu de la Cantine', sprite: 'banane', isBoss: true,
     hp: 160, atk: 85, def: 65, spd: 60,
@@ -1263,24 +1248,8 @@ function renderBossPhaseBar(villain, phaseIdx) {
     d.className = 'boss-phase-dot ' + (i < phaseIdx ? 'done' : i === phaseIdx ? 'active' : '');
     dotsEl.appendChild(d);
   });
-  // Arena class
   const arena = document.getElementById('battleArena');
   arena.className = 'arena' + (phaseIdx === 1 ? ' boss-phase-2' : phaseIdx === 2 ? ' boss-phase-3' : '');
-}
-
-function getCurrentBossPhase(villain) {
-  if (!villain.isBoss) return null;
-  const ratio = state.villainHp / state.villainMaxHp;
-  const phases = villain.bossPhases;
-  for (let i = phases.length - 1; i >= 0; i--) {
-    if (ratio <= phases[i].threshold || i === 0) {
-      // Find the actual phase we SHOULD be at (lowest threshold still above current HP)
-    }
-  }
-  // Simple: phase 0 until 65%, phase 1 until 30%, phase 2 after
-  if (ratio > 0.65) return 0;
-  if (ratio > 0.30) return 1;
-  return 2;
 }
 
 // ============================================
@@ -1298,9 +1267,8 @@ let state = {
   fortressActive: false, fortressTurns: 0,
   pendingLevelUp: null,
   bossCurrentPhase: 0,
-  bossPhaseLocked: false, // prevents double-trigger
-  comboStreak: 0, // consecutive attacks without guarding
-  pendingPhaseTransition: false,
+  bossPhaseLocked: false,
+  comboStreak: 0,
 };
 
 updateStageIndicators();
@@ -1314,9 +1282,7 @@ function incrementCombo() {
   const val = document.getElementById('comboStreakVal');
   val.textContent = state.comboStreak;
   el.classList.add('active');
-  if (state.comboStreak >= 3) {
-    showComboPopup(state.comboStreak);
-  }
+  if (state.comboStreak >= 3) showComboPopup(state.comboStreak);
 }
 function resetCombo() {
   state.comboStreak = 0;
@@ -1327,7 +1293,7 @@ function getComboMult() {
   if (state.comboStreak === 2) return 1.1;
   if (state.comboStreak === 3) return 1.25;
   if (state.comboStreak === 4) return 1.4;
-  return 1.6; // 5+
+  return 1.6;
 }
 function showComboPopup(streak) {
   const el = document.getElementById('comboDisplay');
@@ -1491,10 +1457,9 @@ function startBattle(newGame = false) {
   if (!selectedHero) return;
   applyWeatherToState();
   state.heroChar = HEROES[selectedHero];
-  state.villainChar = JSON.parse(JSON.stringify(ENEMIES[state.currentEnemyIndex])); // deep clone for boss phases
+  state.villainChar = JSON.parse(JSON.stringify(ENEMIES[state.currentEnemyIndex]));
   state.heroStats = getLevelStats(state.heroChar);
 
-  // Apply weather ATK mult
   if (weatherState.atkMult) state.heroStats.atk = Math.floor(state.heroStats.atk * weatherState.atkMult);
 
   state.atkBuff = 0; state.atkBuffTurns = 0;
@@ -1502,7 +1467,6 @@ function startBattle(newGame = false) {
   state.comboStreak = 0;
   state.bossCurrentPhase = 0;
   state.bossPhaseLocked = false;
-  state.pendingPhaseTransition = false;
 
   if (newGame || state.heroHpPersist === 0) {
     state.heroHp = state.heroMaxHp = state.heroStats.hp;
@@ -1517,7 +1481,6 @@ function startBattle(newGame = false) {
   state.turn = 1; state.heroDefending = false; state.villainDefending = false;
   state.battleRunning = true; state.playerTurn = true;
 
-  // Reset boss phase taunt states
   if (state.villainChar.isBoss && state.villainChar.bossPhases) {
     state.villainChar.bossPhases.forEach(p => { p.taunted = false; });
   }
@@ -1547,7 +1510,6 @@ function startBattle(newGame = false) {
   showScreen('battle');
   buildActionRow();
 
-  // Weather display in battle
   const weatherTag = document.getElementById('battleWeatherTag');
   const weatherMini = document.getElementById('battleWeatherMini');
   if (currentWeather.id !== 'w_normal') {
@@ -1571,7 +1533,7 @@ function startBattle(newGame = false) {
   if (state.villainChar.isBoss) {
     addLog(`🍌 "${state.villainChar.bossPhases[0].tauntLines[0]}"`, 'villain-action');
   } else {
-    addLog(`🎙 "${pick(state.villainChar.narratorLines.taunt)}"`, state.villainChar.isBoss ? 'villain-action' : 'intermediate-action');
+    addLog(`🎙 "${pick(state.villainChar.narratorLines.taunt)}"`, 'intermediate-action');
   }
 
   if (state.heroStats.spd < state.villainChar.spd) {
@@ -1593,6 +1555,7 @@ function addLog(msg, cls = '') {
   d.className = 'log-line ' + cls; d.textContent = msg;
   log.appendChild(d); log.scrollTop = log.scrollHeight;
 }
+
 function updateBattleUI() {
   const pct = (v, m) => Math.max(0, v / m * 100) + '%';
   const cls = (v, m) => { const r=v/m; return 'hp-fill'+(r<0.2?' critical':r<0.4?' low':''); };
@@ -1621,14 +1584,8 @@ function updateBattleUI() {
     if (state.fortressActive) badges += `<span style="background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--xp-blue)">🥖 FORTERESSE (${state.fortressTurns}t)</span>`;
     heroStatusEl.innerHTML = badges;
   }
-  // Boss phase check
+  // Boss phase bar refresh (visual only, NO state changes here)
   if (state.villainChar && state.villainChar.isBoss) {
-    const newPhase = getCurrentBossPhase(state.villainChar);
-    if (newPhase > state.bossCurrentPhase && !state.bossPhaseLocked) {
-      state.bossPhaseLocked = true;
-      state.bossCurrentPhase = newPhase;
-      state.pendingPhaseTransition = true;
-    }
     renderBossPhaseBar(state.villainChar, state.bossCurrentPhase);
   }
 }
@@ -1727,9 +1684,7 @@ function triggerBossPhaseTransition(phaseIdx) {
 function continueAfterPhase() {
   document.getElementById('phaseOverlay').classList.remove('show');
   state.bossPhaseLocked = false;
-  state.pendingPhaseTransition = false;
   state.battleRunning = true;
-  // Apply phase modifiers
   const phase = state.villainChar.bossPhases[state.bossCurrentPhase];
   const villainSpriteWrap = document.getElementById('villainSprite');
   villainSpriteWrap.classList.add('phase-shift');
@@ -1785,9 +1740,28 @@ const isMiss = (extraMiss=0) => Math.random() < Math.max(0.01, 0.08 - getPassive
 
 function getEffectiveAtk() { return state.heroStats.atk + (state.atkBuffTurns > 0 ? state.atkBuff : 0); }
 
+// ============================================
+// CHECK AND HANDLE BOSS PHASE CHANGE
+// Returns true if a phase transition was triggered (caller should not proceed)
+// ============================================
+function checkBossPhaseChange() {
+  if (!state.villainChar || !state.villainChar.isBoss || state.bossPhaseLocked) return false;
+  const ratio = state.villainHp / state.villainMaxHp;
+  let newPhase = 0;
+  if (ratio <= 0.30) newPhase = 2;
+  else if (ratio <= 0.65) newPhase = 1;
+  else newPhase = 0;
+
+  if (newPhase > state.bossCurrentPhase) {
+    state.bossPhaseLocked = true;
+    state.bossCurrentPhase = newPhase;
+    return true; // transition needed
+  }
+  return false;
+}
+
 function playerAction(id) {
   if (!state.playerTurn || !state.battleRunning) return;
-  if (state.pendingPhaseTransition) { triggerBossPhaseTransition(state.bossCurrentPhase); return; }
   setPlayerTurn(false);
   const hero = state.heroChar;
   const villain = state.villainChar;
@@ -1799,14 +1773,14 @@ function playerAction(id) {
   const result = atk.fn(heroEffective, villain);
   if (!result) { setPlayerTurn(true); return; }
 
-  if (atk.isDefend || result.defend && !result.dmg) {
-    // Defend action resets combo
+  if (atk.isDefend || (result.defend && !result.dmg)) {
     resetCombo();
   } else if (result.dmg) {
     incrementCombo();
   }
 
   state.heroDefending = false;
+
   if (result.miss) {
     anim('heroSprite','punch-right');
     setTimeout(() => spawnDmg('villainSprite',0,'miss'), 300);
@@ -1825,6 +1799,8 @@ function playerAction(id) {
       spawnDmg('villainSprite', result.dmg, isBossHit ? 'boss-hit' : (result.crit ? 'crit' : 'dmg'));
       if (result.crit) flashArena('yellow');
       state.villainHp -= result.dmg;
+      // Clamp to 0
+      if (state.villainHp < 0) state.villainHp = 0;
     }
     if (result.defend) state.heroDefending = true;
     if (result.spBonus) {
@@ -1835,41 +1811,42 @@ function playerAction(id) {
     // Reflect weather
     if (weatherState.reflect && result.dmg) {
       const reflected = Math.floor(result.dmg * weatherState.reflect);
-      state.villainHp -= reflected;
+      state.villainHp = Math.max(0, state.villainHp - reflected);
     }
     addLog(result.log, result.crit ? 'crit-line' : 'hero-action');
     if (result.crit) addLog('🎙 "'+pick(hero.narratorLines.attack)+'"','system');
     if (state.comboStreak >= 3) addLog(`🔥 COMBO ×${state.comboStreak} — multiplicateur ×${getComboMult().toFixed(1)} !`, 'combo-line');
+
     updateBattleUI();
-    if (state.pendingPhaseTransition) {
-      // show phase transition before checking battle end
-      setTimeout(() => {
-        if (!checkBattleEnd()) triggerBossPhaseTransition(state.bossCurrentPhase);
-      }, 600);
-    } else {
-      checkBattleEnd() || setTimeout(() => villainTurn(), 900);
+
+    // Check battle end first
+    if (checkBattleEnd()) return;
+
+    // Then check boss phase transition
+    if (checkBossPhaseChange()) {
+      setTimeout(() => triggerBossPhaseTransition(state.bossCurrentPhase), 400);
+      return;
     }
+
+    // Otherwise villain takes their turn
+    setTimeout(() => villainTurn(), 900);
   }, 350);
 }
 
 // ============================================
-// VILLAIN TURN — Boss uses phase-specific attacks
+// VILLAIN TURN
 // ============================================
 function getBossCurrentSpecial() {
   if (!state.villainChar.isBoss) return state.villainChar.special;
   return state.villainChar.bossPhases[state.bossCurrentPhase].special;
 }
-
 function getBossEffectiveAtk() {
   if (!state.villainChar.isBoss) return state.villainChar.atk;
-  const phase = state.villainChar.bossPhases[state.bossCurrentPhase];
-  return Math.floor(state.villainChar.atk * phase.atkMult);
+  return Math.floor(state.villainChar.atk * state.villainChar.bossPhases[state.bossCurrentPhase].atkMult);
 }
-
 function getBossEffectiveDef() {
   if (!state.villainChar.isBoss) return state.villainChar.def;
-  const phase = state.villainChar.bossPhases[state.bossCurrentPhase];
-  return Math.floor(state.villainChar.def * phase.defMult);
+  return Math.floor(state.villainChar.def * state.villainChar.bossPhases[state.bossCurrentPhase].defMult);
 }
 
 function villainTurn() {
@@ -1910,7 +1887,6 @@ function villainTurn() {
   const logCls = villain.isBoss ? 'villain-action' : 'intermediate-action';
 
   let action;
-  const phase = villain.isBoss ? villain.bossPhases[state.bossCurrentPhase] : null;
   const isPhase3 = villain.isBoss && state.bossCurrentPhase === 2;
   const isPhase2 = villain.isBoss && state.bossCurrentPhase === 1;
 
@@ -1946,14 +1922,12 @@ function villainTurn() {
     } else if (action === 'combo') {
       let dmg=calcDmg(vAtk,state.heroStats.def,1.2); dmg=Math.floor(dmg*enemyAtkMult); if(state.heroDefending||state.fortressActive) dmg=Math.floor(dmg*(1-blockRate*0.6)); anim('heroSprite','hit-shake'); flashArena('red'); spawnDmg('heroSprite',dmg,'dmg'); state.heroHp-=dmg; addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !', logCls);
     } else if (action === 'frenzied') {
-      // Phase 2/3: 3-hit frenzied attack
       const hits=[Math.floor(vAtk*0.55+Math.random()*15),Math.floor(vAtk*0.55+Math.random()*15),Math.floor(vAtk*0.7+Math.random()*20)];
       let total=Math.floor(hits.reduce((a,b)=>a+b,0)*enemyAtkMult);
       if(state.heroDefending||state.fortressActive) total=Math.floor(total*(1-blockRate*0.5));
       anim('heroSprite','hit-shake'); flashArena('red'); shakeArena(); spawnDmg('heroSprite',total,'dmg'); state.heroHp-=total;
       addLog(`💢 ATTAQUE FRÉNÉTIQUE — ${hits.join('+')}=${total} dégâts déchaînés !`, 'boss-line');
     } else if (action === 'apocalypse') {
-      // Phase 3 only: massive single hit
       const dmg=Math.floor(calcDmg(vAtk,state.heroStats.def,2.2)*enemyAtkMult);
       const reduced = (state.heroDefending||state.fortressActive) ? Math.floor(dmg*(1-blockRate)) : dmg;
       anim('heroSprite','hit-shake'); flashArena('red'); shakeArena(); spawnDmg('heroSprite',reduced,'boss-hit'); state.heroHp-=reduced;
@@ -1968,7 +1942,6 @@ function villainTurn() {
       if(state.heroDefending||state.fortressActive) dmg=Math.floor(dmg*(state.fortressActive?0.25:0.55));
       anim('heroSprite','hit-shake'); flashArena('red'); shakeArena();
       spawnDmg('heroSprite',dmg,'boss-hit'); state.heroHp-=dmg;
-      // Boss drain (phase 3)
       if (result.drain) {
         state.villainHp = Math.min(state.villainMaxHp, state.villainHp + result.drain);
         spawnDmg('villainSprite', result.drain, 'heal');
@@ -1979,20 +1952,16 @@ function villainTurn() {
     state.heroDefending=false; state.villainDefending=false;
     updateBattleUI();
 
-    // Boss phase transition check (after villain turn)
-    if (state.pendingPhaseTransition) {
-      setTimeout(() => {
-        if (!checkBattleEnd()) triggerBossPhaseTransition(state.bossCurrentPhase);
-      }, 400);
-    } else {
-      if (!checkBattleEnd()) setPlayerTurn(true);
+    // Check battle end, then give player their turn
+    if (!checkBattleEnd()) {
+      setPlayerTurn(true);
     }
   }, 400);
 }
 
 function checkBattleEnd() {
-  if (state.heroHp <= 0) { state.battleRunning=false; setTimeout(()=>endBattle(false),500); return true; }
-  if (state.villainHp <= 0) { state.battleRunning=false; setTimeout(()=>endBattle(true),500); return true; }
+  if (state.heroHp <= 0) { state.heroHp = 0; state.battleRunning=false; setTimeout(()=>endBattle(false),500); return true; }
+  if (state.villainHp <= 0) { state.villainHp = 0; state.battleRunning=false; setTimeout(()=>endBattle(true),500); return true; }
   return false;
 }
 
@@ -2017,7 +1986,7 @@ function endBattle(won) {
   if (won && !isLastEnemy) {
     state.heroHpPersist = state.heroHp;
     state.currentEnemyIndex++;
-    currentWeather = pickWeather(); // new weather for next fight
+    currentWeather = pickWeather();
     updateStageIndicators();
     document.getElementById('victoryIcon').textContent = '⚔';
     const t=document.getElementById('victoryTitle');
@@ -2104,7 +2073,7 @@ function renderInventory() {
   const a=player.equipped.armor?SHOP_CATALOG.armors.find(x=>x.id===player.equipped.armor):null;
   if(w){weaponSlot.className='equipped-slot filled';weaponSlot.innerHTML=`<span class="slot-icon">${w.icon}</span><div class="slot-name">${w.name}</div><div class="slot-stat">${w.stat}</div>`;}
   else{weaponSlot.className='equipped-slot';weaponSlot.innerHTML=`<span class="slot-icon">🗡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`;}
-  if(a){armorSlot.className='equipped-slot filled';armorSlot.innerHTML=`<span class="slot-icon">${a.icon}</span><div class="slot-name">${a.name}</div><div class="slot-stat">${a.stat}</div>`;}
+  if(a){armorSlot.className='equipped-slot filled';armorSlot.innerHTML=`<span class="slot-icon">${a.icon}</span><div class="slot-name">${a.name}</div><div class="slot-stat">—</div>`;}
   else{armorSlot.className='equipped-slot';armorSlot.innerHTML=`<span class="slot-icon">🛡️</span><div class="slot-name">Aucune</div><div class="slot-stat">—</div>`;}
   const invEl=document.getElementById('invSlots'); invEl.innerHTML='';
   for(let i=0;i<8;i++){const item=player.inventory[i]; if(item){const cat=SHOP_CATALOG.consumables.find(c=>c.id===item.id);invEl.innerHTML+=`<div class="inv-slot" title="${cat?cat.name:''}">${cat?cat.icon:'?'}<span class="slot-count">${item.qty>1?item.qty:''}</span></div>`;}else invEl.innerHTML+=`<div class="inv-slot empty">·</div>`;}

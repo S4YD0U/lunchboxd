@@ -764,7 +764,7 @@ const HEROES = {
   patate: {
     id: 'patate', name: 'Patate Hongroise', type: 'hero', class: 'Colosse du Goulash', sprite: 'patate',
     hp: 130, atk: 70, def: 85, spd: 55,
-    quote: '"Je suis lente2026 mais quand j'arrive, tu le regrettes."',
+    quote: '"Je suis lente… mais quand j\'arrive, tu le regrettes."',
     special: { name: '🥔 Frappe du Goulash', fn: (hero) => { const dmg = Math.max(1, Math.floor(hero.atk * 2.2 + Math.random() * 30)); return { dmg, log: '🥔 FRAPPE DU GOULASH — ' + dmg + ' dégâts dévastateurs !', type: 'crit' }; } },
     narratorLines: { win: ["La Patate Hongroise prouve que la lenteur est une force !","Solide, implacable, victorieuse — comme un bon goulash.","Personne ne s'attendait à ça. Personne."], lose: ["La Patate retombe. Elle rebondira.","Une défaite épicée. La revanche sera plus épicée encore."], attack: ["La Patate s'élance avec une force tellurique !","Le sol tremble sous les coups de la Colosse du Goulash !","Lente mais imparable — la Patate frappe !"] }
   }

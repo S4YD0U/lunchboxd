@@ -987,22 +987,38 @@
 
   <!-- TABS -->
   <div class="screen-tabs" id="screenTabs">
-    <button class="tab-btn" id="tab-map" onclick="switchTab('map')">🗺 Carte</button>
-    <button class="tab-btn active" id="tab-select" onclick="switchTab('select')">⚔ Combat</button>
+    <button class="tab-btn active" id="tab-map" onclick="switchTab('map')">🗺 Carte</button>
     <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🛒 Boutique</button>
     <button class="tab-btn" id="tab-skills" onclick="switchTab('skills')">✨ Compétences</button>
   </div>
 
-  <!-- MAP SCREEN -->
-  <div id="screen-map" style="display:none;">
-    <div class="world-map-header">
-      <div class="world-map-title">Le Monde de la Cantine</div>
-      <div class="world-map-sub" id="mapProgressLabel">Sélectionne une région pour commencer ton épopée</div>
+  <!-- MAP SCREEN (contient hero select + carte) -->
+  <div id="screen-map">
+
+    <!-- HERO SELECTION -->
+    <div id="heroSelectSection">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:0.2rem;">Choisis ton champion</div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;">SÉLECTION DU PERSONNAGE — puis choisis une région</div>
+        </div>
+        <div id="selectedHeroBadge" style="display:none;background:rgba(200,245,66,0.1);border:1px solid rgba(200,245,66,0.3);border-radius:6px;padding:0.5rem 1rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);"></div>
+      </div>
+      <div class="characters-grid" id="heroGrid"></div>
     </div>
-    <div class="world-map-container">
-      <div class="world-map-grid" id="worldMapGrid"></div>
+
+    <!-- DIVIDER -->
+    <div style="border-top:1px solid var(--border);margin:1.5rem 0;"></div>
+
+    <!-- WORLD MAP -->
+    <div class="world-map-header" style="text-align:left;padding:0 0 1rem;">
+      <div class="world-map-title" style="font-size:1.2rem;">Le Monde de la Cantine</div>
+      <div class="world-map-sub" id="mapProgressLabel">Sélectionne une région pour lancer le combat</div>
     </div>
-    <div class="region-detail-panel" id="regionDetailPanel" style="display:none;">
+    <div class="world-map-grid" id="worldMapGrid"></div>
+
+    <!-- REGION DETAIL PANEL -->
+    <div class="region-detail-panel" id="regionDetailPanel" style="display:none;margin-top:1rem;">
       <div class="rdp-header">
         <div class="rdp-biome-tag" id="rdpBiomeTag"></div>
         <button class="rdp-close" onclick="closeRegionDetail()">✕</button>
@@ -1010,18 +1026,21 @@
       <div class="rdp-title" id="rdpTitle"></div>
       <div class="rdp-story" id="rdpStory"></div>
       <div class="rdp-enemies" id="rdpEnemies"></div>
+      <div style="display:flex;align-items:center;gap:0.6rem;margin-top:0.5rem;" id="rdpHeroWarning" style="display:none;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent2);">⚠ Sélectionne d'abord un héros ci-dessus</span>
+      </div>
       <button class="rdp-enter-btn" id="rdpEnterBtn" onclick="enterRegion()">⚔ Entrer dans la région</button>
     </div>
+
+    <!-- hidden stagesDisplay needed for battle UI -->
+    <div style="display:none;" id="stagesDisplay"></div>
+
   </div>
 
-  <!-- SELECT SCREEN -->
-  <div id="screen-select">
-    <div class="progress-stages" id="stagesDisplay"></div>
-    <p class="select-title">Choisis ton champion</p>
-    <p class="select-subtitle">// SÉLECTION DU PERSONNAGE</p>
-    <div class="characters-grid" id="heroGrid"></div>
-    <div class="vs-divider">contre</div>
-    <div class="villain-label intermediate" id="enemyLabel">⚠ ENNEMI 1/3 — Cornichon Raté</div>
+  <!-- SELECT SCREEN (kept hidden, never shown to user, needed for internal renderSelect calls) -->
+  <div id="screen-select" style="display:none;">
+    <div class="characters-grid" id="_heroGridUnused"></div>
+    <div class="villain-label" id="enemyLabel"></div>
     <div class="characters-grid" id="villainGrid"></div>
     <button class="fight-btn" id="fightBtn" onclick="startBattleWithDialogue(true)" disabled>⚔ COMBAT !</button>
   </div>
@@ -1752,34 +1771,36 @@ function addXpGold(xpAmt, goldAmt) {
 }
 
 function showScreen(name) {
-  ['map','select','shop','skills','battle','victory'].forEach(s => {
+  // map screen stays visible in background when select would have been shown
+  const displayName = (name === 'select') ? 'map' : name;
+  ['map','shop','skills','battle','victory'].forEach(s => {
     const el = document.getElementById('screen-' + s);
     if (el) el.style.display = 'none';
   });
   const tabs = document.getElementById('screenTabs');
   const profile = document.getElementById('playerProfile');
   const lvBanner = document.getElementById('levelupBanner');
-  ['map','select','shop','skills'].forEach(t => {
+  ['map','shop','skills'].forEach(t => {
     const btn = document.getElementById('tab-' + t);
     if (btn) btn.classList.remove('active');
   });
-  if (['map','select','shop','skills'].includes(name)) {
+  if (['map','select','shop','skills'].includes(displayName)) {
     tabs.style.display = ''; profile.style.display = ''; lvBanner.style.display = '';
-    const btn = document.getElementById('tab-' + name);
+    const btn = document.getElementById('tab-' + displayName);
     if (btn) btn.classList.add('active');
   } else {
     tabs.style.display = 'none'; profile.style.display = 'none';
   }
-  const el = document.getElementById('screen-' + name);
+  const el = document.getElementById('screen-' + displayName);
   if (el) el.style.display = 'block';
-  if (name === 'map') renderWorldMap();
+  if (displayName === 'map') { renderWorldMap(); renderHeroGrid(); }
 }
 
 function switchTab(name) {
   showScreen(name);
   if (name === 'shop') renderShop();
   if (name === 'skills') renderSkillTree();
-  if (name === 'map') renderWorldMap();
+  if (name === 'map') { renderWorldMap(); renderHeroGrid(); }
 }
 
 function renderShop() {
@@ -2089,24 +2110,8 @@ function buildCharCard(char, onclickStr, isSelected) {
 let selectedHero = null;
 
 function renderSelect() {
-  const heroes = Object.values(HEROES);
-  document.getElementById('heroGrid').innerHTML = heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
-  if (!ENEMIES.length) {
-    // No region selected yet — show a prompt
-    const lbl = document.getElementById('enemyLabel');
-    lbl.textContent = '⚠ Sélectionne une région sur la Carte d\'abord !';
-    lbl.className = 'villain-label intermediate';
-    document.getElementById('villainGrid').innerHTML = '<div></div><div style="text-align:center;padding:2rem;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.8rem;">🗺 Va sur l\'onglet <strong style=\'color:var(--accent)\'>Carte</strong> pour choisir ta région et tes adversaires.</div><div></div>';
-    document.getElementById('fightBtn').disabled = true;
-    return;
-  }
-  const firstEnemy = ENEMIES[state.currentEnemyIndex];
-  const lbl = document.getElementById('enemyLabel');
-  const regionName = selectedRegion ? (REGIONS.find(r=>r.id===selectedRegion)||{}).name : '';
-  lbl.textContent = firstEnemy.isBoss ? `⚠ BOSS — ${firstEnemy.name}` : `⚠ ${regionName} · Combat ${state.currentEnemyIndex+1}/${ENEMIES.length} — ${firstEnemy.name}`;
-  lbl.className = 'villain-label' + (firstEnemy.isBoss ? '' : ' intermediate');
-  document.getElementById('villainGrid').innerHTML = '<div></div>' + buildCharCard(firstEnemy, '', false) + '<div></div>';
-  document.getElementById('fightBtn').disabled = !selectedHero;
+  // heroGrid is now on the map screen — handled by renderHeroGrid()
+  renderHeroGrid();
 }
 
 function selectHero(id) {
@@ -2116,11 +2121,34 @@ function selectHero(id) {
   state.heroHpPersist = 0;
   updateStageIndicators();
   updateProfileUI();
-  renderSelect();
+  renderHeroGrid();
+  renderWorldMap();
+  updateSelectedHeroBadge();
   const shopEl = document.getElementById('screen-shop');
   if (shopEl && shopEl.style.display !== 'none') renderShop();
   const skillEl = document.getElementById('screen-skills');
   if (skillEl && skillEl.style.display !== 'none') renderSkillTree();
+}
+
+function renderHeroGrid() {
+  const grid = document.getElementById('heroGrid');
+  if (!grid) return;
+  const heroes = Object.values(HEROES);
+  grid.innerHTML = heroes.map(c => buildCharCard(c, `selectHero('${c.id}')`, selectedHero === c.id)).join('');
+  updateSelectedHeroBadge();
+}
+
+function updateSelectedHeroBadge() {
+  const badge = document.getElementById('selectedHeroBadge');
+  if (!badge) return;
+  if (selectedHero && HEROES[selectedHero]) {
+    const heroNames = {fraise:'Fraise',poire:'Poire',patate:'Patate Hongroise'};
+    const heroIcons = {fraise:'🍓',poire:'🍐',patate:'🥔'};
+    badge.textContent = heroIcons[selectedHero] + ' ' + heroNames[selectedHero] + ' sélectionné·e';
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
 }
 
 function getAttacks(heroChar) {
@@ -2455,13 +2483,16 @@ function endBattle(won) {
     btnR.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();if(selectedRegion){enterRegion();}else{startBattle(true);}};
   }
   const btnB=document.getElementById('btnBackSelect');
-  btnB.textContent='← Carte du monde'; btnB.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();switchTab('map');};
+  btnB.textContent='← Carte du monde'; btnB.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();renderHeroGrid();renderWorldMap();switchTab('map');};
   showScreen('victory');
 }
 
 function backToSelect() {
   if(selectedHero)switchCharSave(selectedHero);
-  showScreen('select'); renderSelect(); updateProfileUI();
+  renderHeroGrid();
+  renderWorldMap();
+  showScreen('map');
+  updateProfileUI();
 }
 
 function openMobileMenu(){document.getElementById('mobileMenu').classList.add('open');document.body.style.overflow='hidden';}
@@ -2608,16 +2639,25 @@ function showRegionDetail(regionId) {
   }).join('');
 
   const btn = document.getElementById('rdpEnterBtn');
-  if (completed) {
-    btn.textContent = '🔄 Rejouer la région';
-    btn.className = 'rdp-enter-btn completed-btn';
-    btn.disabled = false;
+  const heroWarning = document.getElementById('rdpHeroWarning');
+  if (!selectedHero) {
+    if (heroWarning) heroWarning.style.display = 'flex';
+    btn.disabled = true;
+    btn.textContent = '⚠ Choisis un héros d\'abord';
+    btn.className = 'rdp-enter-btn';
   } else {
-    const nextEnemy = region.enemies.find(eid => !beaten.includes(eid));
-    const nextE = nextEnemy ? ALL_ENEMIES[nextEnemy] : null;
-    btn.textContent = nextE ? `⚔ Affronter : ${nextE.name}` : '⚔ Entrer dans la région';
-    btn.className = 'rdp-enter-btn resume-btn';
-    btn.disabled = false;
+    if (heroWarning) heroWarning.style.display = 'none';
+    if (completed) {
+      btn.textContent = '🔄 Rejouer la région';
+      btn.className = 'rdp-enter-btn completed-btn';
+      btn.disabled = false;
+    } else {
+      const nextEnemy = region.enemies.find(eid => !beaten.includes(eid));
+      const nextE = nextEnemy ? ALL_ENEMIES[nextEnemy] : null;
+      btn.textContent = nextE ? `⚔ Affronter : ${nextE.name}` : '⚔ Entrer dans la région';
+      btn.className = 'rdp-enter-btn resume-btn';
+      btn.disabled = false;
+    }
   }
 
   panel.style.display = 'block';
@@ -2631,7 +2671,11 @@ function closeRegionDetail() {
 
 function enterRegion() {
   if (!selectedRegion) return;
-  if (!selectedHero) { showToast('Sélectionne d\'abord un héros dans l\'onglet Combat !', 'error'); return; }
+  if (!selectedHero) {
+    showToast('Sélectionne d\'abord un héros ci-dessus !', 'error');
+    document.getElementById('heroSelectSection').scrollIntoView({behavior:'smooth'});
+    return;
+  }
   const region = REGIONS.find(r => r.id === selectedRegion);
   if (!region) return;
   const beaten = getRegionEnemiesBeaten(selectedRegion);
@@ -2656,9 +2700,8 @@ function enterRegion() {
   state.heroHpPersist = 0;
   updateStageIndicators();
 
-  // Go to select screen to pick hero if needed, then straight to battle
-  switchTab('select');
-  renderSelect();
+  // Launch battle directly with dialogue
+  startBattleWithDialogue(true);
 }
 
 // Override endBattle to track region progress
@@ -3108,6 +3151,7 @@ function startBattleWithDialogue(newGame=false) {
 
 // INIT
 updateProfileUI();
+renderHeroGrid();
 renderWorldMap();
 showScreen('map');
 </script>

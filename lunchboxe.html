@@ -2124,6 +2124,10 @@ function selectHero(id) {
   renderHeroGrid();
   renderWorldMap();
   updateSelectedHeroBadge();
+  // Rafraîchir le panel région si ouvert, pour débloquer le bouton
+  if (selectedRegion && document.getElementById('regionDetailPanel').style.display !== 'none') {
+    showRegionDetail(selectedRegion);
+  }
   const shopEl = document.getElementById('screen-shop');
   if (shopEl && shopEl.style.display !== 'none') renderShop();
   const skillEl = document.getElementById('screen-skills');
@@ -2434,6 +2438,10 @@ function checkBattleEnd() {
 }
 
 function endBattle(won) {
+  // Tracking région
+  if (won && selectedRegion && state.villainChar) {
+    markEnemyBeaten(selectedRegion, state.villainChar.id);
+  }
   const hero=state.heroChar; const villain=state.villainChar;
   const isLastEnemy=state.currentEnemyIndex>=ENEMIES.length-1;
   const baseXp=won?(villain.isBoss?200:80):20;
@@ -2669,6 +2677,13 @@ function closeRegionDetail() {
   renderWorldMap();
 }
 
+function startBattleWithDialogue(newGame=false) {
+  if(!selectedHero) return;
+  const villainId = ENEMIES[state.currentEnemyIndex] ? ENEMIES[state.currentEnemyIndex].id : null;
+  if(!villainId) { startBattle(newGame); return; }
+  openDialogue(villainId, selectedHero, () => startBattle(newGame));
+}
+
 function enterRegion() {
   if (!selectedRegion) return;
   if (!selectedHero) {
@@ -2704,30 +2719,7 @@ function enterRegion() {
   startBattleWithDialogue(true);
 }
 
-// Override endBattle to track region progress
-const _origEndBattle = endBattle;
-function endBattle(won) {
-  if (won && selectedRegion) {
-    const villain = state.villainChar;
-    markEnemyBeaten(selectedRegion, villain.id);
-  }
-  // Check if region complete after win
-  if (won && selectedRegion) {
-    const beaten = getRegionEnemiesBeaten(selectedRegion);
-    const region = REGIONS.find(r => r.id === selectedRegion);
-    const isLastInRegion = state.currentEnemyIndex >= ENEMIES.length - 1;
-    if (isLastInRegion && won) {
-      // Will be handled by endBattle victory screen — let it run
-    }
-  }
-  _origEndBattle(won);
-}
-
-// Override backToSelect to update map
-const _origBackToSelect = backToSelect;
-function backToSelect() {
-  _origBackToSelect();
-}
+// region tracking intégré directement dans endBattle ci-dessous
 
 // ============================================
 // DIALOGUES (updated with new enemies)
@@ -3141,12 +3133,7 @@ function closeDlgAndStart() {
   document.body.style.overflow = '';
   if(dlgState.onComplete) { const cb=dlgState.onComplete; dlgState.onComplete=null; setTimeout(cb,120); }
 }
-function startBattleWithDialogue(newGame=false) {
-  if(!selectedHero) return;
-  const villainId = ENEMIES[state.currentEnemyIndex] ? ENEMIES[state.currentEnemyIndex].id : null;
-  if(!villainId) { startBattle(newGame); return; }
-  openDialogue(villainId, selectedHero, () => startBattle(newGame));
-}
+
 
 
 // INIT

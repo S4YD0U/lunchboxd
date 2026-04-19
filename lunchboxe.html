@@ -862,6 +862,82 @@
       .lb-cards-row { gap: 0.6rem; }
       .lb-item-card { width: 110px; }
     }
+
+    /* ============ DIALOGUE CINÉMATIQUE ============ */
+    #dialogueOverlay {
+      position: fixed; inset: 0; z-index: 9000;
+      background: #0a0b08;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    #dialogueOverlay.show { display: flex; }
+    .dlg-bg-noise {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+      opacity: 0.6;
+    }
+    .dlg-scanlines {
+      position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px);
+    }
+    .dlg-vignette {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+    }
+    .dlg-corner { position: absolute; width: 60px; height: 60px; border-color: rgba(200,245,66,0.25); border-style: solid; border-width: 0; }
+    .dlg-corner.tl { top: 20px; left: 20px; border-top-width: 2px; border-left-width: 2px; }
+    .dlg-corner.tr { top: 20px; right: 20px; border-top-width: 2px; border-right-width: 2px; }
+    .dlg-corner.bl { bottom: 20px; left: 20px; border-bottom-width: 2px; border-left-width: 2px; }
+    .dlg-corner.br { bottom: 20px; right: 20px; border-bottom-width: 2px; border-right-width: 2px; }
+    .dlg-stage-label {
+      position: absolute; top: 28px; left: 50%; transform: translateX(-50%);
+      font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--muted); z-index: 1;
+    }
+    .dlg-arena {
+      position: relative; width: 100%; max-width: 900px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 60px; margin-bottom: 40px; gap: 20px; z-index: 1;
+    }
+    .dlg-character { display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; transition: opacity 0.4s, transform 0.4s; }
+    .dlg-character.dim { opacity: 0.22; filter: grayscale(0.6); }
+    .dlg-char-sprite { width: 120px; height: 120px; animation: dlgFloat 3s ease-in-out infinite; }
+    .dlg-character.villain .dlg-char-sprite { animation: dlgFloatVillain 3.2s ease-in-out infinite; }
+    @keyframes dlgFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes dlgFloatVillain { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .dlg-char-sprite img { width: 100%; height: 100%; object-fit: contain; }
+    .dlg-char-name { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .dlg-character.hero .dlg-char-name { color: var(--accent); }
+    .dlg-character.villain .dlg-char-name { color: var(--accent3); }
+    .dlg-box {
+      width: 100%; max-width: 780px; z-index: 1;
+      background: rgba(14,15,12,0.95);
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 28px 36px 24px; position: relative; margin: 0 auto;
+      animation: dlgFadeIn 0.35s ease;
+    }
+    .dlg-box::before {
+      content: ''; position: absolute; top: -1px; left: 40px; right: 40px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent); transition: background 0.3s;
+    }
+    .dlg-box.villain-speaking::before { background: linear-gradient(90deg, transparent, var(--accent3), transparent); }
+    .dlg-speaker { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 10px; color: var(--accent); transition: color 0.3s; }
+    .dlg-box.villain-speaking .dlg-speaker { color: var(--accent3); }
+    .dlg-text { font-family: 'Playfair Display', serif; font-size: 1.15rem; line-height: 1.6; color: var(--text); min-height: 2.4em; }
+    .dlg-cursor { display: inline-block; width: 2px; height: 1em; background: var(--accent); vertical-align: text-bottom; animation: dlgBlink 0.7s step-end infinite; }
+    @keyframes dlgBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .dlg-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; width: 100%; max-width: 780px; z-index: 1; }
+    .dlg-pips { display: flex; gap: 6px; }
+    .dlg-pip { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all 0.3s; }
+    .dlg-pip.active { background: var(--accent); }
+    .dlg-pip.done { background: rgba(200,245,66,0.35); }
+    .dlg-hint { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.5s; animation: dlgPulse 1.5s ease-in-out infinite; }
+    .dlg-hint.visible { opacity: 1; }
+    @keyframes dlgPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+    .dlg-skip { position: absolute; bottom: 28px; right: 36px; font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(122,122,110,0.5); background: none; border: none; cursor: pointer; transition: color 0.2s; padding: 4px 8px; z-index: 2; }
+    .dlg-skip:hover { color: var(--muted); }
+    @keyframes dlgFadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   </style>
 </head>
 <body>

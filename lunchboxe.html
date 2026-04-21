@@ -189,34 +189,62 @@
     .fight-btn:hover:not(:disabled) { background: #ff5555; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,69,69,0.3); }
     .fight-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
-    /* ============ WORLD MAP ============ */
-    .world-map-header { text-align:center; padding:1.5rem 0 1.2rem; }
-    .world-map-title { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; margin-bottom:0.4rem; }
+    /* ============ WORLD MAP — ILLUSTRATED ============ */
+    .world-map-header { text-align:left; padding:0 0 1rem; }
+    .world-map-title { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; margin-bottom:0.4rem; }
     .world-map-sub { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--muted); letter-spacing:0.08em; }
-    .world-map-container { position:relative; }
-    .world-map-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem; }
-    .region-card-map {
-      background:var(--card-bg); border:2px solid var(--border); border-radius:10px;
-      padding:1.4rem 1.2rem; cursor:pointer; transition:all 0.3s; position:relative;
-      overflow:hidden; text-align:center;
-      animation: regionFadeIn 0.4s ease both;
+
+    /* The SVG map container */
+    .world-map-grid { position:relative; width:100%; margin-bottom:1.5rem; }
+    .world-map-svg-wrap {
+      position:relative; width:100%;
+      background: radial-gradient(ellipse at 30% 40%, rgba(99,153,34,0.06) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 70%, rgba(216,90,48,0.07) 0%, transparent 50%),
+                  radial-gradient(ellipse at 50% 20%, rgba(55,138,221,0.05) 0%, transparent 40%),
+                  var(--card-bg);
+      border:1px solid var(--border);
+      border-radius:12px;
+      overflow:hidden;
     }
-    .region-card-map:nth-child(1){animation-delay:0.05s}
-    .region-card-map:nth-child(2){animation-delay:0.1s}
-    .region-card-map:nth-child(3){animation-delay:0.15s}
-    .region-card-map:nth-child(4){animation-delay:0.2s}
-    .region-card-map:nth-child(5){animation-delay:0.25s}
-    @keyframes regionFadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .region-card-map.locked { opacity:0.38; cursor:not-allowed; filter:grayscale(0.6); }
-    .region-card-map.locked:hover { transform:none; }
-    .region-card-map.unlocked:hover { transform:translateY(-4px); }
-    .region-card-map.active-region { box-shadow:0 0 0 2px var(--accent), 0 0 24px rgba(200,245,66,0.15); }
-    .region-card-map.completed { border-color:rgba(200,245,66,0.4); }
-    .region-card-map::before {
-      content:''; position:absolute; inset:0; opacity:0.06;
-      transition:opacity 0.3s;
+    .world-map-svg-wrap::before {
+      content:'';
+      position:absolute; inset:0; pointer-events:none; z-index:1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity:0.8;
     }
-    .region-card-map.unlocked:hover::before { opacity:0.12; }
+    #worldMapSVG { display:block; width:100%; height:auto; }
+
+    /* Region zones on SVG */
+    .map-region-zone {
+      cursor:pointer;
+      transition: filter 0.25s, opacity 0.25s;
+    }
+    .map-region-zone.locked { cursor:not-allowed; filter:grayscale(0.85) brightness(0.5); opacity:0.5; }
+    .map-region-zone.unlocked:hover .region-territory { filter: brightness(1.25); }
+    .map-region-zone.active-zone .region-territory { filter: brightness(1.3); }
+
+    /* Pulsing glow on active region */
+    .map-region-zone.active-zone .region-glow {
+      animation: mapRegionPulse 2s ease-in-out infinite;
+    }
+    @keyframes mapRegionPulse {
+      0%,100% { opacity:0.35; r:32px; }
+      50% { opacity:0.7; r:38px; }
+    }
+
+    /* Fog of war: locked regions get a fog overlay drawn in SVG */
+    .fog-overlay { pointer-events:none; transition: opacity 0.6s ease; }
+    .fog-overlay.revealed { opacity:0; }
+
+    /* Region label tooltips on map */
+    .map-region-label { pointer-events:none; transition: opacity 0.2s; }
+    .map-region-label text { font-family:'DM Sans', sans-serif; }
+
+    /* Connecting path between regions */
+    .map-trail { stroke-dasharray:6 4; animation: trailDash 20s linear infinite; }
+    @keyframes trailDash { to { stroke-dashoffset:-200; } }
+
+    /* Legacy: keep these for the detail panel (unchanged) */
     .region-num-badge {
       display:inline-block; font-family:'DM Mono',monospace; font-size:0.58rem;
       letter-spacing:0.12em; text-transform:uppercase; padding:0.2rem 0.6rem;
@@ -232,6 +260,13 @@
     .region-enemy-pip.boss-pip.beaten { border-color:var(--accent3); background:rgba(232,69,69,0.15); }
     .region-lock-icon { position:absolute; top:0.7rem; right:0.7rem; font-size:0.9rem; color:var(--muted); opacity:0.5; }
     .region-completed-badge { position:absolute; top:0.6rem; right:0.6rem; background:rgba(200,245,66,0.15); border:1px solid rgba(200,245,66,0.3); color:var(--accent); font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.08em; padding:0.15rem 0.4rem; border-radius:2px; }
+
+    /* Animated reveal for newly unlocked region */
+    @keyframes fogReveal {
+      0% { opacity:1; }
+      100% { opacity:0; }
+    }
+    .fog-revealing { animation: fogReveal 1.2s cubic-bezier(0.4,0,0.2,1) forwards; }
 
     /* Region detail panel */
     .region-detail-panel {
@@ -1091,7 +1126,11 @@
       <div class="world-map-title" style="font-size:1.2rem;">Le Monde de la Cantine</div>
       <div class="world-map-sub" id="mapProgressLabel">Sélectionne une région pour lancer le combat</div>
     </div>
-    <div class="world-map-grid" id="worldMapGrid"></div>
+    <div class="world-map-grid" id="worldMapGrid">
+      <div class="world-map-svg-wrap" id="worldMapSvgWrap">
+        <!-- SVG map injected by renderWorldMap() -->
+      </div>
+    </div>
 
     <!-- REGION DETAIL PANEL -->
     <div class="region-detail-panel" id="regionDetailPanel" style="display:none;margin-top:1rem;">
@@ -2634,51 +2673,258 @@ function markEnemyBeaten(regionId, enemyId) {
   if (!prog[regionId]) prog[regionId] = { beaten: [], completed: false };
   if (!prog[regionId].beaten.includes(enemyId)) prog[regionId].beaten.push(enemyId);
   const region = REGIONS.find(r => r.id === regionId);
+  const wasCompleted = prog[regionId].completed;
   if (region && prog[regionId].beaten.length >= region.enemies.length) {
     prog[regionId].completed = true;
   }
   saveRegionProgress(prog);
+
+  // Trigger fog-reveal animation for newly unlocked region
+  if (!wasCompleted && prog[regionId].completed) {
+    const idx = REGIONS.findIndex(r => r.id === regionId);
+    const nextRegion = REGIONS[idx + 1];
+    if (nextRegion) {
+      setTimeout(() => {
+        const fogEl = document.getElementById('fog_' + nextRegion.id);
+        if (fogEl) {
+          fogEl.classList.add('fog-revealing');
+          fogEl.addEventListener('animationend', () => {
+            fogEl.style.opacity = '0';
+            fogEl.classList.remove('fog-revealing');
+          }, { once: true });
+          showToast(`🗺 ${nextRegion.icon} ${nextRegion.name} débloquée !`, 'success');
+        }
+      }, 1200);
+    }
+  }
 }
 
 let selectedRegion = null;
 
+// ─── MAP LAYOUT DATA ─────────────────────────────────────────────────────────
+// Each region has a territory polygon, a center point, and visual theme.
+// viewBox: 0 0 600 380
+const MAP_LAYOUT = [
+  { // 1 – Forêt des Épices (top-left, organic jungle blob)
+    id: 'foret_epices',
+    territory: 'M 20,30 C 60,10 130,15 165,55 C 195,90 185,140 150,165 C 120,185 70,190 40,165 C 10,140 -5,90 20,30 Z',
+    cx: 95, cy: 100,
+    fillColor: '#3a5e10', strokeColor: '#7ab520',
+    gradStop1: '#4a7a14', gradStop2: '#1e3208',
+    pattern: 'trees',   // decorative motif type
+    patternColor: 'rgba(120,200,30,0.12)',
+    mountainPaths: [
+      'M55,140 L65,115 L75,140', 'M80,135 L93,108 L106,135',
+    ],
+    treePaths: [
+      [50,155],[75,160],[100,158],[125,155],[145,148]
+    ],
+  },
+  { // 2 – Désert du Sel (top-right, jagged rocky shape)
+    id: 'desert_sel',
+    territory: 'M 435,20 C 480,15 570,25 580,75 C 590,125 560,160 520,175 C 480,190 430,175 405,145 C 378,115 380,65 435,20 Z',
+    cx: 490, cy: 100,
+    fillColor: '#6b3d08', strokeColor: '#c47a1a',
+    gradStop1: '#7a4a10', gradStop2: '#2e1a04',
+    pattern: 'dunes',
+    patternColor: 'rgba(200,130,30,0.10)',
+    mountainPaths: [
+      'M430,155 L445,128 L460,155', 'M460,150 L478,118 L496,150', 'M500,148 L515,125 L530,148',
+    ],
+    treePaths: [],
+  },
+  { // 3 – Marais du Vinaigre (middle-center, swampy irregular)
+    id: 'marais_vinaigre',
+    territory: 'M 210,120 C 260,95 340,100 370,135 C 400,168 390,220 355,245 C 320,268 265,268 230,245 C 195,220 160,150 210,120 Z',
+    cx: 290, cy: 185,
+    fillColor: '#3a3070', strokeColor: '#7068cc',
+    gradStop1: '#48408a', gradStop2: '#1a1840',
+    pattern: 'mist',
+    patternColor: 'rgba(120,110,220,0.10)',
+    mountainPaths: [],
+    treePaths: [[220,240],[245,248],[270,252],[295,250],[318,245],[338,238]],
+  },
+  { // 4 – Pics Glacés du Sorbet (top-mid-right, sharp peaks)
+    id: 'pics_sorbet',
+    territory: 'M 300,20 C 340,8 410,15 430,55 C 445,85 435,120 405,138 C 375,155 325,150 300,128 C 272,105 265,38 300,20 Z',
+    cx: 362, cy: 82,
+    fillColor: '#0d3d6e', strokeColor: '#3b9ee8',
+    gradStop1: '#1a5490', gradStop2: '#061c3a',
+    pattern: 'snow',
+    patternColor: 'rgba(100,180,255,0.08)',
+    mountainPaths: [
+      'M305,128 L325,88 L345,128', 'M338,122 L362,75 L386,122', 'M378,120 L396,90 L414,120',
+    ],
+    treePaths: [],
+  },
+  { // 5 – Volcan de la Cantine (bottom-center, round volcanic mass)
+    id: 'volcan_cantine',
+    territory: 'M 210,280 C 245,255 335,252 370,278 C 408,305 410,355 375,370 C 340,385 255,385 220,368 C 182,350 175,308 210,280 Z',
+    cx: 292, cy: 322,
+    fillColor: '#6b1a08', strokeColor: '#d44010',
+    gradStop1: '#8a2510', gradStop2: '#2e0a04',
+    pattern: 'lava',
+    patternColor: 'rgba(220,80,20,0.12)',
+    mountainPaths: [
+      'M240,365 L265,325 L290,365', 'M278,360 L305,308 L332,360',
+    ],
+    treePaths: [],
+  },
+];
+
+// Trail path connecting all region centers (approximate route)
+const MAP_TRAIL_D = 'M 95,100 C 180,80 240,100 290,185 C 310,150 330,100 362,82 C 395,100 430,100 490,100 M 290,185 C 292,250 292,290 292,322';
+
 function renderWorldMap() {
-  const grid = document.getElementById('worldMapGrid');
-  if (!grid) return;
-  grid.innerHTML = '';
+  const wrap = document.getElementById('worldMapSvgWrap');
+  if (!wrap) return;
+
   const prog = getRegionProgress();
-  REGIONS.forEach((region, idx) => {
+  const ns = 'http://www.w3.org/2000/svg';
+
+  // Build defs
+  let defsHtml = `<defs>`;
+  // Gradients per region
+  MAP_LAYOUT.forEach(ml => {
+    defsHtml += `
+      <radialGradient id="grad_${ml.id}" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="${ml.gradStop1}"/>
+        <stop offset="100%" stop-color="${ml.gradStop2}"/>
+      </radialGradient>
+      <filter id="shadow_${ml.id}" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="${ml.strokeColor}" flood-opacity="0.35"/>
+      </filter>`;
+  });
+  // Fog gradient
+  defsHtml += `
+    <radialGradient id="fogGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0a0b08" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#0a0b08" stop-opacity="0.98"/>
+    </radialGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>`;
+
+  // Build SVG content
+  let svgContent = defsHtml;
+
+  // Background sea/void
+  svgContent += `<rect width="600" height="380" fill="#0d0e0b"/>`;
+  // Subtle grid lines (cartographic feel)
+  svgContent += `<g stroke="rgba(200,245,66,0.04)" stroke-width="1">`;
+  for (let x = 60; x < 600; x += 60) svgContent += `<line x1="${x}" y1="0" x2="${x}" y2="380"/>`;
+  for (let y = 38; y < 380; y += 38) svgContent += `<line x1="0" y1="${y}" x2="600" y2="${y}"/>`;
+  svgContent += `</g>`;
+  // Compass rose (decorative, bottom-right)
+  svgContent += `<g transform="translate(550,340)" opacity="0.18" stroke="#c8f542" stroke-width="1" fill="none">
+    <circle r="14"/>
+    <line x1="0" y1="-14" x2="0" y2="14"/>
+    <line x1="-14" y1="0" x2="14" y2="0"/>
+    <polygon points="0,-8 3,-3 -3,-3" fill="#c8f542" stroke="none"/>
+    <text x="0" y="-18" text-anchor="middle" fill="#c8f542" font-size="7" font-family="DM Mono,monospace" stroke="none">N</text>
+  </g>`;
+  // Title watermark
+  svgContent += `<text x="15" y="372" fill="rgba(200,245,66,0.08)" font-size="9" font-family="DM Mono,monospace" letter-spacing="3">CARTE DU MONDE DE LA CANTINE</text>`;
+
+  // Trail path
+  svgContent += `<path d="${MAP_TRAIL_D}" fill="none" stroke="rgba(200,245,66,0.18)" stroke-width="1.5" stroke-dasharray="5 4" class="map-trail"/>`;
+
+  // Render each region
+  MAP_LAYOUT.forEach((ml, idx) => {
+    const region = REGIONS.find(r => r.id === ml.id);
+    if (!region) return;
     const unlocked = isRegionUnlocked(idx);
     const beaten = getRegionEnemiesBeaten(region.id);
     const completed = prog[region.id] && prog[region.id].completed;
-    const card = document.createElement('div');
     const isActive = selectedRegion === region.id;
-    card.className = 'region-card-map ' + (unlocked ? 'unlocked' : 'locked') + (completed ? ' completed' : '') + (isActive ? ' active-region' : '');
-    card.style.borderColor = isActive ? region.color : (completed ? region.colorBorder : '');
-    card.style.setProperty('--region-color', region.color);
-    card.innerHTML = `
-      ${!unlocked ? '<span class="region-lock-icon">🔒</span>' : ''}
-      ${completed ? '<span class="region-completed-badge">✓ TERMINÉ</span>' : ''}
-      <span class="region-num-badge" style="background:${region.colorBg};color:${region.color};border:1px solid ${region.colorBorder}">Région ${region.num}</span>
-      <span class="region-map-icon">${region.icon}</span>
-      <div class="region-map-name">${region.name}</div>
-      <div class="region-map-biome">${region.biome}</div>
-      <div class="region-map-progress">
-        ${region.enemies.map((eid, i) => {
-          const e = ALL_ENEMIES[eid];
-          const isBeaten = beaten.includes(eid);
-          const isBoss = e && e.isBoss;
-          return `<div class="region-enemy-pip ${isBoss ? 'boss-pip' : ''} ${isBeaten ? 'beaten' : ''}" title="${e ? e.name : eid}">${isBoss ? '👑' : (isBeaten ? '✓' : '?')}</div>`;
-        }).join('')}
-      </div>
-    `;
-    if (unlocked) {
-      card.onclick = () => selectRegion(region.id);
+
+    const zoneCls = `map-region-zone ${unlocked ? 'unlocked' : 'locked'}${isActive ? ' active-zone' : ''}`;
+    const clickAttr = unlocked ? `onclick="selectRegion('${region.id}')"` : '';
+
+    svgContent += `<g class="${zoneCls}" ${clickAttr} role="button" aria-label="${region.name}">`;
+
+    // Glow circle behind territory (active only)
+    if (isActive) {
+      svgContent += `<circle class="region-glow" cx="${ml.cx}" cy="${ml.cy}" r="35" fill="${ml.strokeColor}" opacity="0.25" filter="url(#glow)"/>`;
     }
-    grid.appendChild(card);
-    // 5th card spans full if odd
-    if (idx === 4) card.style.gridColumn = '2';
+
+    // Main territory shape
+    const strokeW = isActive ? '2.5' : '1.5';
+    const strokeCol = isActive ? ml.strokeColor : (completed ? ml.strokeColor : 'rgba(255,255,255,0.08)');
+    svgContent += `<path class="region-territory" d="${ml.territory}" fill="url(#grad_${ml.id})" stroke="${strokeCol}" stroke-width="${strokeW}" filter="url(#shadow_${ml.id})"/>`;
+
+    // Inner texture: mountain ridges
+    if (ml.mountainPaths && ml.mountainPaths.length) {
+      ml.mountainPaths.forEach(mp => {
+        svgContent += `<path d="${mp}" fill="none" stroke="${ml.strokeColor}" stroke-width="1" opacity="0.3"/>`;
+      });
+    }
+    // Inner texture: tree dots for jungle/swamp
+    if (ml.treePaths && ml.treePaths.length) {
+      ml.treePaths.forEach(([tx,ty]) => {
+        svgContent += `<circle cx="${tx}" cy="${ty}" r="3" fill="${ml.strokeColor}" opacity="0.22"/>`;
+      });
+    }
+    // Special: lava cracks for volcano
+    if (ml.id === 'volcan_cantine') {
+      svgContent += `<path d="M270,310 C278,320 285,330 290,345 C 295,335 302,322 312,315" fill="none" stroke="#ff6030" stroke-width="1.5" opacity="0.35"/>`;
+      svgContent += `<circle cx="292" cy="300" r="5" fill="#ff4010" opacity="0.4"/>`;
+    }
+    // Special: snow caps for glacier
+    if (ml.id === 'pics_sorbet') {
+      svgContent += `<path d="M335,55 C348,40 362,32 375,50 C 385,42 400,38 415,55" fill="none" stroke="rgba(200,230,255,0.5)" stroke-width="2"/>`;
+    }
+    // Special: mist wisps for swamp
+    if (ml.id === 'marais_vinaigre') {
+      svgContent += `<path d="M220,180 Q240,170 260,178 Q280,185 300,175" fill="none" stroke="rgba(150,140,240,0.3)" stroke-width="1.5"/>`;
+      svgContent += `<path d="M230,200 Q255,192 275,200 Q295,208 320,198" fill="none" stroke="rgba(150,140,240,0.25)" stroke-width="1"/>`;
+    }
+
+    // Region icon (emoji via foreignObject — fallback to text char)
+    svgContent += `<text x="${ml.cx}" y="${ml.cy - 14}" text-anchor="middle" font-size="20" opacity="${unlocked ? '0.9' : '0.3'}">${region.icon}</text>`;
+
+    // Region name label
+    const nameOpacity = unlocked ? '1' : '0.25';
+    svgContent += `<text x="${ml.cx}" y="${ml.cy + 8}" text-anchor="middle" fill="${completed ? '#c8f542' : ml.strokeColor}" font-size="8.5" font-family="Playfair Display, serif" font-weight="700" opacity="${nameOpacity}">${region.name}</text>`;
+
+    // Progress pips (small dots below name)
+    const pipSpacing = 10;
+    const totalPips = region.enemies.length;
+    const pipStartX = ml.cx - ((totalPips - 1) * pipSpacing) / 2;
+    region.enemies.forEach((eid, pi) => {
+      const e = ALL_ENEMIES[eid];
+      const isBeaten = beaten.includes(eid);
+      const isBoss = e && e.isBoss;
+      const pipX = pipStartX + pi * pipSpacing;
+      const pipY = ml.cy + 20;
+      const pipColor = isBeaten ? (isBoss ? '#e84545' : '#c8f542') : 'rgba(255,255,255,0.15)';
+      const pipR = isBoss ? 4 : 3;
+      svgContent += `<circle cx="${pipX}" cy="${pipY}" r="${pipR}" fill="${pipColor}" stroke="${isBoss ? '#e84545' : 'rgba(255,255,255,0.2)'}" stroke-width="0.8"/>`;
+    });
+
+    // Completed badge
+    if (completed) {
+      svgContent += `<text x="${ml.cx}" y="${ml.cy + 34}" text-anchor="middle" fill="#c8f542" font-size="8" font-family="DM Mono, monospace" letter-spacing="1" opacity="0.9">✓ TERMINÉ</text>`;
+    }
+
+    // Lock icon if locked
+    if (!unlocked) {
+      svgContent += `<text x="${ml.cx}" y="${ml.cy + 6}" text-anchor="middle" font-size="14" opacity="0.5">🔒</text>`;
+    }
+
+    // Fog overlay for locked regions
+    if (!unlocked) {
+      svgContent += `<path class="fog-overlay" id="fog_${region.id}" d="${ml.territory}" fill="url(#fogGrad)" opacity="1"/>`;
+    }
+
+    svgContent += `</g>`;
   });
+
+  // Full SVG
+  const fullSvg = `<svg id="worldMapSVG" viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" aria-label="Carte du monde de la Cantine">${svgContent}</svg>`;
+  wrap.innerHTML = fullSvg;
   updateMapProgressLabel();
 }
 

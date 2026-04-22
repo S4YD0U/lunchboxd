@@ -1384,6 +1384,7 @@
     <button class="tab-btn active" id="tab-map" onclick="switchTab('map')">🗺 Carte</button>
     <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🛒 Boutique</button>
     <button class="tab-btn" id="tab-skills" onclick="switchTab('skills')">✨ Compétences</button>
+    <button class="tab-btn" id="tab-loadout" onclick="switchTab('loadout')">⚔️ Capacités</button>
   </div>
 
   <!-- MAP SCREEN (contient hero select + carte) -->
@@ -1520,6 +1521,32 @@
     <div class="skill-branches" id="skillBranches"></div>
     <div style="text-align:center;font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);padding:1rem;border:1px solid var(--border);border-radius:6px;background:var(--surface);">
       ⚡ Les compétences actives apparaissent automatiquement dans tes boutons d'action en combat · Les passifs sont appliqués en permanence
+    </div>
+  </div>
+
+  <!-- LOADOUT / CAPACITÉS SCREEN -->
+  <div id="screen-loadout" style="display:none;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.2rem;">Capacités de Combat</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);">Choisis exactement 4 attaques — ce seront tes seules armes en combat</div>
+      </div>
+      <div id="loadoutCounter" style="background:rgba(200,245,66,0.1);border:1px solid rgba(200,245,66,0.3);border-radius:6px;padding:0.5rem 1.2rem;font-family:'DM Mono',monospace;font-size:1rem;color:var(--accent);font-weight:700;">0 / 4</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;padding:0.8rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;">
+      <span style="font-size:1.2rem;">💡</span>
+      <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);line-height:1.6;">
+        Les attaques de l'arbre de compétences doivent d'abord être débloquées dans l'onglet <strong style="color:var(--text)">Compétences</strong>.
+        L'attaque <strong style="color:var(--accent)">SPÉCIAL</strong> est toujours disponible — elle se charge durant le combat et n'occupe pas de slot.
+      </div>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">🎯 Sélection actuelle</div>
+      <div id="loadoutSlots" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;"></div>
+    </div>
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">⚡ Attaques disponibles</div>
+      <div id="loadoutPool" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;"></div>
     </div>
   </div>
 
@@ -2028,6 +2055,7 @@ const DEFAULT_CHAR_SAVE = () => ({
   skillPoints: 0, skillPointsSpent: 0,
   unlockedSkills: {},
   unlockedAttacks: ['punch', 'combo', 'defend', 'special'],
+  equippedLoadout: ['punch', 'combo', 'defend', 'special'],
   owned: [], equipped: { weapon: null, armor: null }, inventory: [],
 });
 
@@ -2179,18 +2207,18 @@ function addXpGold(xpAmt, goldAmt) {
 function showScreen(name) {
   // map screen stays visible in background when select would have been shown
   const displayName = (name === 'select') ? 'map' : name;
-  ['map','shop','skills','battle','victory'].forEach(s => {
+  ['map','shop','skills','loadout','battle','victory'].forEach(s => {
     const el = document.getElementById('screen-' + s);
     if (el) el.style.display = 'none';
   });
   const tabs = document.getElementById('screenTabs');
   const profile = document.getElementById('playerProfile');
   const lvBanner = document.getElementById('levelupBanner');
-  ['map','shop','skills'].forEach(t => {
+  ['map','shop','skills','loadout'].forEach(t => {
     const btn = document.getElementById('tab-' + t);
     if (btn) btn.classList.remove('active');
   });
-  if (['map','select','shop','skills'].includes(displayName)) {
+  if (['map','select','shop','skills','loadout'].includes(displayName)) {
     tabs.style.display = ''; profile.style.display = ''; lvBanner.style.display = '';
     const btn = document.getElementById('tab-' + displayName);
     if (btn) btn.classList.add('active');
@@ -2207,6 +2235,7 @@ function switchTab(name) {
   if (name === 'shop') renderShop();
   if (name === 'skills') renderSkillTree();
   if (name === 'map') { renderWorldMap(); renderHeroGrid(); }
+  if (name === 'loadout') renderLoadout();
 }
 
 function renderShop() {
@@ -2628,12 +2657,133 @@ function getAttacks(heroChar) {
   return [...baseList, ...treeList];
 }
 
+// ============================================
+// LOADOUT SYSTEM
+// ============================================
+const MAX_LOADOUT = 4;
+
+function getAllAvailableAttacks(heroChar) {
+  // Returns all attacks that could be equipped (excludes 'special' which is always present)
+  const baseAttacks = [
+    { id: 'punch',     name: 'Punch',      icon: '👊', desc: 'Coup direct, peut critiquer',    reqLv: 1 },
+    { id: 'combo',     name: 'Combo',      icon: '🔥', desc: '2 coups rapides',                reqLv: 1 },
+    { id: 'defend',    name: 'Garde',      icon: '🛡️', desc: 'Réduit les dégâts reçus',       reqLv: 1 },
+    { id: 'combo_plus',name: 'Combo+',     icon: '🌀', desc: '3 coups + étourdissement',       reqLv: 2 },
+    { id: 'piercing',  name: 'Perforant',  icon: '🗡️', desc: 'Ignore 50% de la DEF ennemie',  reqLv: 3 },
+    { id: 'counter',   name: 'Contre',     icon: '↩️', desc: 'Parade + riposte puissante',    reqLv: 4 },
+    { id: 'ultimate',  name: 'DÉVASTA.',   icon: '💥', desc: 'Dégâts cataclysmiques x2.8',    reqLv: 5 },
+  ];
+  const treeAttacks = [
+    { id: 'sk_atk3', name: 'Tornade',     icon: '🍜', desc: '6 frappes / ignore DEF / +spéciale', reqLv: 1, treeSkill: true },
+    { id: 'sk_def3', name: 'Forteresse',  icon: '🥖', desc: 'Bouclier 3 tours + riposte auto',     reqLv: 1, treeSkill: true },
+    { id: 'sk_spd3', name: 'Coup du Chef',icon: '👨‍🍳', desc: 'x2.5 ATK · vol HP · DEF ignorée',   reqLv: 1, treeSkill: true },
+  ];
+  const available = baseAttacks.filter(a => player.unlockedAttacks.includes(a.id));
+  const treeAvail = treeAttacks.filter(a => isSkillUnlocked(a.id));
+  return [...available, ...treeAvail];
+}
+
+function getLoadout() {
+  if (!player.equippedLoadout) player.equippedLoadout = ['punch','combo','defend','special'];
+  // Ensure loadout only contains currently available attacks (or special)
+  const avail = getAllAvailableAttacks().map(a => a.id);
+  avail.push('special');
+  player.equippedLoadout = player.equippedLoadout.filter(id => avail.includes(id));
+  // Ensure at most 4 (excluding special)
+  const noSpecial = player.equippedLoadout.filter(id => id !== 'special');
+  if (noSpecial.length > MAX_LOADOUT) player.equippedLoadout = noSpecial.slice(0, MAX_LOADOUT);
+  return player.equippedLoadout;
+}
+
+function toggleLoadout(id) {
+  if (!player.equippedLoadout) player.equippedLoadout = [];
+  const idx = player.equippedLoadout.indexOf(id);
+  if (idx >= 0) {
+    // Remove
+    player.equippedLoadout.splice(idx, 1);
+  } else {
+    // Add — max 4
+    if (player.equippedLoadout.length >= MAX_LOADOUT) {
+      showToast('⚠️ Tu as déjà 4 capacités ! Retire-en une d\'abord.', 'error');
+      return;
+    }
+    player.equippedLoadout.push(id);
+  }
+  savePlayer();
+  renderLoadout();
+}
+
+function renderLoadout() {
+  if (!selectedHero) {
+    document.getElementById('loadoutPool').innerHTML = '<div style="grid-column:1/-1;text-align:center;font-family:\'DM Mono\',monospace;font-size:0.75rem;color:var(--muted);padding:2rem;">Sélectionne d\'abord un héros sur la carte.</div>';
+    document.getElementById('loadoutSlots').innerHTML = '';
+    document.getElementById('loadoutCounter').textContent = '0 / 4';
+    return;
+  }
+  const loadout = getLoadout();
+  const count = loadout.length;
+  document.getElementById('loadoutCounter').textContent = count + ' / ' + MAX_LOADOUT;
+  document.getElementById('loadoutCounter').style.borderColor = count === MAX_LOADOUT ? 'rgba(200,245,66,0.6)' : 'rgba(200,245,66,0.3)';
+
+  // --- SLOTS ---
+  const slotsEl = document.getElementById('loadoutSlots');
+  slotsEl.innerHTML = '';
+  const allAvail = getAllAvailableAttacks();
+  for (let i = 0; i < MAX_LOADOUT; i++) {
+    const id = loadout[i];
+    const slot = document.createElement('div');
+    if (id) {
+      const def = allAvail.find(a => a.id === id) || { name: id, icon: '⚡', desc: '' };
+      slot.style.cssText = 'background:rgba(200,245,66,0.08);border:2px solid rgba(200,245,66,0.4);border-radius:8px;padding:1rem 0.8rem;text-align:center;cursor:pointer;transition:all 0.2s;';
+      slot.innerHTML = `<div style="font-size:1.6rem;margin-bottom:0.4rem;">${def.icon}</div><div style="font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;margin-bottom:0.3rem;">${def.name}</div><div style="font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--muted);line-height:1.4;">${def.desc}</div><div style="margin-top:0.6rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent3);">✕ Retirer</div>`;
+      slot.onmouseenter = () => slot.style.borderColor = 'rgba(232,69,69,0.6)';
+      slot.onmouseleave = () => slot.style.borderColor = 'rgba(200,245,66,0.4)';
+      slot.onclick = () => toggleLoadout(id);
+    } else {
+      slot.style.cssText = 'background:var(--surface);border:2px dashed var(--border);border-radius:8px;padding:1rem 0.8rem;text-align:center;opacity:0.5;';
+      slot.innerHTML = `<div style="font-size:1.4rem;margin-bottom:0.4rem;color:var(--muted);">＋</div><div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);">Slot libre</div>`;
+    }
+    slotsEl.appendChild(slot);
+  }
+
+  // --- POOL ---
+  const poolEl = document.getElementById('loadoutPool');
+  poolEl.innerHTML = '';
+  allAvail.forEach(atk => {
+    const selected = loadout.includes(atk.id);
+    const card = document.createElement('div');
+    card.style.cssText = `background:${selected ? 'rgba(200,245,66,0.08)' : 'var(--card-bg)'};border:2px solid ${selected ? 'rgba(200,245,66,0.5)' : 'var(--border)'};border-radius:8px;padding:1rem;cursor:pointer;transition:all 0.2s;position:relative;`;
+    const treeBadge = atk.treeSkill ? `<span style="position:absolute;top:0.5rem;right:0.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.3);border-radius:2px;padding:0.12rem 0.4rem;">COMPÉTENCE</span>` : '';
+    const selBadge = selected ? `<span style="position:absolute;top:0.5rem;left:0.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;background:rgba(200,245,66,0.15);color:var(--accent);border:1px solid rgba(200,245,66,0.3);border-radius:2px;padding:0.12rem 0.4rem;">✓ ÉQUIPÉ</span>` : '';
+    card.innerHTML = `${treeBadge}${selBadge}<div style="font-size:1.8rem;margin-bottom:0.4rem;text-align:center;">${atk.icon}</div><div style="font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;margin-bottom:0.3rem;text-align:center;">${atk.name}</div><div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);line-height:1.5;text-align:center;">${atk.desc}</div>`;
+    card.onmouseenter = () => { if (!selected) card.style.borderColor = 'rgba(200,245,66,0.3)'; };
+    card.onmouseleave = () => { if (!selected) card.style.borderColor = 'var(--border)'; };
+    card.onclick = () => toggleLoadout(atk.id);
+    poolEl.appendChild(card);
+  });
+
+  // Special note
+  const note = document.createElement('div');
+  note.style.cssText = 'grid-column:1/-1;background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.2);border-radius:6px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.6rem;';
+  note.innerHTML = '<span style="font-size:1.2rem;">⚡</span><div style="font-family:\'DM Mono\',monospace;font-size:0.62rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--xp-blue);">SPÉCIAL</strong> — Attaque ultime de ton personnage, toujours présente en combat. Se charge en frappant. N\'occupe pas de slot.</div>';
+  poolEl.appendChild(note);
+}
+
 function buildActionRow() {
   const hero = state.heroChar; if (!hero) return;
-  const attacks = getAttacks(hero);
+  // Get all attack definitions
+  const allAttackDefs = getAttacks(hero);
+  // Get equipped loadout (max 4) + always add special
+  const loadout = getLoadout();
+  const specialDef = allAttackDefs.find(a => a.id === 'special');
+  const chosenAttacks = loadout
+    .map(id => allAttackDefs.find(a => a.id === id))
+    .filter(Boolean);
+  // Always add special at end if not in loadout
+  if (!loadout.includes('special') && specialDef) chosenAttacks.push(specialDef);
   const row = document.getElementById('actionRow');
   row.innerHTML = '';
-  attacks.forEach(atk => {
+  chosenAttacks.forEach(atk => {
     const btn = document.createElement('button');
     btn.className = 'action-btn ' + atk.cls;
     btn.id = 'btn-' + atk.id;

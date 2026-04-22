@@ -752,9 +752,91 @@
     .stage-pip.active { background: var(--accent3); box-shadow: 0 0 8px rgba(232,69,69,0.5); animation: barPulse 1s infinite; }
     .stage-pip.locked { background: var(--surface2); }
 
-    .arena { background: linear-gradient(180deg, #0a0a08 0%, #12130e 40%, #1a1b14 100%); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; min-height: 260px; }
-    .arena-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 25% 60%, rgba(200,245,66,0.04) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 75% 60%, rgba(232,69,69,0.04) 0%, transparent 60%); pointer-events: none; }
-    .arena-floor { position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(180deg, transparent, rgba(200,245,66,0.03)); border-top: 1px solid rgba(200,245,66,0.08); }
+    .arena { background: linear-gradient(180deg, #0a0a08 0%, #12130e 40%, #1a1b14 100%); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; min-height: 260px; transition: background 0.6s ease, border-color 0.6s ease; }
+    .arena-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 25% 60%, rgba(200,245,66,0.04) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 75% 60%, rgba(232,69,69,0.04) 0%, transparent 60%); pointer-events: none; transition: background 0.6s ease; }
+    .arena-floor { position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(180deg, transparent, rgba(200,245,66,0.03)); border-top: 1px solid rgba(200,245,66,0.08); transition: background 0.6s ease, border-color 0.6s ease; }
+
+    /* Région 1 — Forêt des Épices : vert jungle */
+    .arena.region-foret_epices {
+      background: linear-gradient(180deg, #070d04 0%, #0d1a08 40%, #111f0c 100%);
+      border-color: rgba(99,153,34,0.4);
+    }
+    .arena.region-foret_epices .arena-bg {
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 70%, rgba(99,153,34,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 80% 40%, rgba(99,153,34,0.07) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 60% at 50% 90%, rgba(60,120,20,0.1) 0%, transparent 60%);
+    }
+    .arena.region-foret_epices .arena-floor {
+      background: linear-gradient(180deg, transparent, rgba(99,153,34,0.08));
+      border-top-color: rgba(99,153,34,0.2);
+    }
+
+    /* Région 2 — Désert du Sel : ocre / doré */
+    .arena.region-desert_sel {
+      background: linear-gradient(180deg, #0d0a04 0%, #1a1408 40%, #221a0c 100%);
+      border-color: rgba(186,117,23,0.4);
+    }
+    .arena.region-desert_sel .arena-bg {
+      background:
+        radial-gradient(ellipse 80% 40% at 50% 100%, rgba(186,117,23,0.18) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 25% 50%, rgba(186,117,23,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 30% at 75% 30%, rgba(245,166,35,0.06) 0%, transparent 50%);
+    }
+    .arena.region-desert_sel .arena-floor {
+      background: linear-gradient(180deg, transparent, rgba(186,117,23,0.12));
+      border-top-color: rgba(186,117,23,0.25);
+    }
+
+    /* Région 3 — Marais du Vinaigre : violet acide */
+    .arena.region-marais_vinaigre {
+      background: linear-gradient(180deg, #060608 0%, #0d0c14 40%, #14121e 100%);
+      border-color: rgba(127,119,221,0.4);
+    }
+    .arena.region-marais_vinaigre .arena-bg {
+      background:
+        radial-gradient(ellipse 70% 60% at 30% 80%, rgba(127,119,221,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 70% 30%, rgba(167,139,250,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(80,60,160,0.06) 0%, transparent 60%);
+    }
+    .arena.region-marais_vinaigre .arena-floor {
+      background: linear-gradient(180deg, transparent, rgba(127,119,221,0.1));
+      border-top-color: rgba(127,119,221,0.22);
+    }
+
+    /* Région 4 — Pics Glacés du Sorbet : bleu glacial */
+    .arena.region-pics_sorbet {
+      background: linear-gradient(180deg, #03080e 0%, #080f18 40%, #0e1622 100%);
+      border-color: rgba(55,138,221,0.4);
+    }
+    .arena.region-pics_sorbet .arena-bg {
+      background:
+        radial-gradient(ellipse 80% 40% at 50% 100%, rgba(55,138,221,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 20% 50%, rgba(96,165,250,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 80% 20%, rgba(147,197,253,0.06) 0%, transparent 50%);
+    }
+    .arena.region-pics_sorbet .arena-floor {
+      background: linear-gradient(180deg, transparent, rgba(55,138,221,0.12));
+      border-top-color: rgba(55,138,221,0.25);
+    }
+
+    /* Région 5 — Volcan de la Cantine : rouge lave */
+    .arena.region-volcan_cantine {
+      background: linear-gradient(180deg, #0d0403 0%, #1a0806 40%, #220e08 100%);
+      border-color: rgba(216,90,48,0.5);
+    }
+    .arena.region-volcan_cantine .arena-bg {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 100%, rgba(216,90,48,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 20% 60%, rgba(232,69,69,0.1) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 80% 30%, rgba(245,100,30,0.08) 0%, transparent 55%);
+    }
+    .arena.region-volcan_cantine .arena-floor {
+      background: linear-gradient(180deg, transparent, rgba(216,90,48,0.15));
+      border-top-color: rgba(216,90,48,0.3);
+    }
+    @keyframes lavaGlow { 0%,100%{opacity:0.7} 50%{opacity:1} }
+    .arena.region-volcan_cantine .arena-floor { animation: lavaGlow 2s ease-in-out infinite; }
     .fighters-row { display: flex; align-items: flex-end; justify-content: space-between; position: relative; z-index: 2; min-height: 180px; }
     .fighter-side { display: flex; flex-direction: column; align-items: center; width: 140px; }
     .fighter-sprite-wrap { position: relative; width: 100px; height: 120px; display: flex; align-items: center; justify-content: center; }
@@ -2554,6 +2636,13 @@ function startBattle(newGame = false) {
   document.getElementById('heroSprite').innerHTML = `<img src="${state.heroChar.sprite}.svg" alt="${state.heroChar.name}" />`;
   document.getElementById('villainSprite').innerHTML = `<img src="${state.villainChar.sprite}.svg" alt="${state.villainChar.name}" />`;
   updateStageIndicators();
+  // Fond d'arène spécifique à la région
+  const arenaEl = document.querySelector('.arena');
+  if (arenaEl) {
+    arenaEl.className = 'arena';
+    const currentRegion = REGIONS.find(r => r.enemies.includes(state.villainChar.id));
+    if (currentRegion) arenaEl.classList.add('region-' + currentRegion.id);
+  }
   clearLog(); showScreen('battle'); buildActionRow(); updateBattleUI();
   const activeTreeSkills = getActiveTreeSkills();
   if (activeTreeSkills.length > 0) addLog(`✨ Compétences actives : ${activeTreeSkills.map(s=>s.emoji+' '+s.name).join(', ')}`, 'skill-line');

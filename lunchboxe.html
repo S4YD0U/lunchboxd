@@ -916,6 +916,9 @@
     .action-btn.item-btn { border-color: rgba(74,222,128,0.2); background: rgba(74,222,128,0.03); }
     .action-btn.item-btn:hover:not(:disabled) { border-color: var(--hp-green); box-shadow: 0 6px 20px rgba(74,222,128,0.15); }
     .action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .action-btn.on-cooldown { opacity: 0.55; cursor: not-allowed; border-color: rgba(122,122,110,0.3) !important; background: rgba(122,122,110,0.06) !important; }
+    .action-btn.on-cooldown .action-desc { color: var(--accent3); }
+    .cd-overlay { position: absolute; top: 0.3rem; right: 0.4rem; font-family: 'DM Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--accent3); background: rgba(232,69,69,0.15); border: 1px solid rgba(232,69,69,0.3); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; line-height: 1; }
     .action-btn.unlocked-atk { border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.04); }
     .action-btn.unlocked-atk:hover:not(:disabled) { border-color: var(--purple); box-shadow: 0 6px 20px rgba(167,139,250,0.2); }
     /* Bouton spécial chargé à 100% */
@@ -2592,7 +2595,7 @@ function updateSelectedHeroBadge() {
 
 function getAttacks(heroChar) {
   const allAttacks = [
-    { id: 'punch', name: 'Punch', icon: '👊', desc: 'Coup direct', reqLv: 1, cls: '',
+    { id: 'punch', name: 'Punch', icon: '👊', desc: 'Coup direct', reqLv: 1, cls: '', cooldown: 0,
       fn: (hero, villain) => {
         const missChance = Math.max(0.01, 0.08 - getPassiveMissReduction());
         if (Math.random() < missChance) return { miss: true };
@@ -2602,30 +2605,30 @@ function getAttacks(heroChar) {
         return { dmg, crit, spBonus: 15, log: (crit ? '💥 CRITIQUE ! ' : '👊 ') + hero.name + ' frappe pour ' + dmg + ' dégâts !' };
       }
     },
-    { id: 'combo', name: 'Combo', icon: '🔥', desc: '2 coups rapides', reqLv: 1, cls: '',
+    { id: 'combo', name: 'Combo', icon: '🔥', desc: '2 coups rapides', reqLv: 1, cls: '', cooldown: 2,
       fn: (hero, villain) => { const d1=calcDmg(hero.atk,villain.def,0.65);const d2=calcDmg(hero.atk,villain.def,0.65); return { dmg:d1+d2, spBonus:20, log:'🔥 Combo — '+(d1+d2)+' dégâts !' }; }
     },
-    { id: 'defend', name: 'Garde', icon: '🛡️', desc: 'Réduit les dégâts', reqLv: 1, cls: '',
+    { id: 'defend', name: 'Garde', icon: '🛡️', desc: 'Réduit les dégâts', reqLv: 1, cls: '', cooldown: 0,
       fn: (hero) => { return { defend: true, spBonus: 8, log: '🛡️ ' + hero.name + ' se met en garde…' }; }
     },
-    { id: 'special', name: 'SPÉCIAL', icon: '⚡', desc: 'Charge 0%', reqLv: 1, cls: 'special',
+    { id: 'special', name: 'SPÉCIAL', icon: '⚡', desc: 'Charge 0%', reqLv: 1, cls: 'special', cooldown: 0,
       fn: (hero, villain) => { if (state.heroSpecial < 100) return null; state.heroSpecial = 0; return heroChar.special.fn(hero, villain); }
     },
-    { id: 'combo_plus', name: 'Combo+', icon: '🌀', desc: '3 coups + stun', reqLv: 2, cls: 'unlocked-atk',
+    { id: 'combo_plus', name: 'Combo+', icon: '🌀', desc: '3 coups + stun', reqLv: 2, cls: 'unlocked-atk', cooldown: 3,
       fn: (hero, villain) => { const hits=[calcDmg(hero.atk,villain.def,0.6),calcDmg(hero.atk,villain.def,0.6),calcDmg(hero.atk,villain.def,0.7)]; const total=hits.reduce((a,b)=>a+b,0); return { dmg:total, spBonus:25, log:'🌀 Combo+ — '+hits.join('+')+' = '+total+' dégâts !' }; }
     },
-    { id: 'piercing', name: 'Perforant', icon: '🗡️', desc: 'Ignore 50% DEF', reqLv: 3, cls: 'unlocked-atk',
+    { id: 'piercing', name: 'Perforant', icon: '🗡️', desc: 'Ignore 50% DEF', reqLv: 3, cls: 'unlocked-atk', cooldown: 3,
       fn: (hero, villain) => { const dmg=calcDmg(hero.atk,villain.def*0.5,1.2); return { dmg, spBonus:20, log:'🗡️ Frappe Perforante — '+dmg+' dégâts (DEF ignorée) !' }; }
     },
-    { id: 'counter', name: 'Contre', icon: '↩️', desc: 'Parade + riposte', reqLv: 4, cls: 'unlocked-atk',
+    { id: 'counter', name: 'Contre', icon: '↩️', desc: 'Parade + riposte', reqLv: 4, cls: 'unlocked-atk', cooldown: 4,
       fn: (hero, villain) => { const dmg=calcDmg(hero.atk,villain.def,1.5); return { dmg, defend:true, spBonus:30, log:'↩️ Contre-attaque — '+dmg+' dégâts + garde activée !' }; }
     },
-    { id: 'ultimate', name: 'DÉVASTA.', icon: '💥', desc: 'Dégâts massifs', reqLv: 5, cls: 'unlocked-atk',
+    { id: 'ultimate', name: 'DÉVASTA.', icon: '💥', desc: 'Dégâts massifs', reqLv: 5, cls: 'unlocked-atk', cooldown: 5,
       fn: (hero, villain) => { const dmg=calcDmg(hero.atk,villain.def,2.8); return { dmg, spBonus:0, log:'💥 DÉVASTATION — '+dmg+' dégâts cataclysmiques !' }; }
     },
   ];
   const treeActives = [
-    { id: 'sk_atk3', name: 'Tornade', icon: '🍜', desc: '6 frappes / ignore DEF', reqLv: 1, cls: 'unlocked-atk tree-skill',
+    { id: 'sk_atk3', name: 'Tornade', icon: '🍜', desc: '6 frappes / ignore DEF', reqLv: 1, cls: 'unlocked-atk tree-skill', cooldown: 4,
       fn: (hero, villain) => {
         const reducedDef = villain.def * 0.6;
         const hits = [calcDmg(hero.atk,reducedDef,0.6),calcDmg(hero.atk,reducedDef,0.6),calcDmg(hero.atk,reducedDef,0.65),calcDmg(hero.atk,reducedDef,0.65),calcDmg(hero.atk,reducedDef,0.7),calcDmg(hero.atk,reducedDef,0.8)];
@@ -2634,7 +2637,7 @@ function getAttacks(heroChar) {
         return { dmg:total, spBonus:0, log:'🍜 TORNADE DE NOUILLES — '+hits.length+' coups, '+total+' dégâts ! (DEF réduite, +40% spéciale)' };
       }
     },
-    { id: 'sk_def3', name: 'Forteresse', icon: '🥖', desc: 'Bouclier 3t + riposte', reqLv: 1, cls: 'unlocked-atk tree-skill',
+    { id: 'sk_def3', name: 'Forteresse', icon: '🥖', desc: 'Bouclier 3t + riposte', reqLv: 1, cls: 'unlocked-atk tree-skill', cooldown: 5,
       fn: (hero, villain) => {
         state.fortressActive = true; state.fortressTurns = 3; state.fortressCounter = true;
         const dmg = calcDmg(hero.atk, villain.def, 0.7);
@@ -2642,7 +2645,7 @@ function getAttacks(heroChar) {
         return { defend:true, spBonus:20, log:'🥖 FORTERESSE DE BAGUETTE — '+dmg+' dmg + bouclier 85% pendant 3 tours ! Toute attaque sera ripostée.' };
       }
     },
-    { id: 'sk_spd3', name: 'Coup du Chef', icon: '👨‍🍳', desc: 'x2.5 ATK, vol 35% HP', reqLv: 1, cls: 'unlocked-atk tree-skill',
+    { id: 'sk_spd3', name: 'Coup du Chef', icon: '👨‍🍳', desc: 'x2.5 ATK, vol 35% HP', reqLv: 1, cls: 'unlocked-atk tree-skill', cooldown: 4,
       fn: (hero, villain) => {
         const dmg = Math.floor(calcDmg(hero.atk, villain.def*0.2, 2.5+getPassiveCritBonus()));
         const stolen = Math.floor(dmg * 0.35);
@@ -2665,18 +2668,18 @@ const MAX_LOADOUT = 4;
 function getAllAvailableAttacks(heroChar) {
   // Returns all attacks that could be equipped (excludes 'special' which is always present)
   const baseAttacks = [
-    { id: 'punch',     name: 'Punch',      icon: '👊', desc: 'Coup direct, peut critiquer',    reqLv: 1 },
-    { id: 'combo',     name: 'Combo',      icon: '🔥', desc: '2 coups rapides',                reqLv: 1 },
-    { id: 'defend',    name: 'Garde',      icon: '🛡️', desc: 'Réduit les dégâts reçus',       reqLv: 1 },
-    { id: 'combo_plus',name: 'Combo+',     icon: '🌀', desc: '3 coups + étourdissement',       reqLv: 2 },
-    { id: 'piercing',  name: 'Perforant',  icon: '🗡️', desc: 'Ignore 50% de la DEF ennemie',  reqLv: 3 },
-    { id: 'counter',   name: 'Contre',     icon: '↩️', desc: 'Parade + riposte puissante',    reqLv: 4 },
-    { id: 'ultimate',  name: 'DÉVASTA.',   icon: '💥', desc: 'Dégâts cataclysmiques x2.8',    reqLv: 5 },
+    { id: 'punch',     name: 'Punch',      icon: '👊', desc: 'Coup direct, peut critiquer',    reqLv: 1, cooldown: 0 },
+    { id: 'combo',     name: 'Combo',      icon: '🔥', desc: '2 coups rapides',                reqLv: 1, cooldown: 2 },
+    { id: 'defend',    name: 'Garde',      icon: '🛡️', desc: 'Réduit les dégâts reçus',       reqLv: 1, cooldown: 0 },
+    { id: 'combo_plus',name: 'Combo+',     icon: '🌀', desc: '3 coups + étourdissement',       reqLv: 2, cooldown: 3 },
+    { id: 'piercing',  name: 'Perforant',  icon: '🗡️', desc: 'Ignore 50% de la DEF ennemie',  reqLv: 3, cooldown: 3 },
+    { id: 'counter',   name: 'Contre',     icon: '↩️', desc: 'Parade + riposte puissante',    reqLv: 4, cooldown: 4 },
+    { id: 'ultimate',  name: 'DÉVASTA.',   icon: '💥', desc: 'Dégâts cataclysmiques x2.8',    reqLv: 5, cooldown: 5 },
   ];
   const treeAttacks = [
-    { id: 'sk_atk3', name: 'Tornade',     icon: '🍜', desc: '6 frappes / ignore DEF / +spéciale', reqLv: 1, treeSkill: true },
-    { id: 'sk_def3', name: 'Forteresse',  icon: '🥖', desc: 'Bouclier 3 tours + riposte auto',     reqLv: 1, treeSkill: true },
-    { id: 'sk_spd3', name: 'Coup du Chef',icon: '👨‍🍳', desc: 'x2.5 ATK · vol HP · DEF ignorée',   reqLv: 1, treeSkill: true },
+    { id: 'sk_atk3', name: 'Tornade',     icon: '🍜', desc: '6 frappes / ignore DEF / +spéciale', reqLv: 1, treeSkill: true, cooldown: 4 },
+    { id: 'sk_def3', name: 'Forteresse',  icon: '🥖', desc: 'Bouclier 3 tours + riposte auto',     reqLv: 1, treeSkill: true, cooldown: 5 },
+    { id: 'sk_spd3', name: 'Coup du Chef',icon: '👨‍🍳', desc: 'x2.5 ATK · vol HP · DEF ignorée',   reqLv: 1, treeSkill: true, cooldown: 4 },
   ];
   const available = baseAttacks.filter(a => player.unlockedAttacks.includes(a.id));
   const treeAvail = treeAttacks.filter(a => isSkillUnlocked(a.id));
@@ -2755,7 +2758,8 @@ function renderLoadout() {
     card.style.cssText = `background:${selected ? 'rgba(200,245,66,0.08)' : 'var(--card-bg)'};border:2px solid ${selected ? 'rgba(200,245,66,0.5)' : 'var(--border)'};border-radius:8px;padding:1rem;cursor:pointer;transition:all 0.2s;position:relative;`;
     const treeBadge = atk.treeSkill ? `<span style="position:absolute;top:0.5rem;right:0.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.3);border-radius:2px;padding:0.12rem 0.4rem;">COMPÉTENCE</span>` : '';
     const selBadge = selected ? `<span style="position:absolute;top:0.5rem;left:0.5rem;font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;background:rgba(200,245,66,0.15);color:var(--accent);border:1px solid rgba(200,245,66,0.3);border-radius:2px;padding:0.12rem 0.4rem;">✓ ÉQUIPÉ</span>` : '';
-    card.innerHTML = `${treeBadge}${selBadge}<div style="font-size:1.8rem;margin-bottom:0.4rem;text-align:center;">${atk.icon}</div><div style="font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;margin-bottom:0.3rem;text-align:center;">${atk.name}</div><div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);line-height:1.5;text-align:center;">${atk.desc}</div>`;
+    const cdBadge = atk.cooldown > 0 ? `<div style="margin-top:0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent3);text-align:center;">⏳ CD : ${atk.cooldown} tour${atk.cooldown>1?'s':''}</div>` : `<div style="margin-top:0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent);text-align:center;">✓ Pas de cooldown</div>`;
+    card.innerHTML = `${treeBadge}${selBadge}<div style="font-size:1.8rem;margin-bottom:0.4rem;text-align:center;">${atk.icon}</div><div style="font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;margin-bottom:0.3rem;text-align:center;">${atk.name}</div><div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);line-height:1.5;text-align:center;">${atk.desc}</div>${cdBadge}`;
     card.onmouseenter = () => { if (!selected) card.style.borderColor = 'rgba(200,245,66,0.3)'; };
     card.onmouseleave = () => { if (!selected) card.style.borderColor = 'var(--border)'; };
     card.onclick = () => toggleLoadout(atk.id);
@@ -2771,24 +2775,25 @@ function renderLoadout() {
 
 function buildActionRow() {
   const hero = state.heroChar; if (!hero) return;
-  // Get all attack definitions
   const allAttackDefs = getAttacks(hero);
-  // Get equipped loadout (max 4) + always add special
   const loadout = getLoadout();
   const specialDef = allAttackDefs.find(a => a.id === 'special');
   const chosenAttacks = loadout
     .map(id => allAttackDefs.find(a => a.id === id))
     .filter(Boolean);
-  // Always add special at end if not in loadout
   if (!loadout.includes('special') && specialDef) chosenAttacks.push(specialDef);
   const row = document.getElementById('actionRow');
   row.innerHTML = '';
   chosenAttacks.forEach(atk => {
     const btn = document.createElement('button');
-    btn.className = 'action-btn ' + atk.cls;
+    const cd = (state.cooldowns && state.cooldowns[atk.id]) || 0;
+    const onCd = cd > 0;
+    btn.className = 'action-btn ' + atk.cls + (onCd ? ' on-cooldown' : '');
     btn.id = 'btn-' + atk.id;
     if (atk.id === 'special') btn.disabled = true;
-    btn.innerHTML = `<span class="action-icon">${atk.icon}</span><span class="action-name">${atk.name}</span><span class="action-desc" id="desc-${atk.id}">${atk.desc}</span>`;
+    if (onCd) btn.disabled = true;
+    const cdOverlay = onCd ? `<span class="cd-overlay">${cd}</span>` : '';
+    btn.innerHTML = `${cdOverlay}<span class="action-icon">${atk.icon}</span><span class="action-name">${atk.name}</span><span class="action-desc" id="desc-${atk.id}">${onCd ? '⏳ '+cd+' tour'+(cd>1?'s':'') : atk.desc}</span>`;
     btn.onclick = () => playerAction(atk.id);
     row.appendChild(btn);
   });
@@ -2817,6 +2822,7 @@ function startBattle(newGame = false) {
   state.heroStats = getLevelStats(state.heroChar);
   state.atkBuff = 0; state.atkBuffTurns = 0;
   state.fortressActive = false; state.fortressTurns = 0;
+  state.cooldowns = {};
   if (newGame || state.heroHpPersist === 0) {
     state.heroHp = state.heroMaxHp = state.heroStats.hp; state.heroHpPersist = 0;
   } else {
@@ -2906,10 +2912,16 @@ function updateBattleUI() {
 
 function setPlayerTurn(val) {
   state.playerTurn=val;
-  document.querySelectorAll('.action-btn').forEach(b=>b.disabled=!val);
-  const sb=document.getElementById('btn-special');
-  if(sb)sb.disabled=!val||state.heroSpecial<100;
-  // Update turn label
+  // Rebuild with cooldown state instead of just toggling disabled
+  if (val && state.heroChar) {
+    buildActionRow();
+    const sb=document.getElementById('btn-special');
+    if(sb)sb.disabled=!val||state.heroSpecial<100;
+  } else {
+    document.querySelectorAll('.action-btn').forEach(b=>b.disabled=!val);
+    const sb=document.getElementById('btn-special');
+    if(sb)sb.disabled=!val||state.heroSpecial<100;
+  }
   const tl=document.getElementById('turnLabel');
   if(tl){
     if(val){tl.textContent='Tour '+state.turn+' — Ton tour';tl.style.color='var(--accent)';}
@@ -2985,15 +2997,22 @@ function getEffectiveAtk(){return state.heroStats.atk+(state.atkBuffTurns>0?stat
 
 function playerAction(id) {
   if(!state.playerTurn||!state.battleRunning)return;
-  setPlayerTurn(false);
   const hero=state.heroChar; const villain=state.villainChar;
   const heroEffective={...state.heroStats,atk:getEffectiveAtk()};
   const attacks=getAttacks(hero);
   const atk=attacks.find(a=>a.id===id);
   if(!atk){setPlayerTurn(true);return;}
   if(id==='special'&&state.heroSpecial<100){setPlayerTurn(true);return;}
+  // Cooldown check
+  if(atk.cooldown > 0 && (state.cooldowns[id]||0) > 0){
+    showToast(`⏳ ${atk.name} — encore ${state.cooldowns[id]} tour(s) !`, 'error');
+    return;
+  }
+  setPlayerTurn(false);
   const result=atk.fn(heroEffective,villain);
   if(!result){setPlayerTurn(true);return;}
+  // Set cooldown after use
+  if(atk.cooldown > 0) state.cooldowns[id] = atk.cooldown;
   state.heroDefending=false;
   if(result.miss){anim('heroSprite','punch-right');setTimeout(()=>spawnDmg('villainSprite',0,'miss'),300);addLog(`💨 ${hero.name} rate son coup !`,'hero-action');setTimeout(()=>villainTurn(),900);return;}
 
@@ -3037,6 +3056,8 @@ function villainTurn() {
   if(regen>0&&state.heroHp<state.heroMaxHp){const healed=Math.min(regen,state.heroMaxHp-state.heroHp);state.heroHp+=healed;spawnDmg('heroSprite',healed,'heal');addLog(`🫙 Régénération — +${healed} HP`,'heal-line');}
   if(state.atkBuffTurns>0){state.atkBuffTurns--;if(state.atkBuffTurns===0){state.atkBuff=0;addLog('⚡ Boost ATK terminé.','system');}}
   if(state.fortressActive){state.fortressTurns--;if(state.fortressTurns<=0){state.fortressActive=false;addLog('🥖 Forteresse de Baguette s\'effondre…','system');}}
+  // Decrement cooldowns
+  for (const id in state.cooldowns) { if (state.cooldowns[id] > 0) state.cooldowns[id]--; }
   state.villainSpecial=Math.min(100,state.villainSpecial+18);
   const hpRatio=state.villainHp/state.villainMaxHp;
   if(villain.phases){const phase=villain.phases.slice().reverse().find(p=>hpRatio<=p.threshold&&!p.taunted);if(phase){phase.taunted=true;addLog('😈 '+villain.name+' : "'+phase.taunt+'"',villain.isBoss?'villain-action':'intermediate-action');if(villain.isBoss){showPhaseBanner('⚡ NOUVELLE PHASE', phase.taunt.substring(0,40)+'…');}else{showNarrator(phase.taunt,2500);}}}

@@ -2782,8 +2782,26 @@ function buildActionRow() {
     .map(id => allAttackDefs.find(a => a.id === id))
     .filter(Boolean);
   if (!loadout.includes('special') && specialDef) chosenAttacks.push(specialDef);
+
   const row = document.getElementById('actionRow');
   row.innerHTML = '';
+
+  // Check if ALL non-special attacks are on cooldown
+  const nonSpecial = chosenAttacks.filter(a => a.id !== 'special');
+  const allOnCd = nonSpecial.length > 0 && nonSpecial.every(a => (state.cooldowns && state.cooldowns[a.id] || 0) > 0);
+  const specialReady = state.heroSpecial >= 100;
+
+  if (allOnCd && !specialReady && state.battleRunning && state.playerTurn) {
+    // Auto-pass: show a locked panel and trigger automatically
+    const panel = document.createElement('div');
+    panel.style.cssText = 'width:100%;padding:0.8rem 1rem;background:rgba(232,69,69,0.06);border:1px solid rgba(232,69,69,0.25);border-radius:6px;font-family:"DM Mono",monospace;font-size:0.7rem;color:var(--muted);text-align:center;letter-spacing:0.06em;';
+    panel.textContent = '⏳ Toutes les capacités en recharge — tour automatique…';
+    row.appendChild(panel);
+    setTimeout(() => autoPassTurn(), 1200);
+    buildItemRow();
+    return;
+  }
+
   chosenAttacks.forEach(atk => {
     const btn = document.createElement('button');
     const cd = (state.cooldowns && state.cooldowns[atk.id]) || 0;
@@ -2798,6 +2816,20 @@ function buildActionRow() {
     row.appendChild(btn);
   });
   buildItemRow();
+}
+
+function autoPassTurn() {
+  if (!state.battleRunning) return;
+  const hero = state.heroChar;
+  // Hero does a weak automatic counter-tap
+  const dmg = Math.max(1, Math.floor(state.heroStats.atk * 0.25 * (0.8 + Math.random() * 0.4)));
+  state.villainHp -= dmg;
+  anim('heroSprite', 'punch-right');
+  setTimeout(() => spawnDmg('villainSprite', dmg, 'dmg'), 200);
+  addLog(`😤 ${hero.name} riposte faiblement — ${dmg} dégâts (recharge en cours…)`, 'hero-action');
+  state.heroSpecial = Math.min(100, state.heroSpecial + 5);
+  updateBattleUI();
+  if (!checkBattleEnd()) setTimeout(() => villainTurn(), 900);
 }
 
 function buildItemRow() {

@@ -1507,7 +1507,7 @@
     <button class="tab-btn active" id="tab-map" onclick="switchTab('map')">🗺 Carte</button>
     <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🛒 Boutique</button>
     <button class="tab-btn" id="tab-skills" onclick="switchTab('skills')">✨ Compétences</button>
-    <button class="tab-btn" id="tab-loadout" onclick="switchTab('loadout')">⚔️ Capacités</button>
+    <button class="tab-btn" id="tab-loadout" onclick="switchTab('loadout')">🎒 Inventaire</button>
   </div>
 
   <!-- MAP SCREEN (contient hero select + carte) -->
@@ -1647,28 +1647,47 @@
     </div>
   </div>
 
-  <!-- LOADOUT / CAPACITÉS SCREEN -->
+  <!-- INVENTAIRE UNIFIÉ SCREEN -->
   <div id="screen-loadout" style="display:none;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+    <!-- HEADER -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
       <div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.2rem;">Capacités de Combat</div>
-        <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);">Choisis exactement 4 attaques — ce seront tes seules armes en combat</div>
-      </div>
-      <div id="loadoutCounter" style="background:rgba(200,245,66,0.1);border:1px solid rgba(200,245,66,0.3);border-radius:6px;padding:0.5rem 1.2rem;font-family:'DM Mono',monospace;font-size:1rem;color:var(--accent);font-weight:700;">0 / 4</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;padding:0.8rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;">
-      <span style="font-size:1.2rem;">💡</span>
-      <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);line-height:1.6;">
-        Les attaques de l'arbre de compétences doivent d'abord être débloquées dans l'onglet <strong style="color:var(--text)">Compétences</strong>.
-        L'attaque <strong style="color:var(--accent)">SPÉCIAL</strong> est toujours disponible — elle se charge durant le combat et n'occupe pas de slot.
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.2rem;">Inventaire & Capacités</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);">Gère tes armes, armures et sélectionne tes 4 capacités de combat</div>
       </div>
     </div>
-    <div style="margin-bottom:1.5rem;">
-      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">🎯 Sélection actuelle</div>
-      <div id="loadoutSlots" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;"></div>
+
+    <!-- INVENTORY TABS -->
+    <div style="display:flex;gap:0;margin-bottom:1.5rem;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+      <button id="invTab-weapons" onclick="switchInvTab('weapons')" style="flex:1;padding:0.6rem;background:var(--card-bg);border:none;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-right:1px solid var(--border);transition:all 0.2s;">🗡️ Armes</button>
+      <button id="invTab-armors" onclick="switchInvTab('armors')" style="flex:1;padding:0.6rem;background:var(--surface);border:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-right:1px solid var(--border);transition:all 0.2s;">🛡️ Armures</button>
+      <button id="invTab-abilities" onclick="switchInvTab('abilities')" style="flex:1;padding:0.6rem;background:var(--surface);border:none;color:var(--muted);font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;">⚡ Capacités</button>
     </div>
-    <div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">⚡ Attaques disponibles</div>
+
+    <!-- WEAPONS PANEL -->
+    <div id="invPanel-weapons">
+      <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:1rem;padding:0.7rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;line-height:1.6;">
+        💡 Les armes en <strong style="color:var(--accent)">doublon</strong> (déjà possédées) peuvent être <strong style="color:var(--gold)">vendues</strong> pour récupérer de la monnaie. Clique sur une arme possédée pour l'équiper ou la vendre.
+      </div>
+      <div id="invWeaponsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.9rem;"></div>
+    </div>
+
+    <!-- ARMORS PANEL -->
+    <div id="invPanel-armors" style="display:none;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:1rem;padding:0.7rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;line-height:1.6;">
+        💡 Les armures en <strong style="color:var(--accent)">doublon</strong> peuvent être vendues. Clique pour équiper ou vendre.
+      </div>
+      <div id="invArmorsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.9rem;"></div>
+    </div>
+
+    <!-- ABILITIES PANEL -->
+    <div id="invPanel-abilities" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);">🎯 Sélection actuelle</div>
+        <div id="loadoutCounter" style="background:rgba(200,245,66,0.1);border:1px solid rgba(200,245,66,0.3);border-radius:6px;padding:0.4rem 1rem;font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--accent);font-weight:700;">0 / 4</div>
+      </div>
+      <div id="loadoutSlots" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin-bottom:1.5rem;"></div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);">⚡ Capacités disponibles</div>
       <div id="loadoutPool" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;"></div>
     </div>
   </div>
@@ -2639,6 +2658,7 @@ function buyConsumable(id) {
 function equipItem(id, type) {
   player.equipped[type==='weapon'?'weapon':'armor']=id;
   savePlayer(); renderShop(); updateProfileUI();
+  renderInvWeapons(); renderInvArmors();
   const cat=type==='weapon'?SHOP_CATALOG.weapons:SHOP_CATALOG.armors;
   const item=cat.find(i=>i.id===id);
   showToast((item?item.icon:'')+' Équipé !','success');
@@ -2647,6 +2667,7 @@ function equipItem(id, type) {
 function unequip(id, type) {
   player.equipped[type==='weapon'?'weapon':'armor']=null;
   savePlayer(); renderShop(); updateProfileUI();
+  renderInvWeapons(); renderInvArmors();
   showToast('Déséquipé.','info');
 }
 
@@ -2974,62 +2995,120 @@ function getAttacks(heroChar) {
 }
 
 // ============================================
-// LOADOUT SYSTEM
+// UNIFIED INVENTORY SYSTEM
 // ============================================
-const MAX_LOADOUT = 4;
 
-function getAllAvailableAttacks(heroChar) {
-  // Returns all attacks that could be equipped (excludes 'special' which is always present)
-  const baseAttacks = [
-    { id: 'punch',     name: 'Punch',      icon: '👊', desc: 'Coup direct, peut critiquer',    reqLv: 1, cooldown: 0 },
-    { id: 'combo',     name: 'Combo',      icon: '🔥', desc: '2 coups rapides',                reqLv: 1, cooldown: 2 },
-    { id: 'defend',    name: 'Garde',      icon: '🛡️', desc: 'Réduit les dégâts reçus',       reqLv: 1, cooldown: 0 },
-    { id: 'combo_plus',name: 'Combo+',     icon: '🌀', desc: '3 coups + étourdissement',       reqLv: 2, cooldown: 3 },
-    { id: 'piercing',  name: 'Perforant',  icon: '🗡️', desc: 'Ignore 50% de la DEF ennemie',  reqLv: 3, cooldown: 3 },
-    { id: 'counter',   name: 'Contre',     icon: '↩️', desc: 'Parade + riposte puissante',    reqLv: 4, cooldown: 4 },
-    { id: 'ultimate',  name: 'DÉVASTA.',   icon: '💥', desc: 'Dégâts cataclysmiques x2.8',    reqLv: 5, cooldown: 5 },
-  ];
-  const treeAttacks = [
-    { id: 'sk_atk3', name: 'Tornade',     icon: '🍜', desc: '6 frappes / ignore DEF / +spéciale', reqLv: 1, treeSkill: true, cooldown: 4 },
-    { id: 'sk_def3', name: 'Forteresse',  icon: '🥖', desc: 'Bouclier 3 tours + riposte auto',     reqLv: 1, treeSkill: true, cooldown: 5 },
-    { id: 'sk_spd3', name: 'Coup du Chef',icon: '👨‍🍳', desc: 'x2.5 ATK · vol HP · DEF ignorée',   reqLv: 1, treeSkill: true, cooldown: 4 },
-  ];
-  const available = baseAttacks.filter(a => player.unlockedAttacks.includes(a.id));
-  const treeAvail = treeAttacks.filter(a => isSkillUnlocked(a.id));
-  return [...available, ...treeAvail];
-}
+let currentInvTab = 'weapons';
 
-function getLoadout() {
-  if (!player.equippedLoadout) player.equippedLoadout = ['punch','combo','defend','special'];
-  // Ensure loadout only contains currently available attacks (or special)
-  const avail = getAllAvailableAttacks().map(a => a.id);
-  avail.push('special');
-  player.equippedLoadout = player.equippedLoadout.filter(id => avail.includes(id));
-  // Ensure at most 4 (excluding special)
-  const noSpecial = player.equippedLoadout.filter(id => id !== 'special');
-  if (noSpecial.length > MAX_LOADOUT) player.equippedLoadout = noSpecial.slice(0, MAX_LOADOUT);
-  return player.equippedLoadout;
-}
-
-function toggleLoadout(id) {
-  if (!player.equippedLoadout) player.equippedLoadout = [];
-  const idx = player.equippedLoadout.indexOf(id);
-  if (idx >= 0) {
-    // Remove
-    player.equippedLoadout.splice(idx, 1);
-  } else {
-    // Add — max 4
-    if (player.equippedLoadout.length >= MAX_LOADOUT) {
-      showToast('⚠️ Tu as déjà 4 capacités ! Retire-en une d\'abord.', 'error');
-      return;
+function switchInvTab(tab) {
+  currentInvTab = tab;
+  ['weapons','armors','abilities'].forEach(t => {
+    const panel = document.getElementById('invPanel-' + t);
+    const btn   = document.getElementById('invTab-' + t);
+    if (panel) panel.style.display = t === tab ? 'block' : 'none';
+    if (btn) {
+      if (t === tab) {
+        btn.style.background = 'var(--card-bg)';
+        btn.style.color = 'var(--accent)';
+      } else {
+        btn.style.background = 'var(--surface)';
+        btn.style.color = 'var(--muted)';
+      }
     }
-    player.equippedLoadout.push(id);
-  }
-  savePlayer();
-  renderLoadout();
+  });
+  if (tab === 'weapons') renderInvWeapons();
+  if (tab === 'armors')  renderInvArmors();
+  if (tab === 'abilities') renderLoadoutAbilities();
 }
 
-function renderLoadout() {
+function getSellPrice(item) {
+  return Math.max(5, Math.floor(item.price * 0.4));
+}
+
+function sellItem(id, type) {
+  const cat = type === 'weapon' ? SHOP_CATALOG.weapons : SHOP_CATALOG.armors;
+  const item = cat.find(i => i.id === id);
+  if (!item) return;
+  // Can only sell duplicates (if more than 1 in owned, or if equipped + owned)
+  const ownedCount = player.owned.filter(o => o === id).length;
+  if (ownedCount <= 0) { showToast('Tu ne possèdes pas cet objet.', 'error'); return; }
+  // If it's equipped and we only have 1, unequip first
+  const equippedKey = type === 'weapon' ? 'weapon' : 'armor';
+  const isEquipped = player.equipped[equippedKey] === id;
+  if (isEquipped && ownedCount <= 1) {
+    player.equipped[equippedKey] = null;
+  }
+  // Remove one from owned
+  const idx = player.owned.indexOf(id);
+  if (idx >= 0) player.owned.splice(idx, 1);
+  const gain = getSellPrice(item);
+  player.gold += gain;
+  savePlayer();
+  updateProfileUI();
+  renderInvWeapons();
+  renderInvArmors();
+  showToast(`${item.icon} ${item.name} vendu — +${gain} 🪙`, 'success');
+}
+
+function renderInvWeapons() {
+  const grid = document.getElementById('invWeaponsGrid');
+  if (!grid) return;
+  const allWeapons = SHOP_CATALOG.weapons;
+  grid.innerHTML = '';
+  // Show all weapons the player owns (including dupes)
+  const ownedIds = player.owned.filter(id => allWeapons.find(w => w.id === id));
+  if (ownedIds.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;font-family:\'DM Mono\',monospace;font-size:0.72rem;color:var(--muted);">Aucune arme possédée. Achète-en à la boutique !</div>';
+    return;
+  }
+  // Count occurrences
+  const counts = {};
+  ownedIds.forEach(id => { counts[id] = (counts[id] || 0) + 1; });
+  Object.entries(counts).forEach(([id, count]) => {
+    const item = allWeapons.find(w => w.id === id);
+    if (!item) return;
+    const isEquipped = player.equipped.weapon === id;
+    const isDupe = count > 1;
+    const sellPrice = getSellPrice(item);
+    const card = document.createElement('div');
+    card.style.cssText = `background:${isEquipped ? 'rgba(200,245,66,0.08)' : 'var(--card-bg)'};border:2px solid ${isEquipped ? 'rgba(200,245,66,0.5)' : isDupe ? 'rgba(245,166,35,0.4)' : 'var(--border)'};border-radius:8px;padding:1rem 0.8rem;text-align:center;position:relative;transition:all 0.2s;`;
+    let badges = '';
+    if (isEquipped) badges += `<span style="position:absolute;top:0.4rem;left:0.4rem;font-family:'DM Mono',monospace;font-size:0.5rem;background:rgba(200,245,66,0.15);color:var(--accent);border:1px solid rgba(200,245,66,0.3);border-radius:2px;padding:0.1rem 0.35rem;letter-spacing:0.06em;">ÉQUIPÉ</span>`;
+    if (count > 1) badges += `<span style="position:absolute;top:0.4rem;right:0.4rem;font-family:'DM Mono',monospace;font-size:0.52rem;background:rgba(245,166,35,0.15);color:var(--gold);border:1px solid rgba(245,166,35,0.3);border-radius:2px;padding:0.1rem 0.35rem;">×${count}</span>`;
+    card.innerHTML = `${badges}<div style="font-size:2rem;margin:${badges?'1rem':'.3rem'} 0 0.4rem;">${item.icon}</div><div style="font-family:'Playfair Display',serif;font-size:0.8rem;font-weight:700;margin-bottom:0.2rem;line-height:1.2;">${item.name}</div><div style="font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--hp-green);margin-bottom:0.7rem;">${item.stat}</div><div style="display:flex;flex-direction:column;gap:0.35rem;">${!isEquipped ? `<button onclick="equipItem('${id}','weapon')" style="background:var(--accent);color:#0e0f0c;border:none;border-radius:3px;padding:0.35rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;" onmouseover="this.style.background='#d9ff55'" onmouseout="this.style.background='var(--accent)'">⚔ Équiper</button>` : `<button onclick="unequip('${id}','weapon')" style="background:none;color:var(--accent3);border:1px solid rgba(232,69,69,0.4);border-radius:3px;padding:0.35rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;cursor:pointer;transition:all 0.15s;">↩ Déséquiper</button>`}<button onclick="sellItem('${id}','weapon')" style="background:none;color:var(--gold);border:1px solid rgba(245,166,35,0.35);border-radius:3px;padding:0.35rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(245,166,35,0.1)'" onmouseout="this.style.background='none'">🪙 Vendre (${sellPrice})</button></div>`;
+    grid.appendChild(card);
+  });
+}
+
+function renderInvArmors() {
+  const grid = document.getElementById('invArmorsGrid');
+  if (!grid) return;
+  const allArmors = SHOP_CATALOG.armors;
+  grid.innerHTML = '';
+  const ownedIds = player.owned.filter(id => allArmors.find(a => a.id === id));
+  if (ownedIds.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;font-family:\'DM Mono\',monospace;font-size:0.72rem;color:var(--muted);">Aucune armure possédée. Achète-en à la boutique !</div>';
+    return;
+  }
+  const counts = {};
+  ownedIds.forEach(id => { counts[id] = (counts[id] || 0) + 1; });
+  Object.entries(counts).forEach(([id, count]) => {
+    const item = allArmors.find(a => a.id === id);
+    if (!item) return;
+    const isEquipped = player.equipped.armor === id;
+    const isDupe = count > 1;
+    const sellPrice = getSellPrice(item);
+    const card = document.createElement('div');
+    card.style.cssText = `background:${isEquipped ? 'rgba(96,165,250,0.08)' : 'var(--card-bg)'};border:2px solid ${isEquipped ? 'rgba(96,165,250,0.5)' : isDupe ? 'rgba(245,166,35,0.4)' : 'var(--border)'};border-radius:8px;padding:1rem 0.8rem;text-align:center;position:relative;transition:all 0.2s;`;
+    let badges = '';
+    if (isEquipped) badges += `<span style="position:absolute;top:0.4rem;left:0.4rem;font-family:'DM Mono',monospace;font-size:0.5rem;background:rgba(96,165,250,0.15);color:var(--xp-blue);border:1px solid rgba(96,165,250,0.3);border-radius:2px;padding:0.1rem 0.35rem;letter-spacing:0.06em;">ÉQUIPÉ</span>`;
+    if (count > 1) badges += `<span style="position:absolute;top:0.4rem;right:0.4rem;font-family:'DM Mono',monospace;font-size:0.52rem;background:rgba(245,166,35,0.15);color:var(--gold);border:1px solid rgba(245,166,35,0.3);border-radius:2px;padding:0.1rem 0.35rem;">×${count}</span>`;
+    card.innerHTML = `${badges}<div style="font-size:2rem;margin:${badges?'1rem':'.3rem'} 0 0.4rem;">${item.icon}</div><div style="font-family:'Playfair Display',serif;font-size:0.8rem;font-weight:700;margin-bottom:0.2rem;line-height:1.2;">${item.name}</div><div style="font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--xp-blue);margin-bottom:0.7rem;">${item.stat}</div><div style="display:flex;flex-direction:column;gap:0.35rem;">${!isEquipped ? `<button onclick="equipItem('${id}','armor')" style="background:var(--xp-blue);color:#0e0f0c;border:none;border-radius:3px;padding:0.35rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:600;cursor:pointer;transition:all 0.15s;">🛡 Équiper</button>` : `<button onclick="unequip('${id}','armor')" style="background:none;color:var(--accent3);border:1px solid rgba(232,69,69,0.4);border-radius:3px;padding:0.35rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;cursor:pointer;transition:all 0.15s;">↩ Déséquiper</button>`}<button onclick="sellItem('${id}','armor')" style="background:none;color:var(--gold);border:1px solid rgba(245,166,35,0.35);border-radius:3px;padding:0.35rem 0.5rem;font-family:'DM Mono',monospace;font-size:0.58rem;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(245,166,35,0.1)'" onmouseout="this.style.background='none'">🪙 Vendre (${sellPrice})</button></div>`;
+    grid.appendChild(card);
+  });
+}
+
+function renderLoadoutAbilities() {
   if (!selectedHero) {
     document.getElementById('loadoutPool').innerHTML = '<div style="grid-column:1/-1;text-align:center;font-family:\'DM Mono\',monospace;font-size:0.75rem;color:var(--muted);padding:2rem;">Sélectionne d\'abord un héros sur la carte.</div>';
     document.getElementById('loadoutSlots').innerHTML = '';
@@ -3084,6 +3163,65 @@ function renderLoadout() {
   note.style.cssText = 'grid-column:1/-1;background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.2);border-radius:6px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.6rem;';
   note.innerHTML = '<span style="font-size:1.2rem;">⚡</span><div style="font-family:\'DM Mono\',monospace;font-size:0.62rem;color:var(--muted);line-height:1.5;"><strong style="color:var(--xp-blue);">SPÉCIAL</strong> — Attaque ultime de ton personnage, toujours présente en combat. Se charge en frappant. N\'occupe pas de slot.</div>';
   poolEl.appendChild(note);
+}
+
+
+const MAX_LOADOUT = 4;
+
+function getAllAvailableAttacks(heroChar) {
+  // Returns all attacks that could be equipped (excludes 'special' which is always present)
+  const baseAttacks = [
+    { id: 'punch',     name: 'Punch',      icon: '👊', desc: 'Coup direct, peut critiquer',    reqLv: 1, cooldown: 0 },
+    { id: 'combo',     name: 'Combo',      icon: '🔥', desc: '2 coups rapides',                reqLv: 1, cooldown: 2 },
+    { id: 'defend',    name: 'Garde',      icon: '🛡️', desc: 'Réduit les dégâts reçus',       reqLv: 1, cooldown: 0 },
+    { id: 'combo_plus',name: 'Combo+',     icon: '🌀', desc: '3 coups + étourdissement',       reqLv: 2, cooldown: 3 },
+    { id: 'piercing',  name: 'Perforant',  icon: '🗡️', desc: 'Ignore 50% de la DEF ennemie',  reqLv: 3, cooldown: 3 },
+    { id: 'counter',   name: 'Contre',     icon: '↩️', desc: 'Parade + riposte puissante',    reqLv: 4, cooldown: 4 },
+    { id: 'ultimate',  name: 'DÉVASTA.',   icon: '💥', desc: 'Dégâts cataclysmiques x2.8',    reqLv: 5, cooldown: 5 },
+  ];
+  const treeAttacks = [
+    { id: 'sk_atk3', name: 'Tornade',     icon: '🍜', desc: '6 frappes / ignore DEF / +spéciale', reqLv: 1, treeSkill: true, cooldown: 4 },
+    { id: 'sk_def3', name: 'Forteresse',  icon: '🥖', desc: 'Bouclier 3 tours + riposte auto',     reqLv: 1, treeSkill: true, cooldown: 5 },
+    { id: 'sk_spd3', name: 'Coup du Chef',icon: '👨‍🍳', desc: 'x2.5 ATK · vol HP · DEF ignorée',   reqLv: 1, treeSkill: true, cooldown: 4 },
+  ];
+  const available = baseAttacks.filter(a => player.unlockedAttacks.includes(a.id));
+  const treeAvail = treeAttacks.filter(a => isSkillUnlocked(a.id));
+  return [...available, ...treeAvail];
+}
+
+function getLoadout() {
+  if (!player.equippedLoadout) player.equippedLoadout = ['punch','combo','defend','special'];
+  // Ensure loadout only contains currently available attacks (or special)
+  const avail = getAllAvailableAttacks().map(a => a.id);
+  avail.push('special');
+  player.equippedLoadout = player.equippedLoadout.filter(id => avail.includes(id));
+  // Ensure at most 4 (excluding special)
+  const noSpecial = player.equippedLoadout.filter(id => id !== 'special');
+  if (noSpecial.length > MAX_LOADOUT) player.equippedLoadout = noSpecial.slice(0, MAX_LOADOUT);
+  return player.equippedLoadout;
+}
+
+function toggleLoadout(id) {
+  if (!player.equippedLoadout) player.equippedLoadout = [];
+  const idx = player.equippedLoadout.indexOf(id);
+  if (idx >= 0) {
+    // Remove
+    player.equippedLoadout.splice(idx, 1);
+  } else {
+    // Add — max 4
+    if (player.equippedLoadout.length >= MAX_LOADOUT) {
+      showToast('⚠️ Tu as déjà 4 capacités ! Retire-en une d\'abord.', 'error');
+      return;
+    }
+    player.equippedLoadout.push(id);
+  }
+  savePlayer();
+  renderLoadoutAbilities();
+}
+
+function renderLoadout() {
+  // Reset to weapons tab on open, then render current tab
+  switchInvTab(currentInvTab || 'weapons');
 }
 
 function buildActionRow() {

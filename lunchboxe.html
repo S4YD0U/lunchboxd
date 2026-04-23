@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -4010,20 +4011,25 @@ function renderWorldMap() {
   //        Marais centre, Volcan bas-centre
   // Paths générés pixel par pixel depuis l'image carte.png (viewBox 700x434)
   const territories = {
-    foret_epices:    'M 110,10 L 20,40 L 10,70 L 10,100 L 10,130 L 10,160 L 30,190 L 80,220 L 190,250 L 470,250 L 470,220 L 180,190 L 290,160 L 240,130 L 560,100 L 560,70 L 230,40 L 230,10 Z',
-    pics_sorbet:     'M 290,10 L 230,40 L 220,70 L 250,100 L 250,130 L 200,160 L 190,190 L 180,220 L 230,250 L 390,280 L 410,280 L 450,250 L 510,220 L 490,190 L 460,160 L 460,130 L 480,100 L 500,70 L 500,40 L 460,10 Z',
-    desert_sel:      'M 500,30 L 500,60 L 490,90 L 470,120 L 450,150 L 480,180 L 530,210 L 670,210 L 690,180 L 690,150 L 690,120 L 690,90 L 640,60 L 560,30 Z',
-    marais_vinaigre: 'M 240,130 L 190,160 L 170,190 L 170,230 L 180,260 L 250,290 L 430,290 L 500,260 L 510,230 L 510,190 L 490,160 L 450,130 Z',
-    volcan_cantine:  'M 130,260 L 170,290 L 210,320 L 200,350 L 220,380 L 270,410 L 450,410 L 500,380 L 490,350 L 550,290 L 580,260 L 600,230 L 510,170 L 150,230 Z',
+    // Forêt des Épices — zone verte haut-gauche
+    foret_epices:    'M 0,0 L 230,0 L 245,30 C 230,60 210,90 195,120 C 180,150 170,175 155,195 C 135,215 110,220 90,215 C 65,208 40,195 20,175 C 5,160 0,140 0,110 Z',
+    // Pics Glacés du Sorbet — zone bleue haut-centre
+    pics_sorbet:     'M 245,30 C 255,10 280,0 310,0 L 470,0 C 490,8 505,22 510,42 C 515,62 505,82 490,95 C 470,108 445,115 420,118 C 395,120 368,115 345,108 C 318,100 292,88 270,72 C 252,58 244,44 245,30 Z',
+    // Désert du Sel — zone orange/brun haut-droite
+    desert_sel:      'M 470,0 L 700,0 L 700,160 C 660,170 620,175 580,170 C 545,165 510,150 490,135 C 510,115 510,95 510,70 C 510,50 510,25 510,8 Z',
+    // Marais du Vinaigre — zone bleu-vert centre
+    marais_vinaigre: 'M 195,120 C 220,95 260,85 300,82 C 340,79 375,88 405,100 C 430,108 455,122 470,142 C 485,162 488,188 480,212 C 472,235 455,255 430,268 C 405,280 375,285 345,282 C 310,278 275,265 248,248 C 220,230 195,205 185,178 C 176,155 178,138 195,120 Z',
+    // Volcan de la Cantine — zone rouge bas-centre
+    volcan_cantine:  'M 0,215 L 0,440 L 700,440 L 700,215 C 660,210 620,210 580,215 C 555,218 530,225 505,232 C 490,238 475,248 455,258 C 430,272 405,282 375,288 C 345,292 308,292 275,285 C 248,277 220,262 198,244 C 175,228 155,210 130,205 C 85,198 40,205 0,215 Z',
   };
 
-  // Centres calés sur l'image réelle
+  // Centres recalibrés sur les paths MAP_LAYOUT
   const regionCenters = {
-    foret_epices:    { cx: 147, cy: 130 },
-    pics_sorbet:     { cx: 346, cy: 145 },
-    desert_sel:      { cx: 590, cy: 145 },
-    marais_vinaigre: { cx: 340, cy: 215 },
-    volcan_cantine:  { cx: 365, cy: 330 },
+    foret_epices:    { cx: 110, cy: 105 },
+    pics_sorbet:     { cx: 390, cy: 58 },
+    desert_sel:      { cx: 590, cy: 80 },
+    marais_vinaigre: { cx: 335, cy: 185 },
+    volcan_cantine:  { cx: 340, cy: 340 },
   };
 
   // ── DEFS ──────────────────────────────────────────────────────────────────

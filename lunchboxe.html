@@ -263,18 +263,41 @@
 
     /* Animated reveal for newly unlocked region */
     @keyframes fogReveal {
-      0% { opacity:1; }
-      100% { opacity:0; }
+      0%   { opacity:1; transform: scale(1) translateY(0); filter: blur(0px); }
+      30%  { opacity:0.85; transform: scale(1.04) translateY(-4px); filter: blur(1px); }
+      70%  { opacity:0.3; transform: scale(1.12) translateY(-12px); filter: blur(6px); }
+      100% { opacity:0; transform: scale(1.2) translateY(-22px); filter: blur(12px); }
     }
-    .fog-revealing { animation: fogReveal 1.8s cubic-bezier(0.4,0,0.2,1) forwards; }
+    .fog-revealing { animation: fogReveal 2.2s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+
+    /* Individual cloud puff scatter — applied to child ellipses via JS */
+    @keyframes cloudPuffLeft {
+      0%   { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateX(-80px) translateY(-50px) scale(0.4); opacity: 0; }
+    }
+    @keyframes cloudPuffRight {
+      0%   { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateX(80px) translateY(-55px) scale(0.4); opacity: 0; }
+    }
+    @keyframes cloudPuffUp {
+      0%   { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateX(0) translateY(-70px) scale(0.3); opacity: 0; }
+    }
+    @keyframes cloudShimmer {
+      0%   { opacity: 1; }
+      40%  { opacity: 0.6; filter: brightness(1.8); }
+      100% { opacity: 0; }
+    }
 
     /* Cloud drift animation for fog of war */
-    @keyframes cloudDrift1 { 0%,100%{transform:translateX(0px)} 50%{transform:translateX(6px)} }
-    @keyframes cloudDrift2 { 0%,100%{transform:translateX(0px)} 50%{transform:translateX(-5px)} }
-    @keyframes cloudDrift3 { 0%,100%{transform:translateX(0px) translateY(0px)} 50%{transform:translateX(4px) translateY(-3px)} }
-    .fog-overlay ellipse:nth-child(3n+1) { animation: cloudDrift1 8s ease-in-out infinite; }
-    .fog-overlay ellipse:nth-child(3n+2) { animation: cloudDrift2 10s ease-in-out infinite; }
-    .fog-overlay ellipse:nth-child(3n)   { animation: cloudDrift3 12s ease-in-out infinite; }
+    @keyframes cloudDrift1 { 0%,100%{transform:translateX(0px)} 50%{transform:translateX(8px)} }
+    @keyframes cloudDrift2 { 0%,100%{transform:translateX(0px)} 50%{transform:translateX(-7px)} }
+    @keyframes cloudDrift3 { 0%,100%{transform:translateX(0px) translateY(0px)} 50%{transform:translateX(5px) translateY(-4px)} }
+    @keyframes cloudDrift4 { 0%,100%{transform:translateX(0px) translateY(0px)} 50%{transform:translateX(-4px) translateY(3px)} }
+    .fog-overlay ellipse:nth-child(4n+1) { animation: cloudDrift1 9s ease-in-out infinite; }
+    .fog-overlay ellipse:nth-child(4n+2) { animation: cloudDrift2 11s ease-in-out infinite; }
+    .fog-overlay ellipse:nth-child(4n+3) { animation: cloudDrift3 13s ease-in-out infinite; }
+    .fog-overlay ellipse:nth-child(4n)   { animation: cloudDrift4 7s ease-in-out infinite; }
 
     /* Region detail panel */
     .region-detail-panel {
@@ -3732,14 +3755,43 @@ function markEnemyBeaten(regionId, enemyId) {
     if (nextRegion) {
       setTimeout(() => {
         const fogEl = document.getElementById('fog_' + nextRegion.id);
-        if (fogEl) {
+        if (!fogEl) return;
+
+        // Step 1: flash the fog white (lightning bolt effect)
+        fogEl.style.filter = 'brightness(3) saturate(0)';
+        fogEl.style.transition = 'filter 0.12s ease-out';
+        setTimeout(() => { fogEl.style.filter = ''; fogEl.style.transition = ''; }, 120);
+
+        // Step 2: animate individual cloud puffs outward with staggered delays
+        const ellipses = fogEl.querySelectorAll('ellipse');
+        const total = ellipses.length;
+        ellipses.forEach((el, i) => {
+          const frac = i / Math.max(total - 1, 1);
+          // Assign scatter direction based on position fraction
+          let anim;
+          if (frac < 0.33) anim = 'cloudPuffLeft';
+          else if (frac < 0.66) anim = 'cloudPuffUp';
+          else anim = 'cloudPuffRight';
+          const delay = 100 + i * 45; // staggered start
+          const dur = 1200 + Math.random() * 600;
+          el.style.animationName = anim;
+          el.style.animationDuration = dur + 'ms';
+          el.style.animationDelay = delay + 'ms';
+          el.style.animationFillMode = 'forwards';
+          el.style.animationTimingFunction = 'cubic-bezier(0.25,0.46,0.45,0.94)';
+        });
+
+        // Step 3: fade out the whole fog group after puffs scatter
+        fogEl.style.animation = 'none'; // cancel existing drift
+        setTimeout(() => {
           fogEl.classList.add('fog-revealing');
           fogEl.addEventListener('animationend', () => {
             fogEl.style.opacity = '0';
             fogEl.classList.remove('fog-revealing');
           }, { once: true });
-          showToast(`🗺 ${nextRegion.icon} ${nextRegion.name} débloquée !`, 'success');
-        }
+        }, 300);
+
+        showToast(`🗺 ${nextRegion.icon} ${nextRegion.name} débloquée !`, 'success');
       }, 1200);
     }
   }
@@ -3843,12 +3895,107 @@ const MAP_LAYOUT = [
 const MAP_TRAIL_D = 'M 110,105 C 200,92 270,110 335,185 C 355,155 370,105 390,58 C 430,65 470,70 510,85 M 335,185 C 335,240 338,290 340,340';
 
 // Cloud shapes for fog of war (each region has its own cloud cluster)
+// Clouds are large and overlapping to fully blanket the unexplored region
 const REGION_CLOUDS = {
-  foret_epices:   [{cx:60,cy:80,rx:55,ry:35},{cx:130,cy:50,rx:60,ry:38},{cx:170,cy:120,rx:45,ry:30},{cx:40,cy:160,rx:50,ry:32},{cx:110,cy:170,rx:48,ry:28}],
-  desert_sel:     [{cx:400,cy:45,rx:65,ry:38},{cx:480,cy:30,rx:70,ry:40},{cx:560,cy:55,rx:60,ry:35},{cx:630,cy:35,rx:55,ry:32},{cx:520,cy:105,rx:58,ry:30},{cx:650,cy:108,rx:50,ry:28}],
-  marais_vinaigre:[{cx:255,cy:145,rx:55,ry:32},{cx:320,cy:130,rx:60,ry:35},{cx:390,cy:148,rx:52,ry:30},{cx:240,cy:210,rx:58,ry:33},{cx:360,cy:230,rx:55,ry:30},{cx:435,cy:205,rx:48,ry:28}],
-  pics_sorbet:    [{cx:295,cy:35,rx:55,ry:32},{cx:365,cy:22,rx:65,ry:36},{cx:435,cy:35,rx:58,ry:30},{cx:320,cy:78,rx:50,ry:28},{cx:415,cy:80,rx:48,ry:26}],
-  volcan_cantine: [{cx:180,cy:280,rx:60,ry:36},{cx:260,cy:300,rx:68,ry:38},{cx:345,cy:295,rx:72,ry:40},{cx:430,cy:300,rx:65,ry:36},{cx:510,cy:282,rx:58,ry:32},{cx:220,cy:370,rx:65,ry:35},{cx:380,cy:375,rx:70,ry:38}],
+  foret_epices: [
+    // Bottom-layer large base clouds
+    {cx:30,  cy:60,  rx:90, ry:60, layer:0},
+    {cx:150, cy:40,  rx:100,ry:65, layer:0},
+    {cx:220, cy:90,  rx:85, ry:58, layer:0},
+    {cx:70,  cy:145, rx:95, ry:60, layer:0},
+    {cx:185, cy:165, rx:90, ry:55, layer:0},
+    // Mid-layer puffier clouds
+    {cx:55,  cy:85,  rx:72, ry:48, layer:1},
+    {cx:155, cy:70,  rx:80, ry:52, layer:1},
+    {cx:100, cy:160, rx:75, ry:46, layer:1},
+    {cx:200, cy:135, rx:68, ry:42, layer:1},
+    // Top highlights
+    {cx:80,  cy:50,  rx:55, ry:36, layer:2},
+    {cx:175, cy:48,  rx:60, ry:38, layer:2},
+    {cx:130, cy:125, rx:58, ry:34, layer:2},
+  ],
+  desert_sel: [
+    // Large base
+    {cx:360, cy:30,  rx:110,ry:68, layer:0},
+    {cx:490, cy:20,  rx:120,ry:72, layer:0},
+    {cx:620, cy:30,  rx:100,ry:62, layer:0},
+    {cx:420, cy:115, rx:105,ry:60, layer:0},
+    {cx:570, cy:108, rx:110,ry:62, layer:0},
+    {cx:688, cy:100, rx:85, ry:55, layer:0},
+    // Mid
+    {cx:395, cy:55,  rx:85, ry:52, layer:1},
+    {cx:520, cy:50,  rx:90, ry:55, layer:1},
+    {cx:660, cy:60,  rx:78, ry:48, layer:1},
+    {cx:450, cy:135, rx:80, ry:46, layer:1},
+    {cx:610, cy:140, rx:82, ry:48, layer:1},
+    // Top
+    {cx:440, cy:28,  rx:65, ry:40, layer:2},
+    {cx:590, cy:20,  rx:70, ry:42, layer:2},
+    {cx:520, cy:95,  rx:60, ry:36, layer:2},
+  ],
+  marais_vinaigre: [
+    // Base
+    {cx:230, cy:128, rx:95, ry:62, layer:0},
+    {cx:340, cy:118, rx:105,ry:65, layer:0},
+    {cx:455, cy:135, rx:88, ry:58, layer:0},
+    {cx:220, cy:215, rx:100,ry:62, layer:0},
+    {cx:355, cy:230, rx:105,ry:60, layer:0},
+    {cx:468, cy:215, rx:88, ry:55, layer:0},
+    // Mid
+    {cx:260, cy:155, rx:78, ry:50, layer:1},
+    {cx:380, cy:148, rx:85, ry:52, layer:1},
+    {cx:440, cy:175, rx:72, ry:44, layer:1},
+    {cx:245, cy:238, rx:78, ry:46, layer:1},
+    {cx:400, cy:255, rx:80, ry:48, layer:1},
+    // Top
+    {cx:305, cy:132, rx:62, ry:38, layer:2},
+    {cx:420, cy:130, rx:58, ry:36, layer:2},
+    {cx:310, cy:228, rx:64, ry:38, layer:2},
+  ],
+  pics_sorbet: [
+    // Base
+    {cx:270, cy:18,  rx:88, ry:55, layer:0},
+    {cx:370, cy:8,   rx:100,ry:60, layer:0},
+    {cx:468, cy:18,  rx:88, ry:55, layer:0},
+    {cx:295, cy:78,  rx:80, ry:52, layer:0},
+    {cx:400, cy:85,  rx:85, ry:52, layer:0},
+    {cx:490, cy:72,  rx:75, ry:48, layer:0},
+    // Mid
+    {cx:320, cy:35,  rx:68, ry:44, layer:1},
+    {cx:430, cy:28,  rx:72, ry:46, layer:1},
+    {cx:345, cy:90,  rx:60, ry:38, layer:1},
+    {cx:455, cy:95,  rx:62, ry:38, layer:1},
+    // Top
+    {cx:360, cy:20,  rx:55, ry:34, layer:2},
+    {cx:415, cy:62,  rx:50, ry:32, layer:2},
+  ],
+  volcan_cantine: [
+    // Base — wide region, need lots of coverage
+    {cx:60,  cy:260, rx:110,ry:70, layer:0},
+    {cx:195, cy:248, rx:120,ry:72, layer:0},
+    {cx:340, cy:240, rx:125,ry:75, layer:0},
+    {cx:480, cy:248, rx:118,ry:70, layer:0},
+    {cx:625, cy:258, rx:105,ry:65, layer:0},
+    {cx:100, cy:355, rx:115,ry:68, layer:0},
+    {cx:250, cy:365, rx:120,ry:70, layer:0},
+    {cx:400, cy:368, rx:125,ry:72, layer:0},
+    {cx:560, cy:358, rx:118,ry:68, layer:0},
+    {cx:670, cy:345, rx:100,ry:62, layer:0},
+    // Mid
+    {cx:140, cy:290, rx:90, ry:56, layer:1},
+    {cx:285, cy:278, rx:95, ry:58, layer:1},
+    {cx:430, cy:275, rx:98, ry:58, layer:1},
+    {cx:575, cy:285, rx:88, ry:54, layer:1},
+    {cx:180, cy:390, rx:90, ry:55, layer:1},
+    {cx:340, cy:400, rx:95, ry:58, layer:1},
+    {cx:500, cy:392, rx:90, ry:55, layer:1},
+    // Top
+    {cx:220, cy:262, rx:72, ry:44, layer:2},
+    {cx:370, cy:255, rx:78, ry:46, layer:2},
+    {cx:520, cy:265, rx:70, ry:42, layer:2},
+    {cx:290, cy:375, rx:74, ry:44, layer:2},
+    {cx:460, cy:380, rx:72, ry:44, layer:2},
+  ],
 };
 
 function renderWorldMap() {
@@ -3888,10 +4035,24 @@ function renderWorldMap() {
   </radialGradient>`;
 
   // Cloud gradient (puffy white-grey)
-  defs += `<radialGradient id="cloudGrad" cx="50%" cy="40%" r="60%">
-    <stop offset="0%" stop-color="#d0d8e8" stop-opacity="0.96"/>
-    <stop offset="60%" stop-color="#b0bcd0" stop-opacity="0.92"/>
-    <stop offset="100%" stop-color="#8898b0" stop-opacity="0.85"/>
+  defs += `<radialGradient id="cloudGrad" cx="45%" cy="38%" r="62%">
+    <stop offset="0%" stop-color="#c8d6ea" stop-opacity="0.97"/>
+    <stop offset="55%" stop-color="#a8b8cc" stop-opacity="0.94"/>
+    <stop offset="100%" stop-color="#788898" stop-opacity="0.88"/>
+  </radialGradient>`;
+
+  // Dark base cloud (layer 0, behind)
+  defs += `<radialGradient id="cloudGradDark" cx="45%" cy="42%" r="60%">
+    <stop offset="0%" stop-color="#8898ae" stop-opacity="0.95"/>
+    <stop offset="60%" stop-color="#607080" stop-opacity="0.92"/>
+    <stop offset="100%" stop-color="#404858" stop-opacity="0.88"/>
+  </radialGradient>`;
+
+  // Bright highlight cloud (layer 2, front)
+  defs += `<radialGradient id="cloudGradBright" cx="42%" cy="35%" r="60%">
+    <stop offset="0%" stop-color="#e8f0fa" stop-opacity="0.98"/>
+    <stop offset="50%" stop-color="#c8d8ee" stop-opacity="0.95"/>
+    <stop offset="100%" stop-color="#98aec8" stop-opacity="0.9"/>
   </radialGradient>`;
 
   // Cloud shadow
@@ -3967,15 +4128,15 @@ function renderWorldMap() {
     const strokeCol = isActive ? ml.strokeColor : completed ? ml.strokeColor : 'rgba(255,255,255,0.08)';
     const strokeW   = isActive ? '2.5' : '1.2';
 
-    svg += `<g class="map-region-zone ${unlocked?'unlocked':'locked'}${isActive?' active-zone':''}" ${unlocked?`onclick="selectRegion('${region.id}')"`:''}  role="button" aria-label="${region.name}">`;
+    svg += `<g class="map-region-zone ${unlocked?'unlocked':'locked'}${isActive?' active-zone':''}">`;
 
     // Active glow halo
     if (isActive) {
-      svg += `<path d="${t}" fill="${ml.strokeColor}" opacity="0.18" filter="url(#activeglow)"/>`;
+      svg += `<path d="${t}" fill="${ml.strokeColor}" opacity="0.18" filter="url(#activeglow)" pointer-events="none"/>`;
     }
 
-    // Land fill
-    svg += `<path d="${t}" fill="url(#rg_${region.id})" stroke="${strokeCol}" stroke-width="${strokeW}"/>`;
+    // Land fill (pointer-events none, on utilise une hit area transparente séparée)
+    svg += `<path d="${t}" fill="url(#rg_${region.id})" stroke="${strokeCol}" stroke-width="${strokeW}" pointer-events="none"/>`;
 
     // Texture overlays
     if (region.id === 'foret_epices') {
@@ -4086,30 +4247,51 @@ function renderWorldMap() {
       if (isActive) {
         svg += `<circle cx="${cx}" cy="${cy}" r="42" fill="none" stroke="${ml.strokeColor}" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5" class="region-glow"/>`;
       }
+      // Hit area transparente en dernier (au-dessus des décorations) pour capturer les clics
+      svg += `<path d="${t}" fill="transparent" stroke="none" style="cursor:pointer" onclick="selectRegion('${region.id}')"/>`;
     }
 
     // ── CLOUD FOG for locked regions ──────────────────────────────────────
     if (!unlocked) {
       const clouds = REGION_CLOUDS[region.id] || [];
       const fogId = `fog_${region.id}`;
-      svg += `<g class="fog-overlay" id="${fogId}">`;
-      // Dark base fill
-      svg += `<path d="${t}" fill="rgba(8,10,14,0.82)"/>`;
-      // Cloud puffs (layered for depth)
-      clouds.forEach((c, ci) => {
-        // Shadow blob
-        svg += `<ellipse cx="${c.cx+3}" cy="${c.cy+5}" rx="${c.rx}" ry="${c.ry*0.6}" fill="rgba(0,0,0,0.22)" filter="url(#cloudBlur)"/>`;
-        // Main cloud body
-        svg += `<ellipse cx="${c.cx}" cy="${c.cy}" rx="${c.rx}" ry="${c.ry}" fill="url(#cloudGrad)"/>`;
-        // Highlight puff on top
-        svg += `<ellipse cx="${c.cx-c.rx*0.2}" cy="${c.cy-c.ry*0.3}" rx="${c.rx*0.55}" ry="${c.ry*0.5}" fill="rgba(240,248,255,0.5)"/>`;
-        // Secondary puff right
-        svg += `<ellipse cx="${c.cx+c.rx*0.35}" cy="${c.cy-c.ry*0.15}" rx="${c.rx*0.45}" ry="${c.ry*0.55}" fill="rgba(200,215,235,0.45)"/>`;
-        // Small top puff
-        svg += `<ellipse cx="${c.cx+c.rx*0.1}" cy="${c.cy-c.ry*0.55}" rx="${c.rx*0.35}" ry="${c.ry*0.38}" fill="rgba(230,240,255,0.55)"/>`;
+      svg += `<g class="fog-overlay" id="${fogId}" pointer-events="none">`;
+
+      // Clip fog to region territory so it doesn't bleed outside
+      const clipId = `fogclip_${region.id}`;
+      svg += `<defs><clipPath id="${clipId}"><path d="${t}"/></clipPath></defs>`;
+      svg += `<g clip-path="url(#${clipId})">`;
+
+      // Dark base fill — heavy, opaque
+      svg += `<path d="${t}" fill="rgba(6,8,12,0.92)"/>`;
+
+      // Layer 0 — large base clouds (dark, behind)
+      clouds.filter(c => c.layer === 0).forEach(c => {
+        svg += `<ellipse cx="${c.cx+4}" cy="${c.cy+7}" rx="${c.rx*1.05}" ry="${c.ry*0.65}" fill="rgba(0,0,0,0.3)" filter="url(#cloudBlur)"/>`;
+        svg += `<ellipse cx="${c.cx}" cy="${c.cy}" rx="${c.rx}" ry="${c.ry}" fill="url(#cloudGradDark)"/>`;
       });
-      // Lock icon centered on region
-      svg += `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="16" opacity="0.4">🔒</text>`;
+
+      // Layer 1 — mid clouds
+      clouds.filter(c => c.layer === 1).forEach(c => {
+        svg += `<ellipse cx="${c.cx+2}" cy="${c.cy+4}" rx="${c.rx*0.95}" ry="${c.ry*0.6}" fill="rgba(0,0,0,0.18)" filter="url(#cloudBlur)"/>`;
+        svg += `<ellipse cx="${c.cx}" cy="${c.cy}" rx="${c.rx}" ry="${c.ry}" fill="url(#cloudGrad)"/>`;
+        // Bump puffs on top
+        svg += `<ellipse cx="${c.cx-c.rx*0.25}" cy="${c.cy-c.ry*0.35}" rx="${c.rx*0.55}" ry="${c.ry*0.52}" fill="rgba(210,225,245,0.6)"/>`;
+        svg += `<ellipse cx="${c.cx+c.rx*0.3}" cy="${c.cy-c.ry*0.2}" rx="${c.rx*0.48}" ry="${c.ry*0.5}" fill="rgba(200,218,240,0.55)"/>`;
+      });
+
+      // Layer 2 — bright highlight clouds (foreground)
+      clouds.filter(c => c.layer === 2).forEach(c => {
+        svg += `<ellipse cx="${c.cx}" cy="${c.cy}" rx="${c.rx}" ry="${c.ry}" fill="url(#cloudGradBright)"/>`;
+        svg += `<ellipse cx="${c.cx-c.rx*0.18}" cy="${c.cy-c.ry*0.38}" rx="${c.rx*0.55}" ry="${c.ry*0.5}" fill="rgba(250,255,255,0.65)"/>`;
+        svg += `<ellipse cx="${c.cx+c.rx*0.2}" cy="${c.cy-c.ry*0.22}" rx="${c.rx*0.45}" ry="${c.ry*0.48}" fill="rgba(235,248,255,0.58)"/>`;
+        svg += `<ellipse cx="${c.cx}" cy="${c.cy-c.ry*0.6}" rx="${c.rx*0.38}" ry="${c.ry*0.4}" fill="rgba(255,255,255,0.5)"/>`;
+      });
+
+      svg += `</g>`;
+      // Lock icon centered on region (drawn outside clip so it's always visible)
+      svg += `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="16" opacity="0.45" filter="url(#cloudBlur)">🔒</text>`;
+      svg += `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="16" opacity="0.5">🔒</text>`;
       svg += `</g>`;
     }
 
@@ -4134,8 +4316,8 @@ function renderWorldMap() {
   svg += `<line x1="14" y1="420" x2="74" y2="420" stroke="rgba(200,245,66,0.12)" stroke-width="1"/>`;
   svg += `<text x="44" y="418" text-anchor="middle" fill="rgba(200,245,66,0.1)" font-size="6.5" font-family="DM Mono,monospace">60 unités</text>`;
 
-  // Vignette
-  svg += `<rect width="700" height="440" fill="url(#vign)"/>`;
+  // Vignette (pointer-events:none pour ne pas bloquer les clics sur les régions)
+  svg += `<rect width="700" height="440" fill="url(#vign)" pointer-events="none"/>`;
 
   const fullSvg = `<svg id="worldMapSVG" viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">${svg}</svg>`;
   wrap.innerHTML = fullSvg;

@@ -266,7 +266,15 @@
       0% { opacity:1; }
       100% { opacity:0; }
     }
-    .fog-revealing { animation: fogReveal 1.2s cubic-bezier(0.4,0,0.2,1) forwards; }
+    .fog-revealing { animation: fogReveal 1.8s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+    /* Cloud drift animation for fog of war */
+    @keyframes cloudDrift1 { 0%,100%{transform:translateX(0px)} 50%{transform:translateX(6px)} }
+    @keyframes cloudDrift2 { 0%,100%{transform:translateX(0px)} 50%{transform:translateX(-5px)} }
+    @keyframes cloudDrift3 { 0%,100%{transform:translateX(0px) translateY(0px)} 50%{transform:translateX(4px) translateY(-3px)} }
+    .fog-overlay ellipse:nth-child(3n+1) { animation: cloudDrift1 8s ease-in-out infinite; }
+    .fog-overlay ellipse:nth-child(3n+2) { animation: cloudDrift2 10s ease-in-out infinite; }
+    .fog-overlay ellipse:nth-child(3n)   { animation: cloudDrift3 12s ease-in-out infinite; }
 
     /* Region detail panel */
     .region-detail-panel {
@@ -3740,228 +3748,396 @@ function markEnemyBeaten(regionId, enemyId) {
 let selectedRegion = null;
 
 // ─── MAP LAYOUT DATA ─────────────────────────────────────────────────────────
-// Each region has a territory polygon, a center point, and visual theme.
-// viewBox: 0 0 600 380
+// Full-coverage territories that tile together. viewBox: 0 0 700 440
 const MAP_LAYOUT = [
-  { // 1 – Forêt des Épices (top-left, organic jungle blob)
+  { // 1 – Forêt des Épices — top-left quadrant, lush jungle
     id: 'foret_epices',
-    territory: 'M 20,30 C 60,10 130,15 165,55 C 195,90 185,140 150,165 C 120,185 70,190 40,165 C 10,140 -5,90 20,30 Z',
-    cx: 95, cy: 100,
-    fillColor: '#3a5e10', strokeColor: '#7ab520',
-    gradStop1: '#4a7a14', gradStop2: '#1e3208',
-    pattern: 'trees',   // decorative motif type
-    patternColor: 'rgba(120,200,30,0.12)',
-    mountainPaths: [
-      'M55,140 L65,115 L75,140', 'M80,135 L93,108 L106,135',
-    ],
-    treePaths: [
-      [50,155],[75,160],[100,158],[125,155],[145,148]
-    ],
+    territory: 'M 0,0 L 230,0 L 245,30 C 230,60 210,90 195,120 C 180,150 170,175 155,195 C 135,215 110,220 90,215 C 65,208 40,195 20,175 C 5,160 0,140 0,110 Z',
+    cx: 110, cy: 105,
+    gradStop1: '#2d5a0a', gradStop2: '#0f2204',
+    strokeColor: '#6aaa18',
+    // Tree symbols (cx, cy, r)
+    trees: [[40,60,7],[80,45,9],[130,35,8],[175,50,7],[200,75,6],[55,150,6],[95,165,7],[140,170,6],[170,145,5]],
+    // River path
+    river: 'M 180,0 C 170,40 155,80 140,120 C 125,160 100,185 80,200',
+    riverColor: 'rgba(80,180,80,0.25)',
+    mountains: [],
   },
-  { // 2 – Désert du Sel (top-right, jagged rocky shape)
+  { // 2 – Désert du Sel — top-right quadrant, sandy wastes
     id: 'desert_sel',
-    territory: 'M 435,20 C 480,15 570,25 580,75 C 590,125 560,160 520,175 C 480,190 430,175 405,145 C 378,115 380,65 435,20 Z',
-    cx: 490, cy: 100,
-    fillColor: '#6b3d08', strokeColor: '#c47a1a',
-    gradStop1: '#7a4a10', gradStop2: '#2e1a04',
-    pattern: 'dunes',
-    patternColor: 'rgba(200,130,30,0.10)',
-    mountainPaths: [
-      'M430,155 L445,128 L460,155', 'M460,150 L478,118 L496,150', 'M500,148 L515,125 L530,148',
+    territory: 'M 230,0 L 700,0 L 700,160 C 660,170 620,175 580,170 C 545,165 510,150 480,135 C 455,122 430,108 405,100 C 375,90 350,85 330,80 C 305,74 270,55 245,30 Z',
+    cx: 510, cy: 85,
+    gradStop1: '#5c3208', gradStop2: '#1e0e02',
+    strokeColor: '#c8801a',
+    trees: [],
+    river: '',
+    riverColor: '',
+    // Dune arcs
+    dunes: [
+      'M 340,50 Q 380,38 420,55','M 440,70 Q 490,55 535,72','M 550,45 Q 600,32 645,50',
+      'M 360,100 Q 410,88 460,105','M 480,120 Q 535,108 580,125','M 600,90 Q 650,78 690,92',
     ],
-    treePaths: [],
+    mountains: [
+      {x:590,y:155,h:30},{x:620,y:148,h:38},{x:650,y:153,h:28},
+    ],
   },
-  { // 3 – Marais du Vinaigre (middle-center, swampy irregular)
+  { // 3 – Marais du Vinaigre — center, murky wetlands
     id: 'marais_vinaigre',
-    territory: 'M 210,120 C 260,95 340,100 370,135 C 400,168 390,220 355,245 C 320,268 265,268 230,245 C 195,220 160,150 210,120 Z',
-    cx: 290, cy: 185,
-    fillColor: '#3a3070', strokeColor: '#7068cc',
-    gradStop1: '#48408a', gradStop2: '#1a1840',
-    pattern: 'mist',
-    patternColor: 'rgba(120,110,220,0.10)',
-    mountainPaths: [],
-    treePaths: [[220,240],[245,248],[270,252],[295,250],[318,245],[338,238]],
+    territory: 'M 195,120 C 220,95 260,85 300,82 C 340,79 375,88 405,100 C 430,108 455,122 470,142 C 485,162 488,188 480,212 C 472,235 455,255 430,268 C 405,280 375,285 345,282 C 310,278 275,265 248,248 C 220,230 195,205 185,178 C 176,155 178,138 195,120 Z',
+    cx: 335, cy: 185,
+    gradStop1: '#1e2848', gradStop2: '#0a0e20',
+    strokeColor: '#5855bb',
+    trees: [[210,200,5],[230,230,6],[255,250,5],[290,258,4],[325,255,5],[360,248,4],[395,235,5],[415,215,4]],
+    river: 'M 300,82 C 305,120 310,150 320,180 C 330,210 335,240 330,268',
+    riverColor: 'rgba(100,90,200,0.2)',
+    mountains: [],
+    // mist wisps
+    mist: [
+      'M 210,155 Q 240,145 270,158 Q 300,168 330,155','M 230,178 Q 265,168 295,178 Q 325,188 355,175',
+      'M 250,200 Q 285,192 310,202 Q 340,212 370,200',
+    ],
   },
-  { // 4 – Pics Glacés du Sorbet (top-mid-right, sharp peaks)
+  { // 4 – Pics Glacés du Sorbet — top-center-right, icy peaks
     id: 'pics_sorbet',
-    territory: 'M 300,20 C 340,8 410,15 430,55 C 445,85 435,120 405,138 C 375,155 325,150 300,128 C 272,105 265,38 300,20 Z',
-    cx: 362, cy: 82,
-    fillColor: '#0d3d6e', strokeColor: '#3b9ee8',
-    gradStop1: '#1a5490', gradStop2: '#061c3a',
-    pattern: 'snow',
-    patternColor: 'rgba(100,180,255,0.08)',
-    mountainPaths: [
-      'M305,128 L325,88 L345,128', 'M338,122 L362,75 L386,122', 'M378,120 L396,90 L414,120',
+    territory: 'M 245,30 C 270,55 305,74 330,80 C 350,85 375,90 405,100 C 380,88 355,70 335,50 C 318,35 295,18 270,8 Z',
+    // expand it to be bigger
+    territory: 'M 245,30 C 255,10 280,0 310,0 L 470,0 C 490,8 505,22 510,42 C 515,62 505,82 490,95 C 470,108 445,115 420,118 C 395,120 368,115 345,108 C 318,100 292,88 270,72 C 252,58 244,44 245,30 Z',
+    cx: 390, cy: 58,
+    gradStop1: '#0a2f58', gradStop2: '#030d1e',
+    strokeColor: '#48aae8',
+    trees: [],
+    river: '',
+    riverColor: '',
+    mountains: [
+      {x:300,y:105,h:50},{x:335,y:92,h:62},{x:368,y:85,h:70},{x:403,y:88,h:58},{x:435,y:98,h:44},
     ],
-    treePaths: [],
+    snowcap: 'M 285,82 C 302,60 320,48 338,58 C 350,45 368,36 385,48 C 400,35 418,30 435,44 C 448,34 462,32 474,45',
   },
-  { // 5 – Volcan de la Cantine (bottom-center, round volcanic mass)
+  { // 5 – Volcan de la Cantine — bottom-center
     id: 'volcan_cantine',
-    territory: 'M 210,280 C 245,255 335,252 370,278 C 408,305 410,355 375,370 C 340,385 255,385 220,368 C 182,350 175,308 210,280 Z',
-    cx: 292, cy: 322,
-    fillColor: '#6b1a08', strokeColor: '#d44010',
-    gradStop1: '#8a2510', gradStop2: '#2e0a04',
-    pattern: 'lava',
-    patternColor: 'rgba(220,80,20,0.12)',
-    mountainPaths: [
-      'M240,365 L265,325 L290,365', 'M278,360 L305,308 L332,360',
+    territory: 'M 185,178 C 195,205 220,230 248,248 C 275,265 310,278 345,282 C 375,285 405,280 430,268 C 455,255 472,235 480,212 C 488,188 485,162 470,142 C 465,160 460,190 455,215 C 448,240 435,262 415,278 C 393,295 360,305 325,308 C 290,310 255,305 228,292 C 205,280 188,260 182,238 C 176,218 178,198 185,178 Z',
+    // make it fill bottom
+    territory: 'M 130,215 C 140,240 165,268 195,288 C 225,308 265,322 308,326 C 350,330 392,325 428,310 C 462,295 488,272 500,245 C 512,218 508,188 492,165 C 480,212 472,235 455,255 C 430,268 405,280 375,285 C 345,282 310,278 275,265 C 248,248 220,230 195,178 Z',
+    territory: 'M 0,215 L 0,440 L 700,440 L 700,215 C 660,210 620,210 580,215 C 555,218 530,225 505,232 C 490,238 475,248 455,258 C 430,272 405,282 375,288 C 345,292 308,292 275,285 C 248,277 220,262 198,244 C 175,228 155,210 130,205 C 85,198 40,205 0,215 Z',
+    cx: 340, cy: 340,
+    gradStop1: '#5a1508', gradStop2: '#1c0502',
+    strokeColor: '#e04818',
+    trees: [],
+    river: '',
+    riverColor: '',
+    mountains: [
+      {x:200,y:310,h:55},{x:245,y:295,h:70},{x:295,y:280,h:88},{x:345,y:275,h:95},{x:395,y:280,h:80},{x:440,y:292,h:65},{x:485,y:308,h:50},
     ],
-    treePaths: [],
+    lava: [
+      'M 310,300 C 318,315 325,332 330,348','M 345,295 C 350,310 352,328 348,345',
+      'M 365,302 C 370,318 372,335 368,350',
+    ],
   },
+  { // 6 — Sea / ocean edges (decorative fill — not a region)
+    id: '_sea',
+    territory: null, // handled separately
+  }
 ];
 
-// Trail path connecting all region centers (approximate route)
-const MAP_TRAIL_D = 'M 95,100 C 180,80 240,100 290,185 C 310,150 330,100 362,82 C 395,100 430,100 490,100 M 290,185 C 292,250 292,290 292,322';
+// Trail path connecting region centers
+const MAP_TRAIL_D = 'M 110,105 C 200,92 270,110 335,185 C 355,155 370,105 390,58 C 430,65 470,70 510,85 M 335,185 C 335,240 338,290 340,340';
+
+// Cloud shapes for fog of war (each region has its own cloud cluster)
+const REGION_CLOUDS = {
+  foret_epices:   [{cx:60,cy:80,rx:55,ry:35},{cx:130,cy:50,rx:60,ry:38},{cx:170,cy:120,rx:45,ry:30},{cx:40,cy:160,rx:50,ry:32},{cx:110,cy:170,rx:48,ry:28}],
+  desert_sel:     [{cx:400,cy:45,rx:65,ry:38},{cx:480,cy:30,rx:70,ry:40},{cx:560,cy:55,rx:60,ry:35},{cx:630,cy:35,rx:55,ry:32},{cx:520,cy:105,rx:58,ry:30},{cx:650,cy:108,rx:50,ry:28}],
+  marais_vinaigre:[{cx:255,cy:145,rx:55,ry:32},{cx:320,cy:130,rx:60,ry:35},{cx:390,cy:148,rx:52,ry:30},{cx:240,cy:210,rx:58,ry:33},{cx:360,cy:230,rx:55,ry:30},{cx:435,cy:205,rx:48,ry:28}],
+  pics_sorbet:    [{cx:295,cy:35,rx:55,ry:32},{cx:365,cy:22,rx:65,ry:36},{cx:435,cy:35,rx:58,ry:30},{cx:320,cy:78,rx:50,ry:28},{cx:415,cy:80,rx:48,ry:26}],
+  volcan_cantine: [{cx:180,cy:280,rx:60,ry:36},{cx:260,cy:300,rx:68,ry:38},{cx:345,cy:295,rx:72,ry:40},{cx:430,cy:300,rx:65,ry:36},{cx:510,cy:282,rx:58,ry:32},{cx:220,cy:370,rx:65,ry:35},{cx:380,cy:375,rx:70,ry:38}],
+};
 
 function renderWorldMap() {
   const wrap = document.getElementById('worldMapSvgWrap');
   if (!wrap) return;
 
   const prog = getRegionProgress();
-  const ns = 'http://www.w3.org/2000/svg';
 
-  // Build defs
-  let defsHtml = `<defs>`;
-  // Gradients per region
-  MAP_LAYOUT.forEach(ml => {
-    defsHtml += `
-      <radialGradient id="grad_${ml.id}" cx="50%" cy="40%" r="60%">
-        <stop offset="0%" stop-color="${ml.gradStop1}"/>
-        <stop offset="100%" stop-color="${ml.gradStop2}"/>
-      </radialGradient>
-      <filter id="shadow_${ml.id}" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="${ml.strokeColor}" flood-opacity="0.35"/>
-      </filter>`;
+  // ── DEFS ──────────────────────────────────────────────────────────────────
+  let defs = `<defs>`;
+
+  // Per-region radial gradients
+  const gradData = {
+    foret_epices:   {c1:'#2d5a0a',c2:'#0f2204'},
+    desert_sel:     {c1:'#6b3808',c2:'#230d02'},
+    marais_vinaigre:{c1:'#1e2848',c2:'#07091a'},
+    pics_sorbet:    {c1:'#0d3a6e',c2:'#030d22'},
+    volcan_cantine: {c1:'#6b1a06',c2:'#1e0502'},
+  };
+  Object.entries(gradData).forEach(([id,g]) => {
+    defs += `<radialGradient id="rg_${id}" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="${g.c1}"/>
+      <stop offset="100%" stop-color="${g.c2}"/>
+    </radialGradient>`;
   });
-  // Fog gradient
-  defsHtml += `
-    <radialGradient id="fogGrad" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#0a0b08" stop-opacity="0.92"/>
-      <stop offset="100%" stop-color="#0a0b08" stop-opacity="0.98"/>
-    </radialGradient>
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>`;
 
-  // Build SVG content
-  let svgContent = defsHtml;
+  // Ocean gradient
+  defs += `<radialGradient id="rg_ocean" cx="50%" cy="50%" r="70%">
+    <stop offset="0%" stop-color="#0a1520"/>
+    <stop offset="100%" stop-color="#050a10"/>
+  </radialGradient>`;
 
-  // Background sea/void
-  svgContent += `<rect width="600" height="380" fill="#0d0e0b"/>`;
-  // Subtle grid lines (cartographic feel)
-  svgContent += `<g stroke="rgba(200,245,66,0.04)" stroke-width="1">`;
-  for (let x = 60; x < 600; x += 60) svgContent += `<line x1="${x}" y1="0" x2="${x}" y2="380"/>`;
-  for (let y = 38; y < 380; y += 38) svgContent += `<line x1="0" y1="${y}" x2="600" y2="${y}"/>`;
-  svgContent += `</g>`;
-  // Compass rose (decorative, bottom-right)
-  svgContent += `<g transform="translate(550,340)" opacity="0.18" stroke="#c8f542" stroke-width="1" fill="none">
-    <circle r="14"/>
-    <line x1="0" y1="-14" x2="0" y2="14"/>
-    <line x1="-14" y1="0" x2="14" y2="0"/>
-    <polygon points="0,-8 3,-3 -3,-3" fill="#c8f542" stroke="none"/>
-    <text x="0" y="-18" text-anchor="middle" fill="#c8f542" font-size="7" font-family="DM Mono,monospace" stroke="none">N</text>
-  </g>`;
-  // Title watermark
-  svgContent += `<text x="15" y="372" fill="rgba(200,245,66,0.08)" font-size="9" font-family="DM Mono,monospace" letter-spacing="3">CARTE DU MONDE DE LA CANTINE</text>`;
+  // Lava glow
+  defs += `<radialGradient id="rg_lava" cx="50%" cy="80%" r="60%">
+    <stop offset="0%" stop-color="#ff4400" stop-opacity="0.6"/>
+    <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+  </radialGradient>`;
 
-  // Trail path
-  svgContent += `<path d="${MAP_TRAIL_D}" fill="none" stroke="rgba(200,245,66,0.18)" stroke-width="1.5" stroke-dasharray="5 4" class="map-trail"/>`;
+  // Cloud gradient (puffy white-grey)
+  defs += `<radialGradient id="cloudGrad" cx="50%" cy="40%" r="60%">
+    <stop offset="0%" stop-color="#d0d8e8" stop-opacity="0.96"/>
+    <stop offset="60%" stop-color="#b0bcd0" stop-opacity="0.92"/>
+    <stop offset="100%" stop-color="#8898b0" stop-opacity="0.85"/>
+  </radialGradient>`;
 
-  // Render each region
-  MAP_LAYOUT.forEach((ml, idx) => {
-    const region = REGIONS.find(r => r.id === ml.id);
-    if (!region) return;
+  // Cloud shadow
+  defs += `<filter id="cloudBlur"><feGaussianBlur stdDeviation="4"/></filter>`;
+  defs += `<filter id="cloudSoft"><feGaussianBlur stdDeviation="2"/></filter>`;
+
+  // Glow filter
+  defs += `<filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>`;
+
+  // Active region pulse filter
+  defs += `<filter id="activeglow" x="-30%" y="-30%" width="160%" height="160%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>`;
+
+  // Water shimmer pattern
+  defs += `<pattern id="waterPat" x="0" y="0" width="40" height="12" patternUnits="userSpaceOnUse">
+    <path d="M0,6 Q10,2 20,6 Q30,10 40,6" fill="none" stroke="rgba(80,140,200,0.12)" stroke-width="1"/>
+  </pattern>`;
+
+  // Sand dune pattern
+  defs += `<pattern id="sandPat" x="0" y="0" width="60" height="18" patternUnits="userSpaceOnUse">
+    <path d="M0,9 Q15,4 30,9 Q45,14 60,9" fill="none" stroke="rgba(200,140,60,0.15)" stroke-width="1.2"/>
+  </pattern>`;
+
+  // Forest texture (tiny dots)
+  defs += `<pattern id="forestPat" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+    <circle cx="5" cy="5" r="2.5" fill="rgba(80,160,20,0.12)"/>
+    <circle cx="15" cy="12" r="2" fill="rgba(60,140,10,0.1)"/>
+  </pattern>`;
+
+  defs += `</defs>`;
+
+  // ── BACKGROUND ────────────────────────────────────────────────────────────
+  let svg = defs;
+
+  // Ocean / void base
+  svg += `<rect width="700" height="440" fill="#080d14"/>`;
+  // Ocean texture
+  svg += `<rect width="700" height="440" fill="url(#waterPat)" opacity="0.6"/>`;
+  // Subtle vignette
+  svg += `<radialGradient id="vign" cx="50%" cy="50%" r="70%"><stop offset="40%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.55)"/></radialGradient>`;
+  // Cartographic grid
+  svg += `<g stroke="rgba(180,220,255,0.04)" stroke-width="0.8">`;
+  for (let x=70;x<700;x+=70) svg += `<line x1="${x}" y1="0" x2="${x}" y2="440"/>`;
+  for (let y=44;y<440;y+=44) svg += `<line x1="0" y1="${y}" x2="700" y2="${y}"/>`;
+  svg += `</g>`;
+
+  // ── LAND MASSES ───────────────────────────────────────────────────────────
+  // Define territories as clipping regions — draw full-coverage land
+  const territories = {
+    foret_epices:   'M 0,0 L 240,0 L 255,28 C 238,58 218,88 200,118 C 182,148 172,172 158,192 C 138,212 112,218 90,213 C 65,206 40,192 22,173 C 6,157 0,138 0,108 Z',
+    desert_sel:     'M 255,28 L 240,0 L 700,0 L 700,155 C 665,162 628,168 592,163 C 558,158 525,144 498,130 C 472,118 448,104 422,96 C 395,88 368,83 345,78 C 318,72 282,55 255,28 Z',
+    marais_vinaigre:'M 198,120 C 222,96 262,86 302,83 C 342,80 378,89 408,102 C 432,112 458,126 474,148 C 490,170 492,196 484,220 C 476,244 460,264 434,276 C 408,288 376,292 344,288 C 310,284 274,270 248,252 C 220,232 198,206 188,180 C 178,156 182,138 198,120 Z',
+    pics_sorbet:    'M 255,28 C 268,8 292,0 318,0 L 470,0 L 498,28 C 506,48 500,78 484,96 C 465,112 440,120 414,122 C 388,124 362,118 338,110 C 312,100 288,86 268,70 C 252,57 246,42 255,28 Z',
+    volcan_cantine: 'M 0,220 L 0,440 L 700,440 L 700,218 C 662,212 622,210 582,214 C 555,218 528,226 502,235 C 484,242 466,252 446,262 C 420,276 392,286 360,290 C 328,294 292,292 262,284 C 235,276 208,260 188,242 C 168,226 152,210 128,206 C 88,200 44,206 0,220 Z',
+  };
+
+  REGIONS.forEach((region, idx) => {
+    const t = territories[region.id];
+    if (!t) return;
     const unlocked = isRegionUnlocked(idx);
-    const beaten = getRegionEnemiesBeaten(region.id);
+    const beaten   = getRegionEnemiesBeaten(region.id);
     const completed = prog[region.id] && prog[region.id].completed;
-    const isActive = selectedRegion === region.id;
+    const isActive  = selectedRegion === region.id;
 
-    const zoneCls = `map-region-zone ${unlocked ? 'unlocked' : 'locked'}${isActive ? ' active-zone' : ''}`;
-    const clickAttr = unlocked ? `onclick="selectRegion('${region.id}')"` : '';
+    const ml = MAP_LAYOUT.find(m => m.id === region.id);
+    if (!ml) return;
 
-    svgContent += `<g class="${zoneCls}" ${clickAttr} role="button" aria-label="${region.name}">`;
+    const strokeCol = isActive ? ml.strokeColor : completed ? ml.strokeColor : 'rgba(255,255,255,0.08)';
+    const strokeW   = isActive ? '2.5' : '1.2';
 
-    // Glow circle behind territory (active only)
+    svg += `<g class="map-region-zone ${unlocked?'unlocked':'locked'}${isActive?' active-zone':''}" ${unlocked?`onclick="selectRegion('${region.id}')"`:''}  role="button" aria-label="${region.name}">`;
+
+    // Active glow halo
     if (isActive) {
-      svgContent += `<circle class="region-glow" cx="${ml.cx}" cy="${ml.cy}" r="35" fill="${ml.strokeColor}" opacity="0.25" filter="url(#glow)"/>`;
+      svg += `<path d="${t}" fill="${ml.strokeColor}" opacity="0.18" filter="url(#activeglow)"/>`;
     }
 
-    // Main territory shape
-    const strokeW = isActive ? '2.5' : '1.5';
-    const strokeCol = isActive ? ml.strokeColor : (completed ? ml.strokeColor : 'rgba(255,255,255,0.08)');
-    svgContent += `<path class="region-territory" d="${ml.territory}" fill="url(#grad_${ml.id})" stroke="${strokeCol}" stroke-width="${strokeW}" filter="url(#shadow_${ml.id})"/>`;
+    // Land fill
+    svg += `<path d="${t}" fill="url(#rg_${region.id})" stroke="${strokeCol}" stroke-width="${strokeW}"/>`;
 
-    // Inner texture: mountain ridges
-    if (ml.mountainPaths && ml.mountainPaths.length) {
-      ml.mountainPaths.forEach(mp => {
-        svgContent += `<path d="${mp}" fill="none" stroke="${ml.strokeColor}" stroke-width="1" opacity="0.3"/>`;
+    // Texture overlays
+    if (region.id === 'foret_epices') {
+      svg += `<path d="${t}" fill="url(#forestPat)"/>`;
+      // Trees
+      const treeSets = [[45,65],[88,48],[138,38],[182,55],[205,80],[58,155],[100,168],[145,172],[172,148],[60,100],[110,115],[155,105]];
+      treeSets.forEach(([tx,ty]) => {
+        const s = 6 + Math.sin(tx*0.3)*2;
+        svg += `<circle cx="${tx}" cy="${ty}" r="${s}" fill="#1a4008" opacity="0.7"/>
+                <circle cx="${tx}" cy="${ty-s*0.6}" r="${s*0.75}" fill="#2a6010" opacity="0.8"/>
+                <line x1="${tx}" y1="${ty+s}" x2="${tx}" y2="${ty+s+8}" stroke="#3a2008" stroke-width="1.5" opacity="0.5"/>`;
+      });
+      // River
+      svg += `<path d="M 185,0 C 175,42 162,82 148,122 C 134,162 110,188 88,208" fill="none" stroke="rgba(60,160,60,0.3)" stroke-width="3" stroke-linecap="round"/>`;
+    }
+
+    if (region.id === 'desert_sel') {
+      svg += `<path d="${t}" fill="url(#sandPat)"/>`;
+      // Dune lines
+      const dunes = ['M 340,52 Q 385,38 430,56','M 450,74 Q 498,58 545,76','M 555,48 Q 608,34 650,52','M 370,105 Q 422,90 472,108','M 490,125 Q 545,110 590,128','M 610,92 Q 660,78 695,94'];
+      dunes.forEach(d => svg += `<path d="${d}" fill="none" stroke="rgba(220,160,80,0.22)" stroke-width="1.5" stroke-linecap="round"/>`);
+      // Rock formations
+      [[450,140,18,12],[510,120,22,14],[570,135,16,10],[620,145,20,12]].forEach(([rx,ry,rw,rh]) => {
+        svg += `<ellipse cx="${rx}" cy="${ry}" rx="${rw}" ry="${rh}" fill="#3d1e04" opacity="0.5"/>`;
+        svg += `<ellipse cx="${rx}" cy="${ry-rh*0.4}" rx="${rw*0.6}" ry="${rh*0.5}" fill="#5a2e08" opacity="0.4"/>`;
       });
     }
-    // Inner texture: tree dots for jungle/swamp
-    if (ml.treePaths && ml.treePaths.length) {
-      ml.treePaths.forEach(([tx,ty]) => {
-        svgContent += `<circle cx="${tx}" cy="${ty}" r="3" fill="${ml.strokeColor}" opacity="0.22"/>`;
+
+    if (region.id === 'marais_vinaigre') {
+      // Murky pools
+      [[248,155,18,8],[290,172,22,9],[330,165,18,7],[370,178,20,8],[405,198,15,6]].forEach(([px,py,pw,ph]) => {
+        svg += `<ellipse cx="${px}" cy="${py}" rx="${pw}" ry="${ph}" fill="#1a1a50" opacity="0.5"/>`;
+      });
+      // Swamp trees
+      [[215,205],[238,232],[262,252],[292,260],[328,257],[363,250],[398,238],[418,218]].forEach(([tx,ty]) => {
+        svg += `<line x1="${tx}" y1="${ty}" x2="${tx}" y2="${ty-18}" stroke="#1e2a10" stroke-width="2" opacity="0.6"/>`;
+        svg += `<ellipse cx="${tx}" cy="${ty-20}" rx="7" ry="9" fill="#283818" opacity="0.55"/>`;
+      });
+      // Mist wisps
+      ['M 212,158 Q 248,148 278,160 Q 308,170 338,157','M 232,182 Q 268,172 298,182 Q 330,192 362,178','M 252,205 Q 290,196 318,207 Q 350,218 385,205'].forEach(d =>
+        svg += `<path d="${d}" fill="none" stroke="rgba(130,120,220,0.28)" stroke-width="2.5" stroke-linecap="round"/>`
+      );
+    }
+
+    if (region.id === 'pics_sorbet') {
+      // Mountain peaks
+      [[295,108,54],[330,96,68],[365,88,76],[400,92,62],[435,102,46]].forEach(([px,py,h]) => {
+        const bx = py + h;
+        svg += `<polygon points="${px},${py} ${px-h*0.55},${bx} ${px+h*0.55},${bx}" fill="#0a2040" opacity="0.75"/>`;
+        svg += `<polygon points="${px},${py} ${px-h*0.2},${py+h*0.35} ${px+h*0.2},${py+h*0.35}" fill="rgba(220,240,255,0.55)"/>`;
+      });
+      // Snow cap line
+      svg += `<path d="M 282,88 C 300,68 318,56 338,66 C 352,52 372,44 390,56 C 406,42 424,38 442,52 C 456,40 472,38 485,52" fill="none" stroke="rgba(210,235,255,0.6)" stroke-width="2" stroke-linecap="round"/>`;
+      // Ice sparkles
+      [[310,42],[355,30],[400,38],[450,45]].forEach(([sx,sy]) => {
+        svg += `<path d="M${sx},${sy-5} L${sx},${sy+5} M${sx-5},${sy} L${sx+5},${sy}" stroke="rgba(180,220,255,0.5)" stroke-width="1"/>`;
       });
     }
-    // Special: lava cracks for volcano
-    if (ml.id === 'volcan_cantine') {
-      svgContent += `<path d="M270,310 C278,320 285,330 290,345 C 295,335 302,322 312,315" fill="none" stroke="#ff6030" stroke-width="1.5" opacity="0.35"/>`;
-      svgContent += `<circle cx="292" cy="300" r="5" fill="#ff4010" opacity="0.4"/>`;
-    }
-    // Special: snow caps for glacier
-    if (ml.id === 'pics_sorbet') {
-      svgContent += `<path d="M335,55 C348,40 362,32 375,50 C 385,42 400,38 415,55" fill="none" stroke="rgba(200,230,255,0.5)" stroke-width="2"/>`;
-    }
-    // Special: mist wisps for swamp
-    if (ml.id === 'marais_vinaigre') {
-      svgContent += `<path d="M220,180 Q240,170 260,178 Q280,185 300,175" fill="none" stroke="rgba(150,140,240,0.3)" stroke-width="1.5"/>`;
-      svgContent += `<path d="M230,200 Q255,192 275,200 Q295,208 320,198" fill="none" stroke="rgba(150,140,240,0.25)" stroke-width="1"/>`;
-    }
 
-    // Region icon (emoji via foreignObject — fallback to text char)
-    svgContent += `<text x="${ml.cx}" y="${ml.cy - 14}" text-anchor="middle" font-size="20" opacity="${unlocked ? '0.9' : '0.3'}">${region.icon}</text>`;
-
-    // Region name label
-    const nameOpacity = unlocked ? '1' : '0.25';
-    svgContent += `<text x="${ml.cx}" y="${ml.cy + 8}" text-anchor="middle" fill="${completed ? '#c8f542' : ml.strokeColor}" font-size="8.5" font-family="Playfair Display, serif" font-weight="700" opacity="${nameOpacity}">${region.name}</text>`;
-
-    // Progress pips (small dots below name)
-    const pipSpacing = 10;
-    const totalPips = region.enemies.length;
-    const pipStartX = ml.cx - ((totalPips - 1) * pipSpacing) / 2;
-    region.enemies.forEach((eid, pi) => {
-      const e = ALL_ENEMIES[eid];
-      const isBeaten = beaten.includes(eid);
-      const isBoss = e && e.isBoss;
-      const pipX = pipStartX + pi * pipSpacing;
-      const pipY = ml.cy + 20;
-      const pipColor = isBeaten ? (isBoss ? '#e84545' : '#c8f542') : 'rgba(255,255,255,0.15)';
-      const pipR = isBoss ? 4 : 3;
-      svgContent += `<circle cx="${pipX}" cy="${pipY}" r="${pipR}" fill="${pipColor}" stroke="${isBoss ? '#e84545' : 'rgba(255,255,255,0.2)'}" stroke-width="0.8"/>`;
-    });
-
-    // Completed badge
-    if (completed) {
-      svgContent += `<text x="${ml.cx}" y="${ml.cy + 34}" text-anchor="middle" fill="#c8f542" font-size="8" font-family="DM Mono, monospace" letter-spacing="1" opacity="0.9">✓ TERMINÉ</text>`;
+    if (region.id === 'volcan_cantine') {
+      // Volcano cone shape
+      svg += `<polygon points="340,240 280,380 400,380" fill="#3a0d04" opacity="0.6"/>`;
+      svg += `<polygon points="340,240 308,295 372,295" fill="#5a1808" opacity="0.5"/>`;
+      // Lava rivers
+      ['M 326,295 C 322,315 320,335 318,355','M 340,285 C 340,308 340,330 338,352','M 354,295 C 358,318 360,340 358,358'].forEach(d =>
+        svg += `<path d="${d}" fill="none" stroke="#ff5500" stroke-width="3" opacity="0.55" stroke-linecap="round"/>`
+      );
+      // Lava glow
+      svg += `<ellipse cx="340" cy="320" rx="80" ry="50" fill="url(#rg_lava)" opacity="0.4"/>`;
+      // Ember dots
+      [[290,280],[310,265],[340,258],[370,268],[395,282],[260,310],[415,312],[240,340],[450,338]].forEach(([ex,ey]) =>
+        svg += `<circle cx="${ex}" cy="${ey}" r="2.5" fill="#ff6600" opacity="${0.3+Math.random()*0.4}"/>`
+      );
+      // Lava lake at bottom
+      svg += `<ellipse cx="340" cy="410" rx="180" ry="30" fill="#8a1500" opacity="0.5"/>`;
+      svg += `<ellipse cx="340" cy="408" rx="140" ry="20" fill="#c83000" opacity="0.35"/>`;
     }
 
-    // Lock icon if locked
+    // ── LABEL GROUP (always on top) ─────────────────────────────────────────
+    const cx = ml.cx, cy = ml.cy;
+
     if (!unlocked) {
-      svgContent += `<text x="${ml.cx}" y="${ml.cy + 6}" text-anchor="middle" font-size="14" opacity="0.5">🔒</text>`;
+      // Locked: just show faint label, cloud will cover
+    } else {
+      // Icon
+      svg += `<text x="${cx}" y="${cy-16}" text-anchor="middle" font-size="22" opacity="0.92" class="map-region-label">${region.icon}</text>`;
+      // Name
+      svg += `<text x="${cx}" y="${cy+5}" text-anchor="middle" fill="${completed?'#c8f542':ml.strokeColor}" font-size="9" font-family="Playfair Display,serif" font-weight="700" letter-spacing="0.5">${region.name}</text>`;
+      // Progress pips
+      const totalPips = region.enemies.length;
+      const pipSpacing = 11;
+      const pipStartX = cx - ((totalPips-1)*pipSpacing)/2;
+      region.enemies.forEach((eid,pi) => {
+        const e = ALL_ENEMIES[eid];
+        const isBeaten = beaten.includes(eid);
+        const isBoss = e && e.isBoss;
+        const pipX = pipStartX + pi*pipSpacing;
+        const pipY = cy + 18;
+        svg += `<circle cx="${pipX}" cy="${pipY}" r="${isBoss?4.5:3.5}" fill="${isBeaten?(isBoss?'#e84545':'#c8f542'):'rgba(255,255,255,0.12)'}" stroke="${isBoss?'rgba(232,69,69,0.6)':'rgba(255,255,255,0.15)'}" stroke-width="1"/>`;
+        if (isBeaten) svg += `<text x="${pipX}" y="${pipY+3}" text-anchor="middle" font-size="5" fill="${isBoss?'#fff':'#0e0f0c'}" font-weight="700">✓</text>`;
+      });
+      // Completed ribbon
+      if (completed) {
+        svg += `<rect x="${cx-28}" y="${cy+24}" width="56" height="12" rx="3" fill="rgba(200,245,66,0.15)" stroke="rgba(200,245,66,0.4)" stroke-width="0.8"/>`;
+        svg += `<text x="${cx}" y="${cy+33}" text-anchor="middle" fill="#c8f542" font-size="7" font-family="DM Mono,monospace" letter-spacing="1">✓ TERMINÉ</text>`;
+      }
+      // Active pulse ring
+      if (isActive) {
+        svg += `<circle cx="${cx}" cy="${cy}" r="42" fill="none" stroke="${ml.strokeColor}" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5" class="region-glow"/>`;
+      }
     }
 
-    // Fog overlay for locked regions
+    // ── CLOUD FOG for locked regions ──────────────────────────────────────
     if (!unlocked) {
-      svgContent += `<path class="fog-overlay" id="fog_${region.id}" d="${ml.territory}" fill="url(#fogGrad)" opacity="1"/>`;
+      const clouds = REGION_CLOUDS[region.id] || [];
+      const fogId = `fog_${region.id}`;
+      svg += `<g class="fog-overlay" id="${fogId}">`;
+      // Dark base fill
+      svg += `<path d="${t}" fill="rgba(8,10,14,0.82)"/>`;
+      // Cloud puffs (layered for depth)
+      clouds.forEach((c, ci) => {
+        // Shadow blob
+        svg += `<ellipse cx="${c.cx+3}" cy="${c.cy+5}" rx="${c.rx}" ry="${c.ry*0.6}" fill="rgba(0,0,0,0.22)" filter="url(#cloudBlur)"/>`;
+        // Main cloud body
+        svg += `<ellipse cx="${c.cx}" cy="${c.cy}" rx="${c.rx}" ry="${c.ry}" fill="url(#cloudGrad)"/>`;
+        // Highlight puff on top
+        svg += `<ellipse cx="${c.cx-c.rx*0.2}" cy="${c.cy-c.ry*0.3}" rx="${c.rx*0.55}" ry="${c.ry*0.5}" fill="rgba(240,248,255,0.5)"/>`;
+        // Secondary puff right
+        svg += `<ellipse cx="${c.cx+c.rx*0.35}" cy="${c.cy-c.ry*0.15}" rx="${c.rx*0.45}" ry="${c.ry*0.55}" fill="rgba(200,215,235,0.45)"/>`;
+        // Small top puff
+        svg += `<ellipse cx="${c.cx+c.rx*0.1}" cy="${c.cy-c.ry*0.55}" rx="${c.rx*0.35}" ry="${c.ry*0.38}" fill="rgba(230,240,255,0.55)"/>`;
+      });
+      // Lock icon centered on region
+      svg += `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="16" opacity="0.4">🔒</text>`;
+      svg += `</g>`;
     }
 
-    svgContent += `</g>`;
+    svg += `</g>`;
   });
 
-  // Full SVG
-  const fullSvg = `<svg id="worldMapSVG" viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" aria-label="Carte du monde de la Cantine">${svgContent}</svg>`;
+  // ── OVERLAY ELEMENTS ──────────────────────────────────────────────────────
+  // Trail path
+  svg += `<path d="${MAP_TRAIL_D}" fill="none" stroke="rgba(200,245,66,0.22)" stroke-width="1.5" stroke-dasharray="5 4" class="map-trail"/>`;
+
+  // Compass rose
+  svg += `<g transform="translate(658,408)" opacity="0.22" stroke="#c8f542" stroke-width="1" fill="none">
+    <circle r="14"/>
+    <line x1="0" y1="-13" x2="0" y2="13"/>
+    <line x1="-13" y1="0" x2="13" y2="0"/>
+    <polygon points="0,-8 3,-3 -3,-3" fill="#c8f542" stroke="none"/>
+    <text x="0" y="-17" text-anchor="middle" fill="#c8f542" font-size="7" font-family="DM Mono,monospace" stroke="none">N</text>
+  </g>`;
+
+  // Scale bar + watermark
+  svg += `<text x="14" y="432" fill="rgba(200,245,66,0.07)" font-size="8" font-family="DM Mono,monospace" letter-spacing="2.5">CARTE DU MONDE DE LA CANTINE</text>`;
+  svg += `<line x1="14" y1="420" x2="74" y2="420" stroke="rgba(200,245,66,0.12)" stroke-width="1"/>`;
+  svg += `<text x="44" y="418" text-anchor="middle" fill="rgba(200,245,66,0.1)" font-size="6.5" font-family="DM Mono,monospace">60 unités</text>`;
+
+  // Vignette
+  svg += `<rect width="700" height="440" fill="url(#vign)"/>`;
+
+  const fullSvg = `<svg id="worldMapSVG" viewBox="0 0 700 440" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">${svg}</svg>`;
   wrap.innerHTML = fullSvg;
   updateMapProgressLabel();
 }

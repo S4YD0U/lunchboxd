@@ -498,49 +498,71 @@
       margin-top: 0.1rem;
     }
 
-    /* ============ LOOTBOX OPENING OVERLAY ============ */
+    /* ============ LOOTBOX OPENING OVERLAY — OVERWATCH STYLE ============ */
     .lb-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(5,5,4,0.96);
+      background: rgba(5,5,4,0.98);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 700;
       flex-direction: column;
+      overflow: hidden;
     }
     .lb-overlay.show { display: flex; }
+
+    /* Background beams */
+    .lb-bg-beams {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .lb-beam {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      height: 70%;
+      transform-origin: bottom center;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .lb-bg-beams.active .lb-beam { opacity: 1; }
 
     .lb-stage {
       text-align: center;
       max-width: 520px;
       width: 90%;
+      position: relative;
+      z-index: 2;
     }
 
     /* Stage 1: shaking chest */
     .lb-chest-wrap {
       position: relative;
-      width: 180px;
-      height: 180px;
+      width: 200px;
+      height: 200px;
       margin: 0 auto 1.5rem;
     }
     .lb-chest-emoji {
-      font-size: 7rem;
+      font-size: 8rem;
       display: block;
       line-height: 1;
       transition: transform 0.1s;
+      filter: drop-shadow(0 0 0px transparent);
     }
     .lb-chest-glow {
       position: absolute;
-      inset: -20px;
+      inset: -30px;
       border-radius: 50%;
       opacity: 0;
       transition: opacity 0.4s;
       pointer-events: none;
     }
-    .glow-common { background: radial-gradient(circle, rgba(96,165,250,0.3) 0%, transparent 60%); }
-    .glow-rare   { background: radial-gradient(circle, rgba(167,139,250,0.35) 0%, transparent 60%); }
-    .glow-epic   { background: radial-gradient(circle, rgba(245,166,35,0.4) 0%, transparent 60%); }
+    .glow-common { background: radial-gradient(circle, rgba(96,165,250,0.4) 0%, transparent 60%); }
+    .glow-rare   { background: radial-gradient(circle, rgba(167,139,250,0.45) 0%, transparent 60%); }
+    .glow-epic   { background: radial-gradient(circle, rgba(245,166,35,0.5) 0%, transparent 60%); }
 
     .lb-loading-bar-wrap {
       width: 100%;
@@ -554,7 +576,7 @@
       height: 100%;
       border-radius: 3px;
       width: 0%;
-      transition: width 0.1s linear;
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
     }
     .lb-loading-bar.common { background: linear-gradient(90deg, var(--xp-blue), #93c5fd); }
     .lb-loading-bar.rare   { background: linear-gradient(90deg, var(--purple), #c4b5fd); }
@@ -569,84 +591,166 @@
       margin-bottom: 1.5rem;
     }
 
-    /* Stage 2: reveal cards */
-    .lb-reveal-stage { display: none; }
-    .lb-reveal-stage.show { display: block; }
+    /* ===== STAGE 2: OVERWATCH-STYLE CARD REVEAL ===== */
+    .lb-reveal-stage { display: none; width: 100%; max-width: 900px; position: relative; z-index: 2; }
+    .lb-reveal-stage.show { display: flex; flex-direction: column; align-items: center; }
 
     .lb-reveal-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
+      text-align: center;
     }
     .lb-reveal-sub {
       font-family: 'DM Mono', monospace;
       font-size: 0.68rem;
       color: var(--muted);
-      margin-bottom: 2rem;
+      margin-bottom: 1.8rem;
+      text-align: center;
     }
 
+    /* Cards row — perspective for 3D flip */
     .lb-cards-row {
       display: flex;
-      gap: 1rem;
+      gap: 1.2rem;
       justify-content: center;
       flex-wrap: wrap;
       margin-bottom: 2rem;
+      perspective: 1200px;
     }
 
+    /* Overwatch card — flips from face-down */
     .lb-item-card {
-      background: var(--card-bg);
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 1.2rem 1rem;
-      text-align: center;
-      width: 130px;
-      opacity: 0;
-      transform: translateY(30px) scale(0.85);
-      transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
       position: relative;
+      width: 140px;
+      height: 200px;
+      flex-shrink: 0;
+      cursor: pointer;
+      transform-style: preserve-3d;
     }
-    .lb-item-card.revealed {
-      opacity: 1;
-      transform: translateY(0) scale(1);
+    .lb-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+      transform: rotateY(180deg);
     }
-    .lb-item-card.rarity-common { border-color: rgba(96,165,250,0.4); box-shadow: 0 0 20px rgba(96,165,250,0.1); }
-    .lb-item-card.rarity-rare   { border-color: rgba(167,139,250,0.5); box-shadow: 0 0 24px rgba(167,139,250,0.15); }
-    .lb-item-card.rarity-epic   { border-color: rgba(245,166,35,0.6); box-shadow: 0 0 30px rgba(245,166,35,0.2); }
-    .lb-item-card.rarity-legendary { border-color: rgba(232,69,69,0.7); box-shadow: 0 0 40px rgba(232,69,69,0.25); animation: legendaryPulse 1.5s ease-in-out infinite; }
+    .lb-item-card.revealed .lb-card-inner { transform: rotateY(0deg); }
 
-    .lb-item-icon { font-size: 2.2rem; display: block; margin-bottom: 0.5rem; }
-    .lb-item-name { font-family: 'Playfair Display', serif; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .lb-card-face, .lb-card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--border);
+    }
+    .lb-card-back {
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
+      border-color: var(--border);
+      font-size: 3rem;
+      transform: rotateY(180deg);
+    }
+    .lb-card-back-glyph {
+      opacity: 0.2;
+      font-size: 2.5rem;
+      animation: lbCardBackPulse 2s ease-in-out infinite;
+    }
+    @keyframes lbCardBackPulse { 0%,100%{opacity:0.15} 50%{opacity:0.3} }
+
+    .lb-card-face {
+      background: var(--card-bg);
+      padding: 1rem 0.8rem;
+      text-align: center;
+      gap: 0.4rem;
+      border: 2px solid var(--border);
+    }
+    .lb-card-face.rarity-common  { border-color: rgba(96,165,250,0.5);  background: linear-gradient(180deg, rgba(96,165,250,0.06) 0%, var(--card-bg) 60%); }
+    .lb-card-face.rarity-rare    { border-color: rgba(167,139,250,0.6); background: linear-gradient(180deg, rgba(167,139,250,0.08) 0%, var(--card-bg) 60%); }
+    .lb-card-face.rarity-epic    { border-color: rgba(245,166,35,0.7);  background: linear-gradient(180deg, rgba(245,166,35,0.1) 0%, var(--card-bg) 60%); }
+    .lb-card-face.rarity-legendary {
+      border-color: rgba(232,69,69,0.8);
+      background: linear-gradient(180deg, rgba(232,69,69,0.12) 0%, rgba(245,166,35,0.06) 50%, var(--card-bg) 80%);
+      animation: legendaryPulse 1.5s ease-in-out infinite;
+    }
+
+    /* Rarity beam on top of card face */
+    .lb-card-face::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 10%; right: 10%;
+      height: 3px;
+      border-radius: 0 0 3px 3px;
+      background: transparent;
+    }
+    .lb-card-face.rarity-common::before  { background: linear-gradient(90deg, transparent, #60a5fa, transparent); }
+    .lb-card-face.rarity-rare::before    { background: linear-gradient(90deg, transparent, #a78bfa, transparent); }
+    .lb-card-face.rarity-epic::before    { background: linear-gradient(90deg, transparent, #f5a623, transparent); }
+    .lb-card-face.rarity-legendary::before { background: linear-gradient(90deg, transparent, #e84545, #f5a623, #e84545, transparent); }
+
+    .lb-item-icon { font-size: 2.8rem; display: block; line-height: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+    .lb-item-name { font-family: 'Playfair Display', serif; font-size: 0.8rem; font-weight: 700; line-height: 1.2; margin-top: 0.2rem; }
     .lb-item-rarity {
       font-family: 'DM Mono', monospace;
-      font-size: 0.55rem;
+      font-size: 0.52rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 0.15rem 0.5rem;
+      padding: 0.12rem 0.5rem;
       border-radius: 2px;
-      margin-bottom: 0.4rem;
       display: inline-block;
     }
-    .lb-item-rarity.rarity-common { background: rgba(96,165,250,0.12); color: var(--xp-blue); }
-    .lb-item-rarity.rarity-rare   { background: rgba(167,139,250,0.12); color: var(--purple); }
-    .lb-item-rarity.rarity-epic   { background: rgba(245,166,35,0.12); color: var(--gold); }
-    .lb-item-rarity.rarity-legendary { background: rgba(232,69,69,0.12); color: var(--accent3); }
-    .lb-item-stat { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--hp-green); }
+    .lb-item-rarity.rarity-common { background: rgba(96,165,250,0.15); color: var(--xp-blue); }
+    .lb-item-rarity.rarity-rare   { background: rgba(167,139,250,0.15); color: var(--purple); }
+    .lb-item-rarity.rarity-epic   { background: rgba(245,166,35,0.15); color: var(--gold); }
+    .lb-item-rarity.rarity-legendary { background: rgba(232,69,69,0.15); color: var(--accent3); }
+    .lb-item-stat { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--hp-green); margin-top: 0.1rem; }
 
     .lb-new-badge {
       position: absolute;
-      top: -8px; right: -8px;
+      top: -10px; right: -10px;
       background: var(--accent3);
       color: #fff;
       font-family: 'DM Mono', monospace;
-      font-size: 0.52rem;
+      font-size: 0.5rem;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       padding: 0.15rem 0.45rem;
       border-radius: 2px;
       font-weight: 700;
+      z-index: 3;
     }
+
+    /* Spotlight circle under active card */
+    .lb-spotlight {
+      position: fixed;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 699;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+    .lb-spotlight.active { opacity: 1; }
+
+    /* Card click hint */
+    .lb-click-hint {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      animation: lbHintPulse 1.4s ease-in-out infinite;
+      margin-bottom: 1.5rem;
+    }
+    @keyframes lbHintPulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
 
     .lb-close-btn {
       background: none;
@@ -659,7 +763,9 @@
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
+      display: none;
     }
+    .lb-close-btn.show { display: inline-block; }
     .lb-close-btn:hover { border-color: var(--accent); color: var(--accent); }
 
     /* Particles */
@@ -677,6 +783,13 @@
       border-radius: 50%;
       animation: particleFly 1.2s ease forwards;
     }
+    /* Extra burst for OW-style reveal */
+    .lb-burst-particle {
+      position: absolute;
+      border-radius: 3px;
+      animation: lbBurstFly var(--dur, 0.9s) ease forwards;
+    }
+    @keyframes lbBurstFly { 0%{opacity:1;transform:translate(0,0) rotate(0deg) scale(1)} 100%{opacity:0;transform:translate(var(--tx),var(--ty)) rotate(var(--rot,45deg)) scale(0.3)} }
 
     /* ============ SKILL TREE ============ */
     .skilltree-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
@@ -1318,6 +1431,9 @@
 
 <!-- ==================== LOOTBOX OPENING OVERLAY ==================== -->
 <div class="lb-overlay" id="lbOverlay">
+  <!-- Background beams -->
+  <div class="lb-bg-beams" id="lbBgBeams"></div>
+
   <div class="lb-stage" id="lbOpeningStage">
     <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;" id="lbOpeningTierLabel">Ouverture de la boîte...</div>
     <div class="lb-chest-wrap">
@@ -1334,9 +1450,13 @@
     <div class="lb-reveal-title" id="lbRevealTitle">🎁 Contenu révélé !</div>
     <div class="lb-reveal-sub" id="lbRevealSub">Tu as obtenu ces objets :</div>
     <div class="lb-cards-row" id="lbCardsRow"></div>
-    <button class="lb-close-btn" onclick="closeLbOverlay()">Fermer et récupérer les objets</button>
+    <div class="lb-click-hint" id="lbClickHint">▶ Clique sur les cartes pour les révéler</div>
+    <button class="lb-close-btn" id="lbCloseBtn" onclick="closeLbOverlay()">Récupérer les objets →</button>
   </div>
 </div>
+
+<!-- SPOTLIGHT for card reveal -->
+<div class="lb-spotlight" id="lbSpotlight"></div>
 
 <!-- PARTICLES CONTAINER -->
 <div class="lb-particles" id="lbParticles"></div>
@@ -1652,7 +1772,7 @@
 const LOOTBOX_TIERS = [
   {
     id: 'lb_common',
-    name: 'Boîte Ordinaire',
+    name: 'Boîte de Cantine',
     tier: 'common',
     chest: '📦',
     price: 50,
@@ -1667,13 +1787,16 @@ const LOOTBOX_TIERS = [
     ],
     guarantees: ['Au moins 2 objets', 'Chance de rare'],
     lootTable: [
-      { type: 'weapon', id: 'w1', rarity: 'common', weight: 30 },
-      { type: 'armor',  id: 'a1', rarity: 'common', weight: 30 },
-      { type: 'consumable', id: 'c1', rarity: 'common', weight: 30 },
-      { type: 'consumable', id: 'c1', rarity: 'common', weight: 20 },
-      { type: 'weapon', id: 'w2', rarity: 'rare',   weight: 10 },
-      { type: 'armor',  id: 'a2', rarity: 'rare',   weight: 10 },
-      { type: 'consumable', id: 'c2', rarity: 'rare', weight: 8 },
+      { type: 'weapon', id: 'w1', rarity: 'common', weight: 20 },
+      { type: 'weapon', id: 'w5', rarity: 'common', weight: 20 },
+      { type: 'armor',  id: 'a1', rarity: 'common', weight: 20 },
+      { type: 'armor',  id: 'a5', rarity: 'common', weight: 15 },
+      { type: 'consumable', id: 'c1', rarity: 'common', weight: 25 },
+      { type: 'consumable', id: 'c5', rarity: 'common', weight: 20 },
+      { type: 'consumable', id: 'c6', rarity: 'common', weight: 15 },
+      { type: 'weapon', id: 'w2', rarity: 'rare',   weight: 8 },
+      { type: 'armor',  id: 'a2', rarity: 'rare',   weight: 8 },
+      { type: 'consumable', id: 'c2', rarity: 'rare', weight: 6 },
       { type: 'gold',   amount: 20, rarity: 'common', weight: 12 },
       { type: 'gold',   amount: 35, rarity: 'rare',   weight: 5 },
     ],
@@ -1695,14 +1818,17 @@ const LOOTBOX_TIERS = [
     ],
     guarantees: ['Au moins 3 objets', 'Un rare garanti', 'Chance épique'],
     lootTable: [
-      { type: 'weapon', id: 'w2', rarity: 'rare',   weight: 25 },
-      { type: 'armor',  id: 'a2', rarity: 'rare',   weight: 25 },
-      { type: 'weapon', id: 'w3', rarity: 'rare',   weight: 20 },
-      { type: 'armor',  id: 'a3', rarity: 'rare',   weight: 20 },
-      { type: 'consumable', id: 'c2', rarity: 'rare', weight: 20 },
-      { type: 'consumable', id: 'c3', rarity: 'epic', weight: 15 },
-      { type: 'weapon', id: 'w4', rarity: 'epic',   weight: 8 },
-      { type: 'armor',  id: 'a4', rarity: 'epic',   weight: 8 },
+      { type: 'weapon', id: 'w2', rarity: 'rare',   weight: 18 },
+      { type: 'weapon', id: 'w6', rarity: 'rare',   weight: 18 },
+      { type: 'armor',  id: 'a2', rarity: 'rare',   weight: 18 },
+      { type: 'armor',  id: 'a6', rarity: 'rare',   weight: 15 },
+      { type: 'armor',  id: 'a7', rarity: 'rare',   weight: 12 },
+      { type: 'consumable', id: 'c2', rarity: 'rare', weight: 18 },
+      { type: 'consumable', id: 'c7', rarity: 'rare', weight: 15 },
+      { type: 'consumable', id: 'c8', rarity: 'rare', weight: 12 },
+      { type: 'weapon', id: 'w3', rarity: 'epic',   weight: 8 },
+      { type: 'armor',  id: 'a3', rarity: 'epic',   weight: 8 },
+      { type: 'consumable', id: 'c3', rarity: 'epic', weight: 8 },
       { type: 'gold',   amount: 60, rarity: 'rare',  weight: 15 },
       { type: 'gold',   amount: 100, rarity: 'epic', weight: 5 },
       { type: 'xp',     amount: 80, rarity: 'rare',  weight: 12 },
@@ -1726,18 +1852,55 @@ const LOOTBOX_TIERS = [
     ],
     guarantees: ['4 objets garantis', 'Un épique garanti', 'Chance légendaire', 'Bonus XP/Gold'],
     lootTable: [
-      { type: 'weapon', id: 'w3', rarity: 'epic',   weight: 20 },
-      { type: 'armor',  id: 'a3', rarity: 'epic',   weight: 20 },
-      { type: 'weapon', id: 'w4', rarity: 'epic',   weight: 18 },
-      { type: 'armor',  id: 'a4', rarity: 'epic',   weight: 18 },
-      { type: 'consumable', id: 'c3', rarity: 'epic', weight: 15 },
-      { type: 'consumable', id: 'c4', rarity: 'legendary', weight: 8 },
+      { type: 'weapon', id: 'w7', rarity: 'epic',   weight: 18 },
+      { type: 'weapon', id: 'w8', rarity: 'epic',   weight: 16 },
+      { type: 'weapon', id: 'w9', rarity: 'epic',   weight: 14 },
+      { type: 'armor',  id: 'a8', rarity: 'epic',   weight: 18 },
+      { type: 'armor',  id: 'a9', rarity: 'epic',   weight: 14 },
+      { type: 'consumable', id: 'c9',  rarity: 'epic', weight: 15 },
+      { type: 'consumable', id: 'c10', rarity: 'epic', weight: 12 },
+      { type: 'consumable', id: 'c11', rarity: 'epic', weight: 10 },
+      { type: 'consumable', id: 'c4',  rarity: 'legendary', weight: 6 },
       { type: 'gold',   amount: 150, rarity: 'epic', weight: 12 },
       { type: 'gold',   amount: 250, rarity: 'legendary', weight: 5 },
       { type: 'xp',     amount: 200, rarity: 'epic', weight: 15 },
       { type: 'xp',     amount: 400, rarity: 'legendary', weight: 6 },
       { type: 'sp',     amount: 1, rarity: 'legendary', weight: 6 },
       { type: 'sp',     amount: 2, rarity: 'legendary', weight: 2 },
+    ],
+  },
+  {
+    id: 'lb_mythic',
+    name: '✨ Boîte Mythique',
+    tier: 'epic',
+    chest: '🌟',
+    price: 500,
+    desc: 'La boîte ultime. Un vestige de l\'ère où la cantine servait des dieux.',
+    dropCount: 5,
+    drops: [
+      { label: 'Arme légendaire', rarity: 'l', chance: 0.45 },
+      { label: 'Armure légendaire', rarity: 'l', chance: 0.40 },
+      { label: 'Consommable ultime', rarity: 'l', chance: 0.10 },
+      { label: 'Méga XP', rarity: 'l', chance: 0.04 },
+      { label: '3 pts Skill', rarity: 'l', chance: 0.01 },
+    ],
+    guarantees: ['5 objets garantis', 'Épique ou mieux garanti', 'Légendaire très probable', 'Méga récompenses'],
+    lootTable: [
+      { type: 'weapon', id: 'w4',  rarity: 'epic',      weight: 15 },
+      { type: 'weapon', id: 'w10', rarity: 'legendary', weight: 12 },
+      { type: 'weapon', id: 'w11', rarity: 'legendary', weight: 10 },
+      { type: 'weapon', id: 'w12', rarity: 'legendary', weight: 6 },
+      { type: 'armor',  id: 'a4',  rarity: 'epic',      weight: 15 },
+      { type: 'armor',  id: 'a10', rarity: 'legendary', weight: 12 },
+      { type: 'armor',  id: 'a11', rarity: 'legendary', weight: 8 },
+      { type: 'consumable', id: 'c12', rarity: 'legendary', weight: 10 },
+      { type: 'consumable', id: 'c4',  rarity: 'legendary', weight: 8 },
+      { type: 'gold',   amount: 400, rarity: 'legendary', weight: 10 },
+      { type: 'gold',   amount: 600, rarity: 'legendary', weight: 5 },
+      { type: 'xp',     amount: 600, rarity: 'legendary', weight: 12 },
+      { type: 'xp',     amount: 1000, rarity: 'legendary', weight: 5 },
+      { type: 'sp',     amount: 2, rarity: 'legendary', weight: 8 },
+      { type: 'sp',     amount: 3, rarity: 'legendary', weight: 3 },
     ],
   }
 ];
@@ -1761,7 +1924,7 @@ function renderLootboxGrid() {
       <div class="lootbox-card tier-${lb.tier}${cantAfford ? ' cant-afford-lb' : ''}"
            onclick="${cantAfford ? '' : `openLootbox('${lb.id}')`}">
         <span class="lootbox-card-chest">${lb.chest}</span>
-        <span class="lootbox-tier-badge">${lb.tier === 'common' ? '🔵 Commun' : lb.tier === 'rare' ? '🟣 Rare' : '🟡 Épique'}</span>
+        <span class="lootbox-tier-badge">${lb.id === 'lb_mythic' ? '✨ Mythique' : lb.tier === 'common' ? '🔵 Commun' : lb.tier === 'rare' ? '🟣 Rare' : '🟡 Épique'}</span>
         <div class="lootbox-card-name">${lb.name}</div>
         <div class="lootbox-card-desc">${lb.desc}</div>
         <div class="lootbox-card-drops" style="margin-bottom:0.4rem;">${dropPills}</div>
@@ -1775,9 +1938,11 @@ function renderLootboxGrid() {
 }
 
 // ============================================
-// LOOTBOX OPENING ANIMATION
+// LOOTBOX OPENING ANIMATION — OVERWATCH STYLE
 // ============================================
 let currentLbItems = [];
+let lbRevealedCount = 0;
+let lbTotalCards = 0;
 
 function openLootbox(lbId) {
   if (!selectedHero) { showToast('Sélectionne un héros d\'abord !', 'error'); return; }
@@ -1785,68 +1950,99 @@ function openLootbox(lbId) {
   if (!lb) return;
   if (player.gold < lb.price) { showToast('Pas assez de pièces !', 'error'); return; }
 
-  // Deduct gold
   player.gold -= lb.price;
   savePlayer();
   updateProfileUI();
 
-  // Roll the items
   currentLbItems = rollLootbox(lb);
 
-  // Show overlay
   const overlay = document.getElementById('lbOverlay');
   const openStage = document.getElementById('lbOpeningStage');
   const revealStage = document.getElementById('lbRevealStage');
   overlay.classList.add('show');
   openStage.style.display = 'block';
   revealStage.classList.remove('show');
+  document.getElementById('lbCloseBtn').classList.remove('show');
 
-  // Setup visuals
-  document.getElementById('lbOpeningTierLabel').textContent =
-    `Ouverture — ${lb.name}`;
-  document.getElementById('lbChestEmoji').textContent = lb.chest;
-  document.getElementById('lbChestEmoji').style.animation = '';
+  // Setup beams background
+  setupLbBeams(lb.tier);
+
+  document.getElementById('lbOpeningTierLabel').textContent = `✦ ${lb.name} ✦`;
+  const emoji = document.getElementById('lbChestEmoji');
+  emoji.textContent = lb.chest;
+  emoji.style.animation = '';
+  emoji.style.filter = 'drop-shadow(0 0 0px transparent)';
 
   const bar = document.getElementById('lbLoadingBar');
   bar.className = 'lb-loading-bar ' + lb.tier;
   bar.style.width = '0%';
+  bar.style.transition = 'none';
 
   const glow = document.getElementById('lbChestGlow');
   glow.className = 'lb-chest-glow glow-' + lb.tier;
+  glow.style.opacity = '0';
 
-  // Animation phases
+  const glowColors = { common: '#60a5fa', rare: '#a78bfa', epic: '#f5a623', legendary: '#e84545' };
+  const glowColor = glowColors[lb.tier] || '#60a5fa';
+
   const phases = [
-    { pct: 0,   label: 'Déverrouillage des serrures magiques...', delay: 0 },
-    { pct: 25,  label: 'Résistance de la cantine neutralisée...', delay: 600 },
-    { pct: 55,  label: 'Détection des artefacts rares...', delay: 1200 },
-    { pct: 80,  label: 'Dernière protection désactivée...', delay: 1800 },
-    { pct: 100, label: '🎉 La boîte s\'ouvre !', delay: 2400 },
+    { pct: 0,   label: 'Déverrouillage des serrures...', delay: 0 },
+    { pct: 30,  label: 'Résistance de la cantine neutralisée...', delay: 500 },
+    { pct: 60,  label: 'Artefacts détectés...', delay: 1100 },
+    { pct: 85,  label: 'Dernière protection désactivée...', delay: 1700 },
+    { pct: 100, label: '⚡ OUVERTURE !', delay: 2200 },
   ];
+
+  setTimeout(() => { bar.style.transition = 'width 0.5s ease'; }, 50);
 
   phases.forEach(p => {
     setTimeout(() => {
       bar.style.width = p.pct + '%';
       document.getElementById('lbOpeningLabel').textContent = p.label;
-      if (p.pct > 0) {
-        glow.style.opacity = p.pct / 100 * 0.9;
-      }
+      glow.style.opacity = (p.pct / 100) * 0.9;
+      emoji.style.filter = `drop-shadow(0 0 ${p.pct * 0.4}px ${glowColor})`;
     }, p.delay);
   });
 
-  // Shake animation at 60%
   setTimeout(() => {
-    document.getElementById('lbChestEmoji').style.animation = 'chestShake 0.5s ease';
-  }, 1400);
+    emoji.style.animation = 'chestShake 0.45s ease';
+  }, 1300);
   setTimeout(() => {
-    document.getElementById('lbChestEmoji').style.animation = 'chestShake 0.4s ease';
-  }, 2000);
+    emoji.style.animation = 'chestShake 0.38s ease';
+    launchParticles(lb.tier, 12);
+  }, 1950);
+  setTimeout(() => {
+    emoji.style.animation = 'chestPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards';
+    launchParticles(lb.tier, 24);
+    // Flash the overlay
+    overlay.style.background = 'rgba(255,255,255,0.06)';
+    setTimeout(() => { overlay.style.background = 'rgba(5,5,4,0.98)'; }, 200);
+    setTimeout(() => revealItems(lb), 550);
+  }, 2500);
+}
 
-  // Pop and explode
-  setTimeout(() => {
-    document.getElementById('lbChestEmoji').style.animation = 'chestPop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards';
-    launchParticles(lb.tier);
-    setTimeout(() => revealItems(lb), 600);
-  }, 2600);
+function setupLbBeams(tier) {
+  const beamsEl = document.getElementById('lbBgBeams');
+  if (!beamsEl) return;
+  beamsEl.innerHTML = '';
+  const tierColors = {
+    common:    ['rgba(96,165,250,0.08)', 'rgba(147,197,253,0.06)'],
+    rare:      ['rgba(167,139,250,0.1)', 'rgba(196,181,253,0.07)'],
+    epic:      ['rgba(245,166,35,0.1)',  'rgba(251,191,36,0.07)'],
+    legendary: ['rgba(232,69,69,0.12)', 'rgba(248,113,113,0.08)'],
+  };
+  const cols = tierColors[tier] || tierColors.common;
+  for (let i = 0; i < 10; i++) {
+    const beam = document.createElement('div');
+    beam.className = 'lb-beam';
+    const x = 5 + i * 9 + (Math.random() - 0.5) * 5;
+    beam.style.cssText = `left:${x}%;background:linear-gradient(to top, ${cols[i%2]}, transparent);height:${55+Math.random()*20}%;transform:rotate(${(Math.random()-0.5)*12}deg);opacity:0;transition:opacity 0.8s ${i*0.06}s ease;`;
+    beamsEl.appendChild(beam);
+  }
+  requestAnimationFrame(() => {
+    beamsEl.classList.add('active');
+    beamsEl.querySelectorAll('.lb-beam').forEach(b => b.style.opacity = '1');
+  });
 }
 
 function rollLootbox(lb) {
@@ -1856,10 +2052,7 @@ function rollLootbox(lb) {
     let r = Math.random() * totalWeight;
     for (const entry of lb.lootTable) {
       r -= entry.weight;
-      if (r <= 0) {
-        items.push({ ...entry });
-        break;
-      }
+      if (r <= 0) { items.push({ ...entry }); break; }
     }
   }
   return items;
@@ -1870,21 +2063,24 @@ function revealItems(lb) {
   const revealStage = document.getElementById('lbRevealStage');
   openStage.style.display = 'none';
   revealStage.classList.add('show');
+  document.getElementById('lbCloseBtn').classList.remove('show');
 
-  // Check if legendary
   const hasLegendary = currentLbItems.some(i => i.rarity === 'legendary');
   const hasEpic = currentLbItems.some(i => i.rarity === 'epic');
   document.getElementById('lbRevealTitle').textContent =
     hasLegendary ? '🌟 LÉGENDAIRE !' : hasEpic ? '✨ Épique !' : '🎁 Contenu révélé !';
   document.getElementById('lbRevealSub').textContent =
-    `${lb.name} · ${currentLbItems.length} objets obtenus`;
+    `${lb.name} · Clique sur chaque carte pour la révéler`;
 
   const row = document.getElementById('lbCardsRow');
   row.innerHTML = '';
+  lbRevealedCount = 0;
+  lbTotalCards = currentLbItems.length;
 
   currentLbItems.forEach((item, idx) => {
     const card = document.createElement('div');
-    card.className = `lb-item-card rarity-${item.rarity}`;
+    card.className = 'lb-item-card';
+    card.dataset.idx = idx;
 
     let icon, name, stat, isNew = false;
     if (item.type === 'gold') {
@@ -1897,43 +2093,136 @@ function revealItems(lb) {
       const catalog = item.type === 'weapon' ? SHOP_CATALOG.weapons
                     : item.type === 'armor'  ? SHOP_CATALOG.armors
                     : SHOP_CATALOG.consumables;
-      const def = catalog.find(c => c.id === item.id);
+      const def = catalog ? catalog.find(c => c.id === item.id) : null;
       if (def) {
         icon = def.icon; name = def.name; stat = def.stat;
         isNew = !player.owned.includes(item.id) &&
                 !player.inventory.find(i => i.id === item.id);
-      } else {
-        icon = '❓'; name = '???'; stat = '';
-      }
+      } else { icon = '❓'; name = '???'; stat = ''; }
     }
 
     const rarityLabels = { common: 'Commun', rare: 'Rare', epic: 'Épique', legendary: 'Légendaire' };
     card.innerHTML = `
-      ${isNew ? '<div class="lb-new-badge">NOUVEAU</div>' : ''}
-      <span class="lb-item-icon">${icon}</span>
-      <div class="lb-item-name">${name}</div>
-      <span class="lb-item-rarity rarity-${item.rarity}">${rarityLabels[item.rarity] || item.rarity}</span>
-      <div class="lb-item-stat">${stat}</div>
-    `;
+      <div class="lb-card-inner">
+        <div class="lb-card-back"><div class="lb-card-back-glyph">🍱</div></div>
+        <div class="lb-card-face rarity-${item.rarity}">
+          ${isNew ? '<div class="lb-new-badge">NOUVEAU</div>' : ''}
+          <span class="lb-item-icon">${icon}</span>
+          <div class="lb-item-name">${name}</div>
+          <span class="lb-item-rarity rarity-${item.rarity}">${rarityLabels[item.rarity] || item.rarity}</span>
+          <div class="lb-item-stat">${stat}</div>
+        </div>
+      </div>`;
+
+    card.onclick = () => flipLbCard(card, item, idx);
     row.appendChild(card);
 
-    // Staggered reveal animation
+    // Stagger card appearance (cards slide in face-down)
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
     setTimeout(() => {
-      card.classList.add('revealed');
-      if (item.rarity === 'legendary' || item.rarity === 'epic') {
-        launchParticles(item.rarity === 'legendary' ? 'legendary' : 'epic', 6);
-      }
-    }, idx * 220 + 100);
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, idx * 120 + 100);
   });
+
+  // After all cards appear, show click hint
+  setTimeout(() => {
+    document.getElementById('lbClickHint').style.display = 'block';
+  }, currentLbItems.length * 120 + 300);
+}
+
+function flipLbCard(card, item, idx) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  lbRevealedCount++;
+
+  // Burst particles from card position
+  const rect = card.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  burstFromCard(cx, cy, item.rarity);
+
+  // Spotlight effect
+  const spotlight = document.getElementById('lbSpotlight');
+  if (spotlight) {
+    const glowMap = {
+      common:    'radial-gradient(circle, rgba(96,165,250,0.18) 0%, transparent 70%)',
+      rare:      'radial-gradient(circle, rgba(167,139,250,0.22) 0%, transparent 70%)',
+      epic:      'radial-gradient(circle, rgba(245,166,35,0.25) 0%, transparent 70%)',
+      legendary: 'radial-gradient(circle, rgba(232,69,69,0.30) 0%, transparent 70%)',
+    };
+    spotlight.style.background = glowMap[item.rarity] || glowMap.common;
+    spotlight.style.left = cx + 'px';
+    spotlight.style.top  = cy + 'px';
+    spotlight.classList.add('active');
+    setTimeout(() => spotlight.classList.remove('active'), 800);
+  }
+
+  // Sound-like screen flash for legendary
+  if (item.rarity === 'legendary') {
+    const overlay = document.getElementById('lbOverlay');
+    overlay.style.transition = 'background 0.08s';
+    overlay.style.background = 'rgba(232,69,69,0.08)';
+    setTimeout(() => { overlay.style.background = 'rgba(5,5,4,0.98)'; }, 160);
+    launchParticles('legendary', 20);
+  } else if (item.rarity === 'epic') {
+    launchParticles('epic', 10);
+  }
+
+  // When all cards revealed, show close button
+  if (lbRevealedCount >= lbTotalCards) {
+    document.getElementById('lbClickHint').style.display = 'none';
+    setTimeout(() => {
+      document.getElementById('lbCloseBtn').classList.add('show');
+    }, 400);
+  }
+}
+
+function burstFromCard(cx, cy, rarity) {
+  const container = document.getElementById('lbParticles');
+  container.classList.add('show');
+  const colorMap = {
+    common:    ['#60a5fa','#93c5fd'],
+    rare:      ['#a78bfa','#c4b5fd','#7c3aed'],
+    epic:      ['#f5a623','#fbbf24','#fff7a0'],
+    legendary: ['#e84545','#f87171','#f5a623','#fff'],
+  };
+  const cols = colorMap[rarity] || colorMap.common;
+  const count = rarity === 'legendary' ? 22 : rarity === 'epic' ? 14 : 8;
+
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'lb-burst-particle';
+    const size = 4 + Math.random() * 7;
+    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+    const dist  = 60 + Math.random() * 120;
+    const tx = Math.cos(angle) * dist;
+    const ty = Math.sin(angle) * dist - 40;
+    const rot = (Math.random() - 0.5) * 360;
+    const dur = 0.5 + Math.random() * 0.5;
+    p.style.cssText = `
+      left:${cx}px; top:${cy}px;
+      width:${size}px; height:${size}px;
+      background:${cols[Math.floor(Math.random()*cols.length)]};
+      --tx:${tx}px; --ty:${ty}px; --rot:${rot}deg; --dur:${dur}s;
+      border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+      position:fixed;
+    `;
+    container.appendChild(p);
+    setTimeout(() => p.remove(), dur * 1000 + 100);
+  }
+  setTimeout(() => container.classList.remove('show'), 2000);
 }
 
 function launchParticles(tier, count = 18) {
   const container = document.getElementById('lbParticles');
   container.classList.add('show');
   const colors = {
-    common: ['#60a5fa','#93c5fd','#bfdbfe'],
-    rare: ['#a78bfa','#c4b5fd','#7c3aed'],
-    epic: ['#f5a623','#fbbf24','#fef08a'],
+    common:    ['#60a5fa','#93c5fd','#bfdbfe'],
+    rare:      ['#a78bfa','#c4b5fd','#7c3aed'],
+    epic:      ['#f5a623','#fbbf24','#fef08a'],
     legendary: ['#e84545','#f87171','#fca5a5','#fff'],
   };
   const cls = colors[tier] || colors.common;
@@ -1941,22 +2230,15 @@ function launchParticles(tier, count = 18) {
     setTimeout(() => {
       const p = document.createElement('div');
       p.className = 'lb-particle';
-      const size = 6 + Math.random() * 8;
+      const size = 5 + Math.random() * 8;
       const startX = 35 + Math.random() * 30;
       const startY = 30 + Math.random() * 20;
-      const tx = (Math.random() - 0.5) * 400;
-      const ty = -(100 + Math.random() * 200);
-      p.style.cssText = `
-        left:${startX}%;top:${startY}%;
-        width:${size}px;height:${size}px;
-        background:${cls[Math.floor(Math.random()*cls.length)]};
-        --tx:${tx}px;--ty:${ty}px;
-        animation-duration:${0.8 + Math.random()*0.6}s;
-        animation-delay:${Math.random()*0.2}s;
-      `;
+      const tx = (Math.random() - 0.5) * 440;
+      const ty = -(80 + Math.random() * 220);
+      p.style.cssText = `left:${startX}%;top:${startY}%;width:${size}px;height:${size}px;background:${cls[Math.floor(Math.random()*cls.length)]};--tx:${tx}px;--ty:${ty}px;animation-duration:${0.8+Math.random()*0.7}s;animation-delay:${Math.random()*0.15}s;`;
       container.appendChild(p);
-      setTimeout(() => p.remove(), 1500);
-    }, i * 40);
+      setTimeout(() => p.remove(), 1600);
+    }, i * 35);
   }
   setTimeout(() => container.classList.remove('show'), 3000);
 }
@@ -1971,9 +2253,7 @@ function closeLbOverlay() {
     } else if (item.type === 'sp') {
       player.skillPoints += item.amount;
     } else if (item.type === 'weapon' || item.type === 'armor') {
-      if (!player.owned.includes(item.id)) {
-        player.owned.push(item.id);
-      }
+      if (!player.owned.includes(item.id)) player.owned.push(item.id);
     } else if (item.type === 'consumable') {
       const totalItems = player.inventory.reduce((s, i) => s + i.qty, 0);
       if (totalItems < 8) {
@@ -1988,8 +2268,14 @@ function closeLbOverlay() {
   updateProfileUI();
   renderShop();
 
+  // Hide beams
+  const beamsEl = document.getElementById('lbBgBeams');
+  if (beamsEl) { beamsEl.classList.remove('active'); beamsEl.innerHTML = ''; }
+
   document.getElementById('lbOverlay').classList.remove('show');
   currentLbItems = [];
+  lbRevealedCount = 0;
+  lbTotalCards = 0;
   showToast('🎁 Objets ajoutés à ton inventaire !', 'lootbox');
 }
 
@@ -2034,22 +2320,49 @@ const STAT_GROWTH = { hp: 12, atk: 4, def: 3, spd: 2 };
 
 const SHOP_CATALOG = {
   weapons: [
-    { id: 'w1', name: 'Fourchette Rouillée',    icon: '🍴', type: 'weapon', price: 30,  stat: '+8 ATK',   atkBonus: 8,  defBonus: 0,  desc: 'Vieille mais efficace.', reqLv: 1 },
-    { id: 'w2', name: 'Couteau à Beurre',       icon: '🔪', type: 'weapon', price: 70,  stat: '+18 ATK',  atkBonus: 18, defBonus: 0,  desc: 'Plus tranchant qu\'il n\'y paraît.', reqLv: 2 },
-    { id: 'w3', name: 'Spatule Légendaire',     icon: '🥄', type: 'weapon', price: 150, stat: '+35 ATK',  atkBonus: 35, defBonus: 0,  desc: 'Forgée dans les flammes du four.', reqLv: 3 },
-    { id: 'w4', name: 'Rouleau de Sushi Épique',icon: '🍣', type: 'weapon', price: 280, stat: '+55 ATK',  atkBonus: 55, defBonus: 5,  desc: 'Une arme digne des grands maîtres.', reqLv: 5 },
+    { id: 'w1',  name: 'Fourchette Rouillée',     icon: '🍴',  type: 'weapon', price: 30,  stat: '+8 ATK',   atkBonus: 8,  defBonus: 0,  desc: 'Vieille mais efficace.', reqLv: 1 },
+    { id: 'w2',  name: 'Couteau à Beurre',         icon: '🔪',  type: 'weapon', price: 70,  stat: '+18 ATK',  atkBonus: 18, defBonus: 0,  desc: 'Plus tranchant qu\'il n\'y paraît.', reqLv: 2 },
+    { id: 'w5',  name: 'Baguette de Pain',         icon: '🥖',  type: 'weapon', price: 55,  stat: '+14 ATK +5 DEF', atkBonus: 14, defBonus: 5,  desc: 'Croustillante. Redoutable.', reqLv: 1 },
+    { id: 'w6',  name: 'Pince à Crustacé',         icon: '🦞',  type: 'weapon', price: 95,  stat: '+24 ATK',  atkBonus: 24, defBonus: 0,  desc: 'Saisit les ennemis et ne lâche plus.', reqLv: 2 },
+    { id: 'w7',  name: 'Poêle en Fonte',           icon: '🍳',  type: 'weapon', price: 120, stat: '+28 ATK +8 DEF', atkBonus: 28, defBonus: 8,  desc: 'La cuisine c\'est aussi de la résistance.', reqLv: 3 },
+    { id: 'w3',  name: 'Spatule Légendaire',       icon: '🥄',  type: 'weapon', price: 150, stat: '+35 ATK',  atkBonus: 35, defBonus: 0,  desc: 'Forgée dans les flammes du four.', reqLv: 3 },
+    { id: 'w8',  name: 'Tentacule de Calmar',      icon: '🦑',  type: 'weapon', price: 200, stat: '+42 ATK',  atkBonus: 42, defBonus: 0,  desc: 'Flexible. Imprévisible. Visqueux.', reqLv: 4 },
+    { id: 'w9',  name: 'Sceptre de Mozzarella',    icon: '🧇',  type: 'weapon', price: 220, stat: '+38 ATK +10 DEF', atkBonus: 38, defBonus: 10, desc: 'Fondu à l\'intérieur, dur à l\'extérieur.', reqLv: 4 },
+    { id: 'w4',  name: 'Rouleau de Sushi Épique',  icon: '🍣',  type: 'weapon', price: 280, stat: '+55 ATK +5 DEF', atkBonus: 55, defBonus: 5,  desc: 'Une arme digne des grands maîtres.', reqLv: 5 },
+    { id: 'w10', name: 'Lance-Sauce Légendaire',   icon: '🫙',  type: 'weapon', price: 350, stat: '+68 ATK',  atkBonus: 68, defBonus: 0,  desc: 'Propulse de la sauce à haute vélocité.', reqLv: 6 },
+    { id: 'w11', name: 'Épée de Glace Pilée',      icon: '🧊',  type: 'weapon', price: 400, stat: '+75 ATK +12 DEF', atkBonus: 75, defBonus: 12, desc: 'Tranchante, froide, absolue.', reqLv: 7 },
+    { id: 'w12', name: 'Trident du Chef Étoilé',   icon: '⭐',  type: 'weapon', price: 500, stat: '+90 ATK',  atkBonus: 90, defBonus: 0,  desc: 'Forgé dans les étoiles Michelin.', reqLv: 8 },
   ],
   armors: [
-    { id: 'a1', name: 'Tablier Troué',          icon: '🥼', type: 'armor',  price: 25,  stat: '+10 DEF',  atkBonus: 0,  defBonus: 10, desc: 'Une protection basique.', reqLv: 1 },
-    { id: 'a2', name: 'Casque de Casserole',    icon: '🪖', type: 'armor',  price: 60,  stat: '+22 DEF',  atkBonus: 0,  defBonus: 22, desc: 'Certifié anti-éclaboussures.', reqLv: 2 },
-    { id: 'a3', name: 'Armure de Parmesan',     icon: '🧀', type: 'armor',  price: 130, stat: '+40 DEF',  atkBonus: 0,  defBonus: 40, desc: 'Dur comme de la pierre. Et ça sent.', reqLv: 3 },
-    { id: 'a4', name: 'Bouclier de Baguette',   icon: '🥖', type: 'armor',  price: 250, stat: '+62 DEF',  atkBonus: 5,  defBonus: 62, desc: 'Béni par le boulanger du village.', reqLv: 4 },
+    { id: 'a1',  name: 'Tablier Troué',            icon: '🥼',  type: 'armor',  price: 25,  stat: '+10 DEF',  atkBonus: 0,  defBonus: 10, desc: 'Une protection basique.', reqLv: 1 },
+    { id: 'a5',  name: 'Gants de Four',            icon: '🧤',  type: 'armor',  price: 35,  stat: '+14 DEF',  atkBonus: 0,  defBonus: 14, desc: 'Résistants jusqu\'à 250°C.', reqLv: 1 },
+    { id: 'a2',  name: 'Casque de Casserole',      icon: '🪖',  type: 'armor',  price: 60,  stat: '+22 DEF',  atkBonus: 0,  defBonus: 22, desc: 'Certifié anti-éclaboussures.', reqLv: 2 },
+    { id: 'a6',  name: 'Gilet en Nori',            icon: '🌿',  type: 'armor',  price: 80,  stat: '+18 DEF +5 ATK', atkBonus: 5, defBonus: 18, desc: 'Léger et surprenant.', reqLv: 2 },
+    { id: 'a7',  name: 'Cape de Poulpe',           icon: '🐙',  type: 'armor',  price: 100, stat: '+28 DEF',  atkBonus: 0,  defBonus: 28, desc: 'S\'adapte à tout grâce à ses tentacules.', reqLv: 2 },
+    { id: 'a3',  name: 'Armure de Parmesan',       icon: '🧀',  type: 'armor',  price: 130, stat: '+40 DEF',  atkBonus: 0,  defBonus: 40, desc: 'Dur comme de la pierre. Et ça sent.', reqLv: 3 },
+    { id: 'a8',  name: 'Bouclier de Tarte',        icon: '🥧',  type: 'armor',  price: 160, stat: '+35 DEF +8 ATK', atkBonus: 8, defBonus: 35, desc: 'Absorbant. Sucré. Mortel.', reqLv: 3 },
+    { id: 'a4',  name: 'Bouclier de Baguette',     icon: '🥖',  type: 'armor',  price: 250, stat: '+62 DEF +5 ATK', atkBonus: 5, defBonus: 62, desc: 'Béni par le boulanger du village.', reqLv: 4 },
+    { id: 'a9',  name: 'Cuirasse de Croûte',       icon: '🍞',  type: 'armor',  price: 280, stat: '+70 DEF',  atkBonus: 0,  defBonus: 70, desc: 'Aussi dur que le pain rassis du lundi.', reqLv: 5 },
+    { id: 'a10', name: 'Armure de Caramel Dur',    icon: '🍮',  type: 'armor',  price: 350, stat: '+85 DEF +10 ATK', atkBonus: 10, defBonus: 85, desc: 'Caramélisée à la torche. Indestructible.', reqLv: 6 },
+    { id: 'a11', name: 'Égide de Chocolat Noir',   icon: '🍫',  type: 'armor',  price: 450, stat: '+100 DEF', atkBonus: 0,  defBonus: 100, desc: 'Tempéré à la perfection. Amer. Invincible.', reqLv: 7 },
   ],
   consumables: [
-    { id: 'c1', name: 'Petite Potion Verte',    icon: '🧃', type: 'consumable', price: 15, stat: 'Soin +80 HP',  healAmt: 80,  atkMult: 0, desc: 'Un petit jus de légumes réconfortant.', reqLv: 1, stackable: true },
-    { id: 'c2', name: 'Potion de Force',        icon: '🥤', type: 'consumable', price: 40, stat: '+30% ATK (2 tours)', healAmt: 0, atkMult: 0.3, duration: 2, desc: 'De la caféine pure. Dangereux.', reqLv: 2, stackable: true },
-    { id: 'c3', name: 'Elixir du Champion',     icon: '🍵', type: 'consumable', price: 90, stat: 'Soin +200 HP + +20% ATK', healAmt: 200, atkMult: 0.2, duration: 2, desc: 'Une recette secrète de la cantine.', reqLv: 3, stackable: true },
-    { id: 'c4', name: 'Soupe Magique',          icon: '🍲', type: 'consumable', price: 200, stat: 'HP MAX restauré', healAmt: 9999, atkMult: 0, desc: 'La mère de toutes les soupes.', reqLv: 5, stackable: false },
+    { id: 'c1',  name: 'Petite Potion Verte',      icon: '🧃',  type: 'consumable', price: 15,  stat: 'Soin +80 HP',  healAmt: 80,  atkMult: 0, desc: 'Un petit jus de légumes réconfortant.', reqLv: 1, stackable: true },
+    { id: 'c5',  name: 'Banane Boostée',           icon: '🍌',  type: 'consumable', price: 20,  stat: 'Soin +50 HP +10% ATK', healAmt: 50, atkMult: 0.1, duration: 1, desc: 'Un régime, une philosophie.', reqLv: 1, stackable: true },
+    { id: 'c6',  name: 'Thé Vert Concentré',       icon: '🍵',  type: 'consumable', price: 25,  stat: '+15% VIT (2 tours)', healAmt: 0, atkMult: 0, spdMult: 0.15, duration: 2, desc: 'L\'esprit s\'aiguise, le corps suit.', reqLv: 1, stackable: true },
+    { id: 'c2',  name: 'Potion de Force',          icon: '🥤',  type: 'consumable', price: 40,  stat: '+30% ATK (2 tours)', healAmt: 0, atkMult: 0.3, duration: 2, desc: 'De la caféine pure. Dangereux.', reqLv: 2, stackable: true },
+    { id: 'c7',  name: 'Smoothie Épinard-Fer',     icon: '🥬',  type: 'consumable', price: 45,  stat: 'Soin +120 HP', healAmt: 120, atkMult: 0, desc: 'Vert. Épais. Puissant.', reqLv: 2, stackable: true },
+    { id: 'c8',  name: 'Chili Piment Fantôme',     icon: '🌶️', type: 'consumable', price: 60,  stat: '+50% ATK (1 tour)', healAmt: 0, atkMult: 0.5, duration: 1, desc: 'Ça brûle. Tout. Même les ennemis.', reqLv: 2, stackable: true },
+    { id: 'c3',  name: 'Elixir du Champion',       icon: '🍶',  type: 'consumable', price: 90,  stat: 'Soin +200 HP +20% ATK', healAmt: 200, atkMult: 0.2, duration: 2, desc: 'Une recette secrète de la cantine.', reqLv: 3, stackable: true },
+    { id: 'c9',  name: 'Potion de Pierre',         icon: '🪨',  type: 'consumable', price: 80,  stat: '+40% DEF (2 tours)', healAmt: 0, atkMult: 0, defMult: 0.4, duration: 2, desc: 'Bois ça et deviens inébranlable.', reqLv: 3, stackable: true },
+    { id: 'c10', name: 'Sauce Secrète Niveau 9',   icon: '🫙',  type: 'consumable', price: 110, stat: 'Soin +150 HP +35% ATK', healAmt: 150, atkMult: 0.35, duration: 2, desc: 'La recette est dans le coffre-fort.', reqLv: 4, stackable: true },
+    { id: 'c11', name: 'Ambroisie de Cantine',     icon: '🍯',  type: 'consumable', price: 140, stat: 'Soin +300 HP', healAmt: 300, atkMult: 0, desc: 'On dit que la cuisinière pleure dedans.', reqLv: 4, stackable: true },
+    { id: 'c4',  name: 'Soupe Magique',            icon: '🍲',  type: 'consumable', price: 200, stat: 'HP MAX restauré', healAmt: 9999, atkMult: 0, desc: 'La mère de toutes les soupes.', reqLv: 5, stackable: false },
+    { id: 'c12', name: 'Sérum d\'Invincibilité',   icon: '💉',  type: 'consumable', price: 300, stat: '+60% ATK +50% DEF (3 tours)', healAmt: 0, atkMult: 0.6, defMult: 0.5, duration: 3, desc: 'Développé dans les labos secrets de la cantine.', reqLv: 6, stackable: false },
+  ],
+  specials: [
+    { id: 's1',  name: 'Médaille de Goûteur',      icon: '🏅',  type: 'special', price: 500, stat: '+5% à tout', atkBonus: 5, defBonus: 5, desc: 'Pour les vrais connaisseurs.', reqLv: 5 },
+    { id: 's2',  name: 'Toque du Grand Chef',      icon: '👨‍🍳', type: 'special', price: 800, stat: '+15% XP gagné', atkBonus: 0, defBonus: 0, desc: 'Le savoir s\'accumule plus vite.', reqLv: 7 },
   ]
 };
 

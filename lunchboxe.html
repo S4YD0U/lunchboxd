@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -4133,53 +4132,9 @@ function renderWorldMap() {
 
     svg += `<g class="map-region-zone ${unlocked?'unlocked':'locked'}${isActive?' active-zone':''}">`;
 
-    // Active glow halo — uniquement si la région est déverrouillée
-    if (isActive && unlocked) {
-      svg += `<path d="${t}" fill="${ml.strokeColor}" opacity="0.14" filter="url(#activeglow)" pointer-events="none"/>`;
-      svg += `<path d="${t}" fill="none" stroke="${ml.strokeColor}" stroke-width="2.5" stroke-dasharray="6 3" pointer-events="none" opacity="0.6"/>`;
-    }
-
-    // PAS de land fill — on laisse l'image de fond apparaître
-    // Juste un stroke léger pour délimiter la zone active/complétée
-    if (completed && unlocked && !isActive) {
-      svg += `<path d="${t}" fill="rgba(200,245,66,0.05)" stroke="rgba(200,245,66,0.3)" stroke-width="1.5" pointer-events="none"/>`;
-    }
-
-    // Textures supprimées — l'image de fond les remplace
-
-    // ── LABEL GROUP (always on top) ─────────────────────────────────────────
+    // Zone de clic totalement invisible — aucun overlay visuel
     const cx = rcenter.cx, cy = rcenter.cy;
-
-    if (!unlocked) {
-      // Locked: just show faint label, cloud will cover
-    } else {
-      // Icon
-      svg += `<text x="${cx}" y="${cy-16}" text-anchor="middle" font-size="22" opacity="0.92" class="map-region-label">${region.icon}</text>`;
-      // Name
-      svg += `<text x="${cx}" y="${cy+5}" text-anchor="middle" fill="${completed?'#c8f542':ml.strokeColor}" font-size="9" font-family="Playfair Display,serif" font-weight="700" letter-spacing="0.5">${region.name}</text>`;
-      // Progress pips
-      const totalPips = region.enemies.length;
-      const pipSpacing = 11;
-      const pipStartX = cx - ((totalPips-1)*pipSpacing)/2;
-      region.enemies.forEach((eid,pi) => {
-        const e = ALL_ENEMIES[eid];
-        const isBeaten = beaten.includes(eid);
-        const isBoss = e && e.isBoss;
-        const pipX = pipStartX + pi*pipSpacing;
-        const pipY = cy + 18;
-        svg += `<circle cx="${pipX}" cy="${pipY}" r="${isBoss?4.5:3.5}" fill="${isBeaten?(isBoss?'#e84545':'#c8f542'):'rgba(255,255,255,0.12)'}" stroke="${isBoss?'rgba(232,69,69,0.6)':'rgba(255,255,255,0.15)'}" stroke-width="1"/>`;
-        if (isBeaten) svg += `<text x="${pipX}" y="${pipY+3}" text-anchor="middle" font-size="5" fill="${isBoss?'#fff':'#0e0f0c'}" font-weight="700">✓</text>`;
-      });
-      // Completed ribbon
-      if (completed) {
-        svg += `<rect x="${cx-28}" y="${cy+24}" width="56" height="12" rx="3" fill="rgba(200,245,66,0.15)" stroke="rgba(200,245,66,0.4)" stroke-width="0.8"/>`;
-        svg += `<text x="${cx}" y="${cy+33}" text-anchor="middle" fill="#c8f542" font-size="7" font-family="DM Mono,monospace" letter-spacing="1">✓ TERMINÉ</text>`;
-      }
-      // Active pulse ring
-      if (isActive) {
-        svg += `<circle cx="${cx}" cy="${cy}" r="42" fill="none" stroke="${ml.strokeColor}" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5" class="region-glow"/>`;
-      }
-      // Hit area transparente en dernier (au-dessus des décorations) pour capturer les clics
+    if (unlocked) {
       svg += `<path class="region-hit-area" d="${t}" fill="transparent" stroke="none" style="cursor:pointer" onclick="selectRegion('${region.id}')"/>`;
     }
 

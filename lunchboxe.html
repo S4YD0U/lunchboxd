@@ -161,7 +161,7 @@
     .char-card.villain:hover { border-color: rgba(232,69,69,0.4); transform: none; }
     .char-card.intermediate-villain { border-color: var(--border); cursor: default; }
     .char-card.intermediate-villain:hover { border-color: rgba(74,222,128,0.4); transform: none; }
-    .char-sprite { width: 140px; height: 140px; margin: 0 auto 0.8rem; display: flex; align-items: center; justify-content: center; }
+    .char-sprite { width: 180px; height: 180px; margin: 0 auto 0.8rem; display: flex; align-items: center; justify-content: center; }
     .char-sprite img { width: 100%; height: 100%; object-fit: contain; }
     .char-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
     .char-class { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
@@ -1005,7 +1005,7 @@
     .arena.arena-quake { animation: arenaQuake 0.5s ease forwards !important; }
     .fighters-row { display: flex; align-items: flex-end; justify-content: space-between; position: relative; z-index: 2; min-height: 260px; }
     .fighter-side { display: flex; flex-direction: column; align-items: center; width: 180px; }
-    .fighter-sprite-wrap { position: relative; width: 150px; height: 180px; display: flex; align-items: center; justify-content: center; }
+    .fighter-sprite-wrap { position: relative; width: 220px; height: 260px; display: flex; align-items: center; justify-content: center; }
     .fighter-sprite-wrap img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 16px 32px rgba(0,0,0,0.7)); }
     .fighter-sprite-wrap.hero-idle { animation: floatAnim 3s ease-in-out infinite; }
     .fighter-sprite-wrap.villain-idle { animation: floatAnimFlip 3s 1.5s ease-in-out infinite; transform: scaleX(-1); }
@@ -1314,7 +1314,7 @@
       .hp-bars { gap: 0.6rem; }
       .arena { min-height: 200px; }
       .fighters-row { min-height: 150px; }
-      .fighter-sprite-wrap { width: 80px; height: 96px; }
+      .fighter-sprite-wrap { width: 120px; height: 144px; }
       .fighter-side { width: 100px; }
       .xp-rewards { gap: 1rem; }
       .stage-connector { width: 30px; }
@@ -1367,7 +1367,7 @@
     }
     .dlg-character { display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; transition: opacity 0.4s, transform 0.4s; }
     .dlg-character.dim { opacity: 0.22; filter: grayscale(0.6); }
-    .dlg-char-sprite { width: 120px; height: 120px; animation: dlgFloat 3s ease-in-out infinite; }
+    .dlg-char-sprite { width: 180px; height: 180px; animation: dlgFloat 3s ease-in-out infinite; }
     .dlg-character.villain .dlg-char-sprite { animation: dlgFloatVillain 3.2s ease-in-out infinite; }
     @keyframes dlgFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
     @keyframes dlgFloatVillain { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }

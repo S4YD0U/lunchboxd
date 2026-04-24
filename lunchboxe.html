@@ -2913,7 +2913,7 @@ function setEnemiesFromRegion(regionId) {
 const HEROES = {
   fraise: {
     id: 'fraise', name: 'Fraise', type: 'hero', class: 'Guerrière Fruitée', sprite: 'fraise',
-    hp: 11, atk: 75, def: 55, spd: 90,
+    hp: 110, atk: 75, def: 55, spd: 90,
     quote: '"Je suis douce… jusqu\'à ce que ça crame."',
     special: { name: '🍓 Rafale Rouge', fn: (hero) => { const hits=[Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.5+Math.random()*15)),Math.max(1,Math.floor(hero.atk*0.6+Math.random()*20))]; return { dmg: hits.reduce((a,b)=>a+b,0), log: '🍓 RAFALE ROUGE — '+hits.join(' + ')+' dégâts !', type: 'multi' }; } },
     narratorLines: { win: ["La cantine appartient aux petits fruits rouges !","Fraise prouve que le plus fort n'est pas toujours le plus grand.","La victoire a un goût sucré… exactement comme elle."], lose: ["Fraise tombe. Mais elle se relèvera.","Même les meilleurs fruits tombent parfois."], attack: ["Fraise bondit comme une balle de flipper !","La guerrière fruitée frappe sans pitié.","Coup direct ! La cantine tremble."] }

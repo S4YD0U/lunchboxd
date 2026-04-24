@@ -4011,73 +4011,18 @@ function renderWorldMap() {
   // ── DEFS ──────────────────────────────────────────────────────────────────
   let defs = `<defs>`;
 
-  // Per-region radial gradients
-  const gradData = {
-    foret_epices:   {c1:'#2d5a0a',c2:'#0f2204'},
-    desert_sel:     {c1:'#6b3808',c2:'#230d02'},
-    marais_vinaigre:{c1:'#1e2848',c2:'#07091a'},
-    pics_sorbet:    {c1:'#0d3a6e',c2:'#030d22'},
-    volcan_cantine: {c1:'#6b1a06',c2:'#1e0502'},
-  };
-  Object.entries(gradData).forEach(([id,g]) => {
-    defs += `<radialGradient id="rg_${id}" cx="50%" cy="35%" r="65%">
-      <stop offset="0%" stop-color="${g.c1}"/>
-      <stop offset="100%" stop-color="${g.c2}"/>
-    </radialGradient>`;
-  });
-
-  // Ocean gradient
-  defs += `<radialGradient id="rg_ocean" cx="50%" cy="50%" r="70%">
-    <stop offset="0%" stop-color="#0a1520"/>
-    <stop offset="100%" stop-color="#050a10"/>
-  </radialGradient>`;
-
-  // Lava glow
-  defs += `<radialGradient id="rg_lava" cx="50%" cy="80%" r="60%">
-    <stop offset="0%" stop-color="#ff4400" stop-opacity="0.6"/>
-    <stop offset="100%" stop-color="#000" stop-opacity="0"/>
-  </radialGradient>`;
-
-  // Cloud gradient (puffy white-grey) — objectBoundingBox so each ellipse gets its own gradient
-  // Cloud colors — flat/solid pour éviter toute variation de luminosité entre régions
-  // (les gradients objectBoundingBox causent des incohérences selon le navigateur)
-
-  // Cloud shadow
-  defs += `<filter id="cloudBlur"><feGaussianBlur stdDeviation="4"/></filter>`;
-  defs += `<filter id="cloudSoft"><feGaussianBlur stdDeviation="2"/></filter>`;
-
-  // Glow filter
-  defs += `<filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+  // Active region glow filter (for selected pin halo)
+  defs += `<filter id="activeglow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
     <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>`;
 
-  // Active region pulse filter
-  defs += `<filter id="activeglow" x="-30%" y="-30%" width="160%" height="160%">
-    <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
-    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>`;
-
-  // Water shimmer pattern
-  defs += `<pattern id="waterPat" x="0" y="0" width="40" height="12" patternUnits="userSpaceOnUse">
-    <path d="M0,6 Q10,2 20,6 Q30,10 40,6" fill="none" stroke="rgba(80,140,200,0.12)" stroke-width="1"/>
-  </pattern>`;
-
-  // Sand dune pattern
-  defs += `<pattern id="sandPat" x="0" y="0" width="60" height="18" patternUnits="userSpaceOnUse">
-    <path d="M0,9 Q15,4 30,9 Q45,14 60,9" fill="none" stroke="rgba(200,140,60,0.15)" stroke-width="1.2"/>
-  </pattern>`;
-
-  // Forest texture (tiny dots)
-  defs += `<pattern id="forestPat" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-    <circle cx="5" cy="5" r="2.5" fill="rgba(80,160,20,0.12)"/>
-    <circle cx="15" cy="12" r="2" fill="rgba(60,140,10,0.1)"/>
-  </pattern>`;
+  // Vignette gradient
+  defs += `<radialGradient id="vign" cx="50%" cy="50%" r="70%"><stop offset="40%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.35)"/></radialGradient>`;
 
   defs += `</defs>`;
 
-  // ── BACKGROUND ────────────────────────────────────────────────────────────
-  let svg = defs;
+    let svg = defs;
 
   // Image de fond personnalisée (carte.png)
   // ── BACKGROUND IMAGE (dynamique selon progression) ────────────────────
@@ -4097,8 +4042,6 @@ function renderWorldMap() {
   svg += `<image href="${MAP_IMAGES[bgImgIdx]}" x="0" y="0" width="700" height="434" preserveAspectRatio="xMidYMid slice"/>`;
 
   // Légère vignette par-dessus pour l'ambiance
-  svg += `<radialGradient id="vign" cx="50%" cy="50%" r="70%"><stop offset="40%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.35)"/></radialGradient>`;
-
   // Trier regions normalement (volcan en premier pour le fog)
   const sortedRegions = [...REGIONS].sort((a, b) => {
     if (a.id === 'volcan_cantine') return -1;
@@ -4108,91 +4051,71 @@ function renderWorldMap() {
 
   sortedRegions.forEach((region) => {
     const idx = REGIONS.indexOf(region);
-    const t = territories[region.id];
-    if (!t) return;
     const unlocked = isRegionUnlocked(idx);
     const beaten   = getRegionEnemiesBeaten(region.id);
     const completed = prog[region.id] && prog[region.id].completed;
     const isActive  = selectedRegion === region.id;
 
-    const ml = MAP_LAYOUT.find(m => m.id === region.id);
-    if (!ml) return;
-
-    // Utiliser les centres définis pour la nouvelle carte
-    const rcenter = regionCenters[region.id] || { cx: ml.cx, cy: ml.cy };
+    const rc = regionCenters[region.id];
+    if (!rc) return;
+    const { cx, cy } = rc;
 
     svg += `<g class="map-region-zone ${unlocked?'unlocked':'locked'}${isActive?' active-zone':''}">`;
 
-    // Active glow halo — uniquement si la région est déverrouillée
-    if (isActive && unlocked) {
-      svg += `<path d="${t}" fill="${ml.strokeColor}" opacity="0.14" filter="url(#activeglow)" pointer-events="none"/>`;
-      svg += `<path d="${t}" fill="none" stroke="${ml.strokeColor}" stroke-width="2.5" stroke-dasharray="6 3" pointer-events="none" opacity="0.6"/>`;
-    }
+    if (unlocked) {
+      // ── MARQUEUR CLIQUABLE ───────────────────────────────────────────────
+      // Halo de sélection active
+      if (isActive) {
+        svg += `<circle cx="${cx}" cy="${cy}" r="26" fill="none" stroke="${region.color || '#c8f542'}" stroke-width="2" stroke-dasharray="5 3" opacity="0.8" class="region-glow"/>`;
+        svg += `<circle cx="${cx}" cy="${cy}" r="20" fill="${region.color || '#c8f542'}" opacity="0.12"/>`;
+      }
 
-    // PAS de land fill — on laisse l'image de fond apparaître
-    // Juste un stroke léger pour délimiter la zone active/complétée
-    if (completed && unlocked && !isActive) {
-      svg += `<path d="${t}" fill="rgba(200,245,66,0.05)" stroke="rgba(200,245,66,0.3)" stroke-width="1.5" pointer-events="none"/>`;
-    }
+      // Pin base (ombre portée)
+      svg += `<ellipse cx="${cx}" cy="${cy+18}" rx="9" ry="3" fill="rgba(0,0,0,0.35)"/>`;
 
-    // Textures supprimées — l'image de fond les remplace
+      // Couleur du pin selon état
+      const pinFill   = completed ? '#c8f542' : (isActive ? (region.color||'#c8f542') : '#e8e0cc');
+      const pinStroke = completed ? '#7aab1a' : (isActive ? (region.color||'#c8f542') : 'rgba(255,255,255,0.4)');
 
-    // ── LABEL GROUP (always on top) ─────────────────────────────────────────
-    const cx = rcenter.cx, cy = rcenter.cy;
+      // Tige du pin
+      svg += `<line x1="${cx}" y1="${cy+4}" x2="${cx}" y2="${cy+17}" stroke="${pinStroke}" stroke-width="2.5" stroke-linecap="round"/>`;
 
-    if (!unlocked) {
-      // Locked: just show faint label, cloud will cover
-    } else {
-      // Icon
-      svg += `<text x="${cx}" y="${cy-16}" text-anchor="middle" font-size="22" opacity="0.92" class="map-region-label">${region.icon}</text>`;
-      // Name
-      svg += `<text x="${cx}" y="${cy+5}" text-anchor="middle" fill="${completed?'#c8f542':ml.strokeColor}" font-size="9" font-family="Playfair Display,serif" font-weight="700" letter-spacing="0.5">${region.name}</text>`;
-      // Progress pips
+      // Tête du pin (cercle principal)
+      svg += `<circle cx="${cx}" cy="${cy-4}" r="11" fill="${pinFill}" stroke="${pinStroke}" stroke-width="1.5"/>`;
+
+      // Icône dans le pin
+      const pinIcon = completed ? '✓' : region.icon;
+      svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${completed?'9':'10'}" fill="${completed?'#0e0f0c':'#0e0f0c'}" font-weight="800">${pinIcon}</text>`;
+
+      // Pips d'ennemis battus (petits points sous le pin)
       const totalPips = region.enemies.length;
-      const pipSpacing = 11;
+      const pipSpacing = 8;
       const pipStartX = cx - ((totalPips-1)*pipSpacing)/2;
       region.enemies.forEach((eid,pi) => {
         const e = ALL_ENEMIES[eid];
         const isBeaten = beaten.includes(eid);
         const isBoss = e && e.isBoss;
         const pipX = pipStartX + pi*pipSpacing;
-        const pipY = cy + 18;
-        svg += `<circle cx="${pipX}" cy="${pipY}" r="${isBoss?4.5:3.5}" fill="${isBeaten?(isBoss?'#e84545':'#c8f542'):'rgba(255,255,255,0.12)'}" stroke="${isBoss?'rgba(232,69,69,0.6)':'rgba(255,255,255,0.15)'}" stroke-width="1"/>`;
-        if (isBeaten) svg += `<text x="${pipX}" y="${pipY+3}" text-anchor="middle" font-size="5" fill="${isBoss?'#fff':'#0e0f0c'}" font-weight="700">✓</text>`;
+        const pipY = cy + 26;
+        svg += `<circle cx="${pipX}" cy="${pipY}" r="${isBoss?3:2.5}" fill="${isBeaten?(isBoss?'#e84545':'#c8f542'):'rgba(255,255,255,0.18)'}" stroke="${isBoss?'rgba(232,69,69,0.5)':'rgba(255,255,255,0.2)'}" stroke-width="0.8"/>`;
+        if (isBeaten) svg += `<text x="${pipX}" y="${pipY+2}" text-anchor="middle" font-size="3.5" fill="#0e0f0c" font-weight="700">✓</text>`;
       });
-      // Completed ribbon
-      if (completed) {
-        svg += `<rect x="${cx-28}" y="${cy+24}" width="56" height="12" rx="3" fill="rgba(200,245,66,0.15)" stroke="rgba(200,245,66,0.4)" stroke-width="0.8"/>`;
-        svg += `<text x="${cx}" y="${cy+33}" text-anchor="middle" fill="#c8f542" font-size="7" font-family="DM Mono,monospace" letter-spacing="1">✓ TERMINÉ</text>`;
-      }
-      // Active pulse ring
-      if (isActive) {
-        svg += `<circle cx="${cx}" cy="${cy}" r="42" fill="none" stroke="${ml.strokeColor}" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5" class="region-glow"/>`;
-      }
-      // Hit area transparente en dernier (au-dessus des décorations) pour capturer les clics
-      svg += `<path class="region-hit-area" d="${t}" fill="transparent" stroke="none" style="cursor:pointer" onclick="selectRegion('${region.id}')"/>`;
-    }
 
-    // ── NUAGES : gérés par l'image de fond ─────────────────────────────────
-    // Les nuages sont déjà dans l'image de fond selon la progression.
-    // On ajoute juste un overlay transparent pour bloquer les clics
-    // et afficher l'icône cadenas sur les zones non déverrouillées.
-    if (!unlocked) {
-      const clipId = `fogclip_${region.id}`;
-      svg += `<defs><clipPath id="${clipId}"><path d="${t}"/></clipPath></defs>`;
-      
-      // Zone transparente qui bloque les clics
-      svg += `<path d="${t}" fill="transparent" clip-path="url(#${clipId})" style="cursor:not-allowed" pointer-events="all"/>`;
-      
-      // Cadenas avec halo
-      svg += `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="22" opacity="0.18" filter="url(#cloudBlur)">🔒</text>`;
-      svg += `<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="22" opacity="0.55">🔒</text>`;
+      // Zone de clic invisible sur le pin élargi
+      svg += `<circle cx="${cx}" cy="${cy-4}" r="16" fill="transparent" style="cursor:pointer" onclick="selectRegion('${region.id}')"/>`;
+
+    } else {
+      // Région verrouillée : pin grisé avec cadenas
+      svg += `<ellipse cx="${cx}" cy="${cy+18}" rx="9" ry="3" fill="rgba(0,0,0,0.2)"/>`;
+      svg += `<line x1="${cx}" y1="${cy+4}" x2="${cx}" y2="${cy+17}" stroke="rgba(180,180,180,0.3)" stroke-width="2.5" stroke-linecap="round"/>`;
+      svg += `<circle cx="${cx}" cy="${cy-4}" r="11" fill="rgba(30,30,30,0.55)" stroke="rgba(150,150,150,0.25)" stroke-width="1.5"/>`;
+      svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="10">🔒</text>`;
     }
 
     svg += `</g>`;
   });
 
-  // ── OVERLAY ELEMENTS ──────────────────────────────────────────────────────
+    // ── OVERLAY ELEMENTS ──────────────────────────────────────────────────────
   // Trail path
   // Compass rose
   svg += `<g transform="translate(658,416)" opacity="0.22" stroke="#c8f542" stroke-width="1" fill="none">

@@ -2150,6 +2150,8 @@ function revealItems(lb) {
                 !player.inventory.find(i => i.id === item.id);
       } else { icon = '❓'; name = '???'; stat = ''; }
     }
+    const isDuplicate = (item.type === 'weapon' || item.type === 'armor') && player.owned.includes(item.id);
+    const dupGold = isDuplicate ? (DUPLICATE_GOLD[item.rarity] || 10) : 0;
 
     const rarityLabels = { common: 'Commun', rare: 'Rare', epic: 'Épique', legendary: 'Légendaire' };
     card.innerHTML = `
@@ -2157,10 +2159,11 @@ function revealItems(lb) {
         <div class="lb-card-back"><div class="lb-card-back-glyph">🍱</div></div>
         <div class="lb-card-face rarity-${item.rarity}">
           ${isNew ? '<div class="lb-new-badge">NOUVEAU</div>' : ''}
+          ${isDuplicate ? `<div class="lb-new-badge" style="background:rgba(245,166,35,0.25);border-color:rgba(245,166,35,0.6);color:var(--gold)">♻️ DOUBLON</div>` : ''}
           <span class="lb-item-icon">${icon}</span>
           <div class="lb-item-name">${name}</div>
           <span class="lb-item-rarity rarity-${item.rarity}">${rarityLabels[item.rarity] || item.rarity}</span>
-          <div class="lb-item-stat">${stat}</div>
+          <div class="lb-item-stat">${isDuplicate ? `♻️ Converti en +${dupGold} 🪙` : stat}</div>
         </div>
       </div>`;
 
@@ -2293,8 +2296,14 @@ function launchParticles(tier, count = 18) {
   setTimeout(() => container.classList.remove('show'), 3000);
 }
 
+// Gold value for duplicate weapons/armors by rarity
+const DUPLICATE_GOLD = { common: 10, rare: 30, epic: 80, legendary: 200 };
+
 function closeLbOverlay() {
   // Apply loot to player
+  let duplicateGold = 0;
+  let duplicateCount = 0;
+
   currentLbItems.forEach(item => {
     if (item.type === 'gold') {
       player.gold += item.amount;
@@ -2303,7 +2312,14 @@ function closeLbOverlay() {
     } else if (item.type === 'sp') {
       player.skillPoints += item.amount;
     } else if (item.type === 'weapon' || item.type === 'armor') {
-      if (!player.owned.includes(item.id)) player.owned.push(item.id);
+      if (!player.owned.includes(item.id)) {
+        player.owned.push(item.id);
+      } else {
+        // Doublon → conversion en gold selon la rareté
+        const gold = DUPLICATE_GOLD[item.rarity] || 10;
+        duplicateGold += gold;
+        duplicateCount++;
+      }
     } else if (item.type === 'consumable') {
       const totalItems = player.inventory.reduce((s, i) => s + i.qty, 0);
       if (totalItems < 8) {
@@ -2314,6 +2330,11 @@ function closeLbOverlay() {
       }
     }
   });
+
+  if (duplicateGold > 0) {
+    player.gold += duplicateGold;
+  }
+
   savePlayer();
   updateProfileUI();
   renderShop();
@@ -2326,7 +2347,12 @@ function closeLbOverlay() {
   currentLbItems = [];
   lbRevealedCount = 0;
   lbTotalCards = 0;
-  showToast('🎁 Objets ajoutés à ton inventaire !', 'lootbox');
+
+  if (duplicateCount > 0) {
+    showToast(`🎁 Objets ajoutés ! ♻️ ${duplicateCount} doublon${duplicateCount > 1 ? 's' : ''} → +${duplicateGold} 🪙`, 'lootbox');
+  } else {
+    showToast('🎁 Objets ajoutés à ton inventaire !', 'lootbox');
+  }
 }
 
 // ============================================
@@ -2896,7 +2922,7 @@ function buildCharCard(char, onclickStr, isSelected) {
   const selectedCls = isSelected ? ' selected' : '';
   return '<div class="char-card '+cardCls+selectedCls+'" '+clickAttr+'>'
     +'<span class="char-type-badge '+badgeCls+'">'+badgeLbl+'</span>'
-    +'<div class="char-sprite"><img src="'+char.sprite+'.svg" alt="'+char.name+'" /></div>'
+    +'<div class="char-sprite"><img src="https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/'+char.sprite+'.png" alt="'+char.name+'" /></div>'
     +'<div class="char-name">'+char.name+'</div>'
     +'<div class="char-class">'+char.class+'</div>'
     +'<div class="char-stats">'
@@ -3353,8 +3379,8 @@ function startBattle(newGame = false) {
   document.getElementById('villainNameBadge').textContent = state.villainChar.name.toUpperCase();
   document.getElementById('heroLvlBadge').textContent = 'LV.' + player.level;
   document.getElementById('villainLvlBadge').textContent = state.villainChar.isBoss ? 'LV.MAX' : 'LV.' + (state.currentEnemyIndex * 5 + 5);
-  document.getElementById('heroSprite').innerHTML = `<img src="${state.heroChar.sprite}.svg" alt="${state.heroChar.name}" />`;
-  document.getElementById('villainSprite').innerHTML = `<img src="${state.villainChar.sprite}.svg" alt="${state.villainChar.name}" />`;
+  document.getElementById('heroSprite').innerHTML = `<img src="https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/${state.heroChar.sprite}.png" alt="${state.heroChar.name}" />`;
+  document.getElementById('villainSprite').innerHTML = `<img src="https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/${state.villainChar.sprite}.png" alt="${state.villainChar.name}" />`;
   updateStageIndicators();
   // Fond d'arène spécifique à la région
   const arenaEl = document.querySelector('.arena');
@@ -4579,8 +4605,8 @@ function openDialogue(villainId, heroId, onComplete) {
   dlgState.current = 0;
   dlgState.onComplete = onComplete;
   dlgState.canAdvance = false;
-  document.getElementById('dlgHeroSprite').innerHTML = `<img src="${hero.sprite}.svg" alt="${hero.name}"/>`;
-  document.getElementById('dlgVillainSprite').innerHTML = `<img src="${villain.sprite}.svg" alt="${villain.name}"/>`;
+  document.getElementById('dlgHeroSprite').innerHTML = `<img src="https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/${hero.sprite}.png" alt="${hero.name}"/>`;
+  document.getElementById('dlgVillainSprite').innerHTML = `<img src="https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/${villain.sprite}.png" alt="${villain.name}"/>`;
   document.getElementById('dlgHeroName').textContent = hero.name.toUpperCase();
   document.getElementById('dlgVillainName').textContent = villain.name.toUpperCase();
   const regionIdx = selectedRegion ? REGIONS.findIndex(r => r.id === selectedRegion) : -1;
@@ -4666,10 +4692,10 @@ function triggerPatateSpecial(heroEffective, villain, dmgResult, onComplete) {
   const cin = document.getElementById('patateCinematic');
 
   // Set sprites
-  document.getElementById('patateCinHeroImg').src = heroChar.sprite + '.svg';
-  document.getElementById('patateCinHeroSlamImg').src = heroChar.sprite + '.svg';
-  document.getElementById('patateCinVillainChargeImg').src = villain.sprite + '.svg';
-  document.getElementById('patateCinVillainRecoilImg').src = villain.sprite + '.svg';
+  document.getElementById('patateCinHeroImg').src = 'https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/' + heroChar.sprite + '.png';
+  document.getElementById('patateCinHeroSlamImg').src = 'https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/' + heroChar.sprite + '.png';
+  document.getElementById('patateCinVillainChargeImg').src = 'https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/' + villain.sprite + '.png';
+  document.getElementById('patateCinVillainRecoilImg').src = 'https://raw.githubusercontent.com/S4YD0U/lunchboxd/main/sprite/' + villain.sprite + '.png';
 
   // Hide all phases
   ['patatePhaseCharge','patatePhaseTitle','patatePhaseImpact'].forEach(id => {

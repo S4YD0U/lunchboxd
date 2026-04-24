@@ -872,6 +872,107 @@
     .action-btn.tree-skill { border-color: rgba(167,139,250,0.3); }
     .action-btn.tree-skill:hover:not(:disabled) { border-color: var(--purple); box-shadow: 0 0 12px rgba(167,139,250,0.2); }
 
+    /* ============ DIFFICULTY MODAL ============ */
+    .diff-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(5,5,4,0.88);
+      backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center;
+      z-index: 600;
+    }
+    .diff-modal-overlay.show { display: flex; }
+    .diff-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 480px; width: 92%;
+      animation: slideInRight 0.3s ease;
+      position: relative;
+    }
+    .diff-modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 700;
+      margin-bottom: 0.3rem; text-align: center;
+    }
+    .diff-modal-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem; color: var(--muted);
+      text-align: center; margin-bottom: 1.5rem;
+      letter-spacing: 0.06em;
+    }
+    .diff-options { display: flex; flex-direction: column; gap: 0.75rem; }
+    .diff-card {
+      border: 2px solid var(--border);
+      border-radius: 8px; padding: 1rem 1.2rem;
+      cursor: pointer; transition: all 0.22s;
+      background: var(--card-bg);
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .diff-card:hover { transform: translateY(-2px); }
+    .diff-card.diff-normal:hover  { border-color: rgba(96,165,250,0.6); background: rgba(96,165,250,0.06); }
+    .diff-card.diff-epicee:hover  { border-color: rgba(245,166,35,0.6); background: rgba(245,166,35,0.06); }
+    .diff-card.diff-infernal:hover { border-color: rgba(232,69,69,0.7); background: rgba(232,69,69,0.07); }
+    .diff-card.diff-selected.diff-normal  { border-color: rgba(96,165,250,0.8); background: rgba(96,165,250,0.1); }
+    .diff-card.diff-selected.diff-epicee  { border-color: rgba(245,166,35,0.8); background: rgba(245,166,35,0.1); }
+    .diff-card.diff-selected.diff-infernal { border-color: rgba(232,69,69,0.9); background: rgba(232,69,69,0.12); }
+    .diff-icon { font-size: 2rem; flex-shrink: 0; }
+    .diff-info { flex: 1; }
+    .diff-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .diff-name.normal  { color: var(--xp-blue); }
+    .diff-name.epicee  { color: var(--gold); }
+    .diff-name.infernal { color: var(--accent3); }
+    .diff-desc { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); line-height: 1.5; }
+    .diff-reward { font-family: 'DM Mono', monospace; font-size: 0.68rem; margin-top: 0.3rem; font-weight: 500; }
+    .diff-reward.normal  { color: var(--xp-blue); }
+    .diff-reward.epicee  { color: var(--gold); }
+    .diff-reward.infernal { color: var(--accent3); }
+    .diff-confirm-btn {
+      width: 100%; margin-top: 1.2rem;
+      background: var(--accent3); color: #fff;
+      border: none; padding: 0.9rem;
+      border-radius: 6px; font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; letter-spacing: -0.01em;
+    }
+    .diff-confirm-btn:hover { background: #ff5555; transform: translateY(-1px); }
+    .diff-cancel { display: block; text-align: center; margin-top: 0.7rem; font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); cursor: pointer; transition: color 0.2s; }
+    .diff-cancel:hover { color: var(--text); }
+
+    /* Difficulty badge in battle */
+    .diff-badge-battle {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.2rem 0.65rem; border-radius: 3px;
+      margin-left: 0.5rem;
+    }
+    .diff-badge-battle.normal   { background: rgba(96,165,250,0.12); color: var(--xp-blue); border: 1px solid rgba(96,165,250,0.3); }
+    .diff-badge-battle.epicee   { background: rgba(245,166,35,0.12); color: var(--gold); border: 1px solid rgba(245,166,35,0.3); }
+    .diff-badge-battle.infernal { background: rgba(232,69,69,0.12); color: var(--accent3); border: 1px solid rgba(232,69,69,0.35); animation: bossBorderPulse 1.5s ease-in-out infinite; }
+
+    /* ============ STATUS EFFECTS ============ */
+    .status-icon {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      padding: 0.18rem 0.5rem; border-radius: 3px;
+      letter-spacing: 0.04em; margin-right: 0.3rem;
+      animation: statusPulse 2s ease-in-out infinite;
+    }
+    .status-burn   { background: rgba(232,80,20,0.15); color: #ff7040; border: 1px solid rgba(232,80,20,0.4); }
+    .status-poison { background: rgba(120,200,50,0.12); color: #88e040; border: 1px solid rgba(120,200,50,0.35); }
+    .status-slow   { background: rgba(100,100,220,0.14); color: #99aaff; border: 1px solid rgba(100,100,220,0.4); }
+    @keyframes statusPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+    /* Antidote item pill in battle */
+    .cure-btn {
+      background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.35);
+      color: var(--hp-green); font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      padding: 0.25rem 0.7rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+      margin-top: 0.3rem; display: inline-block;
+    }
+    .cure-btn:hover { background: rgba(74,222,128,0.22); }
+
     /* BATTLE */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes shake { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-12px) rotate(-2deg)} 30%{transform:translateX(12px) rotate(2deg)} 45%{transform:translateX(-8px) rotate(-1deg)} 60%{transform:translateX(8px) rotate(1deg)} 75%{transform:translateX(-4px)} }
@@ -1582,7 +1683,7 @@
       <div style="display:flex;align-items:center;gap:0.6rem;margin-top:0.5rem;" id="rdpHeroWarning" style="display:none;">
         <span style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--accent2);">⚠ Sélectionne d'abord un héros ci-dessus</span>
       </div>
-      <button class="rdp-enter-btn" id="rdpEnterBtn" onclick="enterRegion()">⚔ Entrer dans la région</button>
+      <button class="rdp-enter-btn" id="rdpEnterBtn" onclick="openDiffModal(selectedRegion)">⚔ Entrer dans la région</button>
     </div>
 
     <!-- hidden stagesDisplay needed for battle UI -->
@@ -1728,6 +1829,7 @@
     <div class="battle-stage-bar" id="battleStageBar">
       <span id="battleStageText">ÉTAPE 1/2</span>
       <div style="display:flex;gap:6px;margin-left:8px;" id="battlePips"></div>
+      <span id="battleDiffBadge"></span>
     </div>
 
     <div class="narrator-box" id="narratorBox"></div>
@@ -1806,6 +1908,7 @@
       <div class="xp-item"><div class="xp-val gold-val" id="goldGained">+50</div><div class="xp-label">Pièces</div></div>
       <div class="xp-item"><div class="xp-val" id="turnsUsed">12</div><div class="xp-label">Tours</div></div>
     </div>
+    <div style="text-align:center;margin-top:0.5rem;" id="victoryDiffBadge"></div>
     <div class="victory-quote" id="victoryQuote"></div>
     <div class="victory-btns">
       <button class="btn-rematch" id="btnRematch">🔄 Revanche</button>
@@ -2891,6 +2994,7 @@ let state = {
   heroStats: null, atkBuff: 0, atkBuffTurns: 0,
   fortressActive: false, fortressTurns: 0, fortressCounter: false,
   pendingLevelUp: null,
+  heroStatuses: [],
 };
 
 updateStageIndicators();
@@ -3390,6 +3494,9 @@ function startBattle(newGame = false) {
     if (currentRegion) arenaEl.classList.add('region-' + currentRegion.id);
   }
   clearLog(); showScreen('battle'); buildActionRow(); updateBattleUI();
+  // Update difficulty badge
+  const diffBadgeEl = document.getElementById('battleDiffBadge');
+  if (diffBadgeEl) diffBadgeEl.innerHTML = getDiffBadgeHtml();
   // Spawn arena particles
   spawnArenaParticles();
   // Boss fight mode
@@ -3406,7 +3513,9 @@ function startBattle(newGame = false) {
   addLog(`🎙 "${pick(state.villainChar.narratorLines.taunt)}"`, state.villainChar.isBoss ? 'villain-action' : 'intermediate-action');
   // Show opening narrator line
   setTimeout(() => showNarrator(pick(state.villainChar.narratorLines.taunt), 4000), 600);
-  if (state.heroStats.spd < state.villainChar.spd) {
+  state.heroStatuses = [];
+  addAntiStatusItems();
+  if (state.heroStats.spd < state.villainChar.spd || isSlowed()) {
     addLog('⚡ ' + state.villainChar.name + ' attaque en premier !', 'system');
     setPlayerTurn(false); setTimeout(() => villainTurn(), 800);
   } else { setPlayerTurn(true); }
@@ -3447,7 +3556,7 @@ function updateBattleUI() {
   const vsf=document.getElementById('villainSpecialFill');
   if(vsf){if(state.villainSpecial>=100)vsf.classList.add('ready');else vsf.classList.remove('ready');}
   document.getElementById('turnLabel').textContent='Tour '+state.turn;
-  if(heroStatusEl){let badges='';if(state.atkBuffTurns>0)badges+=`<span style="background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent2)">⚡ ATK+ (${state.atkBuffTurns}t)</span>`;if(state.fortressActive)badges+=`<span style="background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);border-radius:3px;padding:0.1rem 0.4rem;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--xp-blue)">🥖 FORTERESSE (${state.fortressTurns}t)</span>`;heroStatusEl.innerHTML=badges;}
+  renderStatusBadges();
 }
 
 function setPlayerTurn(val) {
@@ -3526,6 +3635,17 @@ function useItem(id) {
   savePlayer();
   if(cat.healAmt>0){const healed=Math.min(cat.healAmt,state.heroMaxHp-state.heroHp);state.heroHp=Math.min(state.heroMaxHp,state.heroHp+cat.healAmt);spawnDmg('heroSprite',healed,'heal');addLog(`${cat.icon} ${cat.name} utilisé — +${healed} HP soignés !`,'heal-line');}
   if(cat.atkMult>0){state.atkBuff=Math.floor(state.heroStats.atk*cat.atkMult);state.atkBuffTurns=cat.duration||2;addLog(`${cat.icon} ATK augmentée de +${state.atkBuff} pendant ${state.atkBuffTurns} tours !`,'hero-action');}
+  if(cat.cureStatus){
+    if(cat.cureStatus==='all'){
+      const count=state.heroStatuses?state.heroStatuses.length:0;
+      cureAllStatuses();
+      addLog(`${cat.icon} ${cat.name} — tous les statuts éliminés !`,'heal-line');
+    } else {
+      const cured=cureStatus(cat.cureStatus);
+      if(cured) addLog(`${cat.icon} ${cat.name} — ${STATUS_DEFS[cat.cureStatus].label} soignée !`,'heal-line');
+      else addLog(`${cat.icon} ${cat.name} — aucun statut à soigner.`,'system');
+    }
+  }
   updateBattleUI(); buildItemRow();
   setPlayerTurn(false); setTimeout(()=>villainTurn(),600);
 }
@@ -3534,6 +3654,151 @@ function calcDmg(atk,def,mult=1){return Math.max(1,Math.floor(atk*mult*(0.85+Mat
 const isCrit=()=>Math.random()<0.15;
 const isMiss=()=>Math.random()<Math.max(0.01,0.08-getPassiveMissReduction());
 function getEffectiveAtk(){return state.heroStats.atk+(state.atkBuffTurns>0?state.atkBuff:0);}
+
+// ============================================
+// STATUS EFFECTS SYSTEM
+// ============================================
+// state.heroStatuses = [ { type, turnsLeft, stacks } ]
+
+function initStatuses() {
+  if (!state.heroStatuses) state.heroStatuses = [];
+}
+
+function applyStatus(type, turns, stacks=1) {
+  initStatuses();
+  const existing = state.heroStatuses.find(s => s.type === type);
+  if (existing) {
+    // Refresh duration and stack (poison stacks, others just refresh)
+    existing.turnsLeft = Math.max(existing.turnsLeft, turns);
+    if (type === 'poison') existing.stacks = Math.min(existing.stacks + stacks, 5);
+    addLog(STATUS_DEFS[type].refreshLog, 'villain-action');
+  } else {
+    state.heroStatuses.push({ type, turnsLeft: turns, stacks });
+    addLog(STATUS_DEFS[type].applyLog, 'crit-line');
+    showNarrator(STATUS_DEFS[type].narratorMsg, 2500);
+  }
+  updateBattleUI();
+}
+
+function cureStatus(type) {
+  initStatuses();
+  const idx = state.heroStatuses.findIndex(s => s.type === type);
+  if (idx >= 0) { state.heroStatuses.splice(idx, 1); return true; }
+  return false;
+}
+
+function cureAllStatuses() {
+  initStatuses();
+  state.heroStatuses = [];
+}
+
+function tickStatuses() {
+  initStatuses();
+  const toRemove = [];
+  for (const s of state.heroStatuses) {
+    const def = STATUS_DEFS[s.type];
+    if (def && def.onTick) def.onTick(s);
+    s.turnsLeft--;
+    if (s.turnsLeft <= 0) toRemove.push(s.type);
+  }
+  toRemove.forEach(t => {
+    cureStatus(t);
+    addLog(STATUS_DEFS[t].expireLog, 'system');
+  });
+}
+
+const STATUS_DEFS = {
+  burn: {
+    icon: '🔥', label: 'Brûlure',
+    applyLog:   '🔥 Brûlure infligée ! Tu perdras des HP chaque tour.',
+    refreshLog: '🔥 Brûlure ravivée !',
+    expireLog:  '🔥 La Brûlure s\'éteint.',
+    narratorMsg: 'Les flammes te consumment lentement…',
+    onTick: (s) => {
+      const dmg = Math.max(3, Math.floor(state.heroMaxHp * 0.06));
+      state.heroHp = Math.max(1, state.heroHp - dmg);
+      spawnDmg('heroSprite', dmg, 'dmg');
+      addLog(`🔥 Brûlure — ${dmg} dégâts de feu !`, 'crit-line');
+    }
+  },
+  poison: {
+    icon: '☠️', label: 'Poison',
+    applyLog:   '☠️ Empoisonné ! Les dégâts augmentent chaque tour.',
+    refreshLog: '☠️ Le poison s\'intensifie !',
+    expireLog:  '☠️ Le poison se dissipe.',
+    narratorMsg: 'Le venin se répand dans tes veines…',
+    onTick: (s) => {
+      const dmg = Math.max(2, Math.floor(state.heroMaxHp * 0.03 * s.stacks));
+      state.heroHp = Math.max(1, state.heroHp - dmg);
+      spawnDmg('heroSprite', dmg, 'dmg');
+      addLog(`☠️ Poison (x${s.stacks}) — ${dmg} dégâts !`, 'villain-action');
+      if (s.stacks < 5) s.stacks++; // escalade chaque tick
+    }
+  },
+  slow: {
+    icon: '🧊', label: 'Ralentissement',
+    applyLog:   '🧊 Ralenti ! L\'ennemi agit en premier pendant quelques tours.',
+    refreshLog: '🧊 Ralentissement prolongé !',
+    expireLog:  '🧊 Tu retrouves ta vitesse normale.',
+    narratorMsg: 'Tes mouvements se figent comme de la glace…',
+    onTick: null // l'effet est géré dans setPlayerTurn
+  }
+};
+
+function isSlowed() {
+  initStatuses();
+  return state.heroStatuses.some(s => s.type === 'slow');
+}
+
+function renderStatusBadges() {
+  initStatuses();
+  const el = document.getElementById('heroStatus');
+  if (!el) return;
+  let html = '';
+  // Existing buffs
+  if (state.atkBuffTurns > 0) html += `<span class="status-icon" style="background:rgba(245,166,35,0.15);color:var(--accent2);border:1px solid rgba(245,166,35,0.3);">⚡ ATK+ (${state.atkBuffTurns}t)</span>`;
+  if (state.fortressActive) html += `<span class="status-icon" style="background:rgba(96,165,250,0.15);color:var(--xp-blue);border:1px solid rgba(96,165,250,0.3);">🥖 FORTERESSE (${state.fortressTurns}t)</span>`;
+  // Status effects
+  for (const s of state.heroStatuses) {
+    const def = STATUS_DEFS[s.type];
+    if (!def) continue;
+    const stackStr = s.type === 'poison' ? ` x${s.stacks}` : '';
+    html += `<span class="status-icon status-${s.type}">${def.icon} ${def.label}${stackStr} (${s.turnsLeft}t)</span>`;
+  }
+  el.innerHTML = html;
+}
+
+// Probability of inflicting a status per attack type (villain)
+function maybeInflictStatus(villain, attackType) {
+  // Boss = higher chance, scaled by difficulty
+  const diffBonus = currentDifficulty === 'infernal' ? 0.18 : currentDifficulty === 'epicee' ? 0.09 : 0;
+  const baseChance = villain.isBoss ? 0.28 + diffBonus : 0.14 + diffBonus;
+  if (Math.random() > baseChance) return;
+
+  // Pick status based on villain archetype (id keywords) or random
+  const id = villain.id;
+  let pool = [];
+  if (/piment|cannelle|tomate|banane|volcan/.test(id)) pool = ['burn','burn','poison'];
+  else if (/glace|sorbet|esquimau|yeti/.test(id)) pool = ['slow','slow','burn'];
+  else if (/algue|vinaigre|ferment|anchois|cornichon/.test(id)) pool = ['poison','poison','slow'];
+  else pool = ['burn','poison','slow'];
+
+  const chosen = pool[Math.floor(Math.random() * pool.length)];
+  const turns = villain.isBoss ? 3 : 2;
+  applyStatus(chosen, turns);
+}
+
+function addAntiStatusItems() {
+  // Ensure antidote items exist in shop catalog
+  if (!SHOP_CATALOG.consumables.find(c => c.id === 'cure_burn')) {
+    SHOP_CATALOG.consumables.push(
+      { id:'cure_burn',  name:'Eau Glacée',    icon:'💧', type:'consumable', price:18, stat:'Soigne Brûlure', healAmt:0, atkMult:0, cureStatus:'burn',   desc:'Éteint instantanément la Brûlure.', reqLv:1, stackable:true },
+      { id:'cure_poison',name:'Lait Antidote', icon:'🥛', type:'consumable', price:22, stat:'Soigne Poison',  healAmt:0, atkMult:0, cureStatus:'poison', desc:'Neutralise le Poison, même empilé.', reqLv:1, stackable:true },
+      { id:'cure_slow',  name:'Café Double',   icon:'☕', type:'consumable', price:20, stat:'Soigne Ralentissement', healAmt:0, atkMult:0, cureStatus:'slow', desc:'Remet ta vitesse à la normale.', reqLv:1, stackable:true },
+      { id:'cure_all',   name:'Remède Universel', icon:'🍵', type:'consumable', price:55, stat:'Soigne tous statuts', healAmt:30, atkMult:0, cureStatus:'all', desc:'Élimine tout statut + soigne 30 HP.', reqLv:2, stackable:true }
+    );
+  }
+}
 
 function playerAction(id) {
   if(!state.playerTurn||!state.battleRunning)return;
@@ -3592,6 +3857,9 @@ function villainTurn() {
   if(!state.battleRunning)return;
   const villain=state.villainChar; const hero=state.heroChar;
   state.turn++;
+  // Tick status effects (burn, poison)
+  tickStatuses();
+  if(checkBattleEnd())return; // status might kill hero
   const regen=getPassiveRegenPerTurn();
   if(regen>0&&state.heroHp<state.heroMaxHp){const healed=Math.min(regen,state.heroMaxHp-state.heroHp);state.heroHp+=healed;spawnDmg('heroSprite',healed,'heal');addLog(`🫙 Régénération — +${healed} HP`,'heal-line');}
   if(state.atkBuffTurns>0){state.atkBuffTurns--;if(state.atkBuffTurns===0){state.atkBuff=0;addLog('⚡ Boost ATK terminé.','system');}}
@@ -3621,12 +3889,14 @@ function villainTurn() {
         // Arena flash on villain crit
         if(crit){const arena=document.getElementById('battleArena');if(arena){arena.classList.add('arena-quake');setTimeout(()=>arena.classList.remove('arena-quake'),500);}}
         addLog((crit?'💥 CRITIQUE ! ':'😈 ')+villain.name+' frappe '+hero.name+' pour '+dmg+(state.heroDefending?' (garde !)':state.fortressActive?' (forteresse !)':'')+' !',crit?'crit-line':logCls);
+        maybeInflictStatus(villain, 'punch');
         if(state.fortressActive&&state.fortressCounter){const riposteDmg=calcDmg(state.heroStats.atk,villain.def,0.6);state.villainHp-=riposteDmg;spawnDmg('villainSprite',riposteDmg,'dmg');addLog('🥖 Riposte de la Forteresse — '+riposteDmg+' dégâts !','hero-action');}
       }
     }else if(action==='combo'){
       let dmg=calcDmg(villain.atk,state.heroStats.def,1.2);if(state.heroDefending||state.fortressActive)dmg=Math.floor(dmg*(1-blockRate*0.6));
       anim('heroSprite','hit-shake');spawnDmg('heroSprite',dmg,'dmg');state.heroHp-=dmg;
       addLog('🔥 '+villain.name+' combo furieux — '+dmg+' dégâts !',logCls);
+      maybeInflictStatus(villain, 'combo');
     }else if(action==='defend'){
       state.villainDefending=true;addLog('🛡️ '+villain.name+' se barricade…',logCls);
     }else if(action==='special'){
@@ -3635,6 +3905,7 @@ function villainTurn() {
       anim('heroSprite','hit-shake');spawnDmg('heroSprite',dmg,'crit');state.heroHp-=dmg;
       const arena2=document.getElementById('battleArena');if(arena2){arena2.classList.add('arena-quake');setTimeout(()=>arena2.classList.remove('arena-quake'),500);}
       addLog('⚡ '+result.log,'crit-line');
+      maybeInflictStatus(villain, 'special');
     }
     updateBattleUI();
     if(!checkBattleEnd())setPlayerTurn(true);
@@ -3655,14 +3926,21 @@ function endBattle(won) {
   const hero=state.heroChar; const villain=state.villainChar;
   const isLastEnemy=state.currentEnemyIndex>=ENEMIES.length-1;
   const baseXp=won?(villain.isBoss?200:80):20;
-  const earnedXp=Math.floor(baseXp+state.turn*(won?8:3)+Math.random()*40);
+  const earnedXpRaw=Math.floor(baseXp+state.turn*(won?8:3)+Math.random()*40);
+  const diffMult = won ? (DIFFICULTIES[currentDifficulty]||DIFFICULTIES.normal).xpMult : 1.0;
+  const earnedXp=Math.floor(earnedXpRaw * diffMult);
   const baseGold=won?(villain.isBoss?60:20):5;
-  const earnedGold=Math.floor(baseGold+Math.random()*(won?30:8));
+  const earnedGoldRaw=Math.floor(baseGold+Math.random()*(won?30:8));
+  const earnedGold=Math.floor(earnedGoldRaw * (won ? (DIFFICULTIES[currentDifficulty]||DIFFICULTIES.normal).rewardMult : 1.0));
   const didLevelUp=addXpGold(earnedXp,earnedGold);
   const newLevel=player.level;
   if(didLevelUp){const unlock=LEVEL_UNLOCKS[newLevel];document.getElementById('levelupBannerTitle').textContent=`🎉 Niveau ${newLevel} atteint !`;document.getElementById('levelupBannerSub').textContent=(unlock?unlock.msg+' · ':'')+`✨ +1 point de compétence disponible !`;document.getElementById('levelupBanner').classList.add('show');}
+  // Difficulty badge on victory
+  const vdb = document.getElementById('victoryDiffBadge');
+  if (vdb) vdb.innerHTML = getDiffBadgeHtml();
   if(won&&!isLastEnemy){
     state.heroHpPersist=state.heroHp; state.currentEnemyIndex++; updateStageIndicators();
+    state.heroStatuses = []; // clear statuses between fights
     document.getElementById('victoryIcon').textContent='⚔';
     const t=document.getElementById('victoryTitle'); t.textContent=villain.name+' vaincu !'; t.className='victory-title intermediate';
     document.getElementById('victorySub').textContent=`Bien joué ! Le prochain adversaire t'attend : ${ENEMIES[state.currentEnemyIndex].name}.`;
@@ -4206,12 +4484,14 @@ function showRegionDetail(regionId) {
       btn.textContent = '🔄 Rejouer la région';
       btn.className = 'rdp-enter-btn completed-btn';
       btn.disabled = false;
+      btn.onclick = () => openDiffModal(regionId);
     } else {
       const nextEnemy = region.enemies.find(eid => !beaten.includes(eid));
       const nextE = nextEnemy ? ALL_ENEMIES[nextEnemy] : null;
       btn.textContent = nextE ? `⚔ Affronter : ${nextE.name}` : '⚔ Entrer dans la région';
       btn.className = 'rdp-enter-btn resume-btn';
       btn.disabled = false;
+      btn.onclick = () => openDiffModal(regionId);
     }
   }
 
@@ -4229,6 +4509,111 @@ function startBattleWithDialogue(newGame=false) {
   const villainId = ENEMIES[state.currentEnemyIndex] ? ENEMIES[state.currentEnemyIndex].id : null;
   if(!villainId) { startBattle(newGame); return; }
   openDialogue(villainId, selectedHero, () => startBattle(newGame));
+}
+
+// ============================================
+// DIFFICULTY SYSTEM
+// ============================================
+
+const DIFFICULTIES = {
+  normal:   { label: 'Normal',   icon: '🍃', hpMult: 1.0, atkMult: 1.0, rewardMult: 1.0, xpMult: 1.0 },
+  epicee:   { label: 'Épicé',    icon: '🌶️', hpMult: 1.3, atkMult: 1.3, rewardMult: 1.5, xpMult: 1.5 },
+  infernal: { label: 'Infernal', icon: '🔥', hpMult: 1.65, atkMult: 1.65, rewardMult: 2.5, xpMult: 2.5 },
+};
+
+let currentDifficulty = 'normal';
+let pendingDifficultyRegion = null;
+
+function openDiffModal(regionId) {
+  pendingDifficultyRegion = regionId;
+  const region = REGIONS.find(r => r.id === regionId);
+  if (region) {
+    document.getElementById('diffModalRegionName').textContent = region.icon + ' ' + region.name.toUpperCase();
+  }
+  // Reset selection to normal
+  selectDifficulty('normal');
+  document.getElementById('diffModalOverlay').classList.add('show');
+}
+
+function closeDiffModal() {
+  document.getElementById('diffModalOverlay').classList.remove('show');
+  pendingDifficultyRegion = null;
+}
+
+function selectDifficulty(diff) {
+  currentDifficulty = diff;
+  ['normal','epicee','infernal'].forEach(d => {
+    const card = document.getElementById('diffCard-' + d);
+    if (card) {
+      card.classList.remove('diff-selected');
+      if (d === diff) card.classList.add('diff-selected');
+    }
+  });
+  const btn = document.getElementById('diffConfirmBtn');
+  const d = DIFFICULTIES[diff];
+  if (btn) btn.textContent = d.icon + ' Lancer en ' + d.label;
+}
+
+function confirmDifficulty() {
+  if (!pendingDifficultyRegion) return;
+  closeDiffModal();
+  enterRegionWithDifficulty(pendingDifficultyRegion);
+}
+
+function applyDifficultyToEnemy(enemy) {
+  const d = DIFFICULTIES[currentDifficulty];
+  if (d.hpMult === 1.0 && d.atkMult === 1.0) return enemy; // Normal: no change
+  return Object.assign({}, enemy, {
+    hp:  Math.round(enemy.hp  * d.hpMult),
+    atk: Math.round(enemy.atk * d.atkMult),
+    // Keep same special fn but wrap it to scale dmg
+    special: {
+      name: enemy.special.name,
+      fn: (v) => {
+        const base = enemy.special.fn(v);
+        return Object.assign({}, base, { dmg: Math.round(base.dmg * d.atkMult) });
+      }
+    }
+  });
+}
+
+function getDiffBadgeHtml() {
+  const d = DIFFICULTIES[currentDifficulty];
+  return `<span class="diff-badge-battle ${currentDifficulty}">${d.icon} ${d.label}</span>`;
+}
+
+function enterRegionWithDifficulty(regionId) {
+  selectedRegion = regionId;
+  if (!selectedHero) {
+    showToast('Sélectionne d\'abord un héros ci-dessus !', 'error');
+    document.getElementById('heroSelectSection').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+  const region = REGIONS.find(r => r.id === regionId);
+  if (!region) return;
+  const prog = getRegionProgress();
+  const completed = prog[regionId] && prog[regionId].completed;
+
+  if (completed) {
+    const p = loadRegionProgress();
+    p[regionId] = { beaten: [], completed: false };
+    saveRegionProgress(p);
+  }
+
+  setEnemiesFromRegion(regionId);
+  // Apply difficulty multipliers to enemy copies
+  ENEMIES = ENEMIES.map(e => applyDifficultyToEnemy(e));
+
+  buildSelectStageDots();
+  buildBattlePips();
+
+  const beatenNow = getRegionEnemiesBeaten(regionId);
+  const nextIdx = region.enemies.findIndex(eid => !beatenNow.includes(eid));
+  state.currentEnemyIndex = Math.max(0, nextIdx);
+  state.heroHpPersist = 0;
+  updateStageIndicators();
+
+  startBattleWithDialogue(true);
 }
 
 function enterRegion() {
@@ -4845,6 +5230,42 @@ renderHeroGrid();
 renderWorldMap();
 showScreen('map');
 </script>
+
+<!-- DIFFICULTY SELECTION MODAL -->
+<div id="diffModalOverlay" class="diff-modal-overlay">
+  <div class="diff-modal">
+    <div class="diff-modal-title">⚔ Choisir la Difficulté</div>
+    <div class="diff-modal-sub" id="diffModalRegionName">RÉGION — LE MONDE DE LA CANTINE</div>
+    <div class="diff-options">
+      <div class="diff-card diff-normal" id="diffCard-normal" onclick="selectDifficulty('normal')">
+        <div class="diff-icon">🍃</div>
+        <div class="diff-info">
+          <div class="diff-name normal">Normal</div>
+          <div class="diff-desc">Statistiques ennemies standards. Idéal pour découvrir la région.</div>
+          <div class="diff-reward normal">🪙 Récompenses × 1.0 — XP × 1.0</div>
+        </div>
+      </div>
+      <div class="diff-card diff-epicee" id="diffCard-epicee" onclick="selectDifficulty('epicee')">
+        <div class="diff-icon">🌶️</div>
+        <div class="diff-info">
+          <div class="diff-name epicee">Épicé</div>
+          <div class="diff-desc">Ennemis +30% HP & ATK. Le vrai défi commence ici.</div>
+          <div class="diff-reward epicee">🪙 Récompenses × 1.5 — XP × 1.5</div>
+        </div>
+      </div>
+      <div class="diff-card diff-infernal" id="diffCard-infernal" onclick="selectDifficulty('infernal')">
+        <div class="diff-icon">🔥</div>
+        <div class="diff-info">
+          <div class="diff-name infernal">Infernal</div>
+          <div class="diff-desc">Ennemis +65% HP & ATK. Réservé aux légendes de la cantine.</div>
+          <div class="diff-reward infernal">🪙 Récompenses × 2.5 — XP × 2.5</div>
+        </div>
+      </div>
+    </div>
+    <button class="diff-confirm-btn" id="diffConfirmBtn" onclick="confirmDifficulty()">⚔ Entrer dans la région</button>
+    <span class="diff-cancel" onclick="closeDiffModal()">← Annuler</span>
+  </div>
+</div>
 
 <!-- PATATE HONGROISE SPECIAL CINEMATIC -->
 <div id="patateCinematic" class="patate-cinematic">

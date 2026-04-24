@@ -4087,20 +4087,6 @@ function renderWorldMap() {
       const pinIcon = completed ? '✓' : region.icon;
       svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${completed?'9':'10'}" fill="${completed?'#0e0f0c':'#0e0f0c'}" font-weight="800">${pinIcon}</text>`;
 
-      // Pips d'ennemis battus (petits points sous le pin)
-      const totalPips = region.enemies.length;
-      const pipSpacing = 8;
-      const pipStartX = cx - ((totalPips-1)*pipSpacing)/2;
-      region.enemies.forEach((eid,pi) => {
-        const e = ALL_ENEMIES[eid];
-        const isBeaten = beaten.includes(eid);
-        const isBoss = e && e.isBoss;
-        const pipX = pipStartX + pi*pipSpacing;
-        const pipY = cy + 26;
-        svg += `<circle cx="${pipX}" cy="${pipY}" r="${isBoss?3:2.5}" fill="${isBeaten?(isBoss?'#e84545':'#c8f542'):'rgba(255,255,255,0.18)'}" stroke="${isBoss?'rgba(232,69,69,0.5)':'rgba(255,255,255,0.2)'}" stroke-width="0.8"/>`;
-        if (isBeaten) svg += `<text x="${pipX}" y="${pipY+2}" text-anchor="middle" font-size="3.5" fill="#0e0f0c" font-weight="700">✓</text>`;
-      });
-
       // Zone de clic invisible sur le pin élargi
       svg += `<circle cx="${cx}" cy="${cy-4}" r="16" fill="transparent" style="cursor:pointer" onclick="selectRegion('${region.id}')"/>`;
 

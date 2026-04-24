@@ -3715,13 +3715,15 @@ function doResetSkills() {
 // ============================================
 // WORLD MAP SYSTEM
 // ============================================
-const REGION_PROGRESS_KEY = 'lunchboxe_region_progress';
+function getRegionProgressKey() {
+  return 'lunchboxe_region_progress_' + (selectedHero || 'default');
+}
 
 function loadRegionProgress() {
-  try { return JSON.parse(localStorage.getItem(REGION_PROGRESS_KEY)) || {}; } catch(e) { return {}; }
+  try { return JSON.parse(localStorage.getItem(getRegionProgressKey())) || {}; } catch(e) { return {}; }
 }
 function saveRegionProgress(prog) {
-  localStorage.setItem(REGION_PROGRESS_KEY, JSON.stringify(prog));
+  localStorage.setItem(getRegionProgressKey(), JSON.stringify(prog));
 }
 function getRegionProgress() { return loadRegionProgress(); }
 

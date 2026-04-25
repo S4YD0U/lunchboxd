@@ -1402,17 +1402,64 @@
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: min(420px, 90vw);
+      width: min(900px, 98vw);
       z-index: 1;
       opacity: 0;
-      animation: flagReveal 0.5s 0.15s cubic-bezier(0.22,1,0.36,1) forwards;
-      filter: drop-shadow(0 0 40px rgba(200,40,40,0.6)) drop-shadow(0 0 80px rgba(80,80,80,0.3));
+      animation: flagReveal 0.8s 0.1s cubic-bezier(0.22,1,0.36,1) forwards;
+      filter: drop-shadow(0 0 60px rgba(206,41,57,0.8)) drop-shadow(0 0 120px rgba(206,41,57,0.4));
       pointer-events: none;
     }
     @keyframes flagReveal {
-      0%  { opacity: 0; transform: translate(-50%,-60%) scaleX(0.1) scaleY(0.6); }
-      60% { opacity: 1; transform: translate(-50%,-50%) scaleX(1.04) scaleY(1.02); }
-      100%{ opacity: 0.85; transform: translate(-50%,-50%) scaleX(1) scaleY(1); }
+      0%  { opacity: 0; transform: translate(-50%,-50%) scaleX(0.05) scaleY(0.4); filter: brightness(3); }
+      50% { opacity: 1; transform: translate(-50%,-50%) scaleX(1.06) scaleY(1.04); }
+      75% { transform: translate(-50%,-50%) scaleX(0.98) scaleY(0.99); }
+      100%{ opacity: 1; transform: translate(-50%,-50%) scaleX(1) scaleY(1); }
+    }
+    /* Fond qui pulse aux couleurs du drapeau hongrois */
+    @keyframes hungarianBgPulse {
+      0%   { background: radial-gradient(ellipse at 50% 50%, rgba(206,41,57,0.18) 0%, rgba(71,112,80,0.1) 60%, transparent 80%); }
+      33%  { background: radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.12) 0%, rgba(206,41,57,0.15) 50%, transparent 80%); }
+      66%  { background: radial-gradient(ellipse at 50% 50%, rgba(71,112,80,0.18) 0%, rgba(206,41,57,0.1) 55%, transparent 80%); }
+      100% { background: radial-gradient(ellipse at 50% 50%, rgba(206,41,57,0.18) 0%, rgba(71,112,80,0.1) 60%, transparent 80%); }
+    }
+    .patate-cin-phase#patatePhaseTitle.active .patate-cin-bg-hungary {
+      position: absolute; inset: 0; pointer-events: none;
+      animation: hungarianBgPulse 1.8s ease-in-out infinite;
+    }
+    /* Lignes de scan rouges */
+    @keyframes hungarianScan {
+      0%  { transform: translateY(-100%); opacity: 0.6; }
+      100%{ transform: translateY(100vh); opacity: 0; }
+    }
+    .hungary-scan-line {
+      position: absolute; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(206,41,57,0.8), rgba(255,255,255,0.6), rgba(71,112,80,0.8), transparent);
+      pointer-events: none;
+      animation: hungarianScan var(--dur,1.4s) var(--delay,0s) ease-in forwards;
+    }
+    /* Titre principal de la phase 2 amélioré */
+    .patate-cin-title-wrapper {
+      position: relative; z-index: 2; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    }
+    .patate-cin-country-label {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(0.9rem, 3vw, 1.4rem);
+      letter-spacing: 0.5em; text-transform: uppercase;
+      color: rgba(206,41,57,0.9);
+      text-shadow: 0 0 20px rgba(206,41,57,0.6);
+      opacity: 0;
+      animation: patateSubIn 0.6s 0.4s ease forwards;
+    }
+    .patate-cin-divider {
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), rgba(206,41,57,0.9), rgba(71,112,80,0.8), transparent);
+      opacity: 0;
+      animation: dividerExpand 0.7s 0.6s ease forwards;
+    }
+    @keyframes dividerExpand {
+      0%  { width: 0; opacity: 0; }
+      100%{ width: min(700px,85vw); opacity: 1; }
     }
     /* ---- Pommes de terre tombantes ---- */
     .patate-rain-container {
@@ -1425,13 +1472,30 @@
       font-size: var(--sz, 2rem);
       top: -80px;
       animation: potatoDrop var(--dur, 1s) var(--delay, 0s) ease-in forwards;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
     }
     @keyframes potatoDrop {
-      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
-      80%  { opacity: 1; }
-      100% { transform: translateY(110vh) rotate(calc(var(--spin,1) * 540deg)); opacity: 0; }
+      0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+      10%  { transform: translateY(5px) rotate(calc(var(--spin,1)*20deg)) scale(1.05); }
+      85%  { opacity: 1; }
+      100% { transform: translateY(115vh) rotate(calc(var(--spin,1) * 720deg)) scale(0.6); opacity: 0; }
     }
+    /* Double impact ring */
+    .patate-impact-ring-2 {
+      position: absolute; width: 100px; height: 100px; border-radius: 50%;
+      border: 3px solid rgba(71,112,80,0.7);
+      top: 50%; left: 60%; transform: translate(-50%,-50%) scale(0);
+      animation: patateImpactRing 0.8s 0.15s ease forwards;
+      pointer-events: none;
+    }
+    /* Damage counter animation */
+    @keyframes dmgCounterIn {
+      0%  { transform: scale(0) rotate(-15deg); opacity: 0; text-shadow: 0 0 0px #fff; }
+      50% { transform: scale(1.5) rotate(4deg); text-shadow: 0 0 60px rgba(206,41,57,1), 0 0 100px rgba(255,200,0,0.8); }
+      75% { transform: scale(0.92) rotate(-1deg); }
+      100%{ transform: scale(1) rotate(0deg); opacity: 1; text-shadow: 0 0 30px rgba(232,69,69,0.9), 0 0 60px rgba(245,166,35,0.6); }
+    }
+    .patate-dmg-display { animation: dmgCounterIn 0.7s 0.25s cubic-bezier(0.34,1.56,0.64,1) forwards !important; }
 
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.6rem; cursor: pointer; }
     .hamburger span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; }
@@ -5138,101 +5202,182 @@ function triggerPatateSpecial(heroEffective, villain, dmgResult, onComplete) {
   cin.classList.add('show');
   document.body.style.overflow = 'hidden';
 
-  // --- PHASE 1: CHARGE (0ms → 1600ms) ---
+  // --- PHASE 1: CHARGE (0 → 3000ms) ---
   setTimeout(() => {
     document.getElementById('patatePhaseCharge').classList.add('active');
     spawnPatateSteem();
+    // Quote
     setTimeout(() => {
       const q = document.getElementById('patateChargeQuote');
-      q.style.transition = 'opacity 0.5s';
-      q.style.opacity = '1';
-    }, 400);
+      q.style.transition = 'opacity 0.6s'; q.style.opacity = '1';
+    }, 500);
     // Ground crack
     setTimeout(() => {
       document.getElementById('patateCinGround').classList.add('cracking');
-    }, 800);
-    // Screen quake
+    }, 900);
+    // First quake
     setTimeout(() => {
       const arena = document.getElementById('screen-battle');
       if (arena) { arena.classList.add('arena-quake'); setTimeout(() => arena.classList.remove('arena-quake'), 500); }
-    }, 1000);
+    }, 1200);
+    // Second steam burst
+    setTimeout(() => spawnPatateSteem(), 1600);
+    // Second quake
+    setTimeout(() => {
+      cin.style.animation = 'none';
+      cin.style.transform = 'translate(-3px,2px)';
+      setTimeout(() => { cin.style.transform = 'translate(3px,-2px)'; }, 80);
+      setTimeout(() => { cin.style.transform = 'translate(-2px,3px)'; }, 160);
+      setTimeout(() => { cin.style.transform = 'translate(0,0)'; }, 240);
+    }, 2200);
+    // Third steam burst
+    setTimeout(() => spawnPatateSteem(), 2500);
   }, 80);
 
-  // --- PHASE 2: TITLE CARD (1600ms → 2800ms) ---
+  // --- PHASE 2: TITLE / FLAG (3000ms → 6500ms) ---
   setTimeout(() => {
     document.getElementById('patatePhaseCharge').classList.remove('active');
-    // Re-trigger flash
+    // Flash tricolore
     const flash = document.getElementById('patateCinFlash');
-    flash.style.animation = 'none';
-    void flash.offsetWidth;
-    flash.style.animation = 'patateFlash 0.8s ease forwards';
+    flash.style.background = 'radial-gradient(ellipse at 50% 50%, rgba(206,41,57,0.8) 0%, rgba(255,255,255,0.4) 30%, rgba(71,112,80,0.6) 60%, transparent 80%)';
+    flash.style.animation = 'none'; void flash.offsetWidth;
+    flash.style.animation = 'patateFlash 1s ease forwards';
+    // Spawn scan lines hongroises
+    spawnHungaryScanLines();
     setTimeout(() => {
       document.getElementById('patatePhaseTitle').classList.add('active');
-    }, 150);
-  }, 1600);
+    }, 200);
+    // Multiple quakes pendant le drapeau
+    [800, 1600, 2800].forEach(delay => {
+      setTimeout(() => {
+        cin.style.transform = 'translate(-4px,3px) rotate(-0.3deg)';
+        setTimeout(() => { cin.style.transform = 'translate(4px,-2px) rotate(0.2deg)'; }, 80);
+        setTimeout(() => { cin.style.transform = 'translate(0,0) rotate(0deg)'; }, 160);
+      }, delay);
+    });
+  }, 3000);
 
-  // --- PHASE 3: IMPACT (2800ms → 4000ms) ---
+  // --- PHASE 3: IMPACT (6500ms → 9000ms) ---
   setTimeout(() => {
     document.getElementById('patatePhaseTitle').classList.remove('active');
 
-    // Reset slam/recoil animations by cloning nodes
+    // Flash blanc intense
+    const flash2 = document.getElementById('patateCinFlash');
+    flash2.style.background = 'rgba(255,255,255,0.95)';
+    flash2.style.animation = 'none'; void flash2.offsetWidth;
+    flash2.style.animation = 'patateFlash 0.6s ease forwards';
+
+    // Reset slam/recoil animations
     ['patateCinHeroSlam','patateCinVillainRecoil'].forEach(id => {
       const el = document.getElementById(id);
+      if (!el) return;
       const clone = el.cloneNode(true);
       el.parentNode.replaceChild(clone, el);
     });
 
-    document.getElementById('patateImpactRing').style.animation = 'none';
-    void document.getElementById('patateImpactRing').offsetWidth;
+    const ring = document.getElementById('patateImpactRing');
+    const ring2 = document.getElementById('patateImpactRing2');
+    if (ring) { ring.style.animation = 'none'; void ring.offsetWidth; }
+    if (ring2) { ring2.style.animation = 'none'; void ring2.offsetWidth; }
 
     document.getElementById('patatePhaseImpact').classList.add('active');
-    document.getElementById('patateDmgNum').textContent = dmgResult.dmg;
+
+    // Compteur de dégâts qui monte dramatiquement
+    const dmgEl = document.getElementById('patateDmgNum');
+    dmgEl.textContent = '0';
+    let current = 0;
+    const target = dmgResult.dmg;
+    const steps = 28;
+    const stepTime = 55;
+    const increment = target / steps;
+    const counter = setInterval(() => {
+      current = Math.min(current + increment + Math.random() * increment * 0.5, target);
+      dmgEl.textContent = Math.floor(current);
+      if (current >= target) { clearInterval(counter); dmgEl.textContent = target; }
+    }, stepTime);
+
     spawnPotatoRain();
 
     // Impact flash
     setTimeout(() => {
       const iFlash = document.getElementById('patateCinImpactFlash');
-      if (iFlash) { iFlash.style.animation = 'none'; void iFlash.offsetWidth; iFlash.style.animation = 'patateFlash 0.5s ease forwards'; }
-      // reset ring
-      const ring = document.getElementById('patateImpactRing');
-      if (ring) { ring.style.animation = 'none'; void ring.offsetWidth; ring.style.animation = 'patateImpactRing 0.6s ease forwards'; }
+      if (iFlash) { iFlash.style.animation = 'none'; void iFlash.offsetWidth; iFlash.style.animation = 'patateFlash 0.7s ease forwards'; }
+      if (ring) { ring.style.animation = 'patateImpactRing 0.8s ease forwards'; }
+      if (ring2) { ring2.style.animation = 'patateImpactRing 0.8s 0.18s ease forwards'; }
     }, 350);
 
-  }, 2800);
+    // Second pluie de patates
+    setTimeout(() => spawnPotatoRain(), 900);
 
-  // --- CLOSE & APPLY (4000ms) ---
+    // Quakes répétés sur l'impact
+    [400, 750, 1100].forEach(d => {
+      setTimeout(() => {
+        cin.style.transform = 'translate(-5px,4px) rotate(-0.4deg)';
+        setTimeout(() => { cin.style.transform = 'translate(5px,-3px) rotate(0.3deg)'; }, 70);
+        setTimeout(() => { cin.style.transform = 'translate(0,0) rotate(0deg)'; }, 140);
+      }, d);
+    });
+
+  }, 6500);
+
+  // --- CLOSE & APPLY (9000ms) ---
   setTimeout(() => {
     cin.classList.remove('show');
+    cin.style.transform = '';
     document.body.style.overflow = '';
-    // Reset quote
     const q = document.getElementById('patateChargeQuote');
     if (q) q.style.opacity = '0';
     const ground = document.getElementById('patateCinGround');
     if (ground) ground.classList.remove('cracking');
+    // Clear scan lines
+    const sl = document.getElementById('hungaryScanLines');
+    if (sl) sl.innerHTML = '';
     onComplete(dmgResult);
-  }, 4000);
+  }, 9000);
 }
 
 function spawnPotatoRain() {
   const container = document.getElementById('patateRainContainer');
   if (!container) return;
-  container.innerHTML = '';
-  const emojis = ['🥔','🥔','🥔','🥔','🥔','🥔','🍟','🍲'];
-  const count = 32;
+  const emojis = ['🥔','🥔','🥔','🥔','🥔','🥔','🥔','🍟','🍲','🥔','🥔','🥔'];
+  const count = 55;
   for (let i = 0; i < count; i++) {
     setTimeout(() => {
       const el = document.createElement('div');
       el.className = 'patate-raindrop';
-      const sz = (1.2 + Math.random() * 2.2).toFixed(1);
-      const left = (Math.random() * 100).toFixed(1);
-      const dur = (0.6 + Math.random() * 0.9).toFixed(2);
-      const delay = (Math.random() * 0.5).toFixed(2);
+      const sz = (1.5 + Math.random() * 3.5).toFixed(1);
+      const left = (Math.random() * 105 - 2).toFixed(1);
+      const dur = (0.7 + Math.random() * 1.1).toFixed(2);
+      const delay = (Math.random() * 0.3).toFixed(2);
       const spin = Math.random() < 0.5 ? 1 : -1;
       el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       el.style.cssText = `left:${left}%;--sz:${sz}rem;--dur:${dur}s;--delay:${delay}s;--spin:${spin};`;
       container.appendChild(el);
-      setTimeout(() => el.remove(), (parseFloat(dur) + parseFloat(delay) + 0.2) * 1000);
-    }, i * 55);
+      setTimeout(() => el.remove(), (parseFloat(dur) + parseFloat(delay) + 0.3) * 1000);
+    }, i * 38);
+  }
+}
+
+function spawnHungaryScanLines() {
+  const container = document.getElementById('hungaryScanLines');
+  if (!container) return;
+  container.innerHTML = '';
+  const colors = [
+    'linear-gradient(90deg,transparent,rgba(206,41,57,0.9),rgba(255,100,100,0.6),transparent)',
+    'linear-gradient(90deg,transparent,rgba(255,255,255,0.8),rgba(200,200,200,0.5),transparent)',
+    'linear-gradient(90deg,transparent,rgba(71,112,80,0.9),rgba(100,180,100,0.5),transparent)',
+  ];
+  for (let i = 0; i < 9; i++) {
+    setTimeout(() => {
+      const line = document.createElement('div');
+      line.className = 'hungary-scan-line';
+      const startY = 5 + Math.random() * 80;
+      const dur = (1.0 + Math.random() * 0.8).toFixed(2);
+      const delay = (Math.random() * 0.2).toFixed(2);
+      line.style.cssText = `top:${startY}%;background:${colors[i % 3]};--dur:${dur}s;--delay:${delay}s;`;
+      container.appendChild(line);
+      setTimeout(() => line.remove(), (parseFloat(dur) + parseFloat(delay) + 0.2) * 1000 + 500);
+    }, i * 220);
   }
 }
 
@@ -5367,46 +5512,69 @@ showScreen('map');
 
   <!-- Phase 2: Title card -->
   <div class="patate-cin-phase" id="patatePhaseTitle">
-    <!-- Grand drapeau hongrois SVG animé -->
-    <svg class="patate-hungary-flag" viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" id="hungaryFlagSvg">
+    <!-- Fond aux couleurs hongroises -->
+    <div class="patate-cin-bg-hungary" id="hungaryBgPulse" style="position:absolute;inset:0;pointer-events:none;animation:hungarianBgPulse 1.8s ease-in-out infinite;"></div>
+    <!-- Lignes de scan tricolores -->
+    <div id="hungaryScanLines" style="position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden;"></div>
+
+    <!-- Grand drapeau hongrois SVG animé plein écran -->
+    <svg class="patate-hungary-flag" viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg" id="hungaryFlagSvg">
       <defs>
-        <clipPath id="flagClip">
-          <rect width="420" height="180" rx="4"/>
-        </clipPath>
-        <filter id="flagGlow">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-          <feColorMatrix in="blur" type="matrix" values="2 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.8 0" result="red"/>
-          <feMerge><feMergeNode in="red"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <g clip-path="url(#flagClip)">
-        <!-- Bandes du drapeau hongrois : Rouge, Blanc, Vert -->
-        <rect width="420" height="60" fill="#CE2939"/>
-        <rect y="60" width="420" height="60" fill="#FFFFFF"/>
-        <rect y="120" width="420" height="60" fill="#477050"/>
-        <!-- Reflet lumineux -->
-        <rect width="420" height="180" fill="url(#flagShine)" opacity="0.15"/>
-        <!-- Bordure -->
-        <rect width="420" height="180" rx="4" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
-        <!-- Effet de vague sur le bord droit (simulé avec un dégradé) -->
-        <linearGradient id="waveShadow" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stop-color="rgba(0,0,0,0)" />
-          <stop offset="0.85" stop-color="rgba(0,0,0,0)" />
-          <stop offset="1" stop-color="rgba(0,0,0,0.25)" />
+        <clipPath id="flagClip"><rect width="900" height="360" rx="6"/></clipPath>
+        <linearGradient id="redSheen" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="rgba(255,255,255,0.18)"/>
+          <stop offset="0.5" stop-color="rgba(255,255,255,0)"/>
+          <stop offset="1" stop-color="rgba(0,0,0,0.12)"/>
         </linearGradient>
-        <rect width="420" height="180" fill="url(#waveShadow)"/>
-        <!-- Texte "MAGYARORSZÁG" stylisé -->
-        <text x="210" y="97" text-anchor="middle" font-family="Playfair Display,serif" font-size="22" font-weight="700" fill="rgba(80,40,0,0.55)" letter-spacing="4">MAGYARORSZÁG</text>
+        <linearGradient id="whiteSheen" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="rgba(255,255,255,0.3)"/>
+          <stop offset="1" stop-color="rgba(200,200,200,0.1)"/>
+        </linearGradient>
+        <linearGradient id="greenSheen" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="rgba(255,255,255,0.12)"/>
+          <stop offset="1" stop-color="rgba(0,0,0,0.2)"/>
+        </linearGradient>
+        <filter id="flagGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+          <feFlood flood-color="rgba(206,41,57,0.6)" result="color"/>
+          <feComposite in="color" in2="blur" operator="in" result="glow"/>
+          <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Masque de vague pour le drapeau -->
+        <clipPath id="waveClip">
+          <path id="wavePath" d="M0,0 C150,20 300,-20 450,0 C600,20 750,-20 900,0 L900,360 C750,340 600,380 450,360 C300,340 150,380 0,360 Z"/>
+        </clipPath>
+      </defs>
+      <g clip-path="url(#flagClip)" filter="url(#flagGlow)">
+        <!-- Bandes tricolores -->
+        <rect width="900" height="120" fill="#CE2939"/>
+        <rect y="120" width="900" height="120" fill="#FFFFFF"/>
+        <rect y="240" width="900" height="120" fill="#477050"/>
+        <!-- Reflets -->
+        <rect width="900" height="120" fill="url(#redSheen)"/>
+        <rect y="120" width="900" height="120" fill="url(#whiteSheen)"/>
+        <rect y="240" width="900" height="120" fill="url(#greenSheen)"/>
+        <!-- Bordure lumineuse -->
+        <rect width="900" height="360" rx="6" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="3"/>
+        <!-- Reflet diagonal (aspect satiné) -->
+        <rect x="-50" y="-50" width="200" height="500" fill="rgba(255,255,255,0.06)" transform="rotate(15,450,180)"/>
+        <!-- Texte central -->
+        <text x="450" y="172" text-anchor="middle" font-family="Playfair Display,serif" font-size="48" font-weight="700" fill="rgba(100,50,0,0.45)" letter-spacing="8">MAGYARORSZÁG</text>
+        <text x="450" y="210" text-anchor="middle" font-family="DM Mono,monospace" font-size="18" fill="rgba(80,40,0,0.3)" letter-spacing="4">🥔 PATATE HONGROISE 🥔</text>
       </g>
-      <!-- Mât -->
-      <rect x="0" y="0" width="6" height="180" fill="rgba(180,150,100,0.7)" rx="2"/>
+      <!-- Mât stylisé -->
+      <rect x="0" y="0" width="10" height="360" fill="rgba(200,170,120,0.85)" rx="3"/>
+      <rect x="0" y="0" width="10" height="30" fill="rgba(245,200,80,0.9)" rx="3"/>
     </svg>
 
-    <div class="patate-title-card" style="position:relative;z-index:2">
-      <div class="patate-cin-label">🥔 Patate Hongroise déchaîne</div>
-      <div class="patate-cin-title">Frappe du<br><em>Goulash</em></div>
-      <div class="patate-cin-subtitle">Coup Dévastateur · Puissance ABSOLUE</div>
-      <div class="patate-cin-flavor">"On nous cuit. Et après… on est irrésistibles."</div>
+    <div class="patate-cin-title-wrapper">
+      <div class="patate-cin-country-label">🇭🇺 Hongrie · Magyarország · Hungary 🇭🇺</div>
+      <div class="patate-cin-label" style="margin-bottom:0">🥔 Patate Hongroise déchaîne</div>
+      <div class="patate-cin-divider"></div>
+      <div class="patate-cin-title" style="font-size:clamp(3rem,9vw,6.5rem)">Frappe du<br><em>Goulash</em></div>
+      <div class="patate-cin-subtitle" style="font-size:clamp(0.85rem,2.5vw,1.2rem);letter-spacing:0.3em">⚡ COUP DÉVASTATEUR · PUISSANCE ABSOLUE · INÉVITABLE ⚡</div>
+      <div class="patate-cin-flavor" style="font-size:1rem;margin-top:0.6rem">"On nous cuit. Et après… on est irrésistibles."</div>
+      <div class="patate-cin-flavor" style="animation-delay:0.9s;color:rgba(206,41,57,0.8);font-size:0.85rem">"Aucun ennemi ne résiste à la Frappe du Goulash."</div>
     </div>
   </div>
 
@@ -5424,6 +5592,7 @@ showScreen('map');
         <img id="patateCinVillainRecoilImg" src="" alt="Ennemi" />
       </div>
       <div class="patate-impact-ring" id="patateImpactRing"></div>
+      <div class="patate-impact-ring-2" id="patateImpactRing2"></div>
       <div class="patate-dmg-display" id="patateDmgDisplay">
         <span id="patateDmgNum">0</span>
         <span class="patate-dmg-label">DÉGÂTS</span>

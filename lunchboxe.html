@@ -4556,8 +4556,9 @@ function selectDifficulty(diff) {
 
 function confirmDifficulty() {
   if (!pendingDifficultyRegion) return;
+  const regionId = pendingDifficultyRegion;
   closeDiffModal();
-  enterRegionWithDifficulty(pendingDifficultyRegion);
+  enterRegionWithDifficulty(regionId);
 }
 
 function applyDifficultyToEnemy(enemy) {

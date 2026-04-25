@@ -3923,6 +3923,12 @@ function endBattle(won) {
   if (won && selectedRegion && state.villainChar) {
     markEnemyBeaten(selectedRegion, state.villainChar.id);
   }
+  // Défaite : toute la progression de la région repart à zéro
+  if (!won && selectedRegion) {
+    const p = loadRegionProgress();
+    p[selectedRegion] = { beaten: [], completed: false };
+    saveRegionProgress(p);
+  }
   const hero=state.heroChar; const villain=state.villainChar;
   const isLastEnemy=state.currentEnemyIndex>=ENEMIES.length-1;
   const baseXp=won?(villain.isBoss?200:80):20;
@@ -3956,14 +3962,16 @@ function endBattle(won) {
     btnR.textContent=nextEnemy.isBoss?'💀 Affronter le Boss !':`⚔ Combat suivant : ${nextEnemy.name}`;
     btnR.className='btn-rematch next-stage'; btnR.onclick=()=>startBattle(false);
     const btnB=document.getElementById('btnBackSelect');
-    btnB.textContent='← Recommencer depuis le début';
-    btnB.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();backToSelect();};
+    btnB.textContent='← Abandonner (remet à zéro)';
+    btnB.onclick=()=>{if(selectedRegion){const p=loadRegionProgress();p[selectedRegion]={beaten:[],completed:false};saveRegionProgress(p);}state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();backToSelect();};
     showScreen('victory'); return;
   }
   document.getElementById('hpCarryBanner').classList.add('hidden');
   document.getElementById('victoryIcon').textContent=won?'🏆':'💀';
   const t=document.getElementById('victoryTitle'); t.textContent=won?'Champion de la Cantine !':'Défaite…'; t.className='victory-title '+(won?'win':'lose');
-  document.getElementById('victorySub').textContent=won?`Incroyable ! ${ENEMIES.length} combats, ${villain.name} vaincu en ${state.turn} tours !`:`${villain.name} t'a eu cette fois… Revanche ?`;
+  document.getElementById('victorySub').textContent=won
+    ? `Incroyable ! ${ENEMIES.length} combats, ${villain.name} vaincu en ${state.turn} tours !`
+    : `${villain.name} t'a eu… La progression de la région est remise à zéro. Il faut tout recommencer depuis le début !`;
   document.getElementById('xpGained').textContent=(won?'+':'')+earnedXp;
   document.getElementById('goldGained').textContent=(won?'+':'')+earnedGold;
   document.getElementById('turnsUsed').textContent=state.turn;
@@ -3974,6 +3982,9 @@ function endBattle(won) {
     const allDone=REGIONS.every(r=>{const p=loadRegionProgress();return p[r.id]&&p[r.id].completed;});
     if(allDone){btnR.textContent='🏆 Retour à la Carte';btnR.className='btn-rematch';btnR.onclick=()=>switchTab('map');}
     else{btnR.textContent='🗺 Retour à la Carte';btnR.className='btn-rematch next-stage';btnR.onclick=()=>switchTab('map');}
+  } else if(!won && selectedRegion){
+    btnR.textContent='🔄 Réessayer depuis le début'; btnR.className='btn-rematch';
+    btnR.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();enterRegionWithDifficulty(selectedRegion);};
   } else {
     btnR.textContent=won?'🔄 Rejouer la région':'🔄 Revanche'; btnR.className='btn-rematch';
     btnR.onclick=()=>{state.currentEnemyIndex=0;state.heroHpPersist=0;updateStageIndicators();if(selectedRegion){enterRegion();}else{startBattle(true);}};

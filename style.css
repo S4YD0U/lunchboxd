@@ -217,9 +217,21 @@
       animation: mapRegionPulse 2s ease-in-out infinite;
     }
     @keyframes mapRegionPulse {
-      0%,100% { opacity:0.35; r:32px; }
-      50% { opacity:0.7; r:38px; }
+      0%,100% { opacity:0.4; }
+      50%      { opacity:0.95; }
     }
+
+    /* Pulse doux sur le halo externe de chaque marqueur débloqué */
+    .map-region-zone.unlocked circle:first-child {
+      animation: markerHaloPulse 3s ease-in-out infinite;
+    }
+    @keyframes markerHaloPulse {
+      0%,100% { opacity:0.15; }
+      50%      { opacity:0.45; }
+    }
+
+    /* Hover : légère montée en lumière */
+    .map-region-zone.unlocked:hover { filter: brightness(1.25) drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
 
     /* Fog of war: locked regions get a fog overlay drawn in SVG */
     .fog-overlay { pointer-events:none; transition: opacity 0.6s ease; }

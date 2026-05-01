@@ -2382,26 +2382,26 @@ function renderWorldMap() {
 
   const prog = getRegionProgress();
 
-  // ── ZONES CLIQUABLES pour la carte personnalisée ───────────────────────────
-  // Coordonnées calées sur l'image (viewBox 700x434)
-  // Image: Forêt haut-gauche, Sorbet haut-centre, Désert haut-droite,
-  //        Marais centre, Volcan bas-centre
-  // Paths générés pixel par pixel depuis l'image carte.png (viewBox 700x434)
+  // ── ZONES CLIQUABLES pour la nouvelle carte (map5.png, viewBox 700x434) ──
+  // Nouvelle disposition : Forêt haut-gauche, Désert haut-droite,
+  //                        Marais centre, Pics Glacés bas-gauche, Volcan bas-droite
   const territories = {
-    foret_epices:    'M 110,10 L 20,40 L 10,70 L 10,100 L 10,130 L 10,160 L 30,190 L 80,220 L 190,250 L 470,250 L 470,220 L 180,190 L 290,160 L 240,130 L 560,100 L 560,70 L 230,40 L 230,10 Z',
-    pics_sorbet:     'M 290,10 L 230,40 L 220,70 L 250,100 L 250,130 L 200,160 L 190,190 L 180,220 L 230,250 L 390,280 L 410,280 L 450,250 L 510,220 L 490,190 L 460,160 L 460,130 L 480,100 L 500,70 L 500,40 L 460,10 Z',
-    desert_sel:      'M 500,30 L 500,60 L 490,90 L 470,120 L 450,150 L 480,180 L 530,210 L 670,210 L 690,180 L 690,150 L 690,120 L 690,90 L 640,60 L 560,30 Z',
-    marais_vinaigre: 'M 240,130 L 190,160 L 170,190 L 170,230 L 180,260 L 250,290 L 430,290 L 500,260 L 510,230 L 510,190 L 490,160 L 450,130 Z',
-    volcan_cantine:  'M 130,260 L 170,290 L 210,320 L 200,350 L 220,380 L 270,410 L 450,410 L 500,380 L 490,350 L 550,290 L 580,260 L 600,230 L 510,170 L 150,230 Z',
+    foret_epices:    'M 0,0 L 310,0 L 280,100 L 200,160 L 100,200 L 0,180 Z',
+    desert_sel:      'M 310,0 L 700,0 L 700,220 L 500,200 L 420,160 L 300,120 Z',
+    marais_vinaigre: 'M 200,160 L 420,160 L 500,200 L 480,300 L 380,320 L 200,300 L 100,240 Z',
+    pics_sorbet:     'M 0,180 L 100,200 L 200,300 L 200,434 L 0,434 Z',
+    volcan_cantine:  'M 380,320 L 480,300 L 700,220 L 700,434 L 200,434 L 200,300 Z',
   };
 
-  // Centres calés sur l'image réelle
+  // Centres calés sur les gants de boxe de la nouvelle carte (map5.png, viewBox 700x434)
+  // Ordre sur la carte : Forêt (haut-gauche), Désert du Sel (haut-droite),
+  //                      Marais du Vinaigre (centre), Pics Glacés (bas-gauche), Volcan (bas-droite)
   const regionCenters = {
-    foret_epices:    { cx: 147, cy: 130 },
-    pics_sorbet:     { cx: 346, cy: 145 },
-    desert_sel:      { cx: 590, cy: 145 },
-    marais_vinaigre: { cx: 340, cy: 215 },
-    volcan_cantine:  { cx: 365, cy: 330 },
+    foret_epices:    { cx: 196, cy: 148 },
+    desert_sel:      { cx: 380, cy: 138 },
+    marais_vinaigre: { cx: 342, cy: 215 },
+    pics_sorbet:     { cx: 229, cy: 285 },
+    volcan_cantine:  { cx: 463, cy: 295 },
   };
 
   // ── DEFS ──────────────────────────────────────────────────────────────────
@@ -2459,39 +2459,40 @@ function renderWorldMap() {
     svg += `<g class="map-region-zone ${unlocked?'unlocked':'locked'}${isActive?' active-zone':''}">`;
 
     if (unlocked) {
-      // ── MARQUEUR CLIQUABLE ───────────────────────────────────────────────
-      // Halo de sélection active
+      // ── MARQUEUR ROND TRANSPARENT ────────────────────────────────────────
+      const ringColor  = completed ? '#c8f542' : (isActive ? (region.color || '#c8f542') : 'rgba(255,255,255,0.85)');
+      const glowColor  = completed ? '#c8f542' : (isActive ? (region.color || '#c8f542') : 'rgba(255,255,255,0.5)');
+
+      // Halo animé externe (pulse) — toujours visible, subtil
+      svg += `<circle cx="${cx}" cy="${cy}" r="22" fill="none" stroke="${glowColor}" stroke-width="1" opacity="${isActive ? '0.5' : '0.2'}"/>`;
+
+      // Anneau de sélection active (tirets)
       if (isActive) {
-        svg += `<circle cx="${cx}" cy="${cy}" r="26" fill="none" stroke="${region.color || '#c8f542'}" stroke-width="2" stroke-dasharray="5 3" opacity="0.8" class="region-glow"/>`;
-        svg += `<circle cx="${cx}" cy="${cy}" r="20" fill="${region.color || '#c8f542'}" opacity="0.12"/>`;
+        svg += `<circle cx="${cx}" cy="${cy}" r="26" fill="none" stroke="${ringColor}" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.9" class="region-glow"/>`;
       }
 
-      // Pin base (ombre portée)
-      svg += `<ellipse cx="${cx}" cy="${cy+18}" rx="9" ry="3" fill="rgba(0,0,0,0.35)"/>`;
+      // Cercle principal semi-transparent
+      const fillOpacity  = completed ? '0.25' : (isActive ? '0.2' : '0.08');
+      const strokeOpacity = completed ? '0.9'  : (isActive ? '0.95' : '0.55');
+      svg += `<circle cx="${cx}" cy="${cy}" r="16" fill="${ringColor}" fill-opacity="${fillOpacity}" stroke="${ringColor}" stroke-width="${isActive ? '2' : '1.5'}" stroke-opacity="${strokeOpacity}" style="cursor:pointer" onclick="selectRegion('${region.id}')"/>`;
 
-      // Couleur du pin selon état
-      const pinFill   = completed ? '#c8f542' : (isActive ? (region.color||'#c8f542') : '#e8e0cc');
-      const pinStroke = completed ? '#7aab1a' : (isActive ? (region.color||'#c8f542') : 'rgba(255,255,255,0.4)');
+      // Reflet intérieur (arc de lumière en haut du cercle)
+      svg += `<path d="M ${cx-7},${cy-9} Q ${cx},${cy-14} ${cx+7},${cy-9}" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" stroke-linecap="round" pointer-events="none"/>`;
 
-      // Tige du pin
-      svg += `<line x1="${cx}" y1="${cy+4}" x2="${cx}" y2="${cy+17}" stroke="${pinStroke}" stroke-width="2.5" stroke-linecap="round"/>`;
+      // Icône / checkmark centré
+      if (completed) {
+        svg += `<text x="${cx}" y="${cy+1}" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#c8f542" font-weight="900" opacity="0.95" pointer-events="none">✓</text>`;
+      } else {
+        svg += `<text x="${cx}" y="${cy+1}" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="white" opacity="${isActive ? '1' : '0.8'}" pointer-events="none">${region.icon}</text>`;
+      }
 
-      // Tête du pin (cercle principal)
-      svg += `<circle cx="${cx}" cy="${cy-4}" r="11" fill="${pinFill}" stroke="${pinStroke}" stroke-width="1.5"/>`;
-
-      // Icône dans le pin
-      const pinIcon = completed ? '✓' : region.icon;
-      svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${completed?'9':'10'}" fill="${completed?'#0e0f0c':'#0e0f0c'}" font-weight="800">${pinIcon}</text>`;
-
-      // Zone de clic invisible sur le pin élargi
-      svg += `<circle cx="${cx}" cy="${cy-4}" r="16" fill="transparent" style="cursor:pointer" onclick="selectRegion('${region.id}')"/>`;
+      // Zone de clic élargie invisible
+      svg += `<circle cx="${cx}" cy="${cy}" r="22" fill="transparent" style="cursor:pointer" onclick="selectRegion('${region.id}')"/>`;
 
     } else {
-      // Région verrouillée : pin grisé avec cadenas
-      svg += `<ellipse cx="${cx}" cy="${cy+18}" rx="9" ry="3" fill="rgba(0,0,0,0.2)"/>`;
-      svg += `<line x1="${cx}" y1="${cy+4}" x2="${cx}" y2="${cy+17}" stroke="rgba(180,180,180,0.3)" stroke-width="2.5" stroke-linecap="round"/>`;
-      svg += `<circle cx="${cx}" cy="${cy-4}" r="11" fill="rgba(30,30,30,0.55)" stroke="rgba(150,150,150,0.25)" stroke-width="1.5"/>`;
-      svg += `<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="10">🔒</text>`;
+      // Région verrouillée : anneau très discret
+      svg += `<circle cx="${cx}" cy="${cy}" r="16" fill="rgba(0,0,0,0.3)" stroke="rgba(180,180,180,0.2)" stroke-width="1.5"/>`;
+      svg += `<text x="${cx}" y="${cy+1}" text-anchor="middle" dominant-baseline="middle" font-size="11" opacity="0.5">🔒</text>`;
     }
 
     svg += `</g>`;

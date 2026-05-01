@@ -2397,11 +2397,11 @@ function renderWorldMap() {
   // Ordre sur la carte : Forêt (haut-gauche), Désert du Sel (haut-droite),
   //                      Marais du Vinaigre (centre), Pics Glacés (bas-gauche), Volcan (bas-droite)
   const regionCenters = {
-    foret_epices:    { cx: 267, cy: 165 },
-    desert_sel:      { cx: 380, cy: 120 },
-    marais_vinaigre: { cx: 337, cy: 232 },
-    pics_sorbet:     { cx: 252, cy: 322 },
-    volcan_cantine:  { cx: 463, cy: 360 },
+    foret_epices:    { cx: 220, cy: 200 },
+    desert_sel:      { cx: 555, cy: 168 },
+    marais_vinaigre: { cx: 340, cy: 258 },
+    pics_sorbet:     { cx: 248, cy: 365 },
+    volcan_cantine:  { cx: 452, cy: 388 },
   };
 
   // ── DEFS ──────────────────────────────────────────────────────────────────

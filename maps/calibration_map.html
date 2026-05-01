@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Calibration Carte — Trouve les coordonnées exactes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0f; color: #c8f542; font-family: 'DM Mono', monospace; display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 16px; }
+  h1 { font-size: 14px; letter-spacing: 3px; opacity: 0.7; text-transform: uppercase; }
+  #info { font-size: 12px; opacity: 0.5; text-align: center; line-height: 1.6; }
+  #mapWrap {
+    position: relative;
+    width: 700px;
+    max-width: 100%;
+    cursor: crosshair;
+    border: 1px solid rgba(200,245,66,0.2);
+  }
+  #mapWrap img { width: 100%; display: block; }
+  #svgOverlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+  }
+  #coords {
+    background: rgba(0,0,0,0.85);
+    border: 1px solid rgba(200,245,66,0.3);
+    padding: 12px 16px;
+    font-size: 13px;
+    min-width: 340px;
+    line-height: 2;
+  }
+  .pin-row { display: flex; align-items: center; gap: 10px; }
+  .pin-label { width: 180px; opacity: 0.7; font-size: 11px; }
+  .pin-val { color: #c8f542; font-weight: bold; min-width: 100px; }
+  .pin-btn { 
+    background: rgba(200,245,66,0.15); border: 1px solid rgba(200,245,66,0.4); 
+    color: #c8f542; cursor: pointer; padding: 2px 8px; font-size: 10px; font-family: monospace;
+    border-radius: 2px;
+  }
+  .pin-btn:hover { background: rgba(200,245,66,0.3); }
+  #cursor-pos { font-size: 11px; opacity: 0.5; }
+  #output {
+    background: #0d1117; border: 1px solid rgba(200,245,66,0.2);
+    padding: 14px; font-size: 11px; width: 700px; max-width: 100%;
+    white-space: pre; line-height: 1.8; color: #7dd3fc;
+  }
+  .copy-btn {
+    background: rgba(200,245,66,0.2); border: 1px solid rgba(200,245,66,0.5);
+    color: #c8f542; cursor: pointer; padding: 6px 16px; font-family: monospace;
+    font-size: 12px; letter-spacing: 1px;
+  }
+  .copy-btn:hover { background: rgba(200,245,66,0.35); }
+  #flash { position: fixed; top: 20px; right: 20px; background: #c8f542; color: #000; padding: 8px 16px; font-size: 12px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<h1>🎯 Outil de Calibration — Carte du Monde</h1>
+<p id="info">
+  Clique exactement sur chaque <strong>gant de boxe</strong> pour enregistrer sa position.<br>
+  Survole la carte pour voir les coordonnées en temps réel.
+</p>
+
+<div id="mapWrap">
+  <!-- Remplace le src par le chemin vers ta map5.png -->
+  <img id="mapImg" src="maps/map5.png" alt="Carte" onerror="this.style.border='2px dashed red'; this.alt='⚠ Mets map5.png dans le même dossier que ce fichier'"/>
+  <svg id="svgOverlay" viewBox="0 0 700 434" xmlns="http://www.w3.org/2000/svg">
+    <!-- Pins cliqués -->
+    <g id="pinsGroup"></g>
+    <!-- Curseur live -->
+    <circle id="liveCursor" r="3" fill="rgba(200,245,66,0.8)" pointer-events="none" opacity="0"/>
+    <line id="crossH" stroke="rgba(200,245,66,0.4)" stroke-width="0.5" pointer-events="none" opacity="0"/>
+    <line id="crossV" stroke="rgba(200,245,66,0.4)" stroke-width="0.5" pointer-events="none" opacity="0"/>
+    <text id="liveText" font-size="9" fill="#c8f542" pointer-events="none" opacity="0" font-family="monospace"></text>
+  </svg>
+</div>
+
+<div id="coords">
+  <div style="font-size:10px; opacity:0.5; margin-bottom:8px; letter-spacing:2px;">POSITIONS DES GANTS (clique sur chaque gant)</div>
+  <div id="cursor-pos">Survole la carte → coordonnées en temps réel</div>
+  <br>
+  <div class="pin-row">
+    <span class="pin-label">🌿 Forêt des Épices</span>
+    <span class="pin-val" id="val-foret_epices">—</span>
+    <button class="pin-btn" onclick="setActive('foret_epices')">ACTIVER</button>
+    <button class="pin-btn" onclick="clearPin('foret_epices')" style="opacity:0.5">✕</button>
+  </div>
+  <div class="pin-row">
+    <span class="pin-label">🏜️ Désert du Sel</span>
+    <span class="pin-val" id="val-desert_sel">—</span>
+    <button class="pin-btn" onclick="setActive('desert_sel')">ACTIVER</button>
+    <button class="pin-btn" onclick="clearPin('desert_sel')" style="opacity:0.5">✕</button>
+  </div>
+  <div class="pin-row">
+    <span class="pin-label">🌫️ Marais du Vinaigre</span>
+    <span class="pin-val" id="val-marais_vinaigre">—</span>
+    <button class="pin-btn" onclick="setActive('marais_vinaigre')">ACTIVER</button>
+    <button class="pin-btn" onclick="clearPin('marais_vinaigre')" style="opacity:0.5">✕</button>
+  </div>
+  <div class="pin-row">
+    <span class="pin-label">🧊 Pics Glacés du Sorbet</span>
+    <span class="pin-val" id="val-pics_sorbet">—</span>
+    <button class="pin-btn" onclick="setActive('pics_sorbet')">ACTIVER</button>
+    <button class="pin-btn" onclick="clearPin('pics_sorbet')" style="opacity:0.5">✕</button>
+  </div>
+  <div class="pin-row">
+    <span class="pin-label">🌋 Volcan de la Cantine</span>
+    <span class="pin-val" id="val-volcan_cantine">—</span>
+    <button class="pin-btn" onclick="setActive('volcan_cantine')">ACTIVER</button>
+    <button class="pin-btn" onclick="clearPin('volcan_cantine')" style="opacity:0.5">✕</button>
+  </div>
+</div>
+
+<div id="output">// En attente — clique sur les 5 gants...</div>
+<button class="copy-btn" onclick="copyOutput()">📋 COPIER LE CODE</button>
+
+<div id="flash">Copié !</div>
+
+<script>
+const REGIONS = ['foret_epices','desert_sel','marais_vinaigre','pics_sorbet','volcan_cantine'];
+const COLORS = {
+  foret_epices: '#6aaa18',
+  desert_sel: '#c8801a',
+  marais_vinaigre: '#5855bb',
+  pics_sorbet: '#48aae8',
+  volcan_cantine: '#e04818',
+};
+const pins = {};
+let activeRegion = 'foret_epices';
+
+// Auto-activer le prochain sans pin
+function autoNext() {
+  const next = REGIONS.find(r => !pins[r]);
+  if (next) setActive(next);
+}
+
+function setActive(r) {
+  activeRegion = r;
+  document.querySelectorAll('.pin-btn').forEach(b => b.style.background = '');
+  updateOutput();
+}
+
+function clearPin(r) {
+  delete pins[r];
+  document.getElementById('val-' + r).textContent = '—';
+  const el = document.getElementById('pin-' + r);
+  if (el) el.remove();
+  updateOutput();
+}
+
+const wrap = document.getElementById('mapWrap');
+const svg  = document.getElementById('svgOverlay');
+
+function getSVGCoords(e) {
+  const rect = wrap.getBoundingClientRect();
+  const relX = e.clientX - rect.left;
+  const relY = e.clientY - rect.top;
+  const svgX = Math.round(relX / rect.width * 700);
+  const svgY = Math.round(relY / rect.height * 434);
+  return { x: svgX, y: svgY };
+}
+
+wrap.addEventListener('mousemove', (e) => {
+  const {x, y} = getSVGCoords(e);
+  document.getElementById('cursor-pos').textContent = `Curseur → SVG x=${x}, y=${y}  |  Actif: ${activeRegion}`;
+  
+  const cursor = document.getElementById('liveCursor');
+  const crossH = document.getElementById('crossH');
+  const crossV = document.getElementById('crossV');
+  const liveText = document.getElementById('liveText');
+  
+  cursor.setAttribute('cx', x); cursor.setAttribute('cy', y); cursor.setAttribute('opacity', '1');
+  crossH.setAttribute('x1', 0); crossH.setAttribute('y1', y); crossH.setAttribute('x2', 700); crossH.setAttribute('y2', y); crossH.setAttribute('opacity', '1');
+  crossV.setAttribute('x1', x); crossV.setAttribute('y1', 0); crossV.setAttribute('x2', x); crossV.setAttribute('y2', 434); crossV.setAttribute('opacity', '1');
+  liveText.setAttribute('x', x + 5); liveText.setAttribute('y', y - 5);
+  liveText.textContent = `${x},${y}`; liveText.setAttribute('opacity', '1');
+});
+
+wrap.addEventListener('mouseleave', () => {
+  ['liveCursor','crossH','crossV','liveText'].forEach(id => document.getElementById(id).setAttribute('opacity','0'));
+});
+
+wrap.addEventListener('click', (e) => {
+  const {x, y} = getSVGCoords(e);
+  pins[activeRegion] = {cx: x, cy: y};
+  document.getElementById('val-' + activeRegion).textContent = `cx=${x}, cy=${y}`;
+  
+  // Draw pin on SVG
+  const existing = document.getElementById('pin-' + activeRegion);
+  if (existing) existing.remove();
+  
+  const color = COLORS[activeRegion];
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.id = 'pin-' + activeRegion;
+  g.innerHTML = `
+    <circle cx="${x}" cy="${y}" r="18" fill="none" stroke="${color}" stroke-width="1" opacity="0.4"/>
+    <circle cx="${x}" cy="${y}" r="14" fill="${color}" fill-opacity="0.25" stroke="${color}" stroke-width="1.5" opacity="0.9"/>
+    <text x="${x}" y="${y+1}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="white" font-family="monospace" font-weight="bold">●</text>
+    <text x="${x+18}" y="${y-10}" font-size="9" fill="${color}" font-family="monospace">${x},${y}</text>
+  `;
+  document.getElementById('pinsGroup').appendChild(g);
+  
+  updateOutput();
+  autoNext();
+});
+
+function updateOutput() {
+  const lines = [
+    '  const regionCenters = {',
+    `    foret_epices:    { cx: ${pins.foret_epices   ? pins.foret_epices.cx   : '???'}, cy: ${pins.foret_epices   ? pins.foret_epices.cy   : '???'} },`,
+    `    desert_sel:      { cx: ${pins.desert_sel     ? pins.desert_sel.cx     : '???'}, cy: ${pins.desert_sel     ? pins.desert_sel.cy     : '???'} },`,
+    `    marais_vinaigre: { cx: ${pins.marais_vinaigre? pins.marais_vinaigre.cx: '???'}, cy: ${pins.marais_vinaigre? pins.marais_vinaigre.cy: '???'} },`,
+    `    pics_sorbet:     { cx: ${pins.pics_sorbet    ? pins.pics_sorbet.cx    : '???'}, cy: ${pins.pics_sorbet    ? pins.pics_sorbet.cy    : '???'} },`,
+    `    volcan_cantine:  { cx: ${pins.volcan_cantine ? pins.volcan_cantine.cx : '???'}, cy: ${pins.volcan_cantine ? pins.volcan_cantine.cy : '???'} },`,
+    '  };',
+  ];
+  document.getElementById('output').textContent = lines.join('\n');
+}
+
+function copyOutput() {
+  navigator.clipboard.writeText(document.getElementById('output').textContent);
+  const f = document.getElementById('flash');
+  f.style.opacity = '1';
+  setTimeout(() => f.style.opacity = '0', 1500);
+}
+
+// Init
+setActive('foret_epices');
+updateOutput();
+</script>
+</body>
+</html>

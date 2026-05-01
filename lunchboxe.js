@@ -2397,11 +2397,11 @@ function renderWorldMap() {
   // Ordre sur la carte : Forêt (haut-gauche), Désert du Sel (haut-droite),
   //                      Marais du Vinaigre (centre), Pics Glacés (bas-gauche), Volcan (bas-droite)
   const regionCenters = {
-    foret_epices:    { cx: 248, cy: 134 },
-    desert_sel:      { cx: 441, cy: 99 },
-    marais_vinaigre: { cx: 345, cy: 224 },
-    pics_sorbet:     { cx: 234, cy: 330 },
-    volcan_cantine:  { cx: 459, cy: 395 },
+    foret_epices:    { cx: 245, cy: 152 },
+    desert_sel:      { cx: 440, cy: 114 },
+    marais_vinaigre: { cx: 340, cy: 220 },
+    pics_sorbet:     { cx: 231, cy: 340 },
+    volcan_cantine:  { cx: 456, cy: 394 },
   };
 
   // ── DEFS ──────────────────────────────────────────────────────────────────
@@ -2435,7 +2435,7 @@ function renderWorldMap() {
   
   // Choisir l'image : min entre completedCount et longueur tableau - 1
   const bgImgIdx = Math.min(completedCount, MAP_IMAGES.length - 1);
-  svg += `<image href="${MAP_IMAGES[bgImgIdx]}" x="0" y="0" width="700" height="434" preserveAspectRatio="xMidYMid slice"/>`;
+  svg += `<image href="${MAP_IMAGES[bgImgIdx]}" x="0" y="0" width="700" height="434" preserveAspectRatio="none"/>`;
 
   // Légère vignette par-dessus pour l'ambiance
   // Trier regions normalement (volcan en premier pour le fog)

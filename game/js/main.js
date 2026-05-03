@@ -48,22 +48,47 @@ let pendingDiffRegion = null;
 })();
 
 // ─── Sélection de héros ──────────────────────────────────────────────────────
+function buildCharCard(char, onclickFn, isSelected) {
+  const save  = loadCharSave(char.id);
+  const prev  = save.level > 1 ? (getXpForLevel(save.level - 1) || 0) : 0;
+  const next  = getXpForLevel(save.level) || 1;
+  const xpPct = Math.max(0, Math.min(100, ((save.xp - prev) / (next - prev)) * 100));
+  const progressBadge =
+    '<div style="margin-top:0.8rem;border-top:1px solid var(--border);padding-top:0.7rem;">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">' +
+    '<span style="font-family:monospace;font-size:0.6rem;color:var(--muted)">LV.' + save.level + '</span>' +
+    '<span style="font-family:monospace;font-size:0.6rem;color:var(--gold)">🪙 ' + save.gold + '</span>' +
+    '<span style="font-family:monospace;font-size:0.6rem;color:var(--purple)">✨ ' + save.skillPoints + ' pts</span>' +
+    '</div>' +
+    '<div style="height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">' +
+    '<div style="width:' + xpPct + '%;height:100%;background:linear-gradient(90deg,var(--xp-blue),#93c5fd);border-radius:2px"></div>' +
+    '</div></div>';
+
+  const card = document.createElement('div');
+  card.className = 'char-card' + (isSelected ? ' selected' : '');
+  card.onclick = onclickFn;
+  card.innerHTML =
+    '<span class="char-type-badge badge-hero">⚔ HÉROS</span>' +
+    '<div class="char-sprite"><img src="../sprite/' + char.sprite + '.png" alt="' + char.name + '" /></div>' +
+    '<div class="char-name">' + char.name + '</div>' +
+    '<div class="char-class">' + char.class + '</div>' +
+    '<div class="char-stats">' +
+    '<div class="stat-bar-row"><span class="stat-bar-label">ATK</span><div class="stat-bar-track"><div class="stat-bar-fill fill-atk" style="width:' + char.atk + '%"></div></div></div>' +
+    '<div class="stat-bar-row"><span class="stat-bar-label">DEF</span><div class="stat-bar-track"><div class="stat-bar-fill fill-def" style="width:' + char.def + '%"></div></div></div>' +
+    '<div class="stat-bar-row"><span class="stat-bar-label">VIT</span><div class="stat-bar-track"><div class="stat-bar-fill fill-spd" style="width:' + char.spd + '%"></div></div></div>' +
+    '<div class="stat-bar-row"><span class="stat-bar-label">HP</span><div class="stat-bar-track"><div class="stat-bar-fill fill-hp" style="width:' + char.hp + '%"></div></div></div>' +
+    '</div>' +
+    '<div class="char-quote">' + char.quote + '</div>' +
+    progressBadge;
+  return card;
+}
+
 function renderHeroGrid() {
   const grid = $('heroGrid');
   if (!grid) return;
   grid.innerHTML = '';
   Object.values(HEROES).forEach(hero => {
-    const selected = selectedHero === hero.id;
-    const save     = loadCharSave(hero.id);
-    const card     = document.createElement('div');
-    card.className = 'hero-card' + (selected ? ' selected' : '');
-    card.innerHTML =
-      `<div class="hero-sprite-mini"><img src="../sprite/${hero.sprite}.png" alt="${hero.name}"></div>` +
-      `<div class="hero-name">${hero.name}</div>` +
-      `<div class="hero-class">${hero.class}</div>` +
-      `<div class="hero-level">LV.${save.level}</div>`;
-    card.onclick = () => selectHero(hero.id);
-    grid.appendChild(card);
+    grid.appendChild(buildCharCard(hero, () => selectHero(hero.id), selectedHero === hero.id));
   });
 }
 

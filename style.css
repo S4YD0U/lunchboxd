@@ -1705,3 +1705,92 @@
       transition: all 0.15s;
     }
     .inv-card .btn-sell:hover { background: rgba(245,166,35,0.1); }
+
+    /* ─── Loadout slots (sélection actuelle) ──────────────────────────────── */
+    .loadout-slot {
+      position: relative;
+      border-radius: 8px;
+      padding: 0.9rem 0.6rem 0.7rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      min-height: 90px;
+    }
+    .loadout-slot.filled {
+      background: rgba(200,245,66,0.07);
+      border: 2px solid rgba(200,245,66,0.4);
+    }
+    .loadout-slot.filled:hover { border-color: rgba(200,245,66,0.7); }
+    .loadout-slot.empty {
+      background: var(--surface);
+      border: 2px dashed var(--border);
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      justify-content: center;
+    }
+    .loadout-slot .slot-icon { font-size: 1.5rem; }
+    .loadout-slot .slot-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .loadout-slot .slot-remove {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--accent3);
+      letter-spacing: 0.05em;
+      margin-top: 0.1rem;
+    }
+
+    /* ─── Loadout pool cards (capacités disponibles) ──────────────────────── */
+    .loadout-pool-card {
+      position: relative;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 1.1rem 0.7rem 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .loadout-pool-card:hover {
+      border-color: rgba(200,245,66,0.35);
+      background: rgba(200,245,66,0.04);
+    }
+    .loadout-pool-card.selected {
+      background: rgba(200,245,66,0.08);
+      border-color: rgba(200,245,66,0.55);
+    }
+    /* Badges sur les cartes de pool */
+    .loadout-pool-card .badge {
+      position: absolute;
+      top: 0.4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.48rem;
+      border-radius: 2px;
+      padding: 0.1rem 0.3rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .loadout-pool-card .tree-badge {
+      left: 0.4rem;
+      background: rgba(167,139,250,0.15);
+      color: var(--purple, #a78bfa);
+      border: 1px solid rgba(167,139,250,0.35);
+    }
+    .loadout-pool-card .sel-badge {
+      right: 0.4rem;
+      background: rgba(200,245,66,0.15);
+      color: var(--accent);
+      border: 1px solid rgba(200,245,66,0.35);
+    }

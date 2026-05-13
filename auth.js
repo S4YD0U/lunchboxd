@@ -697,10 +697,10 @@ const Auth = {
     var self = this;
     if (session) {
       self.isAdmin().then(function(isAdm) {
-        var adminLink = isAdm ? '<a class="btn-admin-nav" href="admin.html" title="Panneau admin">⚙ Admin</a>' : '';
+        var adminLink = isAdm ? '<a class="btn-admin-nav" href="/lunchboxd/admin.html" title="Panneau admin">⚙ Admin</a>' : '';
         actionsEl.innerHTML =
           adminLink +
-          '<a href="profil.html" class="nav-profil-btn">' +
+          '<a href="/lunchboxd/profil.html" class="nav-profil-btn">' +
             '<span class="nav-avatar">' + self.renderAvatar(session.avatar, '1.6rem') + '</span>' +
             '<span class="nav-pseudo">' + session.pseudo + '</span>' +
           '</a>' +
@@ -708,8 +708,8 @@ const Auth = {
       });
     } else {
       actionsEl.innerHTML =
-        '<a class="btn-ghost" href="connexion.html">Connexion</a>' +
-        '<a class="btn-primary" href="inscription.html">Créer un compte</a>';
+        '<a class="btn-ghost" href="/lunchboxd/connexion.html">Connexion</a>' +
+        '<a class="btn-primary" href="/lunchboxd/inscription.html">Créer un compte</a>';
     }
   },
 

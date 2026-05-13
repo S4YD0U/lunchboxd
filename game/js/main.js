@@ -6,6 +6,7 @@ import { SHOP_CATALOG, SKILL_BRANCHES, LOOTBOX_TIERS, DIFFICULTIES, LEVEL_UNLOCK
 import {
   player, selectedHero, setSelectedHero,
   loadCharSave, savePlayer, switchCharSave, switchCharSaveWithCloud,
+  loadCharSaveWithCloud,
   addXpGold, getLevelStats, getXpForLevel, getXpProgress,
   getResetCost, doResetSkills, getSellPrice,
   loadRegionProgress, saveRegionProgress, loadRegionProgressWithCloud,
@@ -41,12 +42,30 @@ let selectedRegion   = null;
 let pendingDiffRegion = null;
 
 // ─── Initialisation ──────────────────────────────────────────────────────────
-(function init() {
+(async function init() {
+  // Précharger toutes les saves cloud et mettre à jour le localStorage
+  // avant de rendre les cartes, pour afficher les bons niveaux dès le départ
+  await preloadAllHeroSavesFromCloud();
   updateProfileUI(player, selectedHero, HEROES, getXpForLevel);
   renderHeroGrid();
   renderWorldMap();
   showScreen('map');
 })();
+
+/**
+ * Charge la save cloud de chaque héros et la fusionne dans le localStorage.
+ * Ainsi buildCharCard() lit les bonnes données même au premier rendu.
+ */
+async function preloadAllHeroSavesFromCloud() {
+  const heroIds = Object.values(HEROES).map(h => h.id);
+  await Promise.all(heroIds.map(async (id) => {
+    try {
+      const merged = await loadCharSaveWithCloud(id);
+      // Écrire le résultat fusionné dans localStorage pour que loadCharSave() soit à jour
+      localStorage.setItem('lunchboxe_char_' + id, JSON.stringify(merged));
+    } catch (e) { /* silently fail */ }
+  }));
+}
 
 // ─── Sélection de héros ──────────────────────────────────────────────────────
 function buildCharCard(char, onclickFn, isSelected) {

@@ -2,8 +2,8 @@
 // pvp-main.js — Orchestration du mode PvP en ligne
 // ============================================================
 import { HEROES } from './data/characters.js';
-import { player, selectedHero, getLevelStats, getLoadout } from './engine/player.js';
-import { calcDmg, isCrit, getAttacks } from './engine/battle.js';
+import { player, selectedHero, getLevelStats } from './engine/player.js';
+import { calcDmg, isCrit, getAttacks, getLoadout } from './engine/battle.js';
 import {
   pvp, isPvpActive, isPvpMyTurn,
   createDuel, joinDuel, confirmStart,

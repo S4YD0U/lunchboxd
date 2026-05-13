@@ -1098,7 +1098,7 @@ function switchTab(name) {
   if (name === 'shop')   renderShop();
   if (name === 'skills') renderSkillTreeFull();
   if (name === 'map')    { renderWorldMap(); renderHeroGrid(); }
-  if (name === 'loadout') renderLoadout();
+  if (name === 'loadout') renderLoadoutAbilities();
   if (name === 'pvp')    { import('./pvp-main.js').then(m => m.initPvpTab()); }
 }
 window.switchTab = switchTab;

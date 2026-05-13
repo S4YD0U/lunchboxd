@@ -39,7 +39,18 @@ function getDb() {
 function getUid() {
   try {
     const fb = getFirebase();
-    return fb && fb.auth.currentUser ? fb.auth.currentUser.uid : null;
+    if (!fb) return null;
+    const user = fb.auth.currentUser;
+    if (user) return user.uid;
+    // Fallback : chercher dans localStorage si Firebase pas encore prêt
+    try {
+      const keys = Object.keys(localStorage).filter(k => k.includes('firebase:authUser'));
+      if (keys.length > 0) {
+        const data = JSON.parse(localStorage.getItem(keys[0]));
+        return data?.uid || null;
+      }
+    } catch(e) {}
+    return null;
   } catch (e) { return null; }
 }
 
@@ -47,8 +58,16 @@ function getDisplayName() {
   try {
     const fb = getFirebase();
     const u = fb && fb.auth.currentUser;
-    if (!u) return 'Joueur';
-    return u.displayName || u.email?.split('@')[0] || 'Joueur';
+    if (u) return u.displayName || u.email?.split('@')[0] || 'Joueur';
+    // Fallback localStorage
+    try {
+      const keys = Object.keys(localStorage).filter(k => k.includes('firebase:authUser'));
+      if (keys.length > 0) {
+        const data = JSON.parse(localStorage.getItem(keys[0]));
+        return data?.displayName || data?.email?.split('@')[0] || 'Joueur';
+      }
+    } catch(e) {}
+    return 'Joueur';
   } catch (e) { return 'Joueur'; }
 }
 

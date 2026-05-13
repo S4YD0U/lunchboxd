@@ -119,6 +119,8 @@ async function handleCreateDuel() {
   btn.textContent = 'Création…';
 
   try {
+    // Attendre que Firebase Auth soit bien prêt
+    await waitForAuth();
     const { code } = await createDuel(selectedHero, stats, hp, loadout);
     showWaitingRoom(code);
   } catch (e) {
@@ -127,8 +129,6 @@ async function handleCreateDuel() {
     btn.textContent = 'Créer un duel';
   }
 }
-
-// ─── Rejoindre un duel ───────────────────────────────────────────────────────
 
 async function handleJoinDuel() {
   const code = $('pvpCodeInput')?.value?.trim();
@@ -144,8 +144,8 @@ async function handleJoinDuel() {
   btn.textContent = 'Connexion…';
 
   try {
+    await waitForAuth();
     await joinDuel(code, selectedHero, stats, hp, loadout);
-    // Écouter le duel et attendre la confirmation de l'hôte
     listenDuel(data => handleDuelSnapshot(data));
     showJoiningRoom(code);
   } catch (e) {
@@ -153,6 +153,17 @@ async function handleJoinDuel() {
     btn.disabled = false;
     btn.textContent = 'Rejoindre';
   }
+}
+
+function waitForAuth() {
+  return new Promise((resolve, reject) => {
+    if (typeof firebase === 'undefined') { reject(new Error('Firebase non chargé.')); return; }
+    const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+      unsubscribe();
+      if (user) resolve(user);
+      else reject(new Error('Tu dois être connecté pour jouer en ligne.'));
+    });
+  });
 }
 
 // ─── Salle d'attente (hôte) ─────────────────────────────────────────────────

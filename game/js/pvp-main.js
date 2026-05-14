@@ -124,6 +124,7 @@ async function handleCreateDuel() {
     const { code } = await createDuel(selectedHero, stats, hp, loadout);
     showWaitingRoom(code);
   } catch (e) {
+    console.error('❌ ERREUR createDuel :', e.code, e.message, e);
     showPvpError(e.message);
     btn.disabled = false;
     btn.textContent = 'Créer un duel';
@@ -149,6 +150,7 @@ async function handleJoinDuel() {
     listenDuel(data => handleDuelSnapshot(data));
     showJoiningRoom(code);
   } catch (e) {
+    console.error('❌ ERREUR joinDuel :', e.code, e.message, e);
     showPvpError(e.message);
     btn.disabled = false;
     btn.textContent = 'Rejoindre';
@@ -184,12 +186,21 @@ function showWaitingRoom(code) {
   `;
 
   $('btnCancelDuel')?.addEventListener('click', async () => {
-    await forfeitDuel();
+    try {
+      await forfeitDuel();
+    } catch (e) {
+      console.error('❌ ERREUR forfeitDuel (cancel) :', e.code, e.message, e);
+    }
     renderPvpLobby();
   });
 
   $('btnStartDuel')?.addEventListener('click', async () => {
-    await confirmStart();
+    try {
+      await confirmStart();
+    } catch (e) {
+      console.error('❌ ERREUR confirmStart :', e.code, e.message, e);
+      showPvpError('Erreur au lancement du duel : ' + e.message);
+    }
   });
 
   // Copier le code au clic
@@ -235,7 +246,10 @@ function showJoiningRoom(code) {
 // ─── Snapshot handler ────────────────────────────────────────────────────────
 
 function handleDuelSnapshot(data) {
-  if (!data) return;
+  if (!data) {
+    console.error('❌ ERREUR handleDuelSnapshot : data null ou undefined');
+    return;
+  }
 
   if (data.status === 'active') {
     // Première fois qu'on passe à active → démarrer le combat
@@ -485,17 +499,27 @@ async function handlePvpAction(atk) {
   const iLose = myHpAfter <= 0;
 
   // Soumettre à Firestore
-  await submitAction({
-    attackId:      atk.id,
-    result,
-    myHpAfter,
-    mySpecialAfter: mySpAfter,
-    oppHpAfter,
-    logLine,
-  });
+  try {
+    await submitAction({
+      attackId:      atk.id,
+      result,
+      myHpAfter,
+      mySpecialAfter: mySpAfter,
+      oppHpAfter,
+      logLine,
+    });
+  } catch (e) {
+    console.error('❌ ERREUR submitAction :', e.code, e.message, e);
+    showPvpError('Erreur lors de la soumission de l\'action : ' + e.message);
+    return;
+  }
 
-  if (iWin)  await declareWinner(pvp.role);
-  if (iLose) await declareWinner(pvp.opponentRole);
+  try {
+    if (iWin)  await declareWinner(pvp.role);
+    if (iLose) await declareWinner(pvp.opponentRole);
+  } catch (e) {
+    console.error('❌ ERREUR declareWinner :', e.code, e.message, e);
+  }
 
   // Réduire les cooldowns
   for (const id in pvpState.attackCooldowns) {
